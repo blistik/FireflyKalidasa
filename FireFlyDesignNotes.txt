@@ -1,0 +1,47 @@
+Test Issues:
+
+Commenced 27 Feb 2021 - Completed 24-Apr-2021
+
+Up to:
+work through Gear
+ShipUpgrd
+CrewPerks
+
+
+
+
+2 TASKS:
+CORTEX RELAY 7 SERVICE CALL
+Travel to Cortex Relay 7 to Get Paid.
+Needs: 2 Tech
+Flavor text: "There's been some odd signals from Cortex Relay 7, way out near Rim Space. We may have a squatter out there."
+Pays: $900
+Mechanic Bonus: +1 Part
+
+The Meridian Task says:
+
+COURIER SERVICE MERIDIAN
+Travel to Meridian to Get Paid.
+Needs: Nothing
+Flavor text: "Signature and retinal scan required."
+Pays: $600
+Companion Bonus: +$500
+
+
+Fly - Mosey/Full Burn
+
+Buy (only at supply planets) - 
+	Shop from supply deck(cards) buy: Crew/Crew Gear/Ship Upgrades
+	buy Fuel/Parts - unlimited
+    OR
+	shore leave to remove all Disgruntled tokens - $100 for each Crew, Disgruntled or not
+
+Deal (only where the Dealers are, planets or the Cruiser)
+
+Work
+
+Orig Board 
+H: 15510 W: 22740
+
+Big Board
+Board.Width = 30220
