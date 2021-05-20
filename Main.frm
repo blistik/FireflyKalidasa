@@ -1594,7 +1594,8 @@ Dim frmJoSel As frmJobSel
          rst.MoveNext
       Wend
       rst.Close
-      If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & SectorID), 0) > 0 Then
+      'Make Work if at a Planet
+      If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & SectorID), 63) <> 63 Then 'but not Cruiser dummy planetID 63
          .cbo.AddItem "Make Work at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
          .cbo.ItemData(.cbo.NewIndex) = 0
       End If

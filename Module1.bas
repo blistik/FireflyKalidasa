@@ -3082,13 +3082,16 @@ Dim SQL, pay As Integer, CryBaby As Integer, crewcnt As Integer
    DB.Execute "UPDATE Players SET Warrants = 0, Pay = Pay - " & pay & ", Contraband=0, Fugitive = 0 WHERE PlayerID = " & playerID
    
    'Roll for each Wanted Crew: 1-Remove Crew, 2+ Crew safe
-   SQL = "SELECT PlayerSupplies.CardID "    ', Crew.* "
+   SQL = "SELECT PlayerSupplies.CardID, Crew.* "    ', Crew.* "
    SQL = SQL & "FROM Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID "
    SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & playerID & " AND Crew.Wanted=1"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      If hasShipUpgrade(playerID, 11) And crewcnt < 2 Then
-         If crewcnt = 0 Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to 2 Wanted Crew", player.ID, Logic!Gamecntr, True, getLeader()
+      If hasGearCard(playerID, 20, rst!CrewID) > 0 Then
+         'skip this Crew that has Alliance Ident Card
+         PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " flashes their fake Alliance Ident.Card", playerID, Logic!Gamecntr, True, rst!CrewID
+      ElseIf hasShipUpgrade(playerID, 11) And crewcnt < 2 Then
+         If crewcnt = 0 Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to 2 Wanted Crew", playerID, Logic!Gamecntr, True, getLeader()
          crewcnt = crewcnt + 1
       Else
          doSeizeCrew playerID, rst!CardID

@@ -225,10 +225,7 @@ Private Sub Form_Load()
        Set .ItemPictureExpandable = AssetImages.Overlay("D", "R")
        Set .ItemPictureExpanded = AssetImages.Overlay("D", "R")
        Set .ItemPictureLeaf = AssetImages.Overlay("UN", "O")
-       
-       'set the splitter to a scrollbar's width from the right side
-       '.SplitterOffset = .Width - 1400  '390.165
-      
+     
        .LeftButtonOnly = False
        .AutoRespond = True
        .ButtonStyle = buttonsSftTreeAll
@@ -265,7 +262,7 @@ With sftTree
    While Not rst3.EOF
       Index = .AddItem(CStr(rst3!playerID) & IIf(isOutlaw(rst3!playerID), " - outlaw", ""))
       .ItemLevel(Index) = 0
-      .CellText(Index, 1) = rst3!Ship & " - " & PlayCode(rst3!playerID).PlayName & IIf(rst3!playerID = player.ID, " [me]", "")
+      .CellText(Index, 1) = rst3!ship & " - " & PlayCode(rst3!playerID).PlayName & IIf(rst3!playerID = player.ID, " [me]", "")
       For x = 0 To 8
          .CellForeColor(Index, x) = 0
          .CellBackColor(Index, x) = getPlayerColor(rst3!playerID)
@@ -301,7 +298,7 @@ With sftTree
          .CellForeColor(Index, 4) = 16777215
          .CellText(Index, 5) = IIf(rst!BonusPart > 0, " +" & rst!BonusPart & " part: ", "") & IIf(rst!bonus > 0, " +$" & rst!bonus & ":", "") & IIf(rst!KeywordBonus = 1, rst!KeyWords, "") & IIf(IsNull(rst!ProfessionName), "", " " & rst!ProfessionName) & IIf(rst!BonusPerSkill > 0, " /" & cstrSkill(rst!BonusPerSkill), "") & IIf(rst!Job3ID > 0, "Bonus Job", "")
          If rst!BonusPart > 0 Or rst!bonus > 0 Then
-             .CellForeColor(Index, 5) = 0
+            .CellForeColor(Index, 5) = 0
             .CellBackColor(Index, 5) = 1900316
          End If
          .CellText(Index, 6) = IIf(rst!fight > 0, CStr(rst!fight), "")
@@ -329,7 +326,7 @@ With sftTree
                .CellText(Index, 1) = rst2!JobDesc
                .CellText(Index, 2) = rst2!PlanetName
                
-               If (rst2!SectorID = 1 And getCruiserSector() = SectorID) Or (SectorID = rst2!SectorID) Then
+               If (rst2!SectorID = 1 And getCruiserSector() = SectorID) Or (rst2!SectorID > 1 And SectorID = rst2!SectorID) Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
                   If hasJobReqs(rst3!playerID, rst!CardID) Then
@@ -365,7 +362,7 @@ With sftTree
                .CellText(Index, 1) = rst2!JobDesc
                .CellText(Index, 2) = rst2!PlanetName
                
-               If (rst2!SectorID = 1 And getCruiserSector() = SectorID) Or (SectorID = rst2!SectorID) Then
+               If (rst2!SectorID = 1 And getCruiserSector() = SectorID) Or (rst2!SectorID > 1 And SectorID = rst2!SectorID) Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
                   If hasJobReqs(rst3!playerID, rst!CardID) Then
@@ -400,7 +397,7 @@ With sftTree
                .CellText(Index, 1) = rst2!JobDesc
                .CellText(Index, 2) = rst2!PlanetName
                
-               If (rst2!SectorID = 1 And getCruiserSector() = SectorID) Or (SectorID = rst2!SectorID) Then
+               If (rst2!SectorID = 1 And getCruiserSector() = SectorID) Or (rst2!SectorID > 1 And SectorID = rst2!SectorID) Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
                   If hasJobReqs(rst3!playerID, rst!CardID) Then
@@ -455,7 +452,7 @@ Private Sub sftTree_ItemClick(ByVal Index As Long, ByVal ColNum As Integer, ByVa
    Case 9
       If Button = 2 Then
          With sftTree
-            mnuPopup(0).Enabled = (sftTree.CellItemData(Index, 0) = 0 And sftTree.ItemData(Index) > 0)
+            mnuPopUp(0).Enabled = (sftTree.CellItemData(Index, 0) = 0 And sftTree.ItemData(Index) > 0)
             PopupMenu mnuPop
             
         End With

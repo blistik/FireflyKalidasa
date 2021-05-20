@@ -366,7 +366,7 @@ With sftTree
       If rst!Warrants > 0 Then
          .CellBackColor(Index, 3) = 3355647
       End If
-      If IsNull(rst!PlanetName) Then
+      If Nz(rst!PlanetName, "Cruiser") = "Cruiser" Then
          .CellText(Index, 4) = "Sector " & CStr(rst!SectorID)
       Else
          .CellText(Index, 4) = rst!PlanetName
@@ -662,34 +662,34 @@ With sftTree
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "NT")
             .CellText(Index, 1) = "Cargo: " & CStr(rst2!cargo)
          End If
-         If rst2!passenger > 0 Then
-            x = x + rst2!passenger
+         If rst2!Passenger > 0 Then
+            x = x + rst2!Passenger
             Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 9 'Passengers
             .CellItemData(Index, 4) = rst!playerID
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "PS")
-            .CellText(Index, 1) = "Passenger: " & CStr(rst2!passenger)
+            .CellText(Index, 1) = "Passenger: " & CStr(rst2!Passenger)
             
          End If
-         If rst2!contraband > 0 Then
-            x = x + rst2!contraband
+         If rst2!Contraband > 0 Then
+            x = x + rst2!Contraband
             Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 10 'Contraband
             .CellItemData(Index, 4) = rst!playerID
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "CN")
-            .CellText(Index, 1) = "Contraband: " & CStr(rst2!contraband)
+            .CellText(Index, 1) = "Contraband: " & CStr(rst2!Contraband)
 
          End If
-         If rst2!fugitive > 0 Then
-            x = x + rst2!fugitive
+         If rst2!Fugitive > 0 Then
+            x = x + rst2!Fugitive
             Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 11 ' Fugitives
             .CellItemData(Index, 4) = rst!playerID
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "P")
-            .CellText(Index, 1) = "Fugitive: " & CStr(rst2!fugitive)
+            .CellText(Index, 1) = "Fugitive: " & CStr(rst2!Fugitive)
             
          End If
 
@@ -807,44 +807,44 @@ Private Sub sftTree_ItemClick(ByVal Index As Long, ByVal ColNum As Integer, ByVa
       If Button = 2 Then
          With sftTree
             If .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 1 And .CellItemData(Index, 3) = 0 And .CellItemData(Index, 7) > 0 And (CrewCapacity(player.ID) - getCrewCount(player.ID) >= 1) And getMoney(player.ID) >= .CellItemData(Index, 8) And actionSeq = ASselect Then 'poach disgruntled other player
-               mnuPopup(4).Visible = True
-               mnuPopup(3).Visible = False
-               mnuPopup(2).Visible = False
-               mnuPopup(1).Visible = False
-               mnuPopup(0).Visible = False
+               mnuPopUp(4).Visible = True
+               mnuPopUp(3).Visible = False
+               mnuPopUp(2).Visible = False
+               mnuPopUp(1).Visible = False
+               mnuPopUp(0).Visible = False
                sftTreeListIndex = Index
             ElseIf .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 0 And actionSeq = ASselect Then 'trade with player
-               mnuPopup(3).Visible = True
-               mnuPopup(4).Visible = False
-               mnuPopup(2).Visible = False
-               mnuPopup(1).Visible = False
-               mnuPopup(0).Visible = False
+               mnuPopUp(3).Visible = True
+               mnuPopUp(4).Visible = False
+               mnuPopUp(2).Visible = False
+               mnuPopUp(1).Visible = False
+               mnuPopUp(0).Visible = False
                sftTreeListIndex = Index
             ElseIf .CellItemData(Index, 4) <> player.ID Then 'not yours
                Exit Sub
             Else
-               mnuPopup(0).Visible = True
-               mnuPopup(3).Visible = False
-               mnuPopup(4).Visible = False
+               mnuPopUp(0).Visible = True
+               mnuPopUp(3).Visible = False
+               mnuPopUp(4).Visible = False
                sftTreeListIndex = Index
-               mnuPopup(1).Visible = False
+               mnuPopUp(1).Visible = False
                
                If .CellItemData(Index, 0) = 1 And getPlanetID(player.ID) > 0 And .CellItemData(Index, 3) = 0 Then 'crew
-                  mnuPopup(1).Visible = True
+                  mnuPopUp(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 2 Or .CellItemData(Index, 0) = 3 And actionSeq = ASselect Then  'gear
-                  mnuPopup(1).Visible = True
+                  mnuPopUp(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 5 And Not isDriveCore(.CellItemData(Index, 1)) Then   'shipUpgrds
-                  mnuPopup(1).Visible = True
+                  mnuPopUp(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 6 Or .CellItemData(Index, 0) = 7 Or .CellItemData(Index, 0) = 8 Or .CellItemData(Index, 0) = 10 Then  'goods
-                  mnuPopup(1).Visible = True
+                  mnuPopUp(1).Visible = True
                ElseIf (.CellItemData(Index, 0) = 9 Or .CellItemData(Index, 0) = 11) And getPlanetID(player.ID) > 0 Then  'passengers/fugi
-                  mnuPopup(1).Visible = True
+                  mnuPopUp(1).Visible = True
                End If
                
-               mnuPopup(2).Visible = (hasGearAttribute(player.ID, "LabourContract", .CellItemData(Index, 2)) > 0) And (Not frmAction.buydone) And actionSeq = ASselect
+               mnuPopUp(2).Visible = (hasGearAttribute(player.ID, "LabourContract", .CellItemData(Index, 2)) > 0) And (Not frmAction.buydone) And actionSeq = ASselect
             End If
                 
-            If .CellItemData(Index, 0) = 1 Or mnuPopup(1).Visible Or mnuPopup(3).Visible Or mnuPopup(4).Visible Then PopupMenu mnuPop
+            If .CellItemData(Index, 0) = 1 Or mnuPopUp(1).Visible Or mnuPopUp(3).Visible Or mnuPopUp(4).Visible Then PopupMenu mnuPop
             
         End With
       End If
