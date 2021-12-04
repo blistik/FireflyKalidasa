@@ -2025,6 +2025,9 @@ Public Function doChangeGear(ByVal playerID, ByVal CrewID, ByVal CardID, ByVal m
          
          If noGearSlot(CardID) Then   ' we are all good, these do not count as a spot
          
+         ElseIf CardID = 45 And Not hasCrewAttribute(playerID, "Tech", 0, CrewID) Then 'all good Burgess' laser need 1 Tech
+            Exit Function
+         
          ElseIf CrewID = 57 And getCrewGearCount(CrewID) < 2 Then 'grange bros
          
          ElseIf CrewID = 22 And getCrewGearCount(CrewID) < 3 Then 'jayne - up to 3
@@ -2032,8 +2035,6 @@ Public Function doChangeGear(ByVal playerID, ByVal CrewID, ByVal CardID, ByVal m
          ElseIf CrewID = 59 And gearHasKeyword(CardID, "FIREARM") Then ' Crow - no go
             Exit Function
             
-         ElseIf CardID = 45 And Not hasCrewAttribute(playerID, "Tech", 0, CrewID) Then 'all good Burgess' laser need 1 Tech
-            Exit Function
             
          ElseIf getCrewGearCount(CrewID) > 0 Then  'check the Crew has no existing gear
             Exit Function

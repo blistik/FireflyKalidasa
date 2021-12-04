@@ -3232,6 +3232,8 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
                      End If
                      DB.Execute "UPDATE Players SET Passenger =" & y & ", Fugitive =" & z & " WHERE PlayerID=" & player.ID
                      PutMsg player.PlayName & " rolls a " & skillcnt & " and is left with " & y & " Passengers and " & z & " Fugitives", player.ID, Logic!Gamecntr, True, getLeader()
+                  Else
+                     PutMsg player.PlayName & " rolls a " & skillcnt & " and retains any Passengers and Fugitives", player.ID, Logic!Gamecntr, True, getLeader()
                   End If
                   
                Case 4   'She's Hemmorrhaging Fuel!
