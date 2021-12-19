@@ -978,6 +978,7 @@ End Sub
 
 Public Sub PutMsg(msg, Optional playerID = 0, Optional turn = 0, Optional ByVal force As Boolean = False, Optional ByVal CrewID As Integer = 0, Optional ByVal GearID As Integer = 0, Optional ByVal ShipUpgradeID As Integer = 0, Optional ByVal ContactID As Integer = 0, Optional ByVal refreshShip As Integer = 0)
 Dim SQL, frmPop As frmPopup
+On Error GoTo err_handler
 
    If Left(msg, 3) <> "Wai" Then
       SQL = "INSERT INTO Events (Eventtime, Event, PlayerID, Turn, RefreshShip"
@@ -1027,6 +1028,14 @@ Dim SQL, frmPop As frmPopup
    End If
 
    Main.Stat.Panels(1).Text = msg
+   
+normal_exit:
+   Exit Sub
+   
+err_handler:
+   MsgBox "LoadMsg Error: " & vbCrLf & Err.Description
+   Resume normal_exit
+   
 End Sub
 
 'Deck Seq 0: unset/removed, 1-4 held by PlayerID, 5 Discard pile, 6 consider, 10+ Deck

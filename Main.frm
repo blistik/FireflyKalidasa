@@ -1475,7 +1475,7 @@ Dim frmJoSel As frmJobSel
       .cmd(2).Enabled = False
       If (Not .buydone) And (Not onlyFullburn) And Not reaverActive Then  ' Buy and Shore leave *may* be active
          
-         .chkShore.Enabled = (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19)) And hasDisgruntled(player.ID) And doShoreLeave(player.ID, True) <= getMoney(player.ID)
+         .chkShore.Enabled = (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19)) And hasDisgruntled(player.ID) And Abs(doShoreLeave(player.ID, True)) <= getMoney(player.ID)
          
          If (.lblSupply.Caption <> "") And (actionSeq = ASselect Or (actionSeq = ASBuySelDiscard And getUnseenDeck("Supply", Val(.lblSupply.Tag)) > 0) Or actionSeq = ASBuySelect) Then 'we can BUY
             .cmd(2).Enabled = True

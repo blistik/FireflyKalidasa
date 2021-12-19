@@ -74,7 +74,7 @@ Begin VB.Form frmAction
       Height          =   225
       Left            =   3345
       TabIndex        =   31
-      ToolTipText     =   "remove Warrants with Badger"
+      ToolTipText     =   "pay Badger $1000 to remove all Warrants"
       Top             =   1650
       Width           =   195
    End
