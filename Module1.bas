@@ -3390,7 +3390,7 @@ Dim rst As New ADODB.Recordset, a() As String, x
 Dim SQL
 
    hasJobReqs = True  'until proven otherwise
-   SQL = "SELECT ContactDeck.*, Job.*, p.Cargo AS PCargo, p.Contraband AS PContraband, p.Fugitive as PFugitive, p.Passenger as PPassenger "
+   SQL = "SELECT ContactDeck.*, Job.*, p.Cargo AS PCargo, p.Contraband AS PContraband, p.Fugitive as PFugitive, p.Passenger as PPassenger, p.Fuel as PFuel, p.Parts as PParts "
    SQL = SQL & " FROM ContactDeck, Job, Players AS p WHERE CardID=" & CardID & " AND JobID = " & JobID & " AND PlayerID = " & playerID
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
@@ -3431,7 +3431,9 @@ Dim SQL
       End If
          
       'check Job Requirements
-      If rst!cargo + rst!PCargo < 0 Or rst!Contraband + rst!PContraband < 0 Or rst!Fugitive + rst!PFugitive < 0 Or rst!Passenger + rst!PPassenger < 0 Then
+      If (rst!Contraband = -14 And rst!PContraband = 0) Or (rst!Passenger = -14 And rst!PPassenger = 0) Or (rst!Fugitive = -14 And rst!PFugitive = 0) Then
+         hasJobReqs = False
+      ElseIf rst!cargo + rst!PCargo < 0 Or (rst!Contraband + rst!PContraband < 0 And rst!Contraband > -14) Or (rst!Fugitive + rst!PFugitive < 0 And rst!Fugitive > -14) Or (rst!Passenger + rst!PPassenger < 0 And rst!Passenger > -14) Or rst!fuel + rst!PFuel < 0 Or rst!parts + rst!PParts < 0 Then
          hasJobReqs = False
       End If
    End If
