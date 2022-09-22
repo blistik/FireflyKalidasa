@@ -22,6 +22,7 @@ Begin VB.Form Starter
       Left            =   2100
       TabIndex        =   14
       Top             =   2190
+      Value           =   1  'Checked
       Width           =   3105
    End
    Begin VB.ComboBox cbo 

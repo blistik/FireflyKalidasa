@@ -287,7 +287,7 @@ With sftTree
          .CellText(Index, 1) = rst!ContactName & " - " & rst!JobName
          .CellForeColor(Index, 1) = 0
          .CellBackColor(Index, 1) = rst!Colour
-         .CellText(Index, 2) = rst!JobTypeDescr & IIf(rst!JobType2 <> "No Job", "/" & rst!JobType2, "") & IIf(rst!illegal = 1, "/illegal", "") & IIf(rst!Immoral = 1, "/immoral", "")
+         .CellText(Index, 2) = rst!JobTypeDescr & IIf(rst!JobType2 <> "-", "/" & rst!JobType2, "") & IIf(rst!illegal = 1, "/illegal", "") & IIf(rst!Immoral = 1, "/immoral", "")
          If rst!illegal = 1 Or rst!Immoral Then
             .CellBackColor(Index, 2) = 3355647
          End If
@@ -324,12 +324,13 @@ With sftTree
             If Not rst2.EOF Then
                 Index = .AddItem(CStr(rst2!JobID))
                .CellText(Index, 1) = rst2!JobDesc
-               .CellText(Index, 2) = rst2!PlanetName
-               
+               x = getSectorCount(getPlayerSector(rst3!playerID), rst2!SectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+               .ItemData(Index) = rst!playerID
                If (rst2!SectorID = 1 And getCruiserSector() = SectorID) Or (rst2!SectorID > 1 And SectorID = rst2!SectorID) Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
-                  If hasJobReqs(rst3!playerID, rst!CardID) Then
+                  If hasJobReqs(rst3!playerID, rst!CardID, rst!Job1ID) Then
                      .CellForeColor(Index, 2) = 0
                      .CellForeColor(Index, 3) = 0
                   Else
@@ -339,6 +340,7 @@ With sftTree
                   .CellBackColor(Index, 2) = &HC0FFC0
                   
                   .CellBackColor(Index, 3) = &HC0FFC0
+                  
                End If
                .CellText(Index, 3) = rst2!System
                .ItemLevel(Index) = 2
@@ -346,6 +348,7 @@ With sftTree
                   Set .ItemPicture(Index) = AssetImages.Overlay("L", "R")
                Else
                   Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
+                  .CellItemData(Index, 1) = rst2!SectorID
                End If
          
                '.CellText(index, 3) = rst!
@@ -360,12 +363,13 @@ With sftTree
             If Not rst2.EOF Then
                 Index = .AddItem(CStr(rst2!JobID))
                .CellText(Index, 1) = rst2!JobDesc
-               .CellText(Index, 2) = rst2!PlanetName
-               
+               x = getSectorCount(getPlayerSector(rst3!playerID), rst2!SectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+               .ItemData(Index) = rst!playerID
                If (rst2!SectorID = 1 And getCruiserSector() = SectorID) Or (rst2!SectorID > 1 And SectorID = rst2!SectorID) Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
-                  If hasJobReqs(rst3!playerID, rst!CardID) Then
+                  If hasJobReqs(rst3!playerID, rst!CardID, rst!Job3ID) Then
                      .CellForeColor(Index, 2) = 0
                      .CellForeColor(Index, 3) = 0
                   Else
@@ -382,6 +386,7 @@ With sftTree
                   Set .ItemPicture(Index) = AssetImages.Overlay("L", "R")
                Else
                   Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
+                  .CellItemData(Index, 1) = rst2!SectorID
                End If
          
                '.CellText(index, 3) = rst!
@@ -395,12 +400,13 @@ With sftTree
             If Not rst2.EOF Then
                 Index = .AddItem(CStr(rst2!JobID))
                .CellText(Index, 1) = rst2!JobDesc
-               .CellText(Index, 2) = rst2!PlanetName
-               
+               x = getSectorCount(getPlayerSector(rst3!playerID), rst2!SectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+               .ItemData(Index) = rst!playerID
                If (rst2!SectorID = 1 And getCruiserSector() = SectorID) Or (rst2!SectorID > 1 And SectorID = rst2!SectorID) Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
-                  If hasJobReqs(rst3!playerID, rst!CardID) Then
+                  If hasJobReqs(rst3!playerID, rst!CardID, rst!Job2ID) Then
                      .CellForeColor(Index, 2) = 0
                      .CellForeColor(Index, 3) = 0
                   Else
@@ -413,6 +419,7 @@ With sftTree
                .CellText(Index, 3) = rst2!System
                .ItemLevel(Index) = 2
                Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
+               .CellItemData(Index, 1) = rst2!SectorID
             End If
             rst2.Close
          End If
@@ -450,9 +457,19 @@ End Sub
 Private Sub sftTree_ItemClick(ByVal Index As Long, ByVal ColNum As Integer, ByVal AreaType As Integer, ByVal Button As Integer, ByVal Shift As Integer)
    Select Case AreaType
    Case 9
-      If Button = 2 Then
+      If Button = 1 Then
          With sftTree
-            mnuPopUp(0).Enabled = (sftTree.CellItemData(Index, 0) = 0 And sftTree.ItemData(Index) > 0)
+            If sftTree.CellItemData(Index, 1) > 0 And sftTree.ItemData(Index) = player.ID Then
+               'draw a line
+               Main.drawLine 0, sftTree.CellItemData(Index, 1), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
+            Else
+               Main.drawLine 0, -1
+            End If
+            
+        End With
+      ElseIf Button = 2 Then
+         With sftTree
+            mnuPopup(0).Enabled = (sftTree.CellItemData(Index, 0) = 0 And sftTree.ItemData(Index) > 0)
             PopupMenu mnuPop
             
         End With

@@ -216,6 +216,11 @@ Attribute VB_Exposed = False
 Option Explicit
 Public dealFilter As String
 
+
+Private Sub FDPane1_OnHidden()
+   Main.drawLine 1, -1
+End Sub
+
 Private Sub Form_Load()
    With sftTree
        Set .ItemPictureExpandable = AssetImages.Overlay("D", "R")
@@ -316,7 +321,7 @@ With sftTree
          .CellText(Index, 1) = rst!JobName
          .CellForeColor(Index, 1) = 0
          .CellBackColor(Index, 1) = rst!Colour
-         .CellText(Index, 2) = rst!JobTypeDescr & IIf(rst!JobType2 <> "No Job", "/" & rst!JobType2, "") & IIf(rst!illegal = 1, "/illegal", "") & IIf(rst!Immoral = 1, "/immoral", "")
+         .CellText(Index, 2) = rst!JobTypeDescr & IIf(rst!JobType2 <> "-", "/" & rst!JobType2, "") & IIf(rst!illegal = 1, "/illegal", "") & IIf(rst!Immoral = 1, "/immoral", "")
          If rst!illegal = 1 Or rst!Immoral Then
             .CellBackColor(Index, 2) = 3355647
          End If
@@ -349,11 +354,12 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 2
                .CellText(Index, 1) = rst2!JobDesc
-               .CellText(Index, 2) = rst2!PlanetName
+               x = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
                If SectorID = rst2!SectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
-                  If hasJobReqs(player.ID, rst!CardID) Then
+                  If hasJobReqs(player.ID, rst!CardID, rst!Job1ID) Then
                      .CellForeColor(Index, 2) = 0
                      .CellForeColor(Index, 3) = 0
                   Else
@@ -366,7 +372,7 @@ With sftTree
                End If
                .CellText(Index, 3) = rst2!System
                Set .ItemPicture(Index) = AssetImages.Overlay("LN", "LN")
-            
+               .CellItemData(Index, 1) = rst2!SectorID
             Else
                MsgBox "Job Card " & rst!Job1ID & " Error", vbCritical
             End If
@@ -382,11 +388,12 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 3
                .CellText(Index, 1) = rst2!JobDesc
-               .CellText(Index, 2) = rst2!PlanetName
+               x = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
                If SectorID = rst2!SectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
-                  If hasJobReqs(player.ID, rst!CardID) Then
+                  If hasJobReqs(player.ID, rst!CardID, rst!Job3ID) Then
                      .CellForeColor(Index, 2) = 0
                      .CellForeColor(Index, 3) = 0
                   Else
@@ -399,7 +406,7 @@ With sftTree
                End If
                .CellText(Index, 3) = rst2!System
                Set .ItemPicture(Index) = AssetImages.Overlay("LN", "LN")
-            
+               .CellItemData(Index, 1) = rst2!SectorID
             Else
                MsgBox "Job Card " & rst!Job3ID & " Error", vbCritical
             End If
@@ -414,11 +421,12 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 2
                .CellText(Index, 1) = rst2!JobDesc
-               .CellText(Index, 2) = rst2!PlanetName
+               x = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
                If SectorID = rst2!SectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
-                  If hasJobReqs(player.ID, rst!CardID) Then
+                  If hasJobReqs(player.ID, rst!CardID, rst!Job2ID) Then
                      .CellForeColor(Index, 2) = 0
                      .CellForeColor(Index, 3) = 0
                   Else
@@ -431,6 +439,7 @@ With sftTree
                End If
                .CellText(Index, 3) = rst2!System
                Set .ItemPicture(Index) = AssetImages.Overlay("LN", "LN")
+               .CellItemData(Index, 1) = rst2!SectorID
             Else
                MsgBox "Job Card " & rst!Job2ID & " Error", vbCritical
             End If
@@ -461,7 +470,14 @@ With sftTree
          If isSolid(player.ID, 4) And Val(sftTree.CellText(0, 0)) = 4 Then
             maxConsider = 4
          End If
-
+         
+         If sftTree.CellItemData(Index, 1) > 0 Then
+             'draw a line
+             Main.drawLine 1, sftTree.CellItemData(Index, 1), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
+          Else
+             Main.drawLine 1, -1
+         End If
+         
          Select Case .ItemDataString(Index)
          Case "UN" 'consider
             Select Case actionSeq

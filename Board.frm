@@ -353,6 +353,36 @@ Begin VB.Form Board
          InitFloatWidth  =   200
          InitFloatHeight =   200
       End
+      Begin VB.Line LineB 
+         BorderColor     =   &H0000C000&
+         BorderWidth     =   3
+         Index           =   2
+         Visible         =   0   'False
+         X1              =   11730
+         X2              =   13950
+         Y1              =   9480
+         Y2              =   9690
+      End
+      Begin VB.Line LineB 
+         BorderColor     =   &H000000FF&
+         BorderWidth     =   3
+         Index           =   1
+         Visible         =   0   'False
+         X1              =   11790
+         X2              =   14010
+         Y1              =   8640
+         Y2              =   8850
+      End
+      Begin VB.Line LineB 
+         BorderColor     =   &H0000C0C0&
+         BorderWidth     =   3
+         Index           =   0
+         Visible         =   0   'False
+         X1              =   11820
+         X2              =   14040
+         Y1              =   7830
+         Y2              =   8040
+      End
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgAToken 
       Height          =   705

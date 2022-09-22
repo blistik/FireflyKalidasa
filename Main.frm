@@ -581,6 +581,7 @@ Dim maxConsider
          frmAction.txtFug = "0"
       End If
       
+      drawLine 1, -1
       actionSeq = ASselect 'in limbo awaiting user to select
       showDeals False, "local"
       If Not (frmJob Is Nothing) Then frmJob.RefreshJobs
@@ -688,7 +689,8 @@ Dim maxConsider
    
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASEnd Then 'Finish up your turn
       frmAction.FDPane1.PaneVisible = False
-
+      wormHoleOpen = False
+      drawLine 2, -1
       'Check if WON!
       If CheckWon(player.ID) Then
          If MsgBox("Do you want to Quit?", vbQuestion + vbYesNo, "End Game?") = vbYes Then
@@ -1572,20 +1574,20 @@ Dim frmJoSel As frmJobSel
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       .cbo.Clear
       While Not rst.EOF
-         If ((rst!Sector1 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!Sector1)) And rst!JobStatus = 0 And getPlayerJobs(player.ID, "1,2") < MAXACTIVEJOBS + IIf(isSolid(player.ID, 8), 1, 0) Then ' check requirements met for job
-            If hasJobReqs(player.ID, rst!CardID) Then
+         If ((rst!sector1 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!sector1)) And rst!JobStatus = 0 And getPlayerJobs(player.ID, "1,2") < MAXACTIVEJOBS + IIf(isSolid(player.ID, 8), 1, 0) Then ' check requirements met for job
+            If hasJobReqs(player.ID, rst!CardID, rst!Job1) Then
                .cbo.AddItem rst!Jobdes1 & " (" & CStr(rst!CardID) & ")"
                .cbo.ItemData(.cbo.NewIndex) = rst!CardID
             End If
             
          ElseIf ((rst!Sector3 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!Sector3)) And rst!JobStatus = 1 Then 'Job3 must be in the sector
-            If hasJobReqs(player.ID, rst!CardID) Then
+            If hasJobReqs(player.ID, rst!CardID, rst!Job3) Then
                .cbo.AddItem rst!Jobdes3 & " (" & CStr(rst!CardID) & ")"
                .cbo.ItemData(.cbo.NewIndex) = rst!CardID
             End If
             
-         ElseIf ((rst!Sector2 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!Sector2)) And (rst!JobStatus = 1 Or rst!JobStatus = 2) Then 'Job2 must be in the sector
-            If hasJobReqs(player.ID, rst!CardID) Then
+         ElseIf ((rst!sector2 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!sector2)) And (rst!JobStatus = 1 Or rst!JobStatus = 2) Then 'Job2 must be in the sector
+            If hasJobReqs(player.ID, rst!CardID, rst!Job2) Then
                .cbo.AddItem rst!Jobdes2 & " (" & CStr(rst!CardID) & ")"
                .cbo.ItemData(.cbo.NewIndex) = rst!CardID
             End If
@@ -1655,9 +1657,9 @@ Dim frmSalvage As frmSalvaging
 
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
-      If rst!JobStatus = 0 And ((rst!Sector1 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!Sector1)) Then ' we're doing Job 1
+      If rst!JobStatus = 0 And ((rst!sector1 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!sector1)) Then ' we're doing Job 1
       
-         JobID = rst!JOB1
+         JobID = rst!Job1
          If IsNull(rst!Job2) Then
             finalstate = JOB_SUCCESS
          Else
@@ -1665,12 +1667,12 @@ Dim frmSalvage As frmSalvaging
          End If
          PutMsg player.PlayName & " Started Job: " & rst!JobName, playerID, Logic!Gamecntr
          
-      ElseIf rst!JobStatus = 1 And ((rst!Sector3 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!Sector3)) And Not IsNull(rst!JOB3) Then ' we're doing Bonus Job
-         JobID = rst!JOB3
+      ElseIf rst!JobStatus = 1 And ((rst!Sector3 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!Sector3)) And Not IsNull(rst!Job3) Then ' we're doing Bonus Job
+         JobID = rst!Job3
          bonus = rst!bonus
          finalstate = 2
          
-      ElseIf (rst!JobStatus = 1 Or rst!JobStatus = 2) And ((rst!Sector2 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!Sector2)) And Not IsNull(rst!Job2) Then  ' we're doing Job 2
+      ElseIf (rst!JobStatus = 1 Or rst!JobStatus = 2) And ((rst!sector2 = 1 And getCruiserSector() = SectorID) Or (SectorID = rst!sector2)) And Not IsNull(rst!Job2) Then  ' we're doing Job 2
          JobID = rst!Job2
          finalstate = JOB_SUCCESS
          
@@ -3453,7 +3455,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             
          Case 6 'alert tokens adjacent your posn
             doAddTokensAdjacent SectorID
-         
+            RefreshBoard
          Case 7 'corvette contact
             Set frmSeize = New frmSeized
             If frmSeize.RefreshList(True) > 0 Then 'some are not stashed
@@ -3474,7 +3476,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          Case 9 'alert tokens at every Outlaw Ship
             doAddTokensOutlaws
             If isOutlaw(player.ID) Then ignoreToken = SectorID 'so as to not trip on one put here
-         
+            RefreshBoard
          Case 10 ' Move Corvette Adjacent player
             If Logic!AutoAI = 0 And doMoveCorvetteAdjacent(SectorID, True) Then
                setPlayer player.ID, "V", 1
@@ -3796,6 +3798,9 @@ Dim x
       'get players current posn and check route
       MoveShip player.ID, Index, 7
       MoseyMovesDone = MoseyMovesDone + 1
+      drawLine 0, -2, Index
+      wormHoleOpen = False
+      drawLine 2, -1
       actionSeq = ASMoseyEnd 'throw to main loop
    End If
    
@@ -3805,6 +3810,9 @@ Dim x
       FullburnMovesDone = FullburnMovesDone + 1
       If FullburnMovesDone = 1 And Val(frmAction.lblFuelRq.Caption) > 0 Then burnFuel player.ID, Val(frmAction.lblFuelRq.Caption)
       If HemmorrhagingFuel Then burnFuel player.ID, 1
+      drawLine 0, -2, Index
+      wormHoleOpen = False
+      drawLine 2, -1
       actionSeq = ASFullburnEnd 'throw to main loop
    End If
    
@@ -3812,6 +3820,7 @@ Dim x
       'if evading a reaver at the beginning of turn, then don't stop fullburn
       If FullburnMovesDone > 0 Then frmAction.fullburndone = True
       MoveShip player.ID, Index
+      drawLine 0, -2, Index
       actionSeq = ASNavEvadeEnd
       CruiserCutter = 0
       CorvetteSeq = 0
@@ -3883,4 +3892,53 @@ Dim x
    End If
    
    
+End Sub
+
+Public Sub drawLine(ByVal mode, ByVal sector1, Optional ByVal sector2, Optional ByVal silent As Boolean = True)
+Dim rst As New ADODB.Recordset
+Dim SQL, X1, X2, Y1, Y2
+
+   If sector1 = -1 Then
+      Verse.LineB(mode).Visible = False
+      Exit Sub
+   End If
+   If sector1 = -2 And Verse.LineB(mode).Visible = False Then Exit Sub
+   
+   If sector1 = -2 Then
+      X1 = Verse.LineB(mode).X1
+      Y1 = Verse.LineB(mode).Y1
+   Else
+      SQL = "SELECT * "
+      SQL = SQL & "FROM Board WHERE SectorID=" & sector1
+      rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+      If Not rst.EOF Then
+         X1 = rst!SLeft + Int(rst!SWidth / 2)
+         Y1 = rst!STop + Int(rst!SHeight / 2)
+      End If
+      rst.Close
+   
+   End If
+   
+   SQL = "SELECT * "
+   SQL = SQL & "FROM Board WHERE SectorID=" & sector2
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+       X2 = rst!SLeft + Int(rst!SWidth / 2)
+       Y2 = rst!STop + Int(rst!SHeight / 2)
+   End If
+   rst.Close
+      
+   If Verse.LineB(mode).X1 = X1 And Verse.LineB(mode).Y1 = Y1 And Verse.LineB(mode).X2 = X2 And Verse.LineB(mode).Y2 = Y2 And Verse.LineB(mode).Visible = True Then
+      Verse.LineB(mode).Visible = False
+   Else
+      Verse.LineB(mode).X1 = X1
+      Verse.LineB(mode).Y1 = Y1
+      Verse.LineB(mode).X2 = X2
+      Verse.LineB(mode).Y2 = Y2
+      Verse.LineB(mode).Visible = True
+      'Verse.LineB(mode).ZOrder
+      If Not silent Then playsnd 8
+   End If
+   
+   Set rst = Nothing
 End Sub

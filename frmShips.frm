@@ -437,15 +437,20 @@ With sftTree
          If rst2!HillFolk = 1 Then 'see if there are 3 or more total
             If countCrewAttribute(rst!playerID, "HillFolk") > 2 Then
                fight = fight + 1
+               .CellFont(Index, 5).Bold = True
             End If
          End If
          If rst2!CrewID = 76 Then
-            If countCrewAttribute(rst!playerID, "Mudder") > 2 Then fight = fight + 2
+            If countCrewAttribute(rst!playerID, "Mudder") > 2 Then
+               fight = fight + 2
+               .CellFont(Index, 5).Bold = True
+            End If
          End If
          
          If hasPerkAttribute(rst!playerID, "fight", rst2!CardID) > 0 Then
             If hasGearKeyword(rst!playerID, hasPerkKeyword(rst!playerID, rst2!CardID), rst2!CrewID) Then 'crow's special Knife rule
                fight = fight + 1
+               .CellFont(Index, 5).Bold = True
             End If
          End If
          .CellText(Index, 5) = IIf(fight > 0, CStr(fight), "")
@@ -462,6 +467,7 @@ With sftTree
          If hasPerkAttribute(rst!playerID, "tech", rst2!CardID) > 0 Then
             If hasGearKeyword(rst!playerID, hasPerkKeyword(rst!playerID, rst2!CardID), rst2!CrewID) Then 'no one with this rule yet
                tech = tech + 1
+               .CellFont(Index, 6).Bold = True
             End If
          End If
          .CellText(Index, 6) = IIf(tech > 0, CStr(tech), "")
@@ -475,7 +481,8 @@ With sftTree
          
          'NEGOTIATE
          If hasPerkAttribute(rst!playerID, "negotiate", rst2!CardID) > 0 And hasGearKeyword(rst!playerID, hasPerkKeyword(rst!playerID, rst2!CardID), rst2!CrewID) Then
-             .CellText(Index, 7) = CStr(rst2!Negotiate + 1)
+            .CellText(Index, 7) = CStr(rst2!Negotiate + 1)
+            .CellFont(Index, 7).Bold = True
          Else
             .CellText(Index, 7) = IIf(rst2!Negotiate > 0, CStr(rst2!Negotiate), "")
          End If
@@ -807,44 +814,45 @@ Private Sub sftTree_ItemClick(ByVal Index As Long, ByVal ColNum As Integer, ByVa
       If Button = 2 Then
          With sftTree
             If .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 1 And .CellItemData(Index, 3) = 0 And .CellItemData(Index, 7) > 0 And (CrewCapacity(player.ID) - getCrewCount(player.ID) >= 1) And getMoney(player.ID) >= .CellItemData(Index, 8) And actionSeq = ASselect Then 'poach disgruntled other player
-               mnuPopUp(4).Visible = True
-               mnuPopUp(3).Visible = False
-               mnuPopUp(2).Visible = False
-               mnuPopUp(1).Visible = False
-               mnuPopUp(0).Visible = False
+               mnuPopup(4).Visible = True
+               mnuPopup(3).Visible = False
+               mnuPopup(2).Visible = False
+               mnuPopup(1).Visible = False
+               mnuPopup(0).Visible = False
                sftTreeListIndex = Index
             ElseIf .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 0 And actionSeq = ASselect Then 'trade with player
-               mnuPopUp(3).Visible = True
-               mnuPopUp(4).Visible = False
-               mnuPopUp(2).Visible = False
-               mnuPopUp(1).Visible = False
-               mnuPopUp(0).Visible = False
+               mnuPopup(3).Visible = True
+               mnuPopup(4).Visible = False
+               mnuPopup(2).Visible = False
+               mnuPopup(1).Visible = False
+               mnuPopup(0).Visible = False
                sftTreeListIndex = Index
             ElseIf .CellItemData(Index, 4) <> player.ID Then 'not yours
                Exit Sub
             Else
-               mnuPopUp(0).Visible = True
-               mnuPopUp(3).Visible = False
-               mnuPopUp(4).Visible = False
+               mnuPopup(0).Visible = (.CellItemData(Index, 0) < 6)
+               mnuPopup(3).Visible = False
+               mnuPopup(4).Visible = False
                sftTreeListIndex = Index
-               mnuPopUp(1).Visible = False
-               
+                              
                If .CellItemData(Index, 0) = 1 And getPlanetID(player.ID) > 0 And .CellItemData(Index, 3) = 0 Then 'crew
-                  mnuPopUp(1).Visible = True
+                  mnuPopup(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 2 Or .CellItemData(Index, 0) = 3 And actionSeq = ASselect Then  'gear
-                  mnuPopUp(1).Visible = True
+                  mnuPopup(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 5 And Not isDriveCore(.CellItemData(Index, 1)) Then   'shipUpgrds
-                  mnuPopUp(1).Visible = True
+                  mnuPopup(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 6 Or .CellItemData(Index, 0) = 7 Or .CellItemData(Index, 0) = 8 Or .CellItemData(Index, 0) = 10 Then  'goods
-                  mnuPopUp(1).Visible = True
+                  mnuPopup(1).Visible = True
                ElseIf (.CellItemData(Index, 0) = 9 Or .CellItemData(Index, 0) = 11) And getPlanetID(player.ID) > 0 Then  'passengers/fugi
-                  mnuPopUp(1).Visible = True
+                  mnuPopup(1).Visible = True
+               Else
+                  mnuPopup(1).Visible = False
                End If
                
-               mnuPopUp(2).Visible = (hasGearAttribute(player.ID, "LabourContract", .CellItemData(Index, 2)) > 0) And (Not frmAction.buydone) And actionSeq = ASselect
+               mnuPopup(2).Visible = (hasGearAttribute(player.ID, "LabourContract", .CellItemData(Index, 2)) > 0) And (Not frmAction.buydone) And actionSeq = ASselect
             End If
                 
-            If .CellItemData(Index, 0) = 1 Or mnuPopUp(1).Visible Or mnuPopUp(3).Visible Or mnuPopUp(4).Visible Then PopupMenu mnuPop
+            If .CellItemData(Index, 0) = 1 Or mnuPopup(1).Visible Or mnuPopup(3).Visible Or mnuPopup(4).Visible Then PopupMenu mnuPop
             
         End With
       End If
@@ -884,6 +892,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             If .CellItemData(x, 0) = 1 Then
                Set frmCrew = New frmCrewSel
                frmCrew.crewFilter = " WHERE CrewID =" & .CellItemData(x, 2)
+               frmCrew.cmd.Visible = False
                frmCrew.Show 1
                Set frmCrew = Nothing
             End If
@@ -966,11 +975,16 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   frmNavPeek.Show 1
                   PutMsg player.PlayName & " used Wash's Nav Charts to fiddle with the " & frmNavPeek.NavZone & " deck", player.ID, Logic!Gamecntr
                   
-               Case 50, 51, 52
+               Case 50, 51, 52 'Nav Chart
                   Set frmNavPeek = New frmNavPeeks
                   frmNavPeek.NavZone = IIf(.CellItemData(x, 2) = 50, "A", IIf(.CellItemData(x, 2) = 51, "B", "R"))
                   frmNavPeek.Show 1
                   PutMsg player.PlayName & " used the " & .CellText(x, 1) & " to fiddle with the " & frmNavPeek.NavZone & " deck", player.ID, Logic!Gamecntr
+               
+               Case 53 'wormhole
+                  Main.drawLine 2, 133, 104
+                  wormHoleOpen = True
+                  PutMsg player.PlayName & " used the " & .CellText(x, 1), player.ID, Logic!Gamecntr
                   
                End Select
                
@@ -979,7 +993,6 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             Case 5   '5-ship upgd
                If canRemoveUpgrade(player.ID, .CellItemData(x, 1)) Then
                   doDiscardGear player.ID, .CellItemData(x, 1)
-                  RefreshShips
                End If
                
             Case 6 ' fuel
@@ -1043,7 +1056,8 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                Loop
                DB.Execute "UPDATE Players SET Fugitive = Fugitive - " & z & " WHERE PlayerID=" & player.ID
          End Select
-      
+         RefreshShips
+         
       Case 2 'Labour Contract
          If getCrewCount(player.ID) < CrewCapacity(player.ID) Then
             Set frmCrewList = New frmCrewLst
@@ -1096,7 +1110,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
          
       End Select
    End With
-   Main.showActions
+   If frmAction.FDPane1.PaneVisible Then Main.showActions
 End Sub
 
 Private Sub Timer1_Timer()
