@@ -61,6 +61,7 @@ Public ignoreToken As Integer       'ignore the Token in the current Sector
 Public TheBigBlack As Integer       'count TheBigBlack Nav cards for Emissions Recycler
 Public HigginsDealPerk As Boolean
 Public pickStartSector As Integer
+Public wormHoleOpen As Boolean      '133 - 104
 
 'Public Bitpic() As Control
 Public Const JOB_SUCCESS As Integer = 3      'final JobStatus value once complete
@@ -513,6 +514,10 @@ Dim currentSectorID, adjacent, a() As String, x, reaver
          Exit For
       End If
    Next x
+   
+   If wormHoleOpen = True And ((SectorID = 133 And currentSectorID = 104) Or (SectorID = 104 And currentSectorID = 133)) Then
+      validMove = True
+   End If
 
 End Function
 
@@ -3204,7 +3209,7 @@ Dim x
       Do
          x = RollDice(152)
         
-         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And getZone(x) <> "A" Then
+         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And getZone(x) <> "A" And x > 1 Then
             MoveShip ship, x
             PutMsg "Cutter turns up at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), " the unknown..")
             doMoveCutterPlanetary = True
@@ -3380,12 +3385,13 @@ Public Function warrantDodge(ByVal playerID) As Boolean
    
 End Function
 
-Public Function hasJobReqs(ByVal playerID, ByVal CardID) As Boolean
+Public Function hasJobReqs(ByVal playerID, ByVal CardID, ByVal JobID) As Boolean
 Dim rst As New ADODB.Recordset, a() As String, x
 Dim SQL
 
    hasJobReqs = True  'until proven otherwise
-   SQL = "SELECT * FROM ContactDeck WHERE CardID=" & CardID
+   SQL = "SELECT ContactDeck.*, Job.*, p.Cargo AS PCargo, p.Contraband AS PContraband, p.Fugitive as PFugitive, p.Passenger as PPassenger "
+   SQL = SQL & " FROM ContactDeck, Job, Players AS p WHERE CardID=" & CardID & " AND JobID = " & JobID & " AND PlayerID = " & playerID
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
       If rst!fight > getSkill(playerID, "fight") Then
@@ -3424,7 +3430,10 @@ Dim SQL
          'End If
       End If
          
-      
+      'check Job Requirements
+      If rst!cargo + rst!PCargo < 0 Or rst!Contraband + rst!PContraband < 0 Or rst!Fugitive + rst!PFugitive < 0 Or rst!Passenger + rst!PPassenger < 0 Then
+         hasJobReqs = False
+      End If
    End If
    rst.Close
    Set rst = Nothing
@@ -3727,7 +3736,7 @@ End Function
 
 Private Function getPursuitSector(ByVal SectorID, Optional ByVal ship As Integer = 6) As Integer
 Dim rst As New ADODB.Recordset, cnt
-Dim SQL, a() As String, b(1 To 9, 1 To 3) As Long, x As Integer, y As Long, z As Long, adjacent
+Dim SQL, b(1 To 9, 1 To 3) As Long, x As Integer, y As Long, z As Long, adjacent
 
    SQL = "SELECT Players.PlayerID, Players.SectorID, Board.STop, Board.SLeft, Board.SHeight, Board.SWidth, Board.Zones "
    SQL = SQL & "FROM Board INNER JOIN Players ON Board.SectorID = Players.SectorID "
@@ -3769,6 +3778,47 @@ Dim SQL, a() As String, b(1 To 9, 1 To 3) As Long, x As Integer, y As Long, z As
       rst.MoveNext
    Wend
    rst.Close
+   Set rst = Nothing
+End Function
+
+Public Function getSectorCount(ByVal SectorID, ByVal Target) As Integer
+Dim rst As New ADODB.Recordset, cnt
+Dim SQL, b(1 To 3) As Long, y As Long, z As Long, adjacent, CurrPosn
+
+   If SectorID = Target Then Exit Function
+
+   SQL = "SELECT Board.STop, Board.SLeft, Board.SHeight, Board.SWidth, Board.Zones "
+   SQL = SQL & "FROM Board WHERE Board.SectorID = " & Target
+   
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      'Find the closest Player
+      b(1) = Int(rst!SHeight / 2 + rst!STop) 'X
+      b(2) = Int(rst!SWidth / 2 + rst!SLeft)  'Y
+    
+   End If
+   rst.Close
+   
+   Do
+      y = -1
+      adjacent = getAdjacentRows(SectorID)
+      SQL = "SELECT Board.* FROM Board WHERE Board.SectorID IN (" & adjacent & ")"
+      rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+      While Not rst.EOF
+            'find the adjacent sector closest to the closest player
+            z = Int(Sqr((b(1) - Int(rst!SHeight / 2 + rst!STop)) ^ 2 + (b(2) - Int(rst!SWidth / 2 + rst!SLeft)) ^ 2))
+            If y = -1 Or y > z Then
+               y = z
+               
+               SectorID = rst!SectorID
+            End If
+   
+         rst.MoveNext
+      Wend
+      rst.Close
+      getSectorCount = getSectorCount + 1
+   Loop While SectorID <> Target
+   
    Set rst = Nothing
 End Function
 
@@ -4016,6 +4066,7 @@ Public Sub removeJob(ByVal playerID, ByVal CardID)
    DB.Execute "UPDATE ContactDeck Set Seq = 5 WHERE CardID = " & CardID
    DB.Execute "DELETE FROM PlayerJobs WHERE PlayerID = " & playerID & " AND CardID = " & CardID
 End Sub
+
 
 'Public Function getsumtin(ByVal playerID) As Integer
 'Dim rst As New ADODB.Recordset
