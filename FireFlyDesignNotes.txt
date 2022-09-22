@@ -1,15 +1,14 @@
 Test Issues:
+Cutter turns up at Cruiser (Sector 1)
 
-Commenced 27 Feb 2021 - Completed first release 24 Apr 2021
+Commenced 27 Feb 2021 - Completed 24-Apr-2021
 
-v1.7.6 ~ 22 Sep 2022 
-Buys: prevent buying 2 Drive Cores
-Ship: remove View menu option for goods
-Jobs & Deals: add "Cargo on hand" check to whether Job Requirements are met
-Jobs & Deals: add nav path handler (when click on Planet)
-Jobs & Deals: add ship's sector distance count to Planet
-add Gear: "Nav Charts: Cortex Wormhole" Discard to reveal a Wormhole nav path between Cortex Relays 2 and 7. Only open for current turn.
-fix: Cutter planet relocation
+Up to:
+work through Gear
+ShipUpgrd
+CrewPerks
+
+
 
 
 2 TASKS:

@@ -571,7 +571,7 @@ With sftTree
                   'determine how many cards can be accepted
                   max = MAXJOBCARDACCEPT + getGearFeature(player.ID, "MaxSupplies") 'accept only up to 2 cards + modifier
                   ' check for ship upgrades that there are Slots left. Drives OK (but only 1), and only 3 upgrades. if (getShipUpgrades(player.id)< 3 and .CellItemData(index, 0) = 3) 'upgrd
-                  If getSelected("R") < max And companionsOK(player.ID, .CellItemData(Index, 0), .CellItemData(Index, 1)) And ((getCost("R") + .CellItemData(Index, 8)) <= getMoney(player.ID)) And ((.CellItemData(Index, 0) = 1 And (getCrewCount(player.ID) + getCrewSelected("R")) < CrewCapacity(player.ID)) Or .CellItemData(Index, 0) = 2 Or (.CellItemData(Index, 0) = 3 And ((getShipUpgrades(player.ID) + getUpgradesSelected("R") < 3 And Not isDriveCore(.ItemData(Index))) Or (isDriveCore(.ItemData(Index)) And getDriveCoresSelected("R") = 0)))) Then
+                  If getSelected("R") < max And companionsOK(player.ID, .CellItemData(Index, 0), .CellItemData(Index, 1)) And ((getCost("R") + .CellItemData(Index, 8)) <= getMoney(player.ID)) And ((.CellItemData(Index, 0) = 1 And (getCrewCount(player.ID) + getCrewSelected("R")) < CrewCapacity(player.ID)) Or .CellItemData(Index, 0) = 2 Or ((getShipUpgrades(player.ID) + getUpgradesSelected("R") < 3 And .CellItemData(Index, 0) = 3) Or isDriveCore(.ItemData(Index)))) Then
                      .ItemDataString(Index) = "R"
                      Set .ItemPicture(Index) = AssetImages.Overlay("L", "R")
                   Else
@@ -648,20 +648,6 @@ Dim Index As Integer
 
 End Function
 
-Private Function getDriveCoresSelected(ByVal status As String) As Integer
-Dim Index As Integer
-   With sftTree
-      For Index = 0 To .ListCount - 1
-         If .ItemDataString(Index) = status And .CellItemData(Index, 0) = 3 Then
-            If isDriveCore(.ItemData(Index)) Then
-               getDriveCoresSelected = getDriveCoresSelected + 1
-            End If
-         End If
-      Next Index
-   
-   End With
-
-End Function
 
 Private Function getSelected(ByVal status As String) As Integer
 Dim Index As Integer

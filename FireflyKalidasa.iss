@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly Kalidasa"
-#define MyAppVersion "1.7.6"
+#define MyAppVersion "1.7.5"
 #define MyAppPublisher "VeeBee-er"
 #define MyAppURL "https://boardgamegeek.com"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -23,7 +23,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputBaseFilename=FireflyKalidasaSetupV1.7.6
+OutputBaseFilename=FireflyKalidasaSetupV1.7.5
 SetupIconFile=D:\Progs\GitHub\FireflyKalidasa\ROCKET.ICO
 Compression=lzma
 SolidCompression=yes
