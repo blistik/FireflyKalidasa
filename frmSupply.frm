@@ -35,8 +35,8 @@ Begin VB.Form frmSupply
       PlusMinusPictureLeaf=   "frmSupply.frx":0396
       ButtonPicture   =   "frmSupply.frx":03B2
       BeginProperty ColHeaderFont {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "MS Sans Serif"
-         Size            =   8.25
+         Name            =   "Cyberpunk Is Not Dead"
+         Size            =   9
          Charset         =   0
          Weight          =   400
          Underline       =   0   'False
@@ -68,10 +68,10 @@ Begin VB.Form frmSupply
       ColTitle0       =   "ID"
       ColBmp0         =   "frmSupply.frx":03CE
       ColWidth1       =   167
-      ColTitle1       =   "Names and Titles"
+      ColTitle1       =   "Names & Titles"
       ColBmp1         =   "frmSupply.frx":03EA
       ColWidth2       =   227
-      ColTitle2       =   "Perks and Quirks"
+      ColTitle2       =   "Perks & Quirks"
       ColBmp2         =   "frmSupply.frx":0406
       ColWidth3       =   67
       ColTitle3       =   "Ability"
@@ -340,9 +340,9 @@ With sftTree
                IIf(rst!Grifter = 1, "Grifter ", "") & IIf(rst!Medic = 1, "Medic", ""))
          .CellForeColor(Index, 3) = 65280
          
-         .CellText(Index, 4) = IIf(rst!Wanted > 0, "Wanted", "") & IIf(rst!Moral = 1, IIf(rst!Wanted > 0, "/", "") & "Moral ", "")
+         .CellText(Index, 4) = IIf(rst!wanted > 0, "Wanted", "") & IIf(rst!Moral = 1, IIf(rst!wanted > 0, "/", "") & "Moral ", "")
          .CellForeColor(Index, 4) = 0
-         If rst!Wanted > 0 Then
+         If rst!wanted > 0 Then
             .CellBackColor(Index, 4) = &HC0C0FF
          ElseIf rst!Moral = 1 Then
             .CellBackColor(Index, 4) = &HC0FFC0
@@ -694,20 +694,30 @@ Dim Index As Integer
 End Function
 
 Private Sub sftTree_ItemDblClick(ByVal Index As Long, ByVal ColNum As Integer, ByVal AreaType As Integer, ByVal Button As Integer, ByVal Shift As Integer)
-Dim frmCrew As New frmCrewSel
-Dim frmGear As New frmGearView
+
 
    If Button = constSftTreeLeftButton And AreaType = constSftTreeCellText Then
       If sftTree.CellItemData(Index, 0) = 1 Then
+         Dim frmCrew As New frmCrewSel
          frmCrew.crewFilter = " WHERE CrewID =" & sftTree.CellItemData(Index, 1)
-         frmCrew.Show 1
+         frmCrew.AlwaysOnTop = True
+         frmCrew.Show
          Set frmCrew = Nothing
       End If
-   End If
-   If sftTree.CellItemData(Index, 0) = 2 Then
-       frmGear.gearFilter = " WHERE CardID=" & sftTree.ItemData(Index)
-       frmGear.Show 1
-       Set frmGear = Nothing
+      If sftTree.CellItemData(Index, 0) = 2 Then
+         Dim frmGear As New frmGearView
+         frmGear.gearFilter = " WHERE CardID=" & sftTree.ItemData(Index)
+         frmGear.AlwaysOnTop = True
+         frmGear.Show
+         Set frmGear = Nothing
+      End If
+      If sftTree.CellItemData(Index, 0) = 3 Then
+         Dim frmUpGrd As New frmShipUpgrdView
+         frmUpGrd.gearFilter = " WHERE CardID=" & sftTree.ItemData(Index)
+         frmUpGrd.AlwaysOnTop = True
+         frmUpGrd.Show
+         Set frmUpGrd = Nothing
+      End If
    End If
 End Sub
 

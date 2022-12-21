@@ -2,18 +2,30 @@ VERSION 5.00
 Begin VB.Form frmJobEditor 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "View/Edit Jobs"
-   ClientHeight    =   5520
+   ClientHeight    =   5445
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   15570
+   ClientWidth     =   15540
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmJobEditor.frx":0000
-   ScaleHeight     =   5520
-   ScaleWidth      =   15570
+   ScaleHeight     =   5445
+   ScaleWidth      =   15540
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.PictureBox Picture1 
+      AutoSize        =   -1  'True
+      Height          =   2475
+      Left            =   10100
+      Picture         =   "frmJobEditor.frx":1A191
+      ScaleHeight     =   2415
+      ScaleWidth      =   4050
+      TabIndex        =   79
+      Top             =   2820
+      Width           =   4110
+   End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
       Cancel          =   -1  'True
@@ -155,7 +167,7 @@ Begin VB.Form frmJobEditor
       EndProperty
       Height          =   345
       Index           =   3
-      Left            =   14430
+      Left            =   14410
       Style           =   1  'Graphical
       TabIndex        =   44
       ToolTipText     =   "close the form without saving"
@@ -196,7 +208,7 @@ Begin VB.Form frmJobEditor
       Left            =   90
       TabIndex        =   59
       Top             =   2640
-      Width           =   8565
+      Width           =   9795
       Begin VB.ComboBox cbo 
          ForeColor       =   &H00000080&
          Height          =   315
@@ -211,11 +223,13 @@ Begin VB.Form frmJobEditor
          Alignment       =   1  'Right Justify
          BackColor       =   &H00CBE1ED&
          Caption         =   "Fail Kill 1 Crew"
+         DataField       =   "do not use for Niska job with Warrant"
          ForeColor       =   &H00000080&
          Height          =   285
          Index           =   3
          Left            =   5580
          TabIndex        =   30
+         ToolTipText     =   "do not use with Niska Job + Warrant"
          Top             =   660
          Width           =   1440
       End
@@ -227,7 +241,7 @@ Begin VB.Form frmJobEditor
          Left            =   6450
          TabIndex        =   29
          Text            =   "0"
-         ToolTipText     =   "0- attempt botched, 1-Lose Rep, 2-Warrant issued - attempt botched, 3- pay $1000, attempt botched"
+         ToolTipText     =   $"frmJobEditor.frx":1C8D0
          Top             =   330
          Width           =   885
       End
@@ -262,7 +276,7 @@ Begin VB.Form frmJobEditor
          Index           =   2
          Left            =   1740
          TabIndex        =   63
-         ToolTipText     =   "tick to optionally Win with a Keyword"
+         ToolTipText     =   "tick to optionally Win with a Keyword (1/2 Pay for Explosives)"
          Top             =   1020
          Width           =   1575
       End
@@ -274,7 +288,7 @@ Begin VB.Form frmJobEditor
          Left            =   2670
          TabIndex        =   26
          Text            =   "0"
-         ToolTipText     =   $"frmJobEditor.frx":1A191
+         ToolTipText     =   $"frmJobEditor.frx":1C966
          Top             =   660
          Width           =   885
       End
@@ -424,7 +438,7 @@ Begin VB.Form frmJobEditor
       EndProperty
       Height          =   345
       Index           =   2
-      Left            =   14430
+      Left            =   14410
       Style           =   1  'Graphical
       TabIndex        =   41
       ToolTipText     =   "delete this Job"
@@ -445,7 +459,7 @@ Begin VB.Form frmJobEditor
       EndProperty
       Height          =   345
       Index           =   0
-      Left            =   14430
+      Left            =   14410
       Style           =   1  'Graphical
       TabIndex        =   43
       ToolTipText     =   "save Job"
@@ -466,7 +480,7 @@ Begin VB.Form frmJobEditor
       EndProperty
       Height          =   345
       Index           =   1
-      Left            =   14430
+      Left            =   14410
       Style           =   1  'Graphical
       TabIndex        =   42
       ToolTipText     =   "add a new Job"
@@ -477,7 +491,7 @@ Begin VB.Form frmJobEditor
       BackColor       =   &H00CBE1ED&
       Caption         =   "Contact's Job"
       Height          =   2565
-      Left            =   120
+      Left            =   90
       TabIndex        =   45
       Top             =   90
       Width           =   15375
@@ -487,6 +501,7 @@ Begin VB.Form frmJobEditor
          Left            =   8400
          Style           =   2  'Dropdown List
          TabIndex        =   77
+         ToolTipText     =   "Bonus Pay x skill points"
          Top             =   2070
          Width           =   915
       End
@@ -990,12 +1005,7 @@ Private Sub cbo_Click(Index As Integer)
    Select Case Index
    Case 2
       RefreshJob GetCombo(cbo(Index))
-'   Case 6, 7, 8
-'      If cbo(Index).ListIndex = -1 Then
-'         lbl(Index + 16) = ""
-'      Else
-'         lbl(Index + 16) = getPlanetSector(cbo(Index).ItemData(cbo(Index).ListIndex))
-'      End If
+
    End Select
 End Sub
 Private Sub cbo_KeyDown(Index As Integer, KeyCode As Integer, Shift As Integer)
@@ -1083,8 +1093,10 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Private Sub RefreshJob(ByVal CardID)
-Dim rst As New ADODB.Recordset
+Dim rst As New ADODB.Recordset, MP
 Dim SQL
+   MP = Screen.MousePointer
+   Screen.MousePointer = vbHourglass
    SQL = "SELECT * FROM ContactDeck WHERE CardID =" & CardID
 
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
@@ -1130,7 +1142,7 @@ Dim SQL
    End If
    rst.Close
    Set rst = Nothing
-
+   Screen.MousePointer = MP
 
 End Sub
 
@@ -1140,11 +1152,11 @@ On Error GoTo err_handler
 
    With cmbo
       For x = 0 To .ListCount - 1
-         .Selected(x) = False
+         .selected(x) = False
          If Val(itemVal) = 12 And (.ItemData(x) = 1 Or .ItemData(x) = 2) Then
-            .Selected(x) = True
+            .selected(x) = True
          ElseIf .ItemData(x) = Val(itemVal) Then
-           .Selected(x) = True
+           .selected(x) = True
          End If
       Next x
 
@@ -1291,7 +1303,7 @@ Private Sub clearList(cbo As Control)
 Dim x
    With cbo
       For x = 0 To .ListCount - 1
-         .Selected(x) = False
+         .selected(x) = False
       Next x
    End With
    
@@ -1300,12 +1312,12 @@ End Sub
 Private Function getProfItem(cbo As Control) As Integer
 Dim x
    With cbo
-      If .Selected(0) And .Selected(1) Then 'mech & pilot
+      If .selected(0) And .selected(1) Then 'mech & pilot
          getProfItem = 12
          Exit Function
       End If
       For x = 0 To .ListCount - 1
-         If .Selected(x) Then
+         If .selected(x) Then
             getProfItem = CStr(.ItemData(x))
             Exit For
          End If
@@ -1320,7 +1332,7 @@ Private Function getList(cbo As Control) As String
 Dim x
    With cbo
       For x = 0 To .ListCount - 1
-         If .Selected(x) Then
+         If .selected(x) Then
             getList = getList & IIf(getList = "", "", " ") & CStr(.List(x))
          End If
       Next x
@@ -1333,7 +1345,7 @@ Private Function getSelected(cbo As Control) As Integer
 Dim x
    With cbo
       For x = 0 To .ListCount - 1
-         If .Selected(x) Then
+         If .selected(x) Then
             getSelected = getSelected + 1
          End If
       Next x
@@ -1347,10 +1359,10 @@ Dim x, y, a() As String
    With cbo
       a = Split(solids, " ")
       For x = 0 To .ListCount - 1
-         .Selected(x) = False
+         .selected(x) = False
          For y = LBound(a) To UBound(a)
             If .List(x) = a(y) Then
-               .Selected(x) = True
+               .selected(x) = True
                SetChklist = SetChklist + 1
                'Exit For
             End If

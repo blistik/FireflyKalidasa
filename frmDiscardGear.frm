@@ -250,7 +250,8 @@ Private Sub cmd_Click()
       discardGear
       Me.Hide
    Else
-      If MsgBox("Not enough Skill Points selected, did you change your mind?", vbYesNo + vbQuestion, "Single Use Gear") = vbYes Then
+      If MessBox("Not enough Skill Points selected, did you change your mind?", "Single Use Gear", "Yes", "No", getLeader()) = 0 Then
+      'If MsgBox("Not enough Skill Points selected, did you change your mind?", vbYesNo + vbQuestion, "Single Use Gear") = vbYes Then
          Me.Hide
       End If
    End If

@@ -2,7 +2,7 @@ VERSION 5.00
 Object = "{714D09E3-B193-11D3-A192-00A0CC26207F}#1.0#0"; "XDockFloat.dll"
 Object = "{49801673-2EC8-456E-98B2-037B9B02A1C5}#1.0#0"; "LaVolpeAlphaImg2.ocx"
 Begin VB.Form Board 
-   BorderStyle     =   3  'Fixed Dialog
+   BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "the 'Verse"
    ClientHeight    =   15150
    ClientLeft      =   45
@@ -10,11 +10,13 @@ Begin VB.Form Board
    ClientWidth     =   22710
    Icon            =   "Board.frx":0000
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MDIChild        =   -1  'True
    MinButton       =   0   'False
    ScaleHeight     =   15150
    ScaleWidth      =   22710
+   ShowInTaskbar   =   0   'False
    Begin VB.PictureBox Picture1 
       AutoSize        =   -1  'True
       Height          =   15060
@@ -25,103 +27,136 @@ Begin VB.Form Board
       Top             =   0
       Width           =   22635
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
-         Height          =   465
+         Height          =   300
          Index           =   6
-         Left            =   21690
-         Top             =   3600
+         Left            =   16920
+         Top             =   2190
          Visible         =   0   'False
-         Width           =   855
-         _ExtentX        =   1508
-         _ExtentY        =   820
+         Width           =   900
+         _ExtentX        =   1588
+         _ExtentY        =   529
          Effects         =   "Board.frx":030A
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
-         Height          =   465
-         Index           =   9
-         Left            =   20820
-         Top             =   5430
+         Height          =   750
+         Index           =   5
+         Left            =   17970
+         Top             =   2190
          Visible         =   0   'False
-         Width           =   855
-         _ExtentX        =   1508
-         _ExtentY        =   820
+         Width           =   480
+         _ExtentX        =   847
+         _ExtentY        =   1323
          Effects         =   "Board.frx":0322
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
-         Height          =   465
-         Index           =   8
-         Left            =   20850
-         Top             =   4800
+         Height          =   330
+         Index           =   10
+         Left            =   3000
+         Top             =   270
          Visible         =   0   'False
-         Width           =   855
-         _ExtentX        =   1508
-         _ExtentY        =   820
+         Width           =   750
+         _ExtentX        =   1323
+         _ExtentY        =   582
          Effects         =   "Board.frx":033A
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
-         Height          =   465
-         Index           =   7
-         Left            =   21720
-         Top             =   4110
+         Height          =   330
+         Index           =   11
+         Left            =   1890
+         Top             =   2040
          Visible         =   0   'False
-         Width           =   855
-         _ExtentX        =   1508
-         _ExtentY        =   820
+         Width           =   750
+         _ExtentX        =   1323
+         _ExtentY        =   582
          Effects         =   "Board.frx":0352
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
-         Height          =   555
-         Index           =   1
-         Left            =   21780
-         Top             =   0
+         Height          =   330
+         Index           =   12
+         Left            =   570
+         Top             =   3360
          Visible         =   0   'False
-         Width           =   735
-         _ExtentX        =   1296
-         _ExtentY        =   979
+         Width           =   750
+         _ExtentX        =   1323
+         _ExtentY        =   582
          Effects         =   "Board.frx":036A
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
-         Height          =   555
-         Index           =   2
-         Left            =   21780
-         Top             =   720
+         Height          =   330
+         Index           =   9
+         Left            =   5550
+         Top             =   60
          Visible         =   0   'False
-         Width           =   735
-         _ExtentX        =   1296
-         _ExtentY        =   979
+         Width           =   750
+         _ExtentX        =   1323
+         _ExtentY        =   582
          Effects         =   "Board.frx":0382
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
-         Height          =   555
-         Index           =   3
-         Left            =   21810
-         Top             =   1440
+         Height          =   330
+         Index           =   8
+         Left            =   4770
+         Top             =   60
          Visible         =   0   'False
-         Width           =   735
-         _ExtentX        =   1296
-         _ExtentY        =   979
+         Width           =   750
+         _ExtentX        =   1323
+         _ExtentY        =   582
          Effects         =   "Board.frx":039A
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
-         Height          =   555
-         Index           =   4
-         Left            =   21780
-         Top             =   2130
+         Height          =   330
+         Index           =   7
+         Left            =   3990
+         Top             =   60
          Visible         =   0   'False
-         Width           =   735
-         _ExtentX        =   1296
-         _ExtentY        =   979
+         Width           =   750
+         _ExtentX        =   1323
+         _ExtentY        =   582
          Effects         =   "Board.frx":03B2
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
-         Height          =   765
-         Index           =   5
-         Left            =   21810
-         Top             =   2730
+         Height          =   540
+         Index           =   1
+         Left            =   18570
+         Top             =   30
          Visible         =   0   'False
-         Width           =   735
-         _ExtentX        =   1296
-         _ExtentY        =   1349
+         Width           =   840
+         _ExtentX        =   1482
+         _ExtentY        =   953
          Effects         =   "Board.frx":03CA
+      End
+      Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
+         Height          =   540
+         Index           =   2
+         Left            =   19470
+         Top             =   30
+         Visible         =   0   'False
+         Width           =   840
+         _ExtentX        =   1482
+         _ExtentY        =   953
+         Effects         =   "Board.frx":03E2
+      End
+      Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
+         Height          =   540
+         Index           =   3
+         Left            =   20340
+         Top             =   30
+         Visible         =   0   'False
+         Width           =   840
+         _ExtentX        =   1482
+         _ExtentY        =   953
+         Effects         =   "Board.frx":03FA
+      End
+      Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
+         Height          =   540
+         Index           =   4
+         Left            =   21240
+         Top             =   30
+         Visible         =   0   'False
+         Width           =   840
+         _ExtentX        =   1482
+         _ExtentY        =   953
+         Effects         =   "Board.frx":0412
       End
       Begin VB.Label lblSolid 
          Alignment       =   2  'Center
@@ -332,9 +367,9 @@ Begin VB.Form Board
       End
       Begin XDOCKFLOATLibCtl.FDPane FDPane1 
          Height          =   420
-         Left            =   20820
+         Left            =   60
          TabIndex        =   1
-         Top             =   150
+         Top             =   30
          Visible         =   0   'False
          Width           =   420
          _cx             =   741
@@ -387,12 +422,23 @@ Begin VB.Form Board
    Begin LaVolpeAlphaImg.AlphaImgCtl imgAToken 
       Height          =   705
       Index           =   0
-      Left            =   17310
-      Top             =   15090
+      Left            =   10000
+      Top             =   15000
       Width           =   705
       _ExtentX        =   1244
       _ExtentY        =   1244
-      Effects         =   "Board.frx":03E2
+      Effects         =   "Board.frx":042A
+   End
+   Begin LaVolpeAlphaImg.AlphaImgCtl imgHaven 
+      Height          =   705
+      Index           =   0
+      Left            =   15000
+      Top             =   15060
+      Visible         =   0   'False
+      Width           =   705
+      _ExtentX        =   1244
+      _ExtentY        =   1244
+      Effects         =   "Board.frx":0442
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgToken 
       Height          =   705
@@ -403,13 +449,13 @@ Begin VB.Form Board
       Width           =   705
       _ExtentX        =   1244
       _ExtentY        =   1244
-      Effects         =   "Board.frx":03FA
+      Effects         =   "Board.frx":045A
    End
    Begin VB.Image HotSpot 
       Height          =   735
       Index           =   0
       Left            =   0
-      MouseIcon       =   "Board.frx":0412
+      MouseIcon       =   "Board.frx":0472
       MousePointer    =   4  'Icon
       Top             =   14500
       Width           =   555
@@ -430,7 +476,6 @@ Private Const SWP_NOMOVE = &H2
 'For use with USER32 Function SendMessage
 Private Const HTCAPTION = 2
 Private Const WM_NCLBUTTONDOWN = &HA1
-Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
 
@@ -477,17 +522,18 @@ End Sub
 
 Private Sub initImages()
 Dim x
-   Imag(1).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyOrange.bmp")
-   Imag(2).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyBlue.bmp")
-   Imag(3).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyYellow.bmp")
-   Imag(4).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyGreen.bmp")
-   Imag(5).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Crusier.bmp")
-   Imag(5).AutoSize = lvicMultiAngle
-   Imag(6).Picture = LoadPictureGDIplus(App.Path & "\Pictures\corvette.bmp")
-   Imag(7).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.bmp")
-   Imag(8).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.bmp")
-   Imag(9).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.bmp")
-   For x = 1 To 9
+   Imag(1).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyOrange.gif")
+   
+   Imag(2).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyBlue.gif")
+   Imag(3).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyYellow.gif")
+   Imag(4).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyGreen.gif")
+   Imag(5).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cruiser.gif")
+   'Imag(5).AutoSize = lvicMultiAngle
+   Imag(6).Picture = LoadPictureGDIplus(App.Path & "\Pictures\corvette.gif")
+   For x = 7 To 6 + NumOfReavers
+      Imag(x).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.gif")
+   Next x
+   For x = 1 To 6 + NumOfReavers
       Imag(x).TransparentColor = 0
       Imag(x).TransparentColorMode = lvicUseTransparentColor
    Next x

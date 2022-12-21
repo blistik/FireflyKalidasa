@@ -1,8 +1,9 @@
 VERSION 5.00
+Object = "{49801673-2EC8-456E-98B2-037B9B02A1C5}#1.0#0"; "LaVolpeAlphaImg2.ocx"
 Begin VB.Form frmPopup 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Activity Notice"
-   ClientHeight    =   1710
+   ClientHeight    =   1800
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   6630
@@ -10,10 +11,32 @@ Begin VB.Form frmPopup
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmPopup.frx":0000
-   ScaleHeight     =   1710
+   ScaleHeight     =   1800
    ScaleWidth      =   6630
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.CommandButton cmd 
+      BackColor       =   &H00FF8080&
+      Caption         =   "No"
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   9.75
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   405
+      Index           =   1
+      Left            =   4620
+      Style           =   1  'Graphical
+      TabIndex        =   3
+      TabStop         =   0   'False
+      Top             =   1110
+      Visible         =   0   'False
+      Width           =   1905
+   End
    Begin VB.PictureBox pic 
       AutoSize        =   -1  'True
       BackColor       =   &H00800000&
@@ -47,6 +70,28 @@ Begin VB.Form frmPopup
       Top             =   1110
       Width           =   1905
    End
+   Begin LaVolpeAlphaImg.AlphaImgCtl picDice 
+      Height          =   915
+      Index           =   1
+      Left            =   2300
+      Top             =   2430
+      Visible         =   0   'False
+      Width           =   915
+      _ExtentX        =   1614
+      _ExtentY        =   1614
+      Effects         =   "frmPopup.frx":CDCAA
+   End
+   Begin LaVolpeAlphaImg.AlphaImgCtl picDice 
+      Height          =   915
+      Index           =   0
+      Left            =   330
+      Top             =   2430
+      Visible         =   0   'False
+      Width           =   915
+      _ExtentX        =   1614
+      _ExtentY        =   1614
+      Effects         =   "frmPopup.frx":CDCC2
+   End
    Begin VB.Label lblMsg 
       BackColor       =   &H00800000&
       BorderStyle     =   1  'Fixed Single
@@ -73,8 +118,16 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+Public result As Integer
 
-Private Sub cmd_Click(index As Integer)
+Private Sub cmd_Click(Index As Integer)
+   result = Index
    playsnd 8
    Me.Hide
+End Sub
+
+Private Sub Form_Unload(Cancel As Integer)
+   If Me.Visible Then
+      Cancel = True
+   End If
 End Sub

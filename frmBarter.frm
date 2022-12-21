@@ -245,10 +245,10 @@ Public trader As Integer
 Private fuel As Integer, parts As Integer, contra As Integer
 
 Private Sub cmd_Click(Index As Integer)
-Dim total
+Dim total As Long
    playsnd 8
    If Val(txtDeal(2)) > 3 Then
-      MsgBox "You only can purchase up to 3 Contraband, what are ya tryin' to pull!", vbExclamation, "Bartering"
+      MessBox "You only can purchase up to 3 Contraband, what are ya tryin' to pull!", "Bartering", "Sorry", "", getLeader()
       txtDeal(2) = "3"
       Exit Sub
    End If
@@ -257,10 +257,10 @@ Dim total
    Case 0 'buy
       total = Val(txtDeal(0)) * fuel + Val(txtDeal(1)) * parts + Val(txtDeal(2)) * contra
       If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) < (Val(txtDeal(0)) + Val(txtDeal(1))) / 2 + Val(txtDeal(2)) Then
-         MsgBox "You don't have enough Cargo Space for that deal", vbExclamation, "Tight for room"
+         MessBox "You don't have enough Cargo Space for that deal", "Tight for room", "Ooops", "", 0, 0, 6
          Exit Sub
       ElseIf total > getMoney(player.ID) Then
-         MsgBox "You cannot afford that", vbExclamation, "Short Dealin'"
+         MessBox "You cannot afford that", "Short Dealin'", "Ooops", "", getLeader()
          Exit Sub
       Else
          DB.Execute "UPDATE Players SET Fuel = Fuel + " & CStr(Val(txtDeal(0))) & ", Parts = Parts + " & CStr(Val(txtDeal(1))) & ", Contraband = Contraband + " & CStr(Val(txtDeal(2))) & ", Pay = Pay - " & CStr(total) & " WHERE PlayerID = " & player.ID

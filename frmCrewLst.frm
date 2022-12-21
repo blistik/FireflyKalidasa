@@ -2,11 +2,11 @@ VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.2#0"; "MSCOMCTL.OCX"
 Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SFTTREEX.OCX"
 Begin VB.Form frmCrewLst 
-   BorderStyle     =   4  'Fixed ToolWindow
+   BorderStyle     =   5  'Sizable ToolWindow
    Caption         =   "Select Crew to Pay"
    ClientHeight    =   5400
-   ClientLeft      =   45
-   ClientTop       =   390
+   ClientLeft      =   120
+   ClientTop       =   465
    ClientWidth     =   11760
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
@@ -16,14 +16,14 @@ Begin VB.Form frmCrewLst
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
    Begin SftTree.SftTree sftTree 
-      Height          =   2325
+      Height          =   3435
       Left            =   0
       TabIndex        =   1
       Top             =   0
-      Width           =   4485
+      Width           =   11715
       _Version        =   262144
-      _ExtentX        =   7911
-      _ExtentY        =   4101
+      _ExtentX        =   20664
+      _ExtentY        =   6059
       _StockProps     =   237
       ForeColor       =   16777215
       BackColor       =   8388669
@@ -97,7 +97,7 @@ Begin VB.Form frmCrewLst
       ColStyle8       =   10
       ColTitle8       =   "Pay/job"
       ColBmp8         =   "frmCrewLst.frx":01A4
-      ColWidth9       =   87
+      ColWidth9       =   107
       ColStyle9       =   9
       ColTitle9       =   "Special Info"
       ColBmp9         =   "frmCrewLst.frx":01C0
@@ -133,6 +133,39 @@ Begin VB.Form frmCrewLst
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End
+   Begin VB.CheckBox chk 
+      Caption         =   "Others"
+      Height          =   255
+      Index           =   2
+      Left            =   8100
+      TabIndex        =   5
+      Top             =   5070
+      Value           =   1  'Checked
+      Visible         =   0   'False
+      Width           =   1155
+   End
+   Begin VB.CheckBox chk 
+      Caption         =   "Moral"
+      Height          =   255
+      Index           =   1
+      Left            =   6750
+      TabIndex        =   4
+      Top             =   5070
+      Value           =   1  'Checked
+      Visible         =   0   'False
+      Width           =   1155
+   End
+   Begin VB.CheckBox chk 
+      Caption         =   "Wanted"
+      Height          =   255
+      Index           =   0
+      Left            =   5250
+      TabIndex        =   3
+      Top             =   5070
+      Value           =   1  'Checked
+      Visible         =   0   'False
+      Width           =   1155
+   End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
       Caption         =   "Select"
@@ -153,8 +186,8 @@ Begin VB.Form frmCrewLst
       Width           =   1035
    End
    Begin MSComctlLib.ImageList AssetImages 
-      Left            =   7380
-      Top             =   4620
+      Left            =   10950
+      Top             =   3990
       _ExtentX        =   1005
       _ExtentY        =   1005
       BackColor       =   16777215
@@ -249,7 +282,15 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 ' selectCrew: 0= job payment mode.  >0 = No. of Crew to Select for recruiting.  <0 = Select 1 from Discard Pile
 Option Explicit
-Public payTotal As Integer, selectCrew As Integer, crewcnt As Integer, noMoralDisgruntle As Boolean, costLimit As Integer, SupplyID As Integer, crewFilter As String
+Public payTotal As Integer, selectCrew As Integer, crewcnt As Integer, noMoralDisgruntle As Boolean, costLimit As Integer, SupplyID As Integer, crewFilter As String, lastCrewID
+
+Private Sub chk_Click(Index As Integer)
+Dim selected As String
+   selected = getSelected()
+   refreshShip
+   restoreSelected selected
+   updatePay
+End Sub
 
 Private Sub cmd_Click()
 Dim Index As Integer, imposter As Integer
@@ -303,7 +344,7 @@ Dim Index As Integer, imposter As Integer
                   End If
                End If
                
-            
+               lastCrewID = .CellItemData(Index, 1)
                DB.Execute "UPDATE SupplyDeck SET Seq =" & player.ID & " WHERE CardID = " & .ItemData(Index)
                'add the card to the players deck
                DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & .ItemData(Index) & ")"
@@ -317,9 +358,9 @@ Dim Index As Integer, imposter As Integer
       
          Me.Hide
       ElseIf selectCrew > 0 Then
-         MsgBox "No more than " & selectCrew & " crew and less than $" & costLimit, vbExclamation, "Crew Selection"
+         MessBox "No more than " & selectCrew & " crew and less than $" & costLimit, "Choose wisely", "Ooops", "", getLeader()
       Else
-         MsgBox "No more than 1 crew", vbExclamation, "Crew Selection"
+         MessBox "No more than 1 crew", "Choose wisely", "Ooops", "", getLeader()
       End If
    Else
       Me.Hide
@@ -328,7 +369,16 @@ Dim Index As Integer, imposter As Integer
 End Sub
 
 Private Sub Form_Resize()
-  sftTree.Move sftTree.Left, sftTree.top, Abs(Me.Width - 100), Abs(Me.Height - sftTree.top - 1000)
+Dim x
+  sftTree.Move sftTree.Left, sftTree.top, Abs(Me.Width - 240), Abs(Me.Height - sftTree.top - 1000)
+  For x = 0 To 2
+      chk(x).Move Abs(Me.ScaleWidth - (1200 * (x + 1)) - 2000), Abs(Me.ScaleHeight - 330), chk(x).Width, chk(x).Height
+  Next x
+  'chk(1).top = Me.ScaleHeight - 300
+  'chk(2).top = Me.ScaleHeight - 300
+  cmd.Move Abs(Me.ScaleWidth - 1500), Abs(Me.ScaleHeight - 390), cmd.Width, cmd.Height
+  Label1.Move Label1.Left, Abs(Me.ScaleHeight - 330), Label1.Width, Label1.Height
+  
 End Sub
 
 Private Sub sftTree_ItemClick(ByVal Index As Long, ByVal ColNum As Integer, ByVal AreaType As Integer, ByVal Button As Integer, ByVal Shift As Integer)
@@ -343,7 +393,7 @@ With sftTree
             updatePay
             
          Case "O"  'pay
-
+         
             .ItemDataString(Index) = "R"
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "R")
             updatePay
@@ -389,6 +439,8 @@ End Sub
 
 Private Sub updatePay()
 Dim Index, pay As Integer
+Dim totalfight As Integer, totaltech As Integer, totalnego As Integer
+
    payTotal = 0
    crewcnt = 0
    With sftTree
@@ -396,10 +448,16 @@ Dim Index, pay As Integer
          If .ItemDataString(Index) = "R" Then
             pay = pay + .CellItemData(Index, 8)
             payTotal = payTotal + .CellItemData(Index, 8)
+            totalfight = totalfight + .CellItemData(Index, 5)
+            totaltech = totaltech + .CellItemData(Index, 6)
+            totalnego = totalnego + .CellItemData(Index, 7)
             crewcnt = crewcnt + 1
             .CellText(0, 1) = "selected=" & CStr(crewcnt)
          End If
       Next Index
+      .CellText(0, 5) = IIf(totalfight > 0, CStr(totalfight), "")
+      .CellText(0, 6) = IIf(totaltech > 0, CStr(totaltech), "")
+      .CellText(0, 7) = IIf(totalnego > 0, CStr(totalnego), "")
       .CellText(0, 8) = "$" & CStr(pay)
    End With
 End Sub
@@ -407,7 +465,6 @@ End Sub
 Public Sub refreshShip()
 Dim Index, SQL
 Dim totalfight, totaltech, totalnego, totalpay, lastplayer
-Dim rst As New ADODB.Recordset
 Dim rst2 As New ADODB.Recordset
     
 With sftTree
@@ -430,6 +487,10 @@ With sftTree
       .ItemLevel(Index) = 0
       Select Case selectCrew
       Case Is <> 0
+         chk(0).Visible = True
+         chk(1).Visible = True
+         chk(2).Visible = True
+      
          SQL = "SELECT SupplyDeck.CardID, Crew.*, Perk.PerkDescription "
          SQL = SQL & "FROM PlayerSupplies RIGHT JOIN (Perk INNER JOIN (Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID) ON Perk.PerkID = Crew.PerkID) ON PlayerSupplies.CardID = SupplyDeck.CardID "
          SQL = SQL & "WHERE Crew.Leader=0 AND PlayerSupplies.PlayerID Is Null" & IIf(selectCrew = -1, " AND SupplyDeck.Seq = 5", " AND Crew.CrewID <> 41 AND Crew.CrewID <> 54")
@@ -445,6 +506,17 @@ With sftTree
          If SupplyID > 0 Then
              SQL = SQL & " AND SupplyDeck.SupplyID=" & SupplyID
          End If
+         'filters
+         If chk(0).Value = 0 Then
+            SQL = SQL & " AND Crew.Wanted = 0"
+         End If
+         If chk(1).Value = 0 Then
+            SQL = SQL & " AND Crew.Moral = 0"
+         End If
+         If chk(2).Value = 0 Then
+            SQL = SQL & " AND (Crew.Wanted > 0 OR Crew.Moral = 1)"
+         End If
+         
          SQL = SQL & " ORDER BY Pilot DESC, Mechanic DESC, Companion DESC, Soldier DESC, Merc DESC, HillFolk DESC, Medic DESC, Grifter DESC, CrewName"
       Case Else 'pay crew
          SQL = "SELECT PlayerSupplies.CardID, Crew.*, Perk.PerkDescription"
@@ -483,13 +555,15 @@ With sftTree
          .CellForeColor(Index, 5) = 0
          If rst2!fight > 0 Then .CellBackColor(Index, 5) = 6052315
          totalfight = totalfight + rst2!fight
+         .CellItemData(Index, 5) = rst2!fight
          
          .CellText(Index, 6) = IIf(rst2!tech > 0, CStr(rst2!tech), "")
          .CellForeColor(Index, 6) = 0
          If rst2!tech > 0 Then .CellBackColor(Index, 6) = 16382208
          totaltech = totaltech + rst2!tech
+         .CellItemData(Index, 6) = rst2!tech
          
-         If hasPerkAttribute(player.ID, "negotiate", rst2!CardID) > 0 And hasGearKeyword(player.ID, "FIREARM", rst2!CrewID) Then
+         If getPerkAttributeCrew(player.ID, "negotiate", rst2!CardID) > 0 And hasGearKeyword(player.ID, "FIREARM", rst2!CrewID) Then
              .CellText(Index, 7) = CStr(rst2!Negotiate + 1)
          Else
             .CellText(Index, 7) = IIf(rst2!Negotiate > 0, CStr(rst2!Negotiate), "")
@@ -497,6 +571,7 @@ With sftTree
          .CellForeColor(Index, 7) = 0
          If Val(.CellText(Index, 7)) > 0 Then .CellBackColor(Index, 7) = 5373777
          totalnego = totalnego + Val(.CellText(Index, 7))
+         .CellItemData(Index, 7) = rst2!Negotiate
          
          .CellText(Index, 8) = IIf(rst2!leader = 1, "Leader ", "$" & CStr(rst2!pay))
          .CellItemData(Index, 8) = rst2!pay
@@ -506,9 +581,9 @@ With sftTree
          End If
          totalpay = totalpay + rst2!pay
          
-         .CellText(Index, 9) = IIf(rst2!Wanted > 0, "Wanted", "") & IIf(rst2!Disgruntled > 0, IIf(rst2!Wanted > 0, " / ", "") & "Disgruntled", "")
+         .CellText(Index, 9) = IIf(rst2!wanted > 0, "Wanted", "") & IIf(rst2!Disgruntled > 0, IIf(rst2!wanted > 0, " / ", "") & "Disgruntled", "")
          .CellForeColor(Index, 9) = 0
-         If rst2!Wanted > 0 Then
+         If rst2!wanted > 0 Then
             .CellBackColor(Index, 9) = &HC0C0FF
          ElseIf rst2!Disgruntled > 0 Then
             .CellBackColor(Index, 9) = 11468799
@@ -539,3 +614,34 @@ With sftTree
    
 End Sub
 
+Private Function getSelected() As String
+Dim Index As Long
+
+   With sftTree
+      For Index = 0 To .ListCount - 1
+         If .ItemDataString(Index) = "R" Then
+            getSelected = getSelected & IIf(getSelected = "", "", ",") & CStr(.ItemData(Index))
+         End If
+      Next Index
+   End With
+End Function
+
+
+Private Sub restoreSelected(ByVal selected As String)
+Dim Index As Long
+Dim y, a() As String
+
+   If selected = "" Then Exit Sub
+   a = Split(selected, ",")
+   
+   With sftTree
+      For Index = 0 To .ListCount - 1
+         For y = LBound(a) To UBound(a)
+            If a(y) = CStr(.ItemData(Index)) Then
+               .ItemDataString(Index) = "R"
+               Set .ItemPicture(Index) = AssetImages.Overlay("L", "R")
+            End If
+         Next y
+      Next Index
+   End With
+End Sub

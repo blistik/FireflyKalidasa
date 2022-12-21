@@ -167,37 +167,37 @@ Begin VB.Form frmSalvaging
       BackStyle       =   0  'Transparent
       Caption         =   "Contraband"
       BeginProperty Font 
-         Name            =   "MS Sans Serif"
-         Size            =   8.25
+         Name            =   "Britannic Bold"
+         Size            =   12
          Charset         =   0
-         Weight          =   700
+         Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
       Height          =   225
       Index           =   3
-      Left            =   240
+      Left            =   90
       TabIndex        =   10
       Top             =   1485
-      Width           =   1095
+      Width           =   1245
    End
    Begin VB.Label lbl 
       BackColor       =   &H00CBE1ED&
       BackStyle       =   0  'Transparent
       Caption         =   "Fuel"
       BeginProperty Font 
-         Name            =   "MS Sans Serif"
-         Size            =   8.25
+         Name            =   "Britannic Bold"
+         Size            =   12
          Charset         =   0
-         Weight          =   700
+         Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
       Height          =   225
       Index           =   0
-      Left            =   240
+      Left            =   90
       TabIndex        =   9
       Top             =   420
       Width           =   1065
@@ -207,17 +207,17 @@ Begin VB.Form frmSalvaging
       BackStyle       =   0  'Transparent
       Caption         =   "Parts"
       BeginProperty Font 
-         Name            =   "MS Sans Serif"
-         Size            =   8.25
+         Name            =   "Britannic Bold"
+         Size            =   12
          Charset         =   0
-         Weight          =   700
+         Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
       Height          =   225
       Index           =   1
-      Left            =   240
+      Left            =   90
       TabIndex        =   8
       Top             =   765
       Width           =   885
@@ -227,17 +227,17 @@ Begin VB.Form frmSalvaging
       BackStyle       =   0  'Transparent
       Caption         =   "Cargo"
       BeginProperty Font 
-         Name            =   "MS Sans Serif"
-         Size            =   8.25
+         Name            =   "Britannic Bold"
+         Size            =   12
          Charset         =   0
-         Weight          =   700
+         Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
       Height          =   225
       Index           =   2
-      Left            =   240
+      Left            =   90
       TabIndex        =   7
       Top             =   1140
       Width           =   1035
@@ -269,12 +269,12 @@ Dim total, x
    Next x
    
    If total > salvageCount And mode < 3 Then
-      MsgBox "You can only " & IIf(mode = 2, "take", "salvage") & " up to " & salvageCount & " Goods only, what are ya tryin' to pull!", vbExclamation, IIf(mode = 2, "Goods", "Salvage") & " Limits"
+      MessBox "You can only " & IIf(mode = 2, "take", "salvage") & " up to " & salvageCount & " Goods only, what are ya tryin' to pull!", IIf(mode = 2, "Goods", "Salvage") & " Limits", "Ooops", "", 0, 0, 6
       Exit Sub
    End If
    
    If total < salvageCount And mode = 4 Then
-      MsgBox "You must discard " & salvageCount & " Goods!", vbExclamation, "Discard Quota"
+      MessBox "You must discard " & salvageCount & " Goods!", "Discard Quota", "Ooops", "", 0, 0, 6
       Exit Sub
    End If
    
@@ -282,7 +282,7 @@ Dim total, x
    Case 0 'grab
       If mode < 3 Then
          If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) < (Val(txtDeal(0)) + Val(txtDeal(1))) / 2 + Val(txtDeal(2)) + Val(txtDeal(3)) Then
-            MsgBox "You don't have enough Cargo Space for that amount of Salvage!", vbExclamation, "Tight for room"
+            MessBox "You don't have enough Cargo Space for that amount of Salvage!", "Tight for room", "Ooops", "", 0, 0, 6
             Exit Sub
          Else
             DB.Execute "UPDATE Players SET Fuel = Fuel + " & CStr(Val(txtDeal(0))) & ", Parts = Parts + " & CStr(Val(txtDeal(1))) & ", Contraband = Contraband + " & CStr(Val(txtDeal(3))) & ", Cargo = Cargo + " & CStr(Val(txtDeal(2))) & " WHERE PlayerID = " & player.ID
@@ -293,7 +293,7 @@ Dim total, x
             DB.Execute "UPDATE Players SET Fuel = Fuel - " & CStr(Val(txtDeal(0))) & ", Parts = Parts - " & CStr(Val(txtDeal(1))) & ", Contraband = Contraband - " & CStr(Val(txtDeal(3))) & ", Cargo = Cargo - " & CStr(Val(txtDeal(2))) & " WHERE PlayerID = " & player.ID
             PutMsg player.PlayName & " dumped " & CStr(Val(txtDeal(0))) & " Fuel, " & CStr(Val(txtDeal(1))) & " Parts, " & CStr(Val(txtDeal(3))) & " Contraband and " & CStr(Val(txtDeal(2))) & " Cargo overboard", player.ID, Logic!Gamecntr
          Else
-            MsgBox "That's only " & CStr((Val(txtDeal(0)) + Val(txtDeal(1))) / 2 + Val(txtDeal(2)) + Val(txtDeal(3))) & " space, need " & CStr(salvageCount), vbExclamation, "Discard goods"
+            MessBox "That's only " & CStr((Val(txtDeal(0)) + Val(txtDeal(1))) / 2 + Val(txtDeal(2)) + Val(txtDeal(3))) & " space, need " & CStr(salvageCount), "Discard goods", "Ooops", "", 0, 0, 6
             Exit Sub
          End If
       ElseIf mode = 4 Then
@@ -330,6 +330,7 @@ Private Sub Form_Load()
    initHeld
 End Sub
 
+
 Private Sub initHeld()
 Dim rst As New ADODB.Recordset
 Dim SQL, x
@@ -347,4 +348,11 @@ Dim SQL, x
    End If
    rst.Close
    Set rst = Nothing
+End Sub
+
+
+Private Sub Form_Unload(Cancel As Integer)
+   If Me.Visible Then
+      Cancel = True
+   End If
 End Sub

@@ -3,7 +3,7 @@ Object = "{49801673-2EC8-456E-98B2-037B9B02A1C5}#1.0#0"; "LaVolpeAlphaImg2.ocx"
 Begin VB.Form frmMisbehave 
    BackColor       =   &H00004080&
    BorderStyle     =   4  'Fixed ToolWindow
-   Caption         =   "have fun Misbehavin'"
+   Caption         =   "doin' some Misbehavin'"
    ClientHeight    =   4500
    ClientLeft      =   45
    ClientTop       =   390

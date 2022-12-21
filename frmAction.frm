@@ -28,7 +28,7 @@ Begin VB.Form frmAction
       Left            =   3400
       TabIndex        =   36
       ToolTipText     =   "extra 2 range for 1 extra fuel"
-      Top             =   560
+      Top             =   580
       Width           =   195
    End
    Begin VB.CommandButton cmd 
@@ -264,6 +264,20 @@ Begin VB.Form frmAction
       Top             =   70
       Width           =   1125
    End
+   Begin VB.Label lblMis 
+      Alignment       =   2  'Center
+      BackColor       =   &H00FFFF80&
+      BorderStyle     =   1  'Fixed Single
+      Caption         =   "0"
+      ForeColor       =   &H000000C0&
+      Height          =   285
+      Left            =   1650
+      TabIndex        =   40
+      ToolTipText     =   "Misbehaves"
+      Top             =   2400
+      Visible         =   0   'False
+      Width           =   435
+   End
    Begin VB.Label lblRange2 
       BackStyle       =   0  'Transparent
       Caption         =   "+2 Rng"
@@ -362,7 +376,7 @@ Begin VB.Form frmAction
       Height          =   285
       Left            =   1170
       TabIndex        =   18
-      ToolTipText     =   "Game Seq"
+      ToolTipText     =   "Turns"
       Top             =   2400
       Width           =   435
    End
@@ -524,12 +538,24 @@ Private Sub txtCargo_DblClick()
    If txtCargo.Enabled Then txtCargo.Text = CStr(Val(txtCargo.Text) + 1)
 End Sub
 
+Private Sub txtContra_DblClick()
+   If txtContra.Enabled Then txtContra.Text = CStr(Val(txtContra.Text) + 1)
+End Sub
+
 Private Sub txtFuel_DblClick()
    If txtFuel.Enabled Then txtFuel.Text = CStr(Val(txtFuel.Text) + 1)
 End Sub
 
+Private Sub txtFug_DblClick()
+   If txtFug.Enabled Then txtFug.Text = CStr(Val(txtFug.Text) + 1)
+End Sub
+
 Private Sub txtParts_DblClick()
    If txtParts.Enabled Then txtParts.Text = CStr(Val(txtParts.Text) + 1)
+End Sub
+
+Private Sub txtPass_DblClick()
+   If txtPass.Enabled Then txtPass.Text = CStr(Val(txtPass.Text) + 1)
 End Sub
 
 Private Sub chkRange2_Click()
@@ -543,7 +569,7 @@ Private Sub chkRange2_Click()
 End Sub
 
 Private Sub cmd_Click(Index As Integer)
-Dim x
+Dim x, SectorID
    
    Select Case Index
       Case 0 'mosey
@@ -578,14 +604,18 @@ Dim x
       Case 2 'buy
          If MoseyMovesDone > 0 Then moseydone = True 'already moseyed
          If FullburnMovesDone > 0 Then fullburndone = True
+         SectorID = getPlayerSector(player.ID)
          
-         'shore leave only
-         If chkShore.Value = 1 Then
+         If getHaven(SectorID) = player.ID Then
+            actionSeq = ASBuyHaven
+         
+         ElseIf chkShore.Value = 1 Then
+             'shore leave only
             actionSeq = ASBuyShore
          End If
          
          Select Case actionSeq
-         Case ASBuyShore
+         Case ASBuyShore, ASBuyHaven
             buydone = True
          Case ASBuySelect
             buydone = True
@@ -622,6 +652,10 @@ Dim x
          actionSeq = ASWork
          playsnd 8
       Case 5 'end turn
+         If actionSeq = ASNavEvade Then
+            MessBox "You need to EVADE!", "Evade", "Ooops", "", getLeader()
+            Exit Sub
+         End If
          playsnd 8
          endAction
          
@@ -632,7 +666,7 @@ Dim x
          actionSeq = ASRemoveDisgr
          playsnd 8
       Case 7 'resolve alerts
-         PutMsg player.PlayName & " is selecting a Alert Token to resolve", player.ID, Logic!Gamecntr
+         MessBox "Select an Alert Token to resolve", "Alert Token", "Will Do", "", getLeader()
          actionSeq = ASResolveAlert
          playsnd 8
       
@@ -698,4 +732,3 @@ Public Sub buyIsDone()
    If FullburnMovesDone > 0 Then fullburndone = True
    buydone = True
 End Sub
-

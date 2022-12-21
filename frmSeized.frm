@@ -75,16 +75,16 @@ Dim x, cnt
    cnt = 0
    playsnd 8
    For x = 0 To crewList.ListCount - 1
-      If crewList.Selected(x) Then
+      If crewList.selected(x) Then
          cnt = cnt + 1
       End If
    Next x
    If cnt = nbrSelect Then
       For x = 0 To crewList.ListCount - 1
-         If crewList.Selected(x) Then
+         If crewList.selected(x) Then
          
             'update their pile status - 0 removed, 5 -discarded
-            DB.Execute "UPDATE SupplyDeck SET Seq =" & IIf(hasPerkAttribute(player.ID, "KillDiscard", crewList.ItemData(x)) > 0 Or discard, 5, 0) & " WHERE CardID = " & crewList.ItemData(x)
+            DB.Execute "UPDATE SupplyDeck SET Seq =" & IIf(getPerkAttributeCrew(player.ID, "KillDiscard", crewList.ItemData(x)) > 0 Or discard, 5, 0) & " WHERE CardID = " & crewList.ItemData(x)
             'remove any Gear first
             DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = (SELECT CrewID FROM SupplyDeck WHERE CardID =" & crewList.ItemData(x) & ")"
             'delete the card to the players deck
@@ -94,7 +94,7 @@ Dim x, cnt
       Next x
       Me.Hide
    Else
-      MsgBox "You need to select " & nbrSelect & " crew", vbExclamation
+      MessBox "You need to select " & nbrSelect & " crew", "Select Crew", "Ooops", "", 0, 0, 6
    End If
 
 End Sub
@@ -126,13 +126,13 @@ Dim SQL, crewcnt As Integer
    crewList.Clear
    SQL = "SELECT PlayerSupplies.CardID, Crew.* "
    SQL = SQL & "FROM Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID "
-   SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & player.ID & " AND Crew.Wanted=1"
+   SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & player.ID & " AND Crew.Wanted>0"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      If hasGear(player.ID, 20, rst!crewID) Then  'you're on the list
-         PutMsg player.PlayName & "'s Nav log: " & rst!CrewName & " Flashes an Alliance Ident Card", player.ID, Logic!Gamecntr, True, rst!crewID
+      If hasGear(player.ID, 20, rst!CrewID) Then  'you're on the list
+         If Not check Then PutMsg player.PlayName & "'s Nav log: " & rst!CrewName & " Flashes an Alliance Ident Card", player.ID, Logic!Gamecntr, True, rst!CrewID
       ElseIf hasShipUpgrade(player.ID, 11) And crewcnt < 2 And check Then
-         If crewcnt = 0 Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to 2 Wanted Crew", player.ID, Logic!Gamecntr, True, getLeader()
+         If crewcnt = 0 And Not check Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to 2 Wanted Crew", player.ID, Logic!Gamecntr, True, getLeader()
          crewcnt = crewcnt + 1
       Else
          crewList.AddItem rst!CrewName

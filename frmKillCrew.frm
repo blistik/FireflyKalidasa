@@ -68,7 +68,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Public nbrSelect, killed As Integer
+Public nbrSelect, killed As Integer, extrafilter As String
 
 Private Sub cmd_Click()
 Dim x, cnt
@@ -89,7 +89,7 @@ Dim x, cnt
       Next x
       Me.Hide
    Else
-      MsgBox "You need to select " & nbrSelect & " crew", vbExclamation
+      MessBox "You need to select " & nbrSelect & " crew", "Choose wisely", "Ooops", "", getLeader()
    End If
 
 End Sub
@@ -108,7 +108,7 @@ Private Sub Form_Load()
 
    Me.Caption = "Select " & nbrSelect & " Crew that were lost in Action"
   
-   LoadCombo crewList, "killcrew", CStr(player.ID)
+   LoadCombo crewList, "killcrew", CStr(player.ID) & extrafilter ' AND Crew.Merc = 1
    If nbrSelect > crewList.ListCount Then nbrSelect = crewList.ListCount
 
 End Sub

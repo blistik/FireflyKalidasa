@@ -1,6 +1,78 @@
-Test Issues:
+Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 Mar 2021
 
-Commenced 27 Feb 2021 - Completed first release 24 Apr 2021
+Test Issues pending:
+
+Mr Universe Job name ideas (9 done):
+Lawforce Flags
+Enormous Trouble
+A wee bit naughty
+Action on the side
+Bruises & contusions
+Do it off the grid
+To the eyes & ears of the 'Verse
+Grand theft larceny
+How weird is that?
+Play merry hob
+Right in my orbit
+Run the long con
+Someone is talking
+Techno kung fu
+The puppet theater
+The very best violence
+
+Version updates:
+v1.7.9 ~ 11 Oct 2022 - 22 Dec 2022
+new: Havens supported, new option in Story editor
+new: Story setup support for running from 1 to 6 Reaver Cutters
+new: misc Story & Job editor updates
+new: Corvette as a Job destination (coded as sector 2)
+new: Mr Universe - 9 new "standard" Jobs (ie. no support for Big Damn Challenges)
+add: new Crew - Draper (Soldier, 2F 1N, may carry 2 gear)
+add: new Crew - Jubal (Pilot, 2F 1T, +1 Mosey)
+add: distance calculation to Job Destination, displayed next to Planet's Name in list, eg. Ariel(5)
+add: Wanted/Moral/Other Filters on Crew Select form
+add: Misbehave counter display (next to turn counter) for Stories with a Misbehave count goal
+gui: Add Ship GIF animations and animated movement between sectors
+gui: most in-game Message Dialogs changed from vanilla to custom graphical with context picture
+gui: Crew and Gear view/select form updated to resemble original "Card" graphical format
+fix: CTD when discarding Wash's Hawaiian Shirt
+fix: Leader Atherton now cannot pick a Companion for Stories that allow for Crew pre-selection
+fix: ANY Smuggling or Shipping Job pays $500 due to having a Solid Rep with Lord Harrow
+fix: ANY Transport Job pays $500 due to having a Solid Rep with the Twins
+fix: 'A vote of No Confidence' Misbehave when funds less than $600 depletes bank rather than go negative
+fix: 'Run for you gorram Life' Misbehave option to Kill a Crew, Attempt Botched now forces crew kill or Leader Disgruntled
+fix: Emissions Recycler was rewarding any 2 Big Black cards in a Burn, rather than 2 consecutive
+fix: Nav Option 'Outbreak!' had passengers and fugitives swapped around
+fix: increased maximum Cash on hand to > $32k
+fix: Heist Intel Gear re-order bug
+fix: ReRolls of 1s, keep rolling until more than 1 achieved
+fix: Job 'The expendable' - kill a Merc on success
+fix: Simon's Sonic Stun Baton dice roll & skill count corrected
+fix: Mal's Brown Coat effects on Negotiation Skill now show on Ship's skill tally
+fix: Cortland's Bribe before Negotiations
+fix: Head Goon +2 Nego on 3 Mercs
+fix: Xunsu Whisper X1 now triggers evade test with Corvette
+fix: Long-Range Scanner Array now resolves either Reaver or Alliance Tokens or both
+fix: Discarding The Salesman to buy a ship upgrade during a Buy action in progress, now cancels the Buy action
+fix: removed invalid Path between sector 12 (Aesir) & 3
+fix: Wanted test for Grange Bros
+
+Version updates:
+v1.7.8 ~ 25 Sep 2022 
+fix: An interesting Day - freeze on losing all Mercs
+fix: requirements check for Jobs needing Solid
+fix: displaying nav path for job at Cruiser
+fix: when using Fan Dancers perk, was not discarded
+fix: end of Misbehave & Nav Deck reshuffle
+fix: discard a job at work location - refresh action WORK list
+fix: 2x randomly move Nav card not updating any nav path displayed
+fix: Nav Fill 'er Up!  was set to always maximum fill
+fix: clear displayed nav path on completion/failure of Job
+add: auto End Turn on Mosey is now working in Multiplayer
+add: Time Bomb crew
+
+v1.7.7 ~ 23 Sep 2022 
+fix: requirements check for No Limit goods/passengers
 
 v1.7.6 ~ 22 Sep 2022 
 Buys: prevent buying 2 Drive Cores
@@ -11,7 +83,31 @@ Jobs & Deals: add ship's sector distance count to Planet
 add Gear: "Nav Charts: Cortex Wormhole" Discard to reveal a Wormhole nav path between Cortex Relays 2 and 7. Only open for current turn.
 fix: Cutter planet relocation
 
+v1.7.5 ~ 19 Dec 2021
+disable shore leave when not holding not enough money
+no picture for popup, CTD, add error handler
+remove warrant tooltip to say - pay $1000 ..
+add broken path to Board posn 86->102
 
+v1.7.4 ~ 04 Dec 2021
+Gear Logic: Jayne(27/22) should not be able to carry Burgess Laser (45/15)
+Nav Option: Fisticuffs in the Hold - result given now if successful
+Story: Fix Alliance Operative goal config data
+
+v1.7.3 ~ 16 Nov 2021
+minor Contact Job config fix, no application changes.
+
+v1.7.2 ~ 18 May 2021
+First major release
+Fully working VB6 adaption of the Firefly Board Game, including the BlueSun and Kalidasa expansions.
+
+v1.5.0 ~ 1 Apr 2021 BlueSun Expansion added
+
+v1.0.4 ~ 25 Mar 2021 minor tweaks and fixes
+
+v1.0.3 ~ 24 Mar 2021 Initial Release of FireFly - The PC Game
+
+New content notes:
 2 TASKS:
 CORTEX RELAY 7 SERVICE CALL
 Travel to Cortex Relay 7 to Get Paid.

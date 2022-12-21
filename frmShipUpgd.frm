@@ -78,7 +78,7 @@ Dim ShipUpgradeID, cost, pay
          Me.Hide
          Exit Sub
       Else
-         MsgBox "you have to Pick something", vbExclamation
+         MessBox "you have to Pick something", "Pick something", "Ooops", "", getLeader()
          Exit Sub
       End If
    End If
@@ -89,7 +89,7 @@ Dim ShipUpgradeID, cost, pay
    If CardID = -1 Then
       Exit Sub
    ElseIf cost > pay And discardMode = 2 Then
-      If MsgBox("You cannot afford that!" & vbNewLine & "Do you want to pass?", vbYesNo + vbExclamation, "No Dough") = vbYes Then
+      If MessBox("You cannot afford that!" & vbNewLine & "Do you want to pass?", "No Dough", "Yes", "No", getLeader()) = 0 Then
          CardID = 0
          Me.Hide
       Else
@@ -112,6 +112,11 @@ Dim ShipUpgradeID, cost, pay
          DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & CardID & ")"
          If discardMode = 2 Then 'pay for it
             DB.Execute "UPDATE Players SET Pay = Pay - " & cost & " WHERE PlayerID=" & player.ID
+            If actionSeq = ASBuySelect Or actionSeq = ASBuySelDiscard Then
+               actionSeq = ASselect
+               Main.showBuys False, "local"
+               Main.frmBuy.RefreshBuys
+            End If
             frmAction.buyIsDone
             frmAction.cmd(2).Enabled = False
             frmAction.lblMoney = CStr(pay - cost)

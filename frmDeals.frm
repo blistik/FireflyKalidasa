@@ -34,8 +34,8 @@ Begin VB.Form frmDeals
       PlusMinusPictureLeaf=   "frmDeals.frx":0396
       ButtonPicture   =   "frmDeals.frx":03B2
       BeginProperty ColHeaderFont {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "MS Sans Serif"
-         Size            =   8.25
+         Name            =   "Cyberpunk Is Not Dead"
+         Size            =   9
          Charset         =   0
          Weight          =   400
          Underline       =   0   'False
@@ -63,7 +63,7 @@ Begin VB.Form frmDeals
       ColHeaderAppearance=   2
       ButtonStyle     =   2
       Columns         =   9
-      ColTitle0       =   "CardID"
+      ColTitle0       =   "Card ID"
       ColBmp0         =   "frmDeals.frx":03CE
       ColWidth1       =   200
       ColTitle1       =   "Contact / Instructions"
@@ -72,7 +72,7 @@ Begin VB.Form frmDeals
       ColTitle2       =   "Job Type / Planet"
       ColBmp2         =   "frmDeals.frx":0406
       ColWidth3       =   120
-      ColTitle3       =   "Job Name / System"
+      ColTitle3       =   "Needs / System"
       ColBmp3         =   "frmDeals.frx":0422
       ColWidth4       =   41
       ColStyle4       =   10
@@ -95,7 +95,7 @@ Begin VB.Form frmDeals
       ColBmp8         =   "frmDeals.frx":04AE
       MouseIcon       =   "frmDeals.frx":04CA
       ColHeaderBackColor=   0
-      ColHeaderForeColor=   65280
+      ColHeaderForeColor=   10937324
       ForeColor       =   8833235
       BackColor       =   3353720
       RowColHeaderAppearance=   0
@@ -262,7 +262,8 @@ With sftTree
          ContactID = 8
          HigginsDealPerk = True
       ElseIf hasCrew(player.ID, 75) And dealFilter = "locals" And Not hasCrew(player.ID, 22) And SectorID <> 16 Then
-         If MsgBox("Do you want Deal with Higgins instead?", vbQuestion + vbYesNo, "Fess - Phone Home Deals") = vbYes Then
+         If MessBox("Do you want Deal with Higgins instead?", "Fess - Phone Home Deals", "Yes", "No", 75) = 0 Then
+         'If MsgBox("Do you want Deal with Higgins instead?", vbQuestion + vbYesNo, "Fess - Phone Home Deals") = vbYes Then
             ContactID = 8
             HigginsDealPerk = True
          End If
@@ -283,15 +284,16 @@ With sftTree
    SQL = SQL & " ORDER BY ContactName"
    rst3.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst3.EOF
-      Index = .AddItem(CStr(rst3!ContactID))
+      Index = .AddItem(CStr(rst3!ContactID) & IIf(isSolid(player.ID, rst3!ContactID), " - Solid", ""))
       .ItemLevel(Index) = 0
-      .CellText(Index, 1) = rst3!ContactName & IIf(isSolid(player.ID, rst3!ContactID), " - Solid", "")
+      .CellText(Index, 1) = rst3!ContactName  '& IIf(isSolid(player.ID, rst3!ContactID), " - Solid", "")
       .CellText(Index, 2) = CStr(getUnseenDeck("Contact", rst3!ContactID)) & " unseen"
       For x = 0 To 8
          .CellForeColor(Index, x) = 0
          .CellBackColor(Index, x) = rst3!Colour
       Next x
-      Set .ItemPicture(Index) = AssetImages.Overlay("L", "U")
+      Set .ItemPicture(Index) = LoadPicture(App.Path & "\Pictures\Sm" & Nz(varDLookup("Picture", "Contact", "ContactID=" & rst3!ContactID)))
+      'Set .ItemPicture(Index) = AssetImages.Overlay("L", "U")
     
       SQL = "SELECT Contact.Colour, JobType.JobTypeDescr, Profession.ProfessionName, ContactDeck.*, JobType_1.JobTypeDescr AS JobType2 "
       SQL = SQL & "FROM (Contact INNER JOIN ((ContactDeck INNER JOIN JobType ON ContactDeck.JobTypeID = JobType.JobTypeID) LEFT JOIN Profession "
@@ -495,11 +497,7 @@ With sftTree
                   'determine how many cards can be accepted
                   
                   max = MAXINACTIVEJOBS - getPlayerJobs(player.ID, "0")
-'                  If max > (MAXPLAYERJOBS - MAXJOBCARDACCEPT) Then
-'                     max = MAXPLAYERJOBS - max
-'                  Else
-'                     max = MAXJOBCARDACCEPT
-'                  End If
+
                   If getSelected("R") < max Then  'accept only up to 2 cards, not exceeding 6 in hand
                      .ItemDataString(Index) = "R"
                      Set .ItemPicture(Index) = AssetImages.Overlay("L", "R")

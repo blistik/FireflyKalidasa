@@ -97,3 +97,9 @@ Dim SQL
    
    Set rst = Nothing
 End Sub
+
+Private Sub Form_Unload(Cancel As Integer)
+   If Me.Visible Then
+      Cancel = True
+   End If
+End Sub

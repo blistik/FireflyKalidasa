@@ -8,12 +8,34 @@ Begin VB.Form Starter
    ClientWidth     =   5760
    Icon            =   "Starter.frx":0000
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "Starter.frx":0442
    ScaleHeight     =   4725
    ScaleWidth      =   5760
    StartUpPosition =   1  'CenterOwner
+   Begin VB.CommandButton cmd 
+      BackColor       =   &H00FF8080&
+      Caption         =   "..."
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   315
+      Index           =   2
+      Left            =   5200
+      Style           =   1  'Graphical
+      TabIndex        =   15
+      ToolTipText     =   "Edit this Story Card"
+      Top             =   3150
+      Width           =   375
+   End
    Begin VB.CheckBox chkAI 
       BackColor       =   &H00CBE1ED&
       Caption         =   "auto move Crusier, Corvette && Reavers"
@@ -33,7 +55,7 @@ Begin VB.Form Starter
       Style           =   2  'Dropdown List
       TabIndex        =   10
       Top             =   3150
-      Width           =   5475
+      Width           =   5085
    End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
@@ -197,22 +219,22 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Public isHost As Boolean, started As Boolean, cbotrig As Boolean
+Public isHost As Boolean, started As Boolean
 
 Private Sub cbo_Click()
     
-   If isHost And Not cbotrig Then
+   If isHost Then
       Logic.Update "StoryID", GetCombo(cbo)
-      If GetCombo(cbo) > 0 Then 'custom story
-         If doCustomStory = 0 Then
-            LoadCombo cbo, "story", " WHERE ACTIVE = 1 Order by StoryID"
-            cbotrig = True
-            SetCombo cbo, "", 1
-            cbotrig = False
-         Else
-            cbo.List(cbo.ListIndex) = Nz(varDLookup("StoryTitle", "Story", "StoryID = " & GetCombo(cbo)))
-         End If
-      End If
+'      If GetCombo(cbo) > 0 Then 'custom story
+'         If doCustomStory = 0 Then
+'            LoadCombo cbo, "story", " WHERE ACTIVE = 1 Order by StoryID"
+'            cbotrig = True
+'            SetCombo cbo, "", 1
+'            cbotrig = False
+'         Else
+'            cbo.List(cbo.ListIndex) = Nz(varDLookup("StoryTitle", "Story", "StoryID = " & GetCombo(cbo)))
+'         End If
+'      End If
    End If
    lblStory.Caption = Nz(varDLookup("StoryDesc", "Story", "StoryID = " & GetCombo(cbo)))
 End Sub
@@ -226,7 +248,6 @@ Dim rst As New ADODB.Recordset, col, cnt, x
 Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer
 Dim frmCrewList As frmCrewLst
          
-
    On Error GoTo err_handler
    playsnd 8
    UpdateLst
@@ -243,6 +264,8 @@ Dim frmCrewList As frmCrewLst
          cmd(0).Enabled = False
          cmd(0).Caption = "waiting"
          SetupPlayer player.ID, Logic!StoryID
+         'drop this leaders Card into the Player's supplies
+         DB.Execute "INSERT INTO PlayerSupplies (PlayerID,CardID) VALUES (" & player.ID & ", " & varDLookup("CardID", "SupplyDeck", "CrewID =" & leader) & ")"
          
          'get story requirements
          noOfCrew = varDLookup("StartingCrew", "Story", "StoryID=" & Logic!StoryID)
@@ -293,7 +316,7 @@ Dim frmCrewList As frmCrewLst
                End If
             Next x
             UpdateLst
-            MsgBox rst!ship & " is taken by " & rst!Name
+            MessBox rst!ship & " is taken by " & rst!Name, "Ship taken", "Ooops", "", 0, 0, 6
             
          End If
       End If
@@ -315,7 +338,7 @@ Dim frmCrewList As frmCrewLst
       DrawDeck "Supply", 5, 3
       DrawDeck "Supply", 6, 3
       DrawDeck "Supply", 7, 3
-      ShuffleDeck "Nav", True, (Lst.ListCount > 2)
+      ShuffleDeck "Nav", True, (Lst.ListCount > 2) 'Reshuffle Cards at end for 3 or more players
       ShuffleDeck "Misbehave", False, True
       
       'do story specific setup
@@ -350,8 +373,21 @@ Dim frmCrewList As frmCrewLst
       chkAI.Enabled = False
       'started = True
       'Unload Me
+   
+   Case 2 'edit story
+      If GetCombo(cbo) > 0 Then 'custom story
+         Timing.Enabled = False
+         If doCustomStory(Not isHost) = 0 Then 'deleted, reset back to 1
+            LoadCombo cbo, "story", " WHERE ACTIVE = 1 Order by StoryID"
+            SetCombo cbo, "", 1
+         Else 'update the display
+            cbo.List(cbo.ListIndex) = Nz(varDLookup("StoryTitle", "Story", "StoryID = " & GetCombo(cbo)))
+            lblStory.Caption = Nz(varDLookup("StoryDesc", "Story", "StoryID = " & GetCombo(cbo)))
+         End If
+         Timing.Enabled = True
+      End If
+   
    End Select
-
   
   Exit Sub
   
@@ -394,9 +430,7 @@ Dim rst As New ADODB.Recordset
    cbo.Enabled = isHost
    chkAI.Enabled = isHost
    LoadCombo cbo, "story", " WHERE ACTIVE = 1 Order by StoryID"
-   cbotrig = True
    SetCombo cbo, "", 1
-   cbotrig = False
 
 End Sub
 
@@ -468,19 +502,6 @@ Dim rst As New ADODB.Recordset, col, x, playerID As Integer
   End If
   If started Then Unload Me
 End Sub
-
-Private Function doCustomStory()
-Dim frmStory As New frmStories
-   Timing.Enabled = False
-   With frmStory
-      .StoryID = Logic!StoryID
-      .Show 1, Me
-      'LoadCombo cbo, "story", " WHERE ACTIVE = 1 Order by StoryID"
-      doCustomStory = .StoryID
-         
-   End With
-   Timing.Enabled = True
-End Function
 
 Private Sub doExcludes()
 Dim excludes As String

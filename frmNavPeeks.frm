@@ -170,19 +170,19 @@ Option Explicit
 Public NavZone, minSeq As Integer
 
 Private Sub cmd_Click()
-Dim index, cnt
+Dim Index, cnt
    cnt = minSeq
    With sftTree
-      For index = 0 To .ListCount - 1
-         If .CellItemData(index, 0) = 1 Then 'header
+      For Index = 0 To .ListCount - 1
+         If .CellItemData(Index, 0) = 1 Then 'header
             If NavZone = "M" Then
-               DB.Execute "UPDATE MisbehaveDeck Set Seq =" & IIf(chkDiscard.Value = 1, 5, cnt) & " WHERE CardID =" & .ItemData(index)
+               DB.Execute "UPDATE MisbehaveDeck Set Seq =" & IIf(chkDiscard.Value = 1, 5, cnt) & " WHERE CardID =" & .ItemData(Index)
             Else
-               DB.Execute "UPDATE NavDeck Set Seq =" & cnt & " WHERE CardID =" & .ItemData(index)
+               DB.Execute "UPDATE NavDeck Set Seq =" & cnt & " WHERE CardID =" & .ItemData(Index)
             End If
             cnt = cnt + 1
          End If
-      Next index
+      Next Index
    End With
    playsnd 8
    Me.Hide
@@ -216,18 +216,18 @@ End Sub
 
 
 Private Sub sftTree_DragDrop(Source As Control, x As Single, y As Single)
-Dim index As Long, CardID
+Dim Index As Long, CardID
    With sftTree
       
-      index = .DropHighlight
+      Index = .DropHighlight
       CardID = .ListIndex
-      If index = -1 Then Exit Sub 'dropped on original drag
-      If index >= .ListCount Then
+      If Index = -1 Or CardID = Index Then Exit Sub 'dropped on original drag
+      If Index >= .ListCount Then
          .MoveItems CardID, .DependentCount(CardID, 0) + 1, -1
          
       Else
-         If .CellItemData(index, 0) = 1 Then
-            .MoveItems CardID, .DependentCount(CardID, 0) + 1, index
+         If .CellItemData(Index, 0) = 1 Then
+            .MoveItems CardID, .DependentCount(CardID, 0) + 1, Index
          End If
       End If
       
@@ -237,16 +237,16 @@ Dim index As Long, CardID
 End Sub
 
 Private Sub sftTree_DragOver(Source As Control, x As Single, y As Single, State As Integer)
-Dim index As Long
+Dim Index As Long
    With sftTree
-      index = .HitTest(x, y)
-      If index = -1 Then Exit Sub
+      Index = .HitTest(x, y)
+      If Index = -1 Then Exit Sub
       .DropHighlightStyle = dropSftTreeBetween  ' = dropSftTreeOnTop
       If State = 1 Then
             ' Leaving this tree control
             .DropHighlight = -1
       Else
-            .DropHighlight = index
+            .DropHighlight = Index
             
       End If
    End With
@@ -255,13 +255,13 @@ End Sub
 Private Sub sftTree_DragStarting(ByVal Button As Integer, ByVal Shift As Integer)
    If sftTree.CellItemData(sftTree.ListIndex, 0) = 1 Then  'any title
       'sftTree.DragIcon = DragIcon.Picture
-      sftTree.drag 1
+      sftTree.Drag 1
    End If
 End Sub
 
 Private Sub RefreshMB()
 Dim rst As New ADODB.Recordset
-Dim SQL, index, cnt As Integer
+Dim SQL, Index, cnt As Integer
 
 With sftTree
 
@@ -278,26 +278,26 @@ With sftTree
    End If
    Do While Not rst.EOF
       cnt = cnt + 1
-      index = .AddItem(rst!CardName)
-      .ItemData(index) = rst!CardID
-       .CellItemData(index, 0) = 1
-       .CellItemData(index, 1) = rst!Seq
-      .ItemLevel(index) = 0
-      .CellForeColor(index, 0) = 0
-      .CellBackColor(index, 0) = 13236739
+      Index = .AddItem(rst!CardName)
+      .ItemData(Index) = rst!CardID
+       .CellItemData(Index, 0) = 1
+       .CellItemData(Index, 1) = rst!Seq
+      .ItemLevel(Index) = 0
+      .CellForeColor(Index, 0) = 0
+      .CellBackColor(Index, 0) = 13236739
       
-      index = .AddItem(rst!OptionName)
-      .ItemData(index) = rst!OptionID
-      .CellText(index, 1) = rst!Details
-      .CellItemData(index, 0) = 2
-      .ItemLevel(index) = 1
+      Index = .AddItem(rst!OptionName)
+      .ItemData(Index) = rst!OptionID
+      .CellText(Index, 1) = rst!Details
+      .CellItemData(Index, 0) = 2
+      .ItemLevel(Index) = 1
       
       If Not IsNull(rst!Option2) Then
-         index = .AddItem(rst!Option2Name)
-         .ItemData(index) = rst!Option2
-         .CellText(index, 1) = rst!Details2
-         .CellItemData(index, 0) = 2
-         .ItemLevel(index) = 1
+         Index = .AddItem(rst!Option2Name)
+         .ItemData(Index) = rst!Option2
+         .CellText(Index, 1) = rst!Details2
+         .CellItemData(Index, 0) = 2
+         .ItemLevel(Index) = 1
       End If
       If cnt > 2 Then Exit Do
       rst.MoveNext
@@ -311,7 +311,7 @@ End Sub
 
 Private Sub RefreshNav()
 Dim rst As New ADODB.Recordset
-Dim SQL, index, cnt As Integer
+Dim SQL, Index, cnt As Integer
 
 With sftTree
 
@@ -328,26 +328,26 @@ With sftTree
    End If
    Do While Not rst.EOF
       cnt = cnt + 1
-      index = .AddItem(rst!CardName)
-      .ItemData(index) = rst!CardID
-       .CellItemData(index, 0) = 1
-       .CellItemData(index, 1) = rst!Seq
-      .ItemLevel(index) = 0
-      .CellForeColor(index, 0) = 0
-      .CellBackColor(index, 0) = 13236739
+      Index = .AddItem(rst!CardName)
+      .ItemData(Index) = rst!CardID
+       .CellItemData(Index, 0) = 1
+       .CellItemData(Index, 1) = rst!Seq
+      .ItemLevel(Index) = 0
+      .CellForeColor(Index, 0) = 0
+      .CellBackColor(Index, 0) = 13236739
       
-      index = .AddItem(rst!OptionName)
-      .ItemData(index) = rst!OptionID
-      .CellText(index, 1) = rst!Details
-      .CellItemData(index, 0) = 2
-      .ItemLevel(index) = 1
+      Index = .AddItem(rst!OptionName)
+      .ItemData(Index) = rst!OptionID
+      .CellText(Index, 1) = rst!Details
+      .CellItemData(Index, 0) = 2
+      .ItemLevel(Index) = 1
       
       If Not IsNull(rst!Option2) Then
-         index = .AddItem(rst!Option2Name)
-         .ItemData(index) = rst!Option2
-         .CellText(index, 1) = rst!Details2
-         .CellItemData(index, 0) = 2
-         .ItemLevel(index) = 1
+         Index = .AddItem(rst!Option2Name)
+         .ItemData(Index) = rst!Option2
+         .CellText(Index, 1) = rst!Details2
+         .CellItemData(Index, 0) = 2
+         .ItemLevel(Index) = 1
       End If
       If cnt > 4 Then Exit Do
       rst.MoveNext

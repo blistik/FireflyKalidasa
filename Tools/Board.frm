@@ -321,13 +321,13 @@ Private Sub Form_Load()
 Dim x
    If Not Logon Then End
    
-   Imag(1).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\FireflyOrange.bmp")
-   Imag(2).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\FireflyBlue.bmp")
-   Imag(3).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\FireflyYellow.bmp")
-   Imag(4).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\FireflyGreen.bmp")
-   Imag(5).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\Crusier.bmp")
+   Imag(1).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\FireflyOrange.gif")
+   Imag(2).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\FireflyBlue.gif")
+   Imag(3).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\FireflyYellow.gif")
+   Imag(4).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\FireflyGreen.gif")
+   Imag(5).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\Cruiser.gif")
    Imag(5).AutoSize = lvicMultiAngle
-   Imag(6).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\Cutter.bmp") 'corvette.bmp")  '
+   Imag(6).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\Cutter.gif") 'corvette.gif")  '
    For x = 1 To 6
       Imag(x).TransparentColor = 0
       Imag(x).TransparentColorMode = lvicUseTransparentColor

@@ -19,9 +19,9 @@ Begin VB.Form frmWinner
       TabIndex        =   1
       Top             =   5010
       Visible         =   0   'False
-      Width           =   3765
+      Width           =   4125
       _Version        =   262144
-      _ExtentX        =   6641
+      _ExtentX        =   7276
       _ExtentY        =   6324
       _StockProps     =   237
       ForeColor       =   12648447
@@ -63,32 +63,39 @@ Begin VB.Form frmWinner
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ColHeaderAppearance=   0
+      ColHeaderAppearance=   2
       GridStyle       =   2
       ButtonStyle     =   0
       ItemLines       =   10
       TreeLineStyle   =   0
-      Columns         =   3
+      Columns         =   4
       ColWidth0       =   67
       ColTitle0       =   "Name"
       ColWidth1       =   33
       ColStyle1       =   9
       ColTitle1       =   "Turns"
       ColBmp1         =   "frmWinner.frx":254E2
-      ColWidth2       =   67
-      ColTitle2       =   "Date Played"
+      ColWidth2       =   53
+      ColStyle2       =   9
+      ColTitle2       =   "Minutes"
       ColBmp2         =   "frmWinner.frx":254FE
-      MouseIcon       =   "frmWinner.frx":2551A
+      ColWidth3       =   67
+      ColTitle3       =   "Date Won"
+      ColBmp3         =   "frmWinner.frx":2551A
+      MouseIcon       =   "frmWinner.frx":25536
+      ColHeaderBackColor=   -2147483639
+      ColHeaderForeColor=   32768
       ForeColor       =   12648447
       BackColor       =   3355725
       RowColHeaderAppearance=   0
-      RowColPicture   =   "frmWinner.frx":25536
+      RowColPicture   =   "frmWinner.frx":25552
       LeftButtonOnly  =   0   'False
       RowHeaderAppearance=   0
-      ColPict1        =   "frmWinner.frx":25552
-      ColPict2        =   "frmWinner.frx":2556E
+      ColPict1        =   "frmWinner.frx":2556E
+      ColPict2        =   "frmWinner.frx":2558A
+      ColPict3        =   "frmWinner.frx":255A6
       ItemStyle       =   1
-      BackgroundPicture=   "frmWinner.frx":2558A
+      BackgroundPicture=   "frmWinner.frx":255C2
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End
@@ -146,7 +153,7 @@ End Sub
 
 Private Sub cmdScores_Click()
 Dim rst As New ADODB.Recordset
-Dim SQL, index
+Dim SQL, Index
 
 With Grid
    If .Visible Then
@@ -159,9 +166,10 @@ With Grid
       SQL = SQL & " ORDER BY Turns, PlayDate DESC"
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
-         index = .AddItem(rst!PlayerName)
-         .CellText(index, 1) = CStr(rst!Turns)
-         .CellText(index, 2) = Format(rst!PlayDate, "DD Mmm YYYY HH:nn")
+         Index = .AddItem(rst!PlayerName)
+         .CellText(Index, 1) = CStr(rst!Turns)
+         .CellText(Index, 2) = CStr(DateDiff("n", rst!StartDate, rst!PlayDate))
+         .CellText(Index, 3) = Format(rst!PlayDate, "DD Mmm YYYY HH:nn")
          rst.MoveNext
       Wend
       rst.Close
