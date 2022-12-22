@@ -2354,7 +2354,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew
                If rst!FailLoseRep > 0 Then
                   If Not discardRoberta(playerID) Then
                      DB.Execute "UPDATE Players SET Solid" & rst!FailLoseRep & "=0 WHERE PlayerID =" & playerID
-                     PutMsg player.PlayName & " loses any Rep with " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), playerID, Logic!Gamecntr, True, getLeader()
+                     PutMsg player.PlayName & " loses any Rep with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!FailLoseRep), playerID, Logic!Gamecntr, True, 0, 0, 0, rst!FailLoseRep
                   End If
                End If
                
