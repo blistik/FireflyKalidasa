@@ -17,15 +17,15 @@ Begin VB.Form frmStories
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
    Begin SftTree.SftTree sftTree 
-      Height          =   2025
+      Height          =   1485
       Left            =   60
-      TabIndex        =   14
+      TabIndex        =   18
       TabStop         =   0   'False
-      Top             =   2340
+      Top             =   2880
       Width           =   11895
       _Version        =   262144
       _ExtentX        =   20981
-      _ExtentY        =   3572
+      _ExtentY        =   2619
       _StockProps     =   237
       ForeColor       =   8833235
       BackColor       =   3353720
@@ -164,7 +164,7 @@ Begin VB.Form frmStories
       Index           =   7
       Left            =   10800
       Style           =   1  'Graphical
-      TabIndex        =   29
+      TabIndex        =   31
       Top             =   720
       Width           =   1035
    End
@@ -184,7 +184,7 @@ Begin VB.Form frmStories
       Index           =   1
       Left            =   10800
       Style           =   1  'Graphical
-      TabIndex        =   19
+      TabIndex        =   23
       ToolTipText     =   "add a Goal to this story"
       Top             =   1800
       Width           =   1035
@@ -205,7 +205,7 @@ Begin VB.Form frmStories
       Index           =   0
       Left            =   10800
       Style           =   1  'Graphical
-      TabIndex        =   17
+      TabIndex        =   21
       ToolTipText     =   "save Story and close"
       Top             =   210
       Width           =   1035
@@ -226,7 +226,7 @@ Begin VB.Form frmStories
       Index           =   2
       Left            =   10800
       Style           =   1  'Graphical
-      TabIndex        =   18
+      TabIndex        =   22
       ToolTipText     =   "delete this Story"
       Top             =   1260
       Width           =   1035
@@ -234,17 +234,37 @@ Begin VB.Form frmStories
    Begin VB.Frame Frame1 
       BackColor       =   &H00CBE1ED&
       Caption         =   "Priming the Pump"
-      Height          =   2265
+      Height          =   2775
       Left            =   30
-      TabIndex        =   8
+      TabIndex        =   12
       Top             =   60
       Width           =   10605
+      Begin VB.CheckBox chkUpgrade 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "custom Drive or Upgrade"
+         Height          =   195
+         Left            =   3960
+         TabIndex        =   9
+         ToolTipText     =   "pick Upgrade or Drive"
+         Top             =   2400
+         Width           =   2265
+      End
+      Begin VB.CheckBox chkRandomCrew 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "Random Crew"
+         Height          =   195
+         Left            =   3960
+         TabIndex        =   8
+         ToolTipText     =   "assigned a random crew instead of selecting them"
+         Top             =   2160
+         Width           =   1425
+      End
       Begin VB.TextBox txt 
          Alignment       =   2  'Center
          Height          =   285
          Index           =   7
          Left            =   5340
-         TabIndex        =   27
+         TabIndex        =   4
          Text            =   "3"
          ToolTipText     =   "min 1, max 6"
          Top             =   1170
@@ -255,7 +275,7 @@ Begin VB.Form frmStories
          Caption         =   "use Havens"
          Height          =   195
          Left            =   3960
-         TabIndex        =   26
+         TabIndex        =   7
          ToolTipText     =   "use Havens for starting locations"
          Top             =   1920
          Width           =   1185
@@ -267,10 +287,10 @@ Begin VB.Form frmStories
          Index           =   6
          Left            =   9720
          Style           =   1  'Graphical
-         TabIndex        =   25
+         TabIndex        =   29
          TabStop         =   0   'False
          ToolTipText     =   "invert selection"
-         Top             =   2010
+         Top             =   2500
          Width           =   375
       End
       Begin VB.CommandButton cmd 
@@ -280,10 +300,10 @@ Begin VB.Form frmStories
          Index           =   5
          Left            =   9180
          Style           =   1  'Graphical
-         TabIndex        =   24
+         TabIndex        =   28
          TabStop         =   0   'False
          ToolTipText     =   "select Moral Crew"
-         Top             =   2010
+         Top             =   2500
          Width           =   525
       End
       Begin VB.CommandButton cmd 
@@ -293,10 +313,10 @@ Begin VB.Form frmStories
          Index           =   4
          Left            =   10100
          Style           =   1  'Graphical
-         TabIndex        =   23
+         TabIndex        =   27
          TabStop         =   0   'False
          ToolTipText     =   "clear selection"
-         Top             =   2010
+         Top             =   2500
          Width           =   375
       End
       Begin VB.CommandButton cmd 
@@ -306,18 +326,18 @@ Begin VB.Form frmStories
          Index           =   3
          Left            =   8490
          Style           =   1  'Graphical
-         TabIndex        =   22
+         TabIndex        =   26
          TabStop         =   0   'False
          ToolTipText     =   "select WANTED Crew"
-         Top             =   2010
+         Top             =   2500
          Width           =   675
       End
       Begin VB.ListBox lstCrew 
          BackColor       =   &H00CBE1ED&
-         Height          =   1635
+         Height          =   2085
          Left            =   8490
          Style           =   1  'Checkbox
-         TabIndex        =   20
+         TabIndex        =   24
          Top             =   390
          Width           =   1995
       End
@@ -363,10 +383,10 @@ Begin VB.Form frmStories
       End
       Begin VB.ListBox lstContacts 
          BackColor       =   &H00CBE1ED&
-         Height          =   1635
+         Height          =   2085
          Left            =   6360
          Style           =   1  'Checkbox
-         TabIndex        =   7
+         TabIndex        =   11
          Top             =   390
          Width           =   2025
       End
@@ -375,7 +395,7 @@ Begin VB.Form frmStories
          Height          =   285
          Index           =   2
          Left            =   5800
-         TabIndex        =   4
+         TabIndex        =   3
          Text            =   "2"
          ToolTipText     =   "Parts"
          Top             =   780
@@ -386,7 +406,7 @@ Begin VB.Form frmStories
          Height          =   285
          Index           =   1
          Left            =   5340
-         TabIndex        =   3
+         TabIndex        =   2
          Text            =   "6"
          ToolTipText     =   "Fuel"
          Top             =   780
@@ -399,7 +419,7 @@ Begin VB.Form frmStories
          Height          =   285
          Index           =   0
          Left            =   5340
-         TabIndex        =   2
+         TabIndex        =   10
          Text            =   "3000"
          Top             =   390
          Width           =   885
@@ -409,7 +429,7 @@ Begin VB.Form frmStories
          Caption         =   "Exclude Crew"
          Height          =   225
          Left            =   8490
-         TabIndex        =   21
+         TabIndex        =   25
          Top             =   195
          Width           =   1965
       End
@@ -420,7 +440,7 @@ Begin VB.Form frmStories
          Height          =   285
          Index           =   4
          Left            =   210
-         TabIndex        =   16
+         TabIndex        =   20
          Top             =   720
          Width           =   1545
       End
@@ -431,7 +451,7 @@ Begin VB.Form frmStories
          Height          =   285
          Index           =   12
          Left            =   210
-         TabIndex        =   15
+         TabIndex        =   19
          Top             =   200
          Width           =   1545
       End
@@ -443,7 +463,7 @@ Begin VB.Form frmStories
          Height          =   285
          Index           =   3
          Left            =   3960
-         TabIndex        =   13
+         TabIndex        =   17
          Top             =   1560
          Width           =   1215
       End
@@ -452,7 +472,7 @@ Begin VB.Form frmStories
          Caption         =   "Starting Jobs (discard to 3)"
          Height          =   225
          Left            =   6360
-         TabIndex        =   12
+         TabIndex        =   16
          Top             =   195
          Width           =   2115
       End
@@ -464,7 +484,7 @@ Begin VB.Form frmStories
          Height          =   285
          Index           =   2
          Left            =   3960
-         TabIndex        =   11
+         TabIndex        =   15
          Top             =   1170
          Width           =   1215
       End
@@ -476,7 +496,7 @@ Begin VB.Form frmStories
          Height          =   285
          Index           =   1
          Left            =   3960
-         TabIndex        =   10
+         TabIndex        =   14
          Top             =   780
          Width           =   1215
       End
@@ -488,7 +508,7 @@ Begin VB.Form frmStories
          Height          =   285
          Index           =   0
          Left            =   3960
-         TabIndex        =   9
+         TabIndex        =   13
          Top             =   390
          Width           =   1215
       End
@@ -499,7 +519,7 @@ Begin VB.Form frmStories
       Height          =   285
       Index           =   5
       Left            =   60
-      TabIndex        =   28
+      TabIndex        =   30
       Top             =   4410
       Width           =   11895
    End
@@ -547,7 +567,9 @@ Dim frmGoal As frmGoals, SQL
       SQL = SQL & " NoOfReavers = " & CStr(Val(txt(7))) & ","
       SQL = SQL & " StartingJobs = " & IIf(getList(lstContacts) = "", "NULL", "'" & getList(lstContacts) & "'") & ","
       SQL = SQL & " ExcludeCrew = " & IIf(getList(lstCrew) = "", "NULL", "'" & getList(lstCrew) & "'") & ","
-      SQL = SQL & " Havens = " & chkHavens.Value
+      SQL = SQL & " Havens = " & chkHavens.Value & ","
+      SQL = SQL & " UpgradeDrive = " & chkUpgrade.Value & ","
+      SQL = SQL & " RandomCrew = " & chkRandomCrew.Value
       SQL = SQL & " WHERE StoryID = " & StoryID
       DB.Execute SQL
       
@@ -587,7 +609,7 @@ End Sub
 
 Private Sub Form_Load()
    LoadCombo lstContacts, "contact", " WHERE ContactID > 0"
-   LoadCombo lstCrew, "crew", " Order by CrewName"
+   LoadCombo lstCrew, "crew", " WHERE Crew.CrewID NOT IN (41, 54) Order by CrewName"
    refreshHeader
    RefreshGoals
 End Sub
@@ -625,6 +647,8 @@ Dim SQL, Index
          Label2 = "Exclude Crew (" & CStr(SetList(lstCrew, Nz(rst!ExcludeCrew))) & " selected)"
          lbl(5).Caption = getHighScorer
          chkHavens.Value = rst!Havens
+         chkRandomCrew.Value = rst!RandomCrew
+         chkUpgrade.Value = rst!UpgradeDrive
       Else 'new
          DB.Execute "Insert into Story (StoryID,StoryTitle, Active) VALUES (" & StoryID & ",'add a new story title here..',1)"
       End If

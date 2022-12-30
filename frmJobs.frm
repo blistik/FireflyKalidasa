@@ -10,6 +10,7 @@ Begin VB.Form frmJobs
    ClientWidth     =   4575
    Icon            =   "frmJobs.frx":0000
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MDIChild        =   -1  'True
    ScaleHeight     =   3705
    ScaleWidth      =   4575
@@ -98,6 +99,8 @@ Begin VB.Form frmJobs
       ColHeaderForeColor=   10937324
       ForeColor       =   8833235
       BackColor       =   855618
+      SelectStyle     =   2
+      NoFocusStyle    =   2
       RowColHeaderAppearance=   0
       RowColPicture   =   "frmJobs.frx":04E6
       RowHeaderStyle  =   128
@@ -113,6 +116,8 @@ Begin VB.Form frmJobs
       ColPict7        =   "frmJobs.frx":05C6
       ColPict8        =   "frmJobs.frx":05E2
       BackgroundPicture=   "frmJobs.frx":05FE
+      CharSearchMode  =   2
+      ShowFocusRectangle=   0   'False
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End
@@ -446,7 +451,7 @@ Private Sub mnuPopUp_Click(Index As Integer)
    Select Case Index
    Case 0
       If .ListIndex < 1 Or Left(.CellText(.ListIndex, 1), 4) = "Goal" Then Exit Sub
-      If MessBox("Are you sure you want to ditch the Job: " & .CellText(.ListIndex, 1) & "?", "Discard Job", "Yes", "No", getLeader()) = 0 Then
+      If MessBox("Are you sure you want to ditch the Job: " & .CellText(.ListIndex, 1) & "?", "Discard Job", "Ditch", "Nope", getLeader()) = 0 Then
       'If MsgBox("Are you sure you want to ditch the Job: " & .CellText(.ListIndex, 1) & "?", vbOKCancel + vbQuestion, "Discard Job") = vbOK Then
          removeJob player.ID, .ItemData(.ListIndex)
          If actionSeq > ASidle And actionSeq < ASEnd Then

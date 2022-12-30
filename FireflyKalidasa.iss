@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly Kalidasa"
-#define MyAppVersion "1.7.9"
+#define MyAppVersion "1.8.0"
 #define MyAppPublisher "VeeBee-er"
 #define MyAppURL "https://boardgamegeek.com/thread/1507268/computerize-firefly-board-game/page/5"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -23,7 +23,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputBaseFilename=FireflyKalidasaSetupV1.7.9
+OutputBaseFilename=FireflyKalidasaSetupV1.8.0
 SetupIconFile=D:\Progs\GitHub\FireflyKalidasa\ROCKET.ICO
 Compression=lzma
 SolidCompression=yes
@@ -41,12 +41,12 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\bin\SFTTREEX.OCX"; DestDir: "{sys}"; Fl
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\MSCOMCTL.OCX"; DestDir: "{sys}"; Flags: 32bit regserver sharedfile
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\LaVolpeAlphaImg2.ocx"; DestDir: "{sys}"; Flags: 32bit regserver sharedfile
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\XDockFloat.dll"; DestDir: "{sys}"; Flags: 32bit regserver sharedfile
-;Source: "D:\Progs\GitHub\FireflyKalidasa\bin\msado27.tlb"; DestDir: "{sys}"; Flags: 32bit sharedfile
 
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\SHOWG.TTF";  DestDir: "{autofonts}"; FontInstall: "Showcard Gothic"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\BRITANIC.TTF";  DestDir: "{autofonts}"; FontInstall: "Britannic Bold"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\CIND.otf";  DestDir: "{autofonts}"; FontInstall: "Cyberpunk Is Not Dead"; Flags: onlyifdoesntexist uninsneveruninstall
 
+Source: "D:\Progs\GitHub\FireflyKalidasa\FireFlyAIBot.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\VerseMapTool.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa.mdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\Firefly_rulebook.pdf"; DestDir: "{app}"; Flags: ignoreversion
@@ -270,6 +270,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\clack.wav"; DestDir: "{app}\soun
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\Firefly AI Bot"; Filename: "{app}\FireFlyAIBot.exe"
 Name: "{group}\Firefly Rulebook"; Filename: "{app}\Firefly_rulebook.pdf"
 Name: "{group}\BlueSun Rulebook"; Filename: "{app}\FireflyBlueSun_rulebook.pdf"
 Name: "{group}\Kalidasa Rulebook"; Filename: "{app}\FireflyKalidasa_rulebook.pdf"

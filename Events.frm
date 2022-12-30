@@ -68,12 +68,15 @@ Begin VB.Form Events
       ColStyle0       =   20
       MouseIcon       =   "Events.frx":0506
       BackColor       =   3355725
+      NoFocusStyle    =   2
       RowColHeaderAppearance=   0
       RowColPicture   =   "Events.frx":0522
       LeftButtonOnly  =   0   'False
       RowHeaderAppearance=   0
       ItemStyle       =   1
       BackgroundPicture=   "Events.frx":053E
+      CharSearchMode  =   2
+      ShowFocusRectangle=   0   'False
       ToolTipBackColor=   -2147483643
    End
    Begin VB.Timer Timer1 

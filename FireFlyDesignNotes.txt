@@ -1,5 +1,7 @@
 Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 Mar 2021
 
+Dev Ideas:
+
 Test Issues pending:
 
 Mr Universe Job name ideas (9 done):
@@ -21,6 +23,12 @@ The puppet theater
 The very best violence
 
 Version updates:
+v 1.8.0 ~ 24 Dec 2022 - 31 Dec 2022
+new: buy Fuel & Buy Shoreleave at another player's Haven
+new: Support for AI Player bot (via headless client app)
+add: random Crew selection option for a Story
+add: Ship Upgrade option for Story
+
 v1.7.9 ~ 11 Oct 2022 - 22 Dec 2022
 new: Havens supported, new option in Story editor
 new: Story setup support for running from 1 to 6 Reaver Cutters

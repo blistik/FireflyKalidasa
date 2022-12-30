@@ -421,9 +421,9 @@ Private Sub cmd_Click()
    playsnd 8
    If cboCrew.ListIndex = -1 Then Exit Sub
       
-   If player.PlayName <> "" And actionSeq = 0 And AlwaysOnTop = False Then
-      PutMsg player.PlayName & " has chosen " & cboCrew.Text, player.ID
-   End If
+'   If player.PlayName <> "" And actionSeq = 0 And AlwaysOnTop = False Then
+'      PutMsg player.PlayName & " has chosen " & cboCrew.Text, player.ID
+'   End If
    
    Me.Hide
 End Sub

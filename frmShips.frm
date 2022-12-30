@@ -104,6 +104,7 @@ Begin VB.Form frmShips
       ForeColor       =   8833235
       BackColor       =   4587520
       SelectStyle     =   2
+      NoFocusStyle    =   2
       RowColHeaderAppearance=   0
       RowColPicture   =   "frmShips.frx":0502
       LeftButtonOnly  =   0   'False
@@ -131,6 +132,7 @@ Begin VB.Form frmShips
       ColFlag9        =   8
       ColPict9        =   "frmShips.frx":061A
       BackgroundPicture=   "frmShips.frx":0636
+      CharSearchMode  =   2
       ShowFocusRectangle=   0   'False
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
@@ -774,7 +776,7 @@ With sftTree
       End If
       w = CargoCapacity(rst!playerID)
       x = CargoSpaceUsed(rst!playerID)
-      .CellText(y, 2) = "Cargo Cap: " & w & ",  Cargo: " & CStr(x) & "  Spare: " & CStr((w - x))
+      .CellText(y, 2) = "Cargo Cap: " & w & ",  Goods: " & CStr(x) & "  Spare: " & CStr((w - x))
       If (w - CargoSpaceUsed(rst!playerID)) < 1 Then .CellForeColor(y, 2) = QBColor(12)
       
       If z = y Then .Collapse y, True
@@ -1142,7 +1144,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             Case 9 'Passenger
                y = varDLookup("Passenger", "Players", "PlayerID=" & player.ID)
                Do
-                  z = Val(InputBox("How many Passengers do you want to set ashore?", "Make room in the Cargo Hold"))
+                  z = Val(InputBox("How many Passengers do you want to set ashore?", "Make room in the Cargo Hold", y))
                   If z >= 0 And z <= y Then
                      Exit Do
                   End If

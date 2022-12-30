@@ -65,7 +65,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-' discardMode = 1 discard one upgrd, discardMode = 2 buy an upgrd, discardMode = 3 Cry Baby in discard for free, discardMode = 4 take 1 discard for free, discardMode = 5 take 1 DriveCore discard for free
+' discardMode = 1 discard one upgrd, discardMode = 2 buy an upgrd, discardMode = 3 Cry Baby in discard for free, discardMode = 4 take 1 discard for free
+' discardMode = 5 take 1 DriveCore discard for free, discardMode = 6 take any upgrade for free
 Option Explicit
 Public CardID As Integer, discardMode As Integer
 
@@ -134,7 +135,7 @@ Private Sub Form_Load()
       Me.Caption = "Buy a Ship upgrade"
       Label1 = "Pick a Ship Upgrade to buy at Half Listed Price"
    End If
-   LoadCombo cbo, "shipupgd", IIf(discardMode = 1, CStr(player.ID) & " AND ShipUpgrade.DriveCore<>1", IIf(discardMode = 3, "5 AND ShipUpgrade.ShipUpgradeID = 1", IIf(discardMode = 5, "5 AND ShipUpgrade.DriveCore = 1", "5")))
+   LoadCombo cbo, "shipupgd", IIf(discardMode = 1, "=" & CStr(player.ID) & " AND ShipUpgrade.DriveCore<>1", IIf(discardMode = 3, "=5 AND ShipUpgrade.ShipUpgradeID = 1", IIf(discardMode = 5, "=5 AND ShipUpgrade.DriveCore = 1", IIf(discardMode = 6, ">4", "=5"))))
 
 End Sub
 

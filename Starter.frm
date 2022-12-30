@@ -245,7 +245,7 @@ End Sub
 
 Private Sub cmd_Click(Index As Integer)
 Dim rst As New ADODB.Recordset, col, cnt, x
-Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer
+Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer, randCrew As Integer
 Dim frmCrewList As frmCrewLst
          
    On Error GoTo err_handler
@@ -261,6 +261,7 @@ Dim frmCrewList As frmCrewLst
          frmCrew.crewFilter = " WHERE Leader = 1 AND NOT EXISTS(select 1 from Players WHERE Leader = CrewID)" & IIf(getExcludeCrew = "", "", " AND CrewID NOT IN (" & getExcludeCrew & ")") & " Order By CrewName"
          frmCrew.Show 1
          leader = GetCombo(frmCrew.cboCrew)
+         PutMsg player.PlayName & " has chosen " & frmCrew.cboCrew.Text, player.ID
          cmd(0).Enabled = False
          cmd(0).Caption = "waiting"
          SetupPlayer player.ID, Logic!StoryID
@@ -270,7 +271,12 @@ Dim frmCrewList As frmCrewLst
          'get story requirements
          noOfCrew = varDLookup("StartingCrew", "Story", "StoryID=" & Logic!StoryID)
          costLimit = varDLookup("CrewCostLimit", "Story", "StoryID=" & Logic!StoryID)
-         If noOfCrew > 0 Then
+         randCrew = varDLookup("RandomCrew", "Story", "StoryID=" & Logic!StoryID)
+         
+         If noOfCrew > 0 And randCrew = 1 Then
+            getRandomCrew noOfCrew, leader
+         
+         ElseIf noOfCrew > 0 Then
            'show a list of Crew to choose up to $1000 hire fee
             Set frmCrewList = New frmCrewLst
             frmCrewList.crewFilter = getExcludeCrew
@@ -279,6 +285,7 @@ Dim frmCrewList As frmCrewLst
             frmCrewList.Caption = "Select up to " & noOfCrew & " Crew up to $" & costLimit
             frmCrewList.Show 1
          End If
+
          'cycle players, and set "S" to start when done all
          setNextLeader player.ID, leader
          
@@ -354,7 +361,7 @@ Dim frmCrewList As frmCrewLst
             PutMsg PlayCode(x).PlayName & " has entered the game", x
          End If
       Next x
-      If cnt = 1 Then SoloGame = True
+      SoloGame = isSoloGame()
                
       nextplayer = 0
       Randomize Timer
@@ -510,3 +517,29 @@ Dim excludes As String
       DB.Execute "UPDATE SupplyDeck Set Seq = 0 WHERE  CrewID IN (" & excludes & ")"
    End If
 End Sub
+
+Private Sub getRandomCrew(ByVal noOfCrew As Integer, ByVal leader)
+Dim rst As New ADODB.Recordset, SQL, CrewID, maxCrewID, crewcnt
+
+   maxCrewID = varDLookup("max(CrewID) AS maxcrew", "Crew", "Leader=0", "maxcrew")
+   SQL = "SELECT SupplyDeck.CardID, SupplyDeck.Seq, Crew.* FROM Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID WHERE Crew.Leader=0 AND Seq > 4 AND Crew.CrewID NOT IN (23,54)"
+   If leader = 69 Then 'add Atherton check
+      SQL = SQL & " AND Crew.Companion = 0"
+   End If
+   crewcnt = 0
+   rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
+   While crewcnt < noOfCrew
+      rst.Requery
+      CrewID = Int((maxCrewID * Rnd)) + 1
+      rst.filter = "CrewID =" & CrewID
+      If Not rst.EOF Then
+          DB.Execute "UPDATE SupplyDeck SET Seq =" & player.ID & " WHERE CardID = " & rst!CardID
+          'add the card to the players deck
+          DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & rst!CardID & ")"
+         rst.Update "Seq", player.ID
+         crewcnt = crewcnt + 1
+      End If
+   Wend
+   rst.Close
+End Sub
+

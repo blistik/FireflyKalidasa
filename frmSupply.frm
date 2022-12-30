@@ -104,6 +104,8 @@ Begin VB.Form frmSupply
       ColHeaderForeColor=   65280
       ForeColor       =   8833235
       BackColor       =   7360778
+      SelectStyle     =   2
+      NoFocusStyle    =   2
       RowColHeaderAppearance=   0
       RowColPicture   =   "frmSupply.frx":0502
       RowHeaderStyle  =   128
@@ -127,6 +129,8 @@ Begin VB.Form frmSupply
       ColPict8        =   "frmSupply.frx":05FE
       ColPict9        =   "frmSupply.frx":061A
       BackgroundPicture=   "frmSupply.frx":0636
+      CharSearchMode  =   2
+      ShowFocusRectangle=   0   'False
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End

@@ -534,6 +534,13 @@ Private Sub cbo_Click()
    cbo.ToolTipText = cbo.Text
 End Sub
 
+Private Sub chkShore_Click()
+      txtFuel.Enabled = (chkShore.Value = 0)
+      txtParts.Enabled = (chkShore.Value = 0)
+      setBackColour txtFuel
+      setBackColour txtParts
+End Sub
+
 Private Sub txtCargo_DblClick()
    If txtCargo.Enabled Then txtCargo.Text = CStr(Val(txtCargo.Text) + 1)
 End Sub
@@ -606,7 +613,7 @@ Dim x, SectorID
          If FullburnMovesDone > 0 Then fullburndone = True
          SectorID = getPlayerSector(player.ID)
          
-         If getHaven(SectorID) = player.ID Then
+         If getHaven(SectorID) > 0 Then
             actionSeq = ASBuyHaven
          
          ElseIf chkShore.Value = 1 Then

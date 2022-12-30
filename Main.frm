@@ -15,7 +15,7 @@ Begin VB.MDIForm Main
    StartUpPosition =   3  'Windows Default
    Begin VB.Timer Timing 
       Enabled         =   0   'False
-      Interval        =   4000
+      Interval        =   3200
       Left            =   1830
       Top             =   1800
    End
@@ -270,7 +270,7 @@ Begin VB.MDIForm Main
             ImageKey        =   "help"
             Style           =   5
             BeginProperty ButtonMenus {66833FEC-8583-11D1-B16A-00C0F0283628} 
-               NumButtonMenus  =   6
+               NumButtonMenus  =   7
                BeginProperty ButtonMenu1 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "firefly"
                   Text            =   "Firefly Rulebook"
@@ -292,12 +292,151 @@ Begin VB.MDIForm Main
                   Text            =   "Job View/Edit"
                EndProperty
                BeginProperty ButtonMenu6 {66833FEE-8583-11D1-B16A-00C0F0283628} 
+                  Key             =   "bot"
+                  Text            =   "AI Player Bot"
+               EndProperty
+               BeginProperty ButtonMenu7 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "about"
                   Text            =   "About"
                EndProperty
             EndProperty
          EndProperty
       EndProperty
+      Begin VB.PictureBox pic 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H80000005&
+         ForeColor       =   &H80000008&
+         Height          =   270
+         Index           =   8
+         Left            =   13380
+         Picture         =   "Main.frx":45CF8
+         ScaleHeight     =   240
+         ScaleWidth      =   240
+         TabIndex        =   10
+         Top             =   180
+         Width           =   270
+      End
+      Begin VB.PictureBox pic 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H80000005&
+         ForeColor       =   &H80000008&
+         Height          =   270
+         Index           =   7
+         Left            =   12960
+         Picture         =   "Main.frx":46001
+         ScaleHeight     =   240
+         ScaleWidth      =   240
+         TabIndex        =   9
+         Top             =   180
+         Width           =   270
+      End
+      Begin VB.PictureBox pic 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H80000005&
+         ForeColor       =   &H80000008&
+         Height          =   270
+         Index           =   6
+         Left            =   12540
+         Picture         =   "Main.frx":4630A
+         ScaleHeight     =   240
+         ScaleWidth      =   240
+         TabIndex        =   8
+         Top             =   180
+         Width           =   270
+      End
+      Begin VB.PictureBox pic 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H80000005&
+         ForeColor       =   &H80000008&
+         Height          =   270
+         Index           =   5
+         Left            =   12120
+         Picture         =   "Main.frx":46613
+         ScaleHeight     =   240
+         ScaleWidth      =   240
+         TabIndex        =   7
+         Top             =   180
+         Width           =   270
+      End
+      Begin VB.PictureBox pic 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H80000005&
+         ForeColor       =   &H80000008&
+         Height          =   270
+         Index           =   4
+         Left            =   11700
+         Picture         =   "Main.frx":4691C
+         ScaleHeight     =   240
+         ScaleWidth      =   240
+         TabIndex        =   6
+         Top             =   180
+         Width           =   270
+      End
+      Begin VB.PictureBox pic 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H80000005&
+         ForeColor       =   &H80000008&
+         Height          =   270
+         Index           =   3
+         Left            =   11280
+         Picture         =   "Main.frx":46C25
+         ScaleHeight     =   240
+         ScaleWidth      =   240
+         TabIndex        =   5
+         Top             =   180
+         Width           =   270
+      End
+      Begin VB.PictureBox pic 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H80000005&
+         ForeColor       =   &H80000008&
+         Height          =   270
+         Index           =   2
+         Left            =   10860
+         Picture         =   "Main.frx":46F2E
+         ScaleHeight     =   240
+         ScaleWidth      =   240
+         TabIndex        =   4
+         Top             =   180
+         Width           =   270
+      End
+      Begin VB.PictureBox pic 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H80000005&
+         ForeColor       =   &H80000008&
+         Height          =   270
+         Index           =   1
+         Left            =   10440
+         Picture         =   "Main.frx":47237
+         ScaleHeight     =   240
+         ScaleWidth      =   240
+         TabIndex        =   3
+         Top             =   180
+         Width           =   270
+      End
+      Begin VB.PictureBox pic 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H80000005&
+         ForeColor       =   &H80000008&
+         Height          =   270
+         Index           =   9
+         Left            =   13800
+         Picture         =   "Main.frx":47540
+         ScaleHeight     =   240
+         ScaleWidth      =   240
+         TabIndex        =   2
+         Top             =   180
+         Width           =   270
+      End
    End
    Begin XDOCKFLOATLibCtl.DockFrame DockFrame1 
       Left            =   570
@@ -338,6 +477,12 @@ Dim x
 
 
    If Not Logon Then End
+   
+   For x = 1 To NO_OF_CONTACTS
+      pic(x).Visible = False
+      pic(x).Picture = LoadPicture(App.Path & "\Pictures\Sm" & Nz(varDLookup("Picture", "Contact", "ContactID=" & x)))
+      pic(x).ToolTipText = "Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & x)
+   Next x
 
    Logic.Open "GameSeq", DB, adOpenDynamic, adLockPessimistic ', adLockOptimistic
    x = GetSeq
@@ -348,7 +493,7 @@ End Sub
 Private Sub MDIForm_QueryUnload(Cancel As Integer, UnloadMode As Integer)
    DockFrame1.SaveStates "Firefly"
    If Me.Visible Then
-      If MessBox("Are you sure you want to close the game?", "Closing Game", "Yes", "No") = 0 Then
+      If MessBox("Are you sure you want to close the game?", "Closing Game", "I'm outa here", "Nope") = 0 Then
          If DB.State = adStateOpen Then DB.Close
          End
       Else
@@ -378,6 +523,7 @@ On Error GoTo err_handler
 
    If status <> "H" And status <> "E" And status <> "L" And pickStartSector > -1 Then
       RefreshBoard
+      refreshSolid
    End If
    If status = "E" Then 'currently in End Game
       PutMsg "Waiting to Host or Join a Game"
@@ -404,6 +550,14 @@ On Error GoTo err_handler
       
       'deal start drive core, and Jobs
       dealDriveAndJobs player.ID
+      
+      If varDLookup("UpgradeDrive", "Story", "StoryID=" & Logic!StoryID) = 1 Then
+         Dim frmShUp As frmShipUpgd
+         'present list of discarded upgrades to choose one for free
+         Set frmShUp = New frmShipUpgd
+         frmShUp.discardMode = 6
+         frmShUp.Show 1
+      End If
       
       'starting point selected, pass to next person, or kick the main Running Game cycle off
       setNextPlayerREV player.ID, "R"
@@ -492,21 +646,37 @@ On Error GoTo err_handler
    
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASMoseyEnd Then   'Mosey Cycle - your go
       PutMsg player.PlayName & " moseyed to sector " & SectorID, player.ID, Logic!Gamecntr
-      resolveToken SectorID
-      checkFlacGun SectorID
-      actionSeq = ASselect 'in limbo awaiting user to select
-      showActions   'throw it back to the action window to resolve end of mosey and offer other actions
+      If resolveToken(SectorID) = 6 And isOutlaw(player.ID) Then 'no Nav card when Corvette arrives
+         If actionSeq <> ASNavEvade Then
+            actionSeq = ASselect 'in limbo awaiting user to select
+            showActions   'throw it back to the action window
+         End If
+      Else 'reavers
+         If actionSeq <> ASNavEvade Then
+            checkFlacGun SectorID
+            actionSeq = ASselect 'in limbo awaiting user to select
+            showActions   'throw it back to the action window
+         End If
+      End If
+'      resolveToken SectorID
+'      checkFlacGun SectorID
+'      actionSeq = ASselect 'in limbo awaiting user to select
+'      showActions   'throw it back to the action window to resolve end of mosey and offer other actions
    
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASFullburnEnd Then   'fullburn Cycle - your go
       PutMsg player.PlayName & " fullburned to sector " & SectorID, player.ID, Logic!Gamecntr
       If resolveToken(SectorID) = 6 And isOutlaw(player.ID) Then 'no Nav card when Corvette arrives
          frmAction.fullburndone = True
-         actionSeq = ASselect 'in limbo awaiting user to select
-         showActions   'throw it back to the action window
+         If actionSeq <> ASNavEvade Then
+            actionSeq = ASselect 'in limbo awaiting user to select
+            showActions   'throw it back to the action window
+         End If
       Else
-         checkFlacGun SectorID
-         actionSeq = ASNav 'pick a Nav card
-         showNav
+         If actionSeq <> ASNavEvade Then
+            checkFlacGun SectorID
+            actionSeq = ASNav 'pick a Nav card
+            showNav
+         End If
       End If
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASnavEnd Then   'fullburn Cycle
       'deal with the Nav option chosen
@@ -663,9 +833,10 @@ On Error GoTo err_handler
       'buy fuel & parts now
       If frmAction.txtFuel.Enabled Then
          If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.txtFuel)) / 2 Then
-            If doBuyFuelParts(player.ID, Val(frmAction.txtFuel), 0, False, 4) = 0 Then
-               PutMsg player.PlayName & " loaded " & frmAction.txtFuel & " Fuel at the Haven, up to 4 for free!", player.ID, Logic!Gamecntr
+            If doBuyFuelParts(player.ID, Val(frmAction.txtFuel), 0, False, IIf(getHaven(SectorID) = player.ID, 4, 0)) = 0 Then
+               
             End If
+            PutMsg player.PlayName & " loaded " & frmAction.txtFuel & " Fuel at the Haven" & IIf(getHaven(SectorID) = player.ID, ", up to 4 for free!", ""), player.ID, Logic!Gamecntr
          Else
             MessBox "Not enough Cargo Space for the Fuel/Parts order", "Fuel/Parts order", "Ooops", "", getLeader()
          End If
@@ -674,7 +845,7 @@ On Error GoTo err_handler
       End If
       x = 0
       If frmAction.chkShore.Value = 1 Then
-         x = doShoreLeave(player.ID, False, True)
+         x = doShoreLeave(player.ID, False, (getHaven(SectorID) = player.ID))
       End If
       
       actionSeq = ASselect 'in limbo awaiting user to select
@@ -806,6 +977,7 @@ Dim ChatTxt As String, x
        Logic.Update "Seq", "H"
        Logic.Update "GameCntr", 0
        ClearBoard
+       refreshSolid
        'Starter.cbo.Enabled = True
        Starter.isHost = True
        Starter.Show 1
@@ -845,6 +1017,7 @@ Dim ChatTxt As String, x
          player.ID = 0
          player.Color = ""
          player.PlayName = ""
+         refreshSolid
          Starter.isHost = False
          Starter.Show 1
          
@@ -864,10 +1037,12 @@ Dim ChatTxt As String, x
         'Case vbOK
             player.ID = getNewPlayer()
             player.PlayName = Nz(varDLookup("Name", "Players", "PlayerID =" & player.ID))
-            SoloGame = (getPlayerCount(True) = 1)
+            getPlayerCount True
+            SoloGame = isSoloGame()
             pickStartSector = 2  'flag the selection is done
             actionSeq = ASidle
             initBoard
+            refreshSolid
             'Verse.Timer1.Enabled = True
             showEvents
             initToolbar True, False
@@ -1101,41 +1276,45 @@ Private Sub initToolbar(ByVal start As Boolean, Optional ByVal admin As Boolean 
 End Sub
 
 Private Sub killAllForms()
+Dim x
 
-    If Verse.Visible Then
-       Verse.Hide
-       Unload Verse
-       Set Verse = Nothing
-    End If
-
-    If frmJob Is Nothing Then
-    Else
-       Unload frmJob
-       Set frmJob = Nothing
-    End If
-    If frmShip Is Nothing Then
-    Else
-       Unload frmShip
-       Set frmShip = Nothing
-    End If
-    If frmDeal Is Nothing Then
-    Else
-       Unload frmDeal
-       Set frmDeal = Nothing
-    End If
-    If frmBuy Is Nothing Then
-    Else
-       Unload frmBuy
-       Set frmBuy = Nothing
-    End If
-    If frmStat Is Nothing Then
-    Else
-      Unload frmStat
-      Set frmStat = Nothing
-    End If
-    If Events.FDPane1.PaneVisible Then Unload Events
-    If frmAction.FDPane1.PaneVisible Then Unload frmAction
-
+   If Verse.Visible Then
+      Verse.Hide
+      Unload Verse
+      Set Verse = Nothing
+   End If
+   
+   If frmJob Is Nothing Then
+   Else
+      Unload frmJob
+      Set frmJob = Nothing
+   End If
+   If frmShip Is Nothing Then
+   Else
+      Unload frmShip
+      Set frmShip = Nothing
+   End If
+   If frmDeal Is Nothing Then
+   Else
+      Unload frmDeal
+      Set frmDeal = Nothing
+   End If
+   If frmBuy Is Nothing Then
+   Else
+      Unload frmBuy
+      Set frmBuy = Nothing
+   End If
+   If frmStat Is Nothing Then
+   Else
+     Unload frmStat
+     Set frmStat = Nothing
+   End If
+   If Events.FDPane1.PaneVisible Then Unload Events
+   If frmAction.FDPane1.PaneVisible Then Unload frmAction
+   
+   For x = 1 To NO_OF_CONTACTS
+     pic(x).Visible = False
+   Next x
 
 
 End Sub
@@ -1222,9 +1401,11 @@ Dim frmJobEdit As frmJobEditor, x
       x = ShellExecute(x, "OPEN", App.Path & "\FireflyForPC.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
    Case "about"
       MessBox "Firefly + Blue Sun/Kalidasa  V" & App.Major & "." & App.Minor & "." & App.Revision & vbNewLine & "*Freeware* - use at your own risk" & vbNewLine & "Made by: Vee Bee-er (c)2021-22 BLiSoftware", "About", "Shiny"
-  Case "jobs"
+   Case "jobs"
     Set frmJobEdit = New frmJobEditor
     frmJobEdit.Show 1
+   Case "bot"
+      x = ShellExecute(x, "OPEN", App.Path & "\FireflyAIBot.exe ", DataB, vbNullString, 1)               '1=normal, 2=min, 3=max, 4=behind
    End Select
 
 End Sub
@@ -1584,11 +1765,11 @@ Dim frmJoSel As frmJobSel
       .cmd(2).Enabled = False
       If (Not .buydone) And (Not onlyFullburn) And Not reaverActive Then  ' Buy and Shore leave *may* be active
          
-         .chkShore.Enabled = (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19) Or getHaven(SectorID) = player.ID) And hasDisgruntled(player.ID) And (Abs(doShoreLeave(player.ID, True)) <= getMoney(player.ID) Or getHaven(SectorID) = player.ID)
+         .chkShore.Enabled = (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19) Or getHaven(SectorID) > 0) And hasDisgruntled(player.ID) And (Abs(doShoreLeave(player.ID, True)) <= getMoney(player.ID) Or getHaven(SectorID) = player.ID)
          
          If (.lblSupply.Caption <> "") And (actionSeq = ASselect Or (actionSeq = ASBuySelDiscard And getUnseenDeck("Supply", Val(.lblSupply.Tag)) > 0) Or actionSeq = ASBuySelect) Then 'we can BUY
             .cmd(2).Enabled = True
-         ElseIf getHaven(SectorID) = player.ID And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 Then
+         ElseIf getHaven(SectorID) > 0 And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 Then
             .cmd(2).Enabled = True
          ElseIf .chkShore.Enabled And actionSeq = ASselect Then 'shore leave ONLY
             .cmd(2).Enabled = True
@@ -1607,10 +1788,11 @@ Dim frmJoSel As frmJobSel
       
       'FUEL & PARTS
       '.txtFuel.Enabled = ((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone) And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0) Or (Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0) = 5 And isSolid(player.ID, 5))
-      .txtFuel.Enabled = CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 And (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone)) Or (Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0) = 5 And isSolid(player.ID, 5)) Or getHaven(SectorID) = player.ID)
+      .txtFuel.Enabled = CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 And (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone)) Or (Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0) = 5 And isSolid(player.ID, 5)) Or getHaven(SectorID) > 0)
       .txtParts.Enabled = ((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone) And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0)
-            
-                     
+      setBackColour .txtFuel
+      setBackColour .txtParts
+      
       'load Dealer in this sector
       .lblContact.Tag = varDLookup("ContactID", "Contact", "SectorID=" & SectorID) & ""
       .lblContact.Caption = varDLookup("ContactName", "Contact", "SectorID=" & SectorID) & ""
@@ -1648,6 +1830,8 @@ Dim frmJoSel As frmJobSel
          .txtCargo.ToolTipText = "sell Cargo to Contact"
          .txtContra.ToolTipText = "sell Contraband to Contact"
       End If
+      setBackColour .txtCargo
+      setBackColour .txtContra
          
       '>>>>>  CMD  DEAL  <<<<
       Select Case actionSeq
@@ -1794,7 +1978,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew
    End If
    
    If finalstate = JOB_SUCCESS And rst!Immoral = 1 And hasDisgruntled(playerID) Then
-      If MessBox("Warning: Completing this Immoral Job with Disgruntle Crew will result in Crew leaving." & vbNewLine & "Are you sure you want to continue?", "Immoral Job Consequences", "Yes", "No", getLeader()) = 1 Then
+      If MessBox("Warning: Completing this Immoral Job with Disgruntle Crew will result in Crew leaving." & vbNewLine & "Are you sure you want to continue?", "Immoral Job Consequences", "Don't Care", "Oh No", getLeader()) = 1 Then
          frmAction.workdone = False
          Exit Function
       End If
@@ -2052,7 +2236,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew
             'check if the keyword was single use, and discard
             
             If discardGearKeyword(playerID, rst!KeyWords, True) Then
-               If MessBox("In this final Work Challenge, do you want to use your discardable " & rst!KeyWords & " instead of the Skill Test?" & IIf(rst!KeyWords = "EXPLOSIVES", vbNewLine & "This would result in Half Pay.", ""), "Final Work Challenge", "Yes", "No", getLeader()) = 0 Then
+               If MessBox("In this final Work Challenge, do you want to use your discardable " & rst!KeyWords & " instead of the Skill Test?" & IIf(rst!KeyWords = "EXPLOSIVES", vbNewLine & "This would result in Half Pay.", ""), "Final Work Challenge", "Do It", "Nope", getLeader()) = 0 Then
                   discardGearKeyword playerID, rst!KeyWords
                   KeywordInUse = True
                   If rst!KeyWords = "EXPLOSIVES" Then
@@ -2062,7 +2246,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew
                   End If
                End If
             Else
-               If MessBox("In this final Work Challenge, do you want to use your " & rst!KeyWords & " instead of the Skill Test?" & IIf(rst!KeyWords = "EXPLOSIVES", vbNewLine & "This would result in Half Pay.", ""), "Final Work Challenge", "Yes", "No", getLeader()) = 0 Then
+               If MessBox("In this final Work Challenge, do you want to use your " & rst!KeyWords & " instead of the Skill Test?" & IIf(rst!KeyWords = "EXPLOSIVES", vbNewLine & "This would result in Half Pay.", ""), "Final Work Challenge", "Do It", "Nope", getLeader()) = 0 Then
                   KeywordInUse = True
                   If rst!KeyWords = "EXPLOSIVES" Then
                      result = 2 'half pay
@@ -2088,14 +2272,14 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew
             '-----------------------------------------
             'Stitch & Sheydra can change a Fight to a Nego once per Job
             If Wskill = 3 And hasCrew(playerID, 27) And Not usedStitchSkill Then
-               If MessBox("Stitch wants to change this Negotiation to a Fight.  Do you want to use those skills instead?", "Negotiate -> Fight", "Yes", "No", 27) = 0 Then
+               If MessBox("Stitch wants to change this Negotiation to a Fight.  Do you want to use those one-time skills now?", "Negotiate -> Fight", "Bring it", "Not now", 27) = 0 Then
                   Wskill = 1
                   usedStitchSkill = True
                   PutMsg player.PlayName & " uses Stitch's one time Negotiation to Fight Skills", playerID, Logic!Gamecntr, True, 27
                End If
             End If
             If Wskill = 1 And getPerkAttributeCrew(playerID, "ChangeTestType") > 0 And Not usedStitchSkill Then
-               If MessBox("Sheydra wants to Negotiate instead of Fight.  Do you want to use those skills instead?", "Fight -> Negotiate", "Yes", "No", 66) = 0 Then
+               If MessBox("Sheydra wants to Negotiate instead of Fight.  Do you want to use those one-time skills now?", "Fight -> Negotiate", "Yes", "Not now", 66) = 0 Then
                   Wskill = 3
                   usedStitchSkill = True
                   PutMsg player.PlayName & " uses Sheydra's one time Fight to Negotiation Skills", playerID, Logic!Gamecntr, True, 66
@@ -2137,7 +2321,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew
             
             fruityBar = hasGearCard(playerID, 24)
             If fruityBar > 0 Then 'we got one or more
-               If MessBox("Do you wish to Eat the Fruity Bar and add 1 to the Test Roll?", "Extra Bite", "Yes", "No", 0, 24) = 0 Then
+               If MessBox("Do you wish to Eat the Fruity Bar and add 1 to the Test Roll?", "Extra Bite", "Yes", "Not now", 0, 24) = 0 Then
                   doDiscardGear playerID, fruityBar
                   fruityBar = 1
                Else
@@ -2451,7 +2635,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew
          End If
          
          PutMsg player.PlayName & " completed the Job: " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " for $" & Abs(bonus) & IIf(bonus > 0, " profit", " loss") & IIf(ContactID = 0, "", " and is solid with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!ContactID)), playerID, Logic!Gamecntr, True, 0, 0, 0, rst!ContactID
-      
+         refreshSolid
       End If 'close off record
       rst.Close
       
@@ -3967,6 +4151,7 @@ Dim Havens As Boolean
       If validMove(player.ID, Index) Then
          'if evading a reaver at the beginning of turn, then don't stop fullburn
          If FullburnMovesDone > 0 Then frmAction.fullburndone = True
+         frmAction.moseydone = True
          MoveShip player.ID, Index
          drawLine 0, -2, Index
          actionSeq = ASNavEvadeEnd
@@ -4131,4 +4316,12 @@ Dim x
          End If
       End If
    Next x
+End Sub
+
+Private Sub refreshSolid()
+Dim x
+      For x = 1 To NO_OF_CONTACTS
+         pic(x).Visible = isSolid(player.ID, x)
+      Next x
+
 End Sub

@@ -98,6 +98,8 @@ Begin VB.Form frmDeals
       ColHeaderForeColor=   10937324
       ForeColor       =   8833235
       BackColor       =   3353720
+      SelectStyle     =   2
+      NoFocusStyle    =   2
       RowColHeaderAppearance=   0
       RowColPicture   =   "frmDeals.frx":04E6
       RowHeaderStyle  =   128
@@ -113,6 +115,8 @@ Begin VB.Form frmDeals
       ColPict7        =   "frmDeals.frx":05C6
       ColPict8        =   "frmDeals.frx":05E2
       BackgroundPicture=   "frmDeals.frx":05FE
+      CharSearchMode  =   2
+      ShowFocusRectangle=   0   'False
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End
@@ -262,7 +266,7 @@ With sftTree
          ContactID = 8
          HigginsDealPerk = True
       ElseIf hasCrew(player.ID, 75) And dealFilter = "locals" And Not hasCrew(player.ID, 22) And SectorID <> 16 Then
-         If MessBox("Do you want Deal with Higgins instead?", "Fess - Phone Home Deals", "Yes", "No", 75) = 0 Then
+         If MessBox("Do you want Deal with Higgins instead?", "Fess - Phone Home Deals", "Deal", "Not now", 75) = 0 Then
          'If MsgBox("Do you want Deal with Higgins instead?", vbQuestion + vbYesNo, "Fess - Phone Home Deals") = vbYes Then
             ContactID = 8
             HigginsDealPerk = True
