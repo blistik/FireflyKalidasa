@@ -58,7 +58,7 @@ Public Enum actionSeqCntr
    ASEnd     'end action, selectnext player
 End Enum
 Public actionSeq As actionSeqCntr, NumOfReavers As Integer
-
+Public Trail(0 To 7) As Integer 'record the trail of sectors travelled in a burn
 Public MoseyMovesDone As Integer, FullburnMovesDone As Integer
 'Public Bitpic() As Control
 Public Const JOB_SUCCESS As Integer = 3      'final JobStatus value once complete
@@ -100,7 +100,7 @@ On Error GoTo err_handler
 
    If Left(msg, 3) <> "Wai" Then 'waiting for game to start
       SQL = "INSERT INTO Events (Eventtime, Event, PlayerID, Turn, RefreshShip"
-      SQL = SQL & ") Values (#" & Now & "#, '" & SQLFilter(msg) & "', " & playerID & ", " & turn & ", " & refreshShip
+      SQL = SQL & ") Values (#" & Format(Now, "MM-DD-YY HH:nn") & "#, '" & SQLFilter(msg) & "', " & playerID & ", " & turn & ", " & refreshShip
       SQL = SQL & ")"
       DB.Execute SQL
    End If
@@ -545,7 +545,7 @@ Public Function getAdjacentRows(ByVal SectorID) As String
 
 End Function
 
-Public Function getContactSector(ByVal fromSectorID, ByVal toSectorID As Integer) As Integer
+Public Function getNextSector(ByVal fromSectorID, ByVal toSectorID As Integer, ByVal canMosey) As Integer
 Dim rst As New ADODB.Recordset
 Dim SQL, b(1 To 2) As Long, x As Integer, y As Long, z As Long, adjacent
 
@@ -566,18 +566,30 @@ Dim SQL, b(1 To 2) As Long, x As Integer, y As Long, z As Long, adjacent
    SQL = "SELECT Board.* FROM Board WHERE Board.SectorID IN (" & adjacent & ")"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      
+      If (getCutterSector(rst!SectorID) > 0 And Not (canMosey And toSectorID = rst!SectorID)) Or beenHereBefore(rst!SectorID) Then
+         'Beep
+      Else
          'find the adjacent sector closest to the closest player
          z = Int(Sqr((b(1) - Int(rst!SHeight / 2 + rst!STop)) ^ 2 + (b(2) - Int(rst!SWidth / 2 + rst!SLeft)) ^ 2))
          If y = -1 Or y > z Then
             y = z
-            getContactSector = rst!SectorID
+            getNextSector = rst!SectorID
          End If
-      
+      End If
       rst.MoveNext
    Wend
    rst.Close
    Set rst = Nothing
+End Function
+
+Public Function beenHereBefore(ByVal SectorID As Integer) As Boolean
+Dim x
+   For x = 0 To 7
+      If Trail(x) = SectorID And SectorID > 0 Then
+         beenHereBefore = True
+         Exit For
+      End If
+   Next x
 End Function
 
 Public Function getJob(ByVal ContactID)
@@ -607,6 +619,26 @@ Dim SQL
    rst.Close
 
 Set rst = Nothing
+End Function
+
+' returns cash + or parts -ve based on Crew Perk and JobType
+Public Function getJobCrewBonus(ByVal playerID, ByVal JobType) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+
+   getJobCrewBonus = 0
+   If JobType = 0 Then Exit Function
+   
+   SQL = "SELECT SUM(Perk.Payment) AS Pay "
+   SQL = SQL & "FROM Perk INNER JOIN (Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID) ON Perk.PerkID = Crew.PerkID "
+   SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & playerID & " AND Perk.JobTypeID=" & JobType
+
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      getJobCrewBonus = Nz(rst!pay, 0)
+   End If
+   rst.Close
+   Set rst = Nothing
 End Function
 
 Public Function getJobSector(ByVal CardID, ByVal JobID) As Integer
@@ -1259,7 +1291,7 @@ Dim adjacent, a() As String, x, y
    
    y = 0
    For x = LBound(a) To UBound(a)
-      If getClearSector(Val(a(x))) = "A" Then  'no ship in this spot
+      If getClearSector(Val(a(x))) = "A" And getHaven(Val(a(x))) = 0 Then   'no ship in this spot
          y = 1 'we have at least one possible solution
          If check Then
             doMoveAllianceAdjacent = True
@@ -1272,7 +1304,7 @@ Dim adjacent, a() As String, x, y
       Do
          x = RollDice(UBound(a) - LBound(a) + 1) - 1
          If x > UBound(a) Then x = UBound(a)
-         If getClearSector(Val(a(x))) = "A" Then
+         If getClearSector(Val(a(x))) = "A" And getHaven(Val(a(x))) = 0 Then
             MoveShip 5, Val(a(x))
             doMoveAllianceAdjacent = True
             Exit Do
@@ -2096,7 +2128,7 @@ Dim rst As New ADODB.Recordset, SQL
    rst.Close
 
    If CheckWon = True Then
-      playsnd 5
+      playsnd 5, True
       DB.Execute "INSERT INTO Scores (StoryID,PlayerName,Turns,StartDate,PlayDate) Values (" & CStr(Logic!StoryID) & ",'" & SQLFilter(player.PlayName) & "'," & CStr(Logic!Gamecntr - 1) & ", #" & Format(varDLookup("EventTime", "Events", "Event ='" & player.PlayName & "''s on the Map'"), "MM-DD-YY HH:nn") & "#, #" & Format(Now, "MM-DD-YY HH:nn") & "#)"
       PutMsg PlayCode(playerID).PlayName & " has WON the Game in " & Logic!Gamecntr - 1 & " turns", playerID, Logic!Gamecntr
    End If
@@ -2147,13 +2179,24 @@ Dim SQL, x, cnt As Integer
          doGoalCheck = True
       End If
             
-          
+            'Negative tests ---- TurnLimit
+      If rst!TurnLimit > 0 And Not doGoalCheck Then
+         If Seq > rst!TurnLimit Then
+            addGoal playerID, -1
+            PutMsg player.PlayName & " has Failed to meet the Story Goal Turn limit of " & rst!TurnLimit & ". GAME OVER!", player.ID, Seq
+            goaldone = False
+         End If
+      End If
+      
       'if we here and goaldone then Goal IS Done
       If goaldone Then
          addGoal playerID, 1
       End If
       
-      
+       ' we good to give new instructions
+      If goaldone And Nz(rst!Instructions) <> "" And Not doGoalCheck Then
+         PutMsg player.PlayName & " has completed Goal " & Goal + 1 & vbNewLine & rst!Instructions, playerID, Logic!Gamecntr
+      End If
       
    End If
    rst.Close

@@ -541,6 +541,16 @@ Private Sub chkShore_Click()
       setBackColour txtParts
 End Sub
 
+Private Sub FDPane1_OnHidden()
+   Select Case actionSeq
+   Case ASend
+   
+   Case Else
+      playsnd 9
+      FDPane1.PaneVisible = True
+   End Select
+End Sub
+
 Private Sub txtCargo_DblClick()
    If txtCargo.Enabled Then txtCargo.Text = CStr(Val(txtCargo.Text) + 1)
 End Sub
@@ -712,7 +722,7 @@ Public Sub endAction()
    turnExtraRange = 0
    TheBigBlack = 0
    HigginsDealPerk = False
-   actionSeq = ASEnd
+   actionSeq = ASend
 End Sub
 
 Public Function checkNoOfActions() As Integer

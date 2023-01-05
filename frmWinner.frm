@@ -162,13 +162,13 @@ With Grid
    
    Else
       .Clear
-      SQL = "SELECT * FROM Scores WHERE StoryID=" & Logic!StoryID
-      SQL = SQL & " ORDER BY Turns, PlayDate DESC"
+      SQL = "SELECT PlayerName, Turns, PlayDate,DateDiff('n', StartDate, PlayDate) AS Mins FROM Scores WHERE StoryID=" & Logic!StoryID
+      SQL = SQL & " ORDER BY Turns, DateDiff('n', StartDate, PlayDate)"
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
          Index = .AddItem(rst!PlayerName)
          .CellText(Index, 1) = CStr(rst!Turns)
-         .CellText(Index, 2) = CStr(DateDiff("n", rst!StartDate, rst!PlayDate))
+         .CellText(Index, 2) = rst!Mins  'CStr(DateDiff("n", rst!StartDate, rst!PlayDate))
          .CellText(Index, 3) = Format(rst!PlayDate, "DD Mmm YYYY HH:nn")
          rst.MoveNext
       Wend

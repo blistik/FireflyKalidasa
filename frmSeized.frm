@@ -89,6 +89,8 @@ Dim x, cnt
             DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = (SELECT CrewID FROM SupplyDeck WHERE CardID =" & crewList.ItemData(x) & ")"
             'delete the card to the players deck
             DB.Execute "DELETE FROM PlayerSupplies WHERE PlayerID =" & player.ID & " AND CardID = " & crewList.ItemData(x)
+            'clear disgruntled
+            DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = (SELECT CrewID FROM SupplyDeck WHERE CardID =" & crewList.ItemData(x) & ")"
          
          End If
       Next x

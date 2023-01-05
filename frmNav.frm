@@ -141,10 +141,10 @@ Attribute VB_Exposed = False
 Option Explicit
 Public NavCardID, NavOption
 
-Private Sub cmd_Click(index As Integer)
+Private Sub cmd_Click(Index As Integer)
 Dim x
    playsnd 8
-   Select Case index
+   Select Case Index
       Case 0
          NavOption = 1
          actionSeq = ASnavEnd
@@ -157,4 +157,16 @@ Dim x
       cmd(x).Enabled = False
    Next x
    
+End Sub
+
+Private Sub FDPane1_OnHidden()
+   Select Case actionSeq
+   Case ASNav, ASselect
+      playsnd 9
+      FDPane1.PaneVisible = True
+   Case ASnavEnd, ASNavEvade, ASNavEvadeEnd, ASNavReav, ASNavReavBorder, ASNavReavEnd, ASNavCrus, ASNavCrusBorder, ASNavCrusOutlaw, ASNavCrusAdjacent, ASNavCorvAdjacent, ASNavCorvPlanetary, ASNavCrusEnd
+
+   Case Else
+     ' Beep
+   End Select
 End Sub

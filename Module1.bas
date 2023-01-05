@@ -575,8 +575,13 @@ Dim c() As String
       x = getCutterSector(SectorID)
       If x > 0 Then 'move this reaver back to Reaver Space
          PutMsg "The Corvette chases a Reaver Cutter off, which hightails it back to Reaver Space", playerID, Logic!Gamecntr
-         'place it at Miranda and use the AI move to get it back to the Reaver Space with preference to any Player Ship :O
-         DB.Execute "UPDATE Players SET SectorID = 123 WHERE PlayerID = " & x
+         'check there is room
+         If getCutterSector(120) > 0 And getCutterSector(121) > 0 And getCutterSector(122) > 0 Then 'full house, goto 121 instead
+            DB.Execute "UPDATE Players SET SectorID = 121 WHERE PlayerID = " & x
+         Else
+            'place it at Miranda and use the AI move to get it back to the Reaver Space with preference to any Player Ship :O
+            DB.Execute "UPDATE Players SET SectorID = 123 WHERE PlayerID = " & x
+         End If
          moveAutoAI x, 0, False, False
       End If
       'clear any Reaver Tokens
@@ -1031,7 +1036,7 @@ On Error GoTo err_handler
 
    If Left(msg, 3) <> "Wai" Then 'waiting for game to start
       SQL = "INSERT INTO Events (Eventtime, Event, PlayerID, Turn, RefreshShip"
-      SQL = SQL & ") Values (#" & Now & "#, '" & SQLFilter(msg) & "', " & playerID & ", " & turn & ", " & refreshShip
+      SQL = SQL & ") Values (#" & Format(Now, "MM-DD-YY HH:nn") & "#, '" & SQLFilter(msg) & "', " & playerID & ", " & turn & ", " & refreshShip
       SQL = SQL & ")"
       DB.Execute SQL
    End If
@@ -3183,6 +3188,9 @@ Dim result As Integer, x As Integer, CrewID
    DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = " & CrewID
    'delete the card to the players deck
    DB.Execute "DELETE FROM PlayerSupplies WHERE PlayerID =" & playerID & " AND CardID = " & CardID
+   'clear disgruntled
+   DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & CrewID
+
    doKillCrew = 1
    
 End Function
@@ -3343,7 +3351,7 @@ Dim adjacent, a() As String, x, y
    
    y = 0
    For x = LBound(a) To UBound(a)
-      If getClearSector(Val(a(x))) = "A" Then  'no ship in this spot
+      If getClearSector(Val(a(x))) = "A" And getHaven(Val(a(x))) = 0 Then 'no ship in this spot
          y = 1 'we have at least one possible solution
          If check Then
             doMoveAllianceAdjacent = True
@@ -3356,7 +3364,7 @@ Dim adjacent, a() As String, x, y
       Do
          x = RollDice(UBound(a) - LBound(a) + 1) - 1
          If x > UBound(a) Then x = UBound(a)
-         If getClearSector(Val(a(x))) = "A" Then
+         If getClearSector(Val(a(x))) = "A" And getHaven(Val(a(x))) = 0 Then
             MoveShip 5, Val(a(x))
             doMoveAllianceAdjacent = True
             Exit Do
@@ -3845,7 +3853,7 @@ Dim SQL, SectorID As Integer, Zone As String, a() As String, b(1 To 20) As Integ
    moveAutoAI = adjacent  'return sectorID
    NPCFlag = False
    For z = 6 To 6 + NumOfReavers  'check if a NPC ship already there
-      If adjacent = b(z) Then
+      If adjacent = b(z) And adjacent > 0 Then
          NPCFlag = True
          If ship > 6 Then adjacent = 0
          Exit For

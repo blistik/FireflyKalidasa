@@ -83,7 +83,7 @@ End Sub
 Public Sub RefreshList()
 Dim rst As New ADODB.Recordset
 Dim SQL
-   SQL = "SELECT * FROM Players WHERE Name IS NOT NULL "
+   SQL = "SELECT * FROM Players WHERE Name IS NOT NULL AND AI = 0"  'remove for testing >>>AI = 0<<<<<<<
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    Do While Not rst.EOF
       cbo.AddItem rst!Name

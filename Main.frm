@@ -1310,6 +1310,7 @@ Dim x
      Set frmStat = Nothing
    End If
    If Events.FDPane1.PaneVisible Then Unload Events
+   frmAction.endAction
    If frmAction.FDPane1.PaneVisible Then Unload frmAction
    
    For x = 1 To NO_OF_CONTACTS

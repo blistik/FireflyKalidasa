@@ -1,8 +1,11 @@
 Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 Mar 2021
 
 Dev Ideas:
+support for Gamble on Jobs (260-262)
+Pay $500 and name a suit. Reveal a Misbehave Card. If the suit matches, take $3000.
 
-Test Issues pending:
+Test Issues pending: 
+
 
 Mr Universe Job name ideas (9 done):
 Lawforce Flags
@@ -21,6 +24,19 @@ Someone is talking
 Techno kung fu
 The puppet theater
 The very best violence
+
+Version updates:
+v 1.8.1 ~ 03 Jan 2023 - 05 Jan 2023
+add: AI Bot will get Solids in turn first, then do random jobs after that
+add: AI Bot will use Havens for Fuel and Shoreleave if they exist and are close
+add: Turn Limit test to Story Goals for AI Bot
+add: AI Bot now using rudementary path finding around Reaver Cutters
+fix: additional handling when more than 3 Cutters, when chased back to Reaver Space
+fix: AI Bot form layout resize event from minimised
+fix: accidental closure of Nav and Action panels
+fix: Clear Disgruntled for Gun Hands that are returned to the discards
+fix: Event log time format, creating issues for High Score times
+fix: Nav Card  "Bluff Your Way Through" was ignoring Havens
 
 Version updates:
 v 1.8.0 ~ 24 Dec 2022 - 31 Dec 2022
