@@ -14,18 +14,18 @@ Begin VB.Form Main
    ScaleHeight     =   5955
    ScaleWidth      =   14760
    StartUpPosition =   3  'Windows Default
-   Begin SftTree.SftTree sftTree2 
-      Height          =   1455
+   Begin SftTree.SftTree sftTree 
+      Height          =   4125
       Left            =   0
-      TabIndex        =   2
-      Top             =   4170
-      Width           =   14145
+      TabIndex        =   1
+      Top             =   0
+      Width           =   14115
       _Version        =   262144
-      _ExtentX        =   24950
-      _ExtentY        =   2566
+      _ExtentX        =   24897
+      _ExtentY        =   7276
       _StockProps     =   237
       ForeColor       =   8833235
-      BackColor       =   855618
+      BackColor       =   4587520
       BorderStyle     =   1
       ItemPictureExpanded=   "main.frx":0442
       ItemPictureExpandable=   "main.frx":045E
@@ -63,80 +63,99 @@ Begin VB.Form Main
       EndProperty
       ColHeaderAppearance=   2
       ButtonStyle     =   2
-      Columns         =   9
-      ColTitle0       =   "Card ID"
+      TreeLineColor   =   -2147483632
+      Columns         =   10
+      ColTitle0       =   "ID"
       ColBmp0         =   "main.frx":0506
-      ColWidth1       =   200
-      ColTitle1       =   "Contact / Job Details"
+      ColWidth1       =   167
+      ColTitle1       =   "Names & Titles"
       ColBmp1         =   "main.frx":0522
-      ColWidth2       =   213
-      ColTitle2       =   "Job Type / Planet"
+      ColWidth2       =   227
+      ColTitle2       =   "Perks and Quirks"
       ColBmp2         =   "main.frx":053E
-      ColWidth3       =   120
-      ColTitle3       =   "Needs / System"
+      ColWidth3       =   67
+      ColTitle3       =   "Ability"
       ColBmp3         =   "main.frx":055A
-      ColWidth4       =   41
-      ColStyle4       =   10
-      ColTitle4       =   "Pay"
+      ColWidth4       =   77
+      ColStyle4       =   9
+      ColTitle4       =   "Status"
       ColBmp4         =   "main.frx":0576
-      ColWidth5       =   87
-      ColTitle5       =   "Bonus"
+      ColWidth5       =   33
+      ColStyle5       =   9
+      ColTitle5       =   "Fight"
       ColBmp5         =   "main.frx":0592
       ColWidth6       =   33
       ColStyle6       =   9
-      ColTitle6       =   "Fight"
+      ColTitle6       =   "Tech"
       ColBmp6         =   "main.frx":05AE
-      ColWidth7       =   33
+      ColWidth7       =   37
       ColStyle7       =   9
-      ColTitle7       =   "Tech"
+      ColTitle7       =   "Nego"
       ColBmp7         =   "main.frx":05CA
-      ColWidth8       =   34
-      ColStyle8       =   9
-      ColTitle8       =   "Nego"
+      ColWidth8       =   47
+      ColStyle8       =   10
+      ColTitle8       =   "Pay/job"
       ColBmp8         =   "main.frx":05E6
-      MouseIcon       =   "main.frx":0602
+      ColWidth9       =   200
+      ColTitle9       =   "Keywords"
+      ColBmp9         =   "main.frx":0602
+      MouseIcon       =   "main.frx":061E
       ColHeaderBackColor=   0
-      ColHeaderForeColor=   10937324
+      ColHeaderForeColor=   65280
       ForeColor       =   8833235
-      BackColor       =   855618
+      BackColor       =   4587520
+      SelectStyle     =   2
       RowColHeaderAppearance=   0
-      RowColPicture   =   "main.frx":061E
+      RowColPicture   =   "main.frx":063A
+      LeftButtonOnly  =   0   'False
       RowHeaderStyle  =   128
       RowHeaderAppearance=   0
       OpenEnded       =   0   'False
-      ColPict0        =   "main.frx":063A
-      ColPict1        =   "main.frx":0656
-      ColPict2        =   "main.frx":0672
-      ColPict3        =   "main.frx":068E
-      ColPict4        =   "main.frx":06AA
-      ColPict5        =   "main.frx":06C6
-      ColPict6        =   "main.frx":06E2
-      ColPict7        =   "main.frx":06FE
-      ColPict8        =   "main.frx":071A
-      BackgroundPicture=   "main.frx":0736
+      ColFlag0        =   4
+      ColPict0        =   "main.frx":0656
+      ColFlag1        =   8
+      ColPict1        =   "main.frx":0672
+      ColFlag2        =   4
+      ColPict2        =   "main.frx":068E
+      ColFlag3        =   12
+      ColPict3        =   "main.frx":06AA
+      ColFlag4        =   8
+      ColPict4        =   "main.frx":06C6
+      ColFlag5        =   8
+      ColPict5        =   "main.frx":06E2
+      ColFlag6        =   8
+      ColPict6        =   "main.frx":06FE
+      ColFlag7        =   8
+      ColPict7        =   "main.frx":071A
+      ColFlag8        =   8
+      ColPict8        =   "main.frx":0736
+      ColFlag9        =   8
+      ColPict9        =   "main.frx":0752
+      BackgroundPicture=   "main.frx":076E
+      ShowFocusRectangle=   0   'False
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End
-   Begin SftTree.SftTree sftTree 
-      Height          =   4125
+   Begin SftTree.SftTree sftTree2 
+      Height          =   1455
       Left            =   0
-      TabIndex        =   1
-      Top             =   0
-      Width           =   14115
+      TabIndex        =   2
+      Top             =   4170
+      Width           =   14145
       _Version        =   262144
-      _ExtentX        =   24897
-      _ExtentY        =   7276
+      _ExtentX        =   24950
+      _ExtentY        =   2566
       _StockProps     =   237
       ForeColor       =   8833235
-      BackColor       =   4587520
+      BackColor       =   855618
       BorderStyle     =   1
-      ItemPictureExpanded=   "main.frx":0752
-      ItemPictureExpandable=   "main.frx":076E
-      ItemPictureLeaf =   "main.frx":078A
-      PlusMinusPictureExpanded=   "main.frx":07A6
-      PlusMinusPictureExpandable=   "main.frx":07C2
-      PlusMinusPictureLeaf=   "main.frx":07DE
-      ButtonPicture   =   "main.frx":07FA
+      ItemPictureExpanded=   "main.frx":078A
+      ItemPictureExpandable=   "main.frx":07A6
+      ItemPictureLeaf =   "main.frx":07C2
+      PlusMinusPictureExpanded=   "main.frx":07DE
+      PlusMinusPictureExpandable=   "main.frx":07FA
+      PlusMinusPictureLeaf=   "main.frx":0816
+      ButtonPicture   =   "main.frx":0832
       BeginProperty ColHeaderFont {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "Cyberpunk Is Not Dead"
          Size            =   9
@@ -166,76 +185,57 @@ Begin VB.Form Main
       EndProperty
       ColHeaderAppearance=   2
       ButtonStyle     =   2
-      TreeLineColor   =   -2147483632
-      Columns         =   10
-      ColTitle0       =   "ID"
-      ColBmp0         =   "main.frx":0816
-      ColWidth1       =   167
-      ColTitle1       =   "Names & Titles"
-      ColBmp1         =   "main.frx":0832
-      ColWidth2       =   227
-      ColTitle2       =   "Perks and Quirks"
-      ColBmp2         =   "main.frx":084E
-      ColWidth3       =   67
-      ColTitle3       =   "Ability"
-      ColBmp3         =   "main.frx":086A
-      ColWidth4       =   77
-      ColStyle4       =   9
-      ColTitle4       =   "Status"
-      ColBmp4         =   "main.frx":0886
-      ColWidth5       =   33
-      ColStyle5       =   9
-      ColTitle5       =   "Fight"
-      ColBmp5         =   "main.frx":08A2
+      Columns         =   9
+      ColTitle0       =   "Card ID"
+      ColBmp0         =   "main.frx":084E
+      ColWidth1       =   200
+      ColTitle1       =   "Contact / Job Details"
+      ColBmp1         =   "main.frx":086A
+      ColWidth2       =   213
+      ColTitle2       =   "Job Type / Planet"
+      ColBmp2         =   "main.frx":0886
+      ColWidth3       =   120
+      ColTitle3       =   "Needs / System"
+      ColBmp3         =   "main.frx":08A2
+      ColWidth4       =   41
+      ColStyle4       =   10
+      ColTitle4       =   "Pay"
+      ColBmp4         =   "main.frx":08BE
+      ColWidth5       =   87
+      ColTitle5       =   "Bonus"
+      ColBmp5         =   "main.frx":08DA
       ColWidth6       =   33
       ColStyle6       =   9
-      ColTitle6       =   "Tech"
-      ColBmp6         =   "main.frx":08BE
-      ColWidth7       =   37
+      ColTitle6       =   "Fight"
+      ColBmp6         =   "main.frx":08F6
+      ColWidth7       =   33
       ColStyle7       =   9
-      ColTitle7       =   "Nego"
-      ColBmp7         =   "main.frx":08DA
-      ColWidth8       =   47
-      ColStyle8       =   10
-      ColTitle8       =   "Pay/job"
-      ColBmp8         =   "main.frx":08F6
-      ColWidth9       =   200
-      ColTitle9       =   "Keywords"
-      ColBmp9         =   "main.frx":0912
-      MouseIcon       =   "main.frx":092E
+      ColTitle7       =   "Tech"
+      ColBmp7         =   "main.frx":0912
+      ColWidth8       =   34
+      ColStyle8       =   9
+      ColTitle8       =   "Nego"
+      ColBmp8         =   "main.frx":092E
+      MouseIcon       =   "main.frx":094A
       ColHeaderBackColor=   0
-      ColHeaderForeColor=   65280
+      ColHeaderForeColor=   10937324
       ForeColor       =   8833235
-      BackColor       =   4587520
-      SelectStyle     =   2
+      BackColor       =   855618
       RowColHeaderAppearance=   0
-      RowColPicture   =   "main.frx":094A
-      LeftButtonOnly  =   0   'False
+      RowColPicture   =   "main.frx":0966
       RowHeaderStyle  =   128
       RowHeaderAppearance=   0
       OpenEnded       =   0   'False
-      ColFlag0        =   4
-      ColPict0        =   "main.frx":0966
-      ColFlag1        =   8
-      ColPict1        =   "main.frx":0982
-      ColFlag2        =   4
-      ColPict2        =   "main.frx":099E
-      ColFlag3        =   12
-      ColPict3        =   "main.frx":09BA
-      ColFlag4        =   8
-      ColPict4        =   "main.frx":09D6
-      ColFlag5        =   8
-      ColPict5        =   "main.frx":09F2
-      ColFlag6        =   8
-      ColPict6        =   "main.frx":0A0E
-      ColFlag7        =   8
-      ColPict7        =   "main.frx":0A2A
-      ColFlag8        =   8
-      ColPict8        =   "main.frx":0A46
-      ColFlag9        =   8
-      ColPict9        =   "main.frx":0A62
+      ColPict0        =   "main.frx":0982
+      ColPict1        =   "main.frx":099E
+      ColPict2        =   "main.frx":09BA
+      ColPict3        =   "main.frx":09D6
+      ColPict4        =   "main.frx":09F2
+      ColPict5        =   "main.frx":0A0E
+      ColPict6        =   "main.frx":0A2A
+      ColPict7        =   "main.frx":0A46
+      ColPict8        =   "main.frx":0A62
       BackgroundPicture=   "main.frx":0A7E
-      ShowFocusRectangle=   0   'False
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End
@@ -483,7 +483,6 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 Dim targetContact As Integer, targetJobCard, targetJobID, targetSector, targetSupplySector
-Dim ContactList
 Public moseydone As Boolean, fullburndone As Boolean, buydone As Boolean, leader
 Public dealdone As Boolean, workdone As Boolean
 Private Const MAXFUEL As Variant = 8
@@ -517,7 +516,7 @@ Dim x
    End With
     
     
-   ContactList = "1,2,4,5" 'to be reduced as legal Jobs run out
+   ContactList = "1,2,4,5" 'default, to be reduced as legal Jobs run out.  6-Harrow has 4, 8-Higgins has 8
       
    PlayCode(1).Color = "Orange"
    PlayCode(2).Color = "Blue"
@@ -547,6 +546,7 @@ Dim x
       RefreshJob " WHERE PlayerID = " & player.ID
       refreshSolid
       NumOfReavers = varDLookup("NoOfReavers", "Story", "StoryID = " & Logic!StoryID)
+      ContactList = getContactList(Logic!StoryID)
       actionSeq = ASidle
    End If
    Timing.Enabled = True
@@ -630,7 +630,9 @@ On Error GoTo err_handler
    ElseIf status = "S" And thisPlayer = player.ID And pickStartSector = 0 Then  'your go to pick starting sector on MAP
       Main.Caption = "Firefly AI Bot " & PlayCode(player.ID).Color & " (" & CStr(player.ID) & ")" & " - " & varDLookup("StoryTitle", "Story", "StoryID = " & Logic!StoryID)
       NumOfReavers = varDLookup("NoOfReavers", "Story", "StoryID = " & Logic!StoryID)
-
+      
+      ContactList = getContactList(Logic!StoryID)
+      
       PutMsg player.PlayName & " selecting Start Sector", player.ID, Logic!Gamecntr
 
        pickStartSector = 1
@@ -669,20 +671,7 @@ On Error GoTo err_handler
          'go there
          targetSector = targetSupplySector
          If goToSupply(SectorID, targetSector, (FullburnMovesDone = 0)) > 0 And Not fullburndone Then 'move then check if a mosey or a fullburn was required
-            SectorID = getPlayerSector(player.ID)
-            If FullburnMovesDone = 0 And (targetSector = SectorID Or getFuel(player.ID) < 1) Then 'Mosey
-               PutMsg player.PlayName & " Moseys to Sector " & SectorID, player.ID, Logic!Gamecntr
-               fullburndone = True
-            ElseIf FullburnMovesDone = 0 Then
-               'burn 1 fuel
-               DB.Execute "UPDATE Players Set Fuel = Fuel - 1 WHERE PlayerID = " & player.ID
-               PutMsg player.PlayName & " goes FullBurn and has " & varDLookup("Fuel", "Players", "PlayerID=" & player.ID) & " Fuel left", player.ID, Logic!Gamecntr
-               FullburnMovesDone = FullburnMovesDone + 1
-               showNav SectorID
-            Else
-               FullburnMovesDone = FullburnMovesDone + 1
-               showNav SectorID
-            End If
+            SectorID = processMove ' getPlayerSector(player.ID)
             
          Else 'we are there, load fuel below
             
@@ -697,8 +686,11 @@ On Error GoTo err_handler
             'pickup a job
             targetJobCard = getJob(targetContact)
             If IsEmpty(targetJobCard) Then
+               PutMsg player.PlayName & " finds no Legal Jobs for " & varDLookup("ContactName", "Contact", "ContactID=" & targetContact), player.ID, Logic!Gamecntr
                'reset for next contact
-               ContactList = Replace(ContactList, targetContact & ",", "")
+               ContactList = Replace(ContactList, targetContact & ",", "") 'for 4,5
+               ContactList = Replace(ContactList, "," & targetContact, "") 'for 3,4
+               ContactList = Replace(ContactList, targetContact, "") 'for 4
             End If
             
             targetJobID = 1
@@ -708,22 +700,8 @@ On Error GoTo err_handler
          Else 'No - Head for target contact / 1,2,4,5 that has a legal job left
             targetSector = varDLookup("SectorID", "Contact", "ContactID=" & targetContact)
             If goToContact(SectorID, targetSector, (FullburnMovesDone = 0)) > 0 And Not fullburndone Then 'move then check if a mosey or a fullburn was required
-               SectorID = getPlayerSector(player.ID)
-               
-               If FullburnMovesDone = 0 And (targetSector = SectorID Or getFuel(player.ID) < 1) Then  'Mosey
-                  PutMsg player.PlayName & " Moseys to Sector " & SectorID, player.ID, Logic!Gamecntr
-                  fullburndone = True
-               ElseIf FullburnMovesDone = 0 Then
-                  'burn 1 fuel
-                  DB.Execute "UPDATE Players Set Fuel = Fuel - 1 WHERE PlayerID = " & player.ID
-                  PutMsg player.PlayName & " goes FullBurn and has " & varDLookup("Fuel", "Players", "PlayerID=" & player.ID) & " Fuel left", player.ID, Logic!Gamecntr
-                  FullburnMovesDone = FullburnMovesDone + 1
-                  showNav SectorID
-               Else
-                  FullburnMovesDone = FullburnMovesDone + 1
-                  showNav SectorID
-               End If
-               
+               SectorID = processMove ' getPlayerSector(player.ID)
+           
             Else 'we are there
                'workdone = True
                fullburndone = (FullburnMovesDone > 0) Or fullburndone
@@ -735,7 +713,7 @@ On Error GoTo err_handler
          targetSector = getJobSector(targetJobCard, targetJobID)
          If targetSector = SectorID Then   'we there
             'do job
-            If workdone Then 'already used this action
+            If workdone And ((FullburnMovesDone > 0) Or fullburndone) Then 'already used this action
                fullburndone = True
             ElseIf targetJobID = 1 Then
                'check if this Job has a part 2?
@@ -760,21 +738,7 @@ On Error GoTo err_handler
          ElseIf Not fullburndone Then    'we're not there yet
             If goToContact(SectorID, targetSector, (FullburnMovesDone = 0)) > 0 Then 'move then check if a mosey or a fullburn was required
 
-               SectorID = getPlayerSector(player.ID)
-               If FullburnMovesDone = 0 And (targetSector = SectorID Or getFuel(player.ID) < 1) Then  'Mosey
-                  PutMsg player.PlayName & " Moseys to Sector " & SectorID, player.ID, Logic!Gamecntr
-                  fullburndone = True
-               ElseIf FullburnMovesDone = 0 Then
-                  'burn 1 fuel
-                  DB.Execute "UPDATE Players Set Fuel = Fuel - 1 WHERE PlayerID = " & player.ID
-                  PutMsg player.PlayName & " goes FullBurn and has " & varDLookup("Fuel", "Players", "PlayerID=" & player.ID) & " Fuel left", player.ID, Logic!Gamecntr
-                  FullburnMovesDone = FullburnMovesDone + 1
-                  showNav SectorID
-                  
-               Else
-                  FullburnMovesDone = FullburnMovesDone + 1
-                  showNav SectorID
-               End If
+               SectorID = processMove ' getPlayerSector(player.ID)
                
             End If
          End If
@@ -838,6 +802,7 @@ On Error GoTo err_handler
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASEnd Then 'Finish up your turn
       'Check if WON!
       CheckWon player.ID
+      
 
       'turn finished, push to next player (for SP thats you)
       thisPlayer = setNextPlayer(player.ID)
@@ -871,6 +836,26 @@ err_handler:
    
    
 End Sub
+
+Private Function processMove() As Integer
+Dim fuel As Integer
+
+   fuel = 1 + getExtraBurn(player.ID)
+   processMove = getPlayerSector(player.ID)
+   If FullburnMovesDone = 0 And (targetSector = processMove Or getFuel(player.ID) < 1) Then 'Mosey
+      PutMsg player.PlayName & " Moseys to Sector " & processMove, player.ID, Logic!Gamecntr
+      fullburndone = True
+   ElseIf FullburnMovesDone = 0 Then
+      'burn 1 fuel
+      DB.Execute "UPDATE Players Set Fuel = Fuel - " & fuel & " WHERE PlayerID = " & player.ID
+      PutMsg player.PlayName & " goes FullBurn" & IIf(fuel > 1, " with Heavy Load", "") & " and has " & varDLookup("Fuel", "Players", "PlayerID=" & player.ID) & " Fuel left", player.ID, Logic!Gamecntr
+      FullburnMovesDone = FullburnMovesDone + 1
+      showNav processMove
+   Else
+      FullburnMovesDone = FullburnMovesDone + 1
+      showNav processMove
+   End If
+End Function
 
 Private Function goToContact(ByVal SectorID, ByVal ContactSectorID, ByVal canMosey)
 Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorID, playerSector
@@ -1236,14 +1221,17 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Private Sub pullSupplies(ByVal SupplyID)
-Dim rst As ADODB.Recordset, SQL
+Dim rst As ADODB.Recordset, SQL, cnt As Integer
 
       Set rst = New ADODB.Recordset
       SQL = "SELECT * FROM SupplyDeck WHERE Seq > 6 AND SupplyID =" & SupplyID & " ORDER BY Seq"
       rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
-      If Not rst.EOF Then
+      cnt = 0
+      While Not rst.EOF And cnt < 3
+         cnt = cnt + 1
          rst.Update "Seq", 5
-      End If
+         rst.MoveNext
+      Wend
       rst.Close
       
 End Sub
@@ -1302,7 +1290,7 @@ With sftTree
       If rst!Warrants > 0 Then
          .CellBackColor(Index, 3) = 3355647
       End If
-      If Nz(rst!PlanetName, "Cruiser") = "Cruiser" Then
+      If Nz(rst!PlanetName, "Cruiser") = "Cruiser" Or Nz(rst!PlanetName, "Corvette") = "Corvette" Then
          .CellText(Index, 4) = "Sector " & CStr(rst!SectorID)
       Else
          .CellText(Index, 4) = rst!PlanetName
@@ -1316,7 +1304,7 @@ With sftTree
       Else
          .CellBackColor(Index, 4) = 16711680
       End If
-      .CellText(Index, 9) = "Goals: " & CStr(rst!Goals)
+      .CellText(Index, 9) = "Goals: " & CStr(rst!Goals) & " Turns: " & CStr(Logic!Gamecntr - 1)
       
       'CREW---------------------------------------------
       Index = .AddItem("Crew")
@@ -1941,3 +1929,4 @@ Dim x
       Trail(x) = 0
    Next x
 End Function
+

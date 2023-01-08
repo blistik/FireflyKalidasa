@@ -41,7 +41,7 @@ Public Enum actionSeqCntr
    ASRemoveDisgr
    ASResolveAlert
    ASResolveAlertEnd
-   ASEnd     'end action, selectnext player
+   ASend     'end action, selectnext player
 End Enum
 Public actionSeq As actionSeqCntr, NumOfReavers As Integer
 
@@ -1110,7 +1110,7 @@ err_handler:
    
 End Sub
 
-Public Function MessBox(ByVal msg As String, ByVal title As String, ByVal button1 As String, Optional ByVal button2 As String = vbNullString, Optional ByVal CrewID As Integer = 0, Optional ByVal GearID As Integer = 0, Optional ByVal ShipUpgradeID As Integer = 0, Optional ByVal dice As Integer = 0)
+Public Function MessBox(ByVal msg As String, ByVal title As String, ByVal button1 As String, Optional ByVal button2 As String = vbNullString, Optional ByVal CrewID As Integer = 0, Optional ByVal GearID As Integer = 0, Optional ByVal ShipUpgradeID As Integer = 0, Optional ByVal dice As Integer = 0, Optional ByVal ContactID As Integer = 0)
 Dim frmPop As frmPopup
 On Error GoTo err_handler
   
@@ -1147,7 +1147,14 @@ On Error GoTo err_handler
          .cmd(1).top = 1900
          .pic.Visible = True
          Set .pic.Picture = LoadPicture(App.Path & "\pictures\" & varDLookup("Picture", "ShipUpgrade", "ShipUpgradeID=" & ShipUpgradeID))
-         
+      ElseIf ContactID > 0 Then
+         .Width = 10320
+         .Height = 5040
+         .lblMsg.Height = 1600
+         .cmd(0).top = 1900
+         .cmd(1).top = 1900
+         .pic.Visible = True
+         Set .pic.Picture = LoadPicture(App.Path & "\pictures\" & varDLookup("Picture", "Contact", "ContactID=" & ContactID))
       End If
       If dice > 0 And dice < 7 Then
          .picDice(0).Visible = True
@@ -2579,8 +2586,7 @@ Dim SQL
    Set rst = Nothing
 End Function
 
-
-'return true for a player's crew's gear attrib <>0
+'return value of a player's *any* crew's gear attrib
 Public Function hasGearAttribute(ByVal playerID, ByVal Attrib As String, Optional ByVal GearID As Integer = 0) As Integer
 Dim rst As New ADODB.Recordset
 Dim SQL
@@ -2597,6 +2603,25 @@ Dim SQL
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
        hasGearAttribute = rst.Fields(Attrib)
+   End If
+   rst.Close
+   Set rst = Nothing
+End Function
+
+'return value of a player's crew's *any* gear attrib
+Public Function hasCrewGearAttribute(ByVal playerID, ByVal CrewID As Integer, ByVal Attrib As String) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+   If Attrib = "" Then Exit Function
+   
+   SQL = "SELECT Max(Gear." & Attrib & ") AS MaxVal "
+   SQL = SQL & "FROM PlayerSupplies INNER JOIN (Gear INNER JOIN SupplyDeck ON Gear.GearID = SupplyDeck.GearID) ON PlayerSupplies.CardID = SupplyDeck.CardID "
+   SQL = SQL & "GROUP BY PlayerSupplies.PlayerID, PlayerSupplies.CrewID "
+   SQL = SQL & "Having PlayerSupplies.playerID = " & playerID & " And PlayerSupplies.CrewID = " & CrewID
+   
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+       hasCrewGearAttribute = rst!MaxVal
    End If
    rst.Close
    Set rst = Nothing
@@ -3278,7 +3303,7 @@ End Sub
 ' Return True if Cruiser was faced.
 Public Function doMoveAlliance(ByVal playerID, ByVal SectorID) As Boolean
 Dim rst As New ADODB.Recordset
-Dim SQL, pay As Integer, CryBaby As Integer, crewcnt As Integer
+Dim SQL, pay As Integer, CryBaby As Integer, crewcnt As Integer, GearID As Integer
    
    'Move Crusier to your Sector,
    If getCruiserSector <> SectorID Then
@@ -3326,9 +3351,10 @@ Dim SQL, pay As Integer, CryBaby As Integer, crewcnt As Integer
    SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & playerID & " AND Crew.Wanted>0"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      If hasGearCard(playerID, 20, rst!CrewID) > 0 Then
+      GearID = hasCrewGearAttribute(playerID, rst!CrewID, "IgnoreWanted")
+      If GearID > 0 Then
          'skip this Crew that has Alliance Ident Card
-         PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " flashes their fake Alliance Ident.Card", playerID, Logic!Gamecntr, True, rst!CrewID
+         PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " makes use of " & varDLookup("GearName", "Gear", "GearID=" & GearID) & " to avoid detection", playerID, Logic!Gamecntr, True, rst!CrewID
       ElseIf hasShipUpgrade(playerID, 11) And crewcnt < 2 Then
          If crewcnt = 0 Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to 2 Wanted Crew", playerID, Logic!Gamecntr, True, getLeader()
          crewcnt = crewcnt + 1
@@ -3673,6 +3699,39 @@ Dim SQL
       ElseIf rst!cargo + rst!PCargo < 0 Or (rst!Contraband + rst!PContraband < 0 And rst!Contraband > -14) Or (rst!Fugitive + rst!PFugitive < 0 And rst!Fugitive > -14) Or (rst!Passenger + rst!PPassenger < 0 And rst!Passenger > -14) Or rst!fuel + rst!PFuel < 0 Or rst!parts + rst!PParts < 0 Then
          hasJobReqs = False
       End If
+      
+      'check if we have space for goods & people
+      x = 0
+      If rst!fuel > 0 Then
+         x = x + rst!fuel / 2
+      End If
+      If rst!parts > 0 Then
+         x = x + rst!parts / 2
+      End If
+      If rst!cargo > 0 Then
+         x = x + rst!cargo
+      End If
+      If rst!Contraband > 0 Then
+         x = x + rst!Contraband
+      End If
+      
+      If rst!Passenger > 0 And rst!Passenger < 14 Then
+         x = x + rst!Passenger
+      ElseIf rst!Passenger = 14 Then
+         x = x + 1
+      End If
+
+      If rst!Fugitive > 0 And rst!Fugitive < 14 Then
+         x = x + rst!Fugitive
+      ElseIf rst!Fugitive = 14 Then
+         x = x + 1
+      End If
+      
+      If CargoCapacity(playerID) < CargoSpaceUsed(playerID) + x Then
+         hasJobReqs = False
+      End If
+
+      
    End If
    rst.Close
    Set rst = Nothing

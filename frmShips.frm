@@ -339,7 +339,7 @@ Dim rst2 As New ADODB.Recordset
 Dim rst3 As New ADODB.Recordset
     
 SQL = "SELECT Board.Zones, P.PlanetName, Players.*"
-SQL = SQL & " FROM (Board INNER JOIN Players ON Board.SectorID = Players.SectorID) LEFT JOIN (select Planet.SectorID, min(Planet.PlanetName) AS PlanetName FROM Planet  group by Planet.SectorID) P ON Players.SectorID = P.SectorID "
+SQL = SQL & " FROM (Board INNER JOIN Players ON Board.SectorID = Players.SectorID) LEFT JOIN (select Planet.SectorID, min(Planet.PlanetName) AS PlanetName FROM Planet group by Planet.SectorID) P ON Players.SectorID = P.SectorID "
 SQL = SQL & filter
 SQL = SQL & " ORDER BY PlayerID"
     
@@ -383,7 +383,7 @@ With sftTree
       If rst!Warrants > 0 Then
          .CellBackColor(Index, 3) = 3355647
       End If
-      If Nz(rst!PlanetName, "Cruiser") = "Cruiser" Then
+      If Nz(rst!PlanetName, "Cruiser") = "Cruiser" Or Nz(rst!PlanetName, "Corvette") = "Corvette" Then
          .CellText(Index, 4) = "Sector " & CStr(rst!SectorID)
       Else
          .CellText(Index, 4) = rst!PlanetName
@@ -846,7 +846,7 @@ Dim Index As Long, CrewID, CardID
       
       .DropHighlight = -1
       RefreshShips
-      If actionSeq > ASidle And actionSeq < ASEnd Then
+      If actionSeq > ASidle And actionSeq < ASend Then
          Main.showActions
       Else
          If Not (Main.frmJob Is Nothing) Then
@@ -1103,7 +1103,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             Case 6 ' fuel
                y = varDLookup("Fuel", "Players", "PlayerID=" & player.ID)
                Do
-                  z = Val(InputBox("How much Fuel do you want to toss overboard?", "Make room in the Cargo Hold"))
+                  z = Val(InputBox("How much Fuel do you want to toss overboard?", "Make room in the Cargo Hold", "1"))
                   If z >= 0 And z <= y Then
                      Exit Do
                   End If
@@ -1113,7 +1113,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             Case 7 'parts
                y = varDLookup("Parts", "Players", "PlayerID=" & player.ID)
                Do
-                  z = Val(InputBox("How many Parts do you want to toss overboard?", "Make room in the Cargo Hold"))
+                  z = Val(InputBox("How many Parts do you want to toss overboard?", "Make room in the Cargo Hold", CStr(y)))
                   If z >= 0 And z <= y Then
                      Exit Do
                   End If
@@ -1123,7 +1123,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             Case 8 'Cargo
                y = varDLookup("Cargo", "Players", "PlayerID=" & player.ID)
                Do
-                  z = Val(InputBox("How much Cargo do you want to toss overboard?", "Make room in the Cargo Hold"))
+                  z = Val(InputBox("How much Cargo do you want to toss overboard?", "Make room in the Cargo Hold", CStr(y)))
                   If z >= 0 And z <= y Then
                      Exit Do
                   End If
@@ -1133,7 +1133,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             Case 10 'Contraband
                y = varDLookup("Contraband", "Players", "PlayerID=" & player.ID)
                Do
-                  z = Val(InputBox("How much Contraband do you want to toss overboard?", "Make room in the Cargo Hold"))
+                  z = Val(InputBox("How much Contraband do you want to toss overboard?", "Make room in the Cargo Hold", CStr(y)))
                   If z >= 0 And z <= y Then
                      Exit Do
                   End If
@@ -1144,7 +1144,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             Case 9 'Passenger
                y = varDLookup("Passenger", "Players", "PlayerID=" & player.ID)
                Do
-                  z = Val(InputBox("How many Passengers do you want to set ashore?", "Make room in the Cargo Hold", y))
+                  z = Val(InputBox("How many Passengers do you want to set ashore?", "Make room in the Cargo Hold", CStr(y)))
                   If z >= 0 And z <= y Then
                      Exit Do
                   End If
@@ -1154,7 +1154,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             Case 11 'Fugitive
                y = varDLookup("Fugitive", "Players", "PlayerID=" & player.ID)
                Do
-                  z = Val(InputBox("How many Fugitives do you want to set ashore?", "Make room in the Cargo Hold"))
+                  z = Val(InputBox("How many Fugitives do you want to set ashore?", "Make room in the Cargo Hold", CStr(y)))
                   If z >= 0 And z <= y Then
                      Exit Do
                   End If

@@ -345,6 +345,7 @@ Begin VB.Form frmStories
          Height          =   1155
          Index           =   6
          Left            =   180
+         MaxLength       =   255
          MultiLine       =   -1  'True
          TabIndex        =   1
          Text            =   "frmStories.frx":14FF3
@@ -366,6 +367,7 @@ Begin VB.Form frmStories
          Height          =   285
          Index           =   5
          Left            =   180
+         MaxLength       =   50
          TabIndex        =   0
          Text            =   "Add your Story Title here.."
          Top             =   390

@@ -57,7 +57,7 @@ Public Enum actionSeqCntr
    ASResolveAlertEnd
    ASEnd     'end action, selectnext player
 End Enum
-Public actionSeq As actionSeqCntr, NumOfReavers As Integer
+Public actionSeq As actionSeqCntr, NumOfReavers As Integer, ContactList As String
 Public Trail(0 To 7) As Integer 'record the trail of sectors travelled in a burn
 Public MoseyMovesDone As Integer, FullburnMovesDone As Integer
 'Public Bitpic() As Control
@@ -967,8 +967,13 @@ Dim c() As String
       x = getCutterSector(SectorID)
       If x > 0 Then 'move this reaver back to Reaver Space
          PutMsg "The Corvette chases a Reaver Cutter off, which hightails it back to Reaver Space", playerID, Logic!Gamecntr
-         'place it at Miranda and use the AI move to get it back to the Reaver Space with preference to any Player Ship :O
-         DB.Execute "UPDATE Players SET SectorID = 123 WHERE PlayerID = " & x
+         'check there is room
+         If getCutterSector(120) > 0 And getCutterSector(121) > 0 And getCutterSector(122) > 0 Then 'full house, goto 121 instead
+            DB.Execute "UPDATE Players SET SectorID = 121 WHERE PlayerID = " & x
+         Else
+            'place it at Miranda and use the AI move to get it back to the Reaver Space with preference to any Player Ship :O
+            DB.Execute "UPDATE Players SET SectorID = 123 WHERE PlayerID = " & x
+         End If
          moveAutoAI x, 0, False, False
       End If
       'clear any Reaver Tokens
@@ -2164,6 +2169,8 @@ Dim SQL, x, cnt As Integer
             End If
          Next x
       End If
+      
+      If rst!SolidCount = 0 And Nz(rst!Solid) = "" And rst!Cash = 0 Then goaldone = False 'AI can never reach goal
      
       'money
       If goaldone And rst!Cash > 0 Then
@@ -2191,6 +2198,7 @@ Dim SQL, x, cnt As Integer
       'if we here and goaldone then Goal IS Done
       If goaldone Then
          addGoal playerID, 1
+         ContactList = getContactList(StoryID)
       End If
       
        ' we good to give new instructions
@@ -2211,5 +2219,32 @@ Private Sub addGoal(ByVal playerID, Optional ByVal change As Integer = 1)
    Else
       DB.Execute "UPDATE Players SET Goals = Goals + " & change & " WHERE PlayerID =" & playerID
    End If
+   
 
 End Sub
+
+Public Function getContactList(ByVal StoryID) As String
+Dim Goal As Integer, tmpCL As String
+   Goal = varDLookup("Goals", "Players", "PlayerID = " & player.ID) + 1
+   tmpCL = varDLookup("Solid", "StoryGoals", "StoryID = " & StoryID & " AND Goal =" & Goal) & ""
+   If tmpCL <> "" Then
+      getContactList = tmpCL
+   Else
+      getContactList = "1,2,4,5"
+   End If
+End Function
+
+Public Function getExtraBurn(ByVal playerID) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+   SQL = "SELECT Max(ContactDeck.ExtraFuel) as cnt "
+   SQL = SQL & "FROM PlayerJobs INNER JOIN ContactDeck ON PlayerJobs.CardID = ContactDeck.CardID "
+   SQL = SQL & "WHERE PlayerJobs.PlayerID=" & playerID & " AND (PlayerJobs.JobStatus=1 OR PlayerJobs.JobStatus=2) AND ContactDeck.ExtraFuel>0"
+
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+       getExtraBurn = Nz(rst!cnt, 0)
+   End If
+   rst.Close
+   Set rst = Nothing
+End Function

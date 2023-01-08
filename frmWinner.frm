@@ -8,6 +8,7 @@ Begin VB.Form frmWinner
    ClientTop       =   0
    ClientWidth     =   12000
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    Picture         =   "frmWinner.frx":0000
    ScaleHeight     =   9585
    ScaleWidth      =   12000
@@ -99,6 +100,26 @@ Begin VB.Form frmWinner
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End
+   Begin VB.CommandButton cmdClear 
+      BackColor       =   &H00FF8080&
+      Caption         =   "Clear Scores"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   285
+      Left            =   3000
+      Style           =   1  'Graphical
+      TabIndex        =   3
+      Top             =   8790
+      Visible         =   0   'False
+      Width           =   1365
+   End
    Begin VB.CommandButton cmdScores 
       BackColor       =   &H00FF8080&
       Caption         =   "Show Scores"
@@ -151,6 +172,13 @@ Private Sub cmd_Click()
    
 End Sub
 
+Private Sub cmdClear_Click()
+   DB.Execute "DELETE FROM Scores WHERE StoryID=" & Logic!StoryID
+   Grid.Visible = False
+   cmdScores.Caption = "Show Scores"
+   cmdClear.Visible = False
+End Sub
+
 Private Sub cmdScores_Click()
 Dim rst As New ADODB.Recordset
 Dim SQL, Index
@@ -159,7 +187,7 @@ With Grid
    If .Visible Then
       .Visible = False
       cmdScores.Caption = "Show Scores"
-   
+      cmdClear.Visible = False
    Else
       .Clear
       SQL = "SELECT PlayerName, Turns, PlayDate,DateDiff('n', StartDate, PlayDate) AS Mins FROM Scores WHERE StoryID=" & Logic!StoryID
@@ -168,16 +196,16 @@ With Grid
       While Not rst.EOF
          Index = .AddItem(rst!PlayerName)
          .CellText(Index, 1) = CStr(rst!Turns)
-         .CellText(Index, 2) = rst!Mins  'CStr(DateDiff("n", rst!StartDate, rst!PlayDate))
+         .CellText(Index, 2) = rst!Mins
          .CellText(Index, 3) = Format(rst!PlayDate, "DD Mmm YYYY HH:nn")
          rst.MoveNext
       Wend
       rst.Close
       Set rst = Nothing
-      '.RecalcHorizontalExtent
-      '.ScrollBars = scrollSftTreeVert
+
       .Visible = True
       cmdScores.Caption = "Hide Scores"
+      cmdClear.Visible = True
    End If
    
 End With

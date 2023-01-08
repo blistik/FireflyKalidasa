@@ -3,17 +3,17 @@ Object = "{714D09E3-B193-11D3-A192-00A0CC26207F}#1.0#0"; "XDockFloat.dll"
 Begin VB.Form frmNav 
    BackColor       =   &H00400000&
    Caption         =   "Nav Deck"
-   ClientHeight    =   4140
+   ClientHeight    =   4230
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   4335
+   ClientWidth     =   4260
    Icon            =   "frmNav.frx":0000
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    MDIChild        =   -1  'True
    Picture         =   "frmNav.frx":030A
-   ScaleHeight     =   4140
-   ScaleWidth      =   4335
+   ScaleHeight     =   4230
+   ScaleWidth      =   4260
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
       Caption         =   "option 2"

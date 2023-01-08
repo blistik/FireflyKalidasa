@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.8.1"
+#define MyAppVersion "1.8.2"
 #define MyAppPublisher "VeeBee-er"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -23,7 +23,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputBaseFilename=FireflyKalidasaSetupV1.8.1
+OutputBaseFilename=FireflyKalidasaSetupV1.8.2
 SetupIconFile=D:\Progs\GitHub\FireflyKalidasa\serenity.ico
 Compression=lzma
 SolidCompression=yes
@@ -45,6 +45,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\bin\XDockFloat.dll"; DestDir: "{sys}"; 
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\SHOWG.TTF";  DestDir: "{autofonts}"; FontInstall: "Showcard Gothic"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\BRITANIC.TTF";  DestDir: "{autofonts}"; FontInstall: "Britannic Bold"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\CIND.otf";  DestDir: "{autofonts}"; FontInstall: "Cyberpunk Is Not Dead"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "D:\Progs\GitHub\FireflyKalidasa\bin\Forque.ttf";  DestDir: "{autofonts}"; FontInstall: "FORQUE"; Flags: onlyifdoesntexist uninsneveruninstall
 
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireFlyAIBot.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\VerseMapTool.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -253,6 +254,15 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Smbadger.jpg"; DestDir: "{app}
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Jubal.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\CrewTemplate.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\GearBlank.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\MisbehaveTemplate.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit1.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit2.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit3.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit4.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\skill1.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\skill2.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\skill3.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\bonnet.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Alert.WAV"; DestDir: "{app}\sounds"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Beep.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion

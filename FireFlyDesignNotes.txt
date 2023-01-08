@@ -1,31 +1,31 @@
 Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 Mar 2021
 
 Dev Ideas:
-support for Gamble on Jobs (260-262)
-Pay $500 and name a suit. Reveal a Misbehave Card. If the suit matches, take $3000.
 
 Test Issues pending: 
 
-
-Mr Universe Job name ideas (9 done):
-Lawforce Flags
-Enormous Trouble
-A wee bit naughty
-Action on the side
-Bruises & contusions
-Do it off the grid
-To the eyes & ears of the 'Verse
-Grand theft larceny
-How weird is that?
-Play merry hob
-Right in my orbit
-Run the long con
-Someone is talking
-Techno kung fu
-The puppet theater
-The very best violence
-
 Version updates:
+v 1.8.2 ~ 05 Jan 2023 - 08 Jan 2023
+new: Story - "Robots make the long hauls." - expands the Solid Contacts required
+add: Gear - Mal's Bonnet
+add: support for 'Gamble' on Jobs (260-262)
+add: 4 new Mr Universe Jobs that are legal (to enable AI Bot access)
+add: AI Bot can now support Jobs for Harrow, Higgins, & Mr Universe
+add: AI Bot now looks for Solid list in Story's next Goal
+add: misbehave suit progress now posted on the toolbar for 'double down' tracking
+add: default values for discard of goods & people
+add: test for Job requirements includes having enough cargo space 
+gui: misbehave card updated closer to the original graphics
+gui: actions font tweaks
+fix: Kaylee now re-rolls Tech skill tests
+fix: Dealing with Harken when holding Warrants is now disabled
+fix: wasn't counting 'Ace in Hole':proceeds in misbehave counts
+fix: tweak to AI Bot Job/Move logic
+fix: loophole when fullburn, could spam click and move 2 sectors in one turn
+fix: AI Bot no longer progresses past goals that it does not test for.
+map: remove path from 73 -> 96, non adjacent rule
+
+
 v 1.8.1 ~ 03 Jan 2023 - 05 Jan 2023
 add: AI Bot will get Solids in turn first, then do random jobs after that
 add: AI Bot will use Havens for Fuel and Shoreleave if they exist and are close
@@ -131,25 +131,22 @@ v1.0.4 ~ 25 Mar 2021 minor tweaks and fixes
 
 v1.0.3 ~ 24 Mar 2021 Initial Release of FireFly - The PC Game
 
-New content notes:
-2 TASKS:
-CORTEX RELAY 7 SERVICE CALL
-Travel to Cortex Relay 7 to Get Paid.
-Needs: 2 Tech
-Flavor text: "There's been some odd signals from Cortex Relay 7, way out near Rim Space. We may have a squatter out there."
-Pays: $900
-Mechanic Bonus: +1 Part
+New content ideas:
+Mr Universe Job name ideas (13 done):
+Lawforce Flags
+Enormous Trouble
+A wee bit naughty
+Bruises & contusions
+Grand theft larceny
+How weird is that?
+Play merry hob
+Right in my orbit
+Run the long con
+Techno kung fu
+The puppet theater
+The very best violence
 
-The Meridian Task says:
-
-COURIER SERVICE MERIDIAN
-Travel to Meridian to Get Paid.
-Needs: Nothing
-Flavor text: "Signature and retinal scan required."
-Pays: $600
-Companion Bonus: +$500
-
-
+Actions:
 Fly - Mosey/Full Burn
 
 Buy (only at supply planets) - 

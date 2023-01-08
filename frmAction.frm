@@ -18,7 +18,7 @@ Begin VB.Form frmAction
       Left            =   2450
       TabIndex        =   38
       Text            =   "0"
-      ToolTipText     =   "Buy Fuel qty $100ea"
+      ToolTipText     =   "Buy Fuel qty $100ea, dbl-clk +1"
       Top             =   1020
       Width           =   315
    End
@@ -383,6 +383,15 @@ Begin VB.Form frmAction
    Begin VB.Label lblSupply 
       BackColor       =   &H00CBE1ED&
       BorderStyle     =   1  'Fixed Single
+      BeginProperty Font 
+         Name            =   "Britannic Bold"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       Height          =   345
       Left            =   1170
       TabIndex        =   16
@@ -412,6 +421,15 @@ Begin VB.Form frmAction
    Begin VB.Label lblContact 
       BackColor       =   &H00CBE1ED&
       BorderStyle     =   1  'Fixed Single
+      BeginProperty Font 
+         Name            =   "Britannic Bold"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       Height          =   345
       Left            =   1170
       TabIndex        =   11
@@ -660,6 +678,7 @@ Dim x, SectorID
          Case Else
             actionSeq = ASDeal
          End Select
+
          playsnd 8
       Case 4 'work
          If hasHigginsJayneWork(GetCombo(cbo)) Then Exit Sub
@@ -692,14 +711,15 @@ Dim x, SectorID
       cmd(x).Enabled = False
    Next x
    
-   If Index = 0 And actionSeq = ASmosey Then  'And MoseyMovesDone = 0
+   If Index = 0 And actionSeq = ASmosey Then
        cmd(0).Caption = "Cancel"
        cmd(0).Enabled = True
    End If
-   If Index = 1 And actionSeq = ASfullburn Then  'And FullburnMovesDone = 0
+   If Index = 1 And actionSeq = ASfullburn Then
        cmd(1).Caption = "Cancel"
        cmd(1).Enabled = True
    End If
+
 End Sub
 
 Public Sub endAction()
