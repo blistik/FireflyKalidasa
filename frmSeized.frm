@@ -1,12 +1,13 @@
 VERSION 5.00
 Begin VB.Form frmSeized 
    BorderStyle     =   4  'Fixed ToolWindow
-   Caption         =   "Select the Crew Member seized by the Alliance Corvette"
+   Caption         =   "Select the Crew Member seized by the Operative's Corvette"
    ClientHeight    =   5235
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   5565
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmSeized.frx":0000
@@ -136,8 +137,7 @@ Dim SQL, crewcnt As Integer, GearID As Integer
       If GearID > 0 Then
          'skip this Crew that has Alliance Ident Card or other similar Wanted bypass
          If Not check Then PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " makes use of " & varDLookup("GearName", "Gear", "GearID=" & GearID) & " to avoid detection", player.ID, Logic!Gamecntr, True, rst!CrewID
-'      If hasGear(player.ID, 20, rst!CrewID) Then  'you're on the list
-'         If Not check Then PutMsg player.PlayName & "'s Nav log: " & rst!CrewName & " Flashes an Alliance Ident Card", player.ID, Logic!Gamecntr, True, rst!CrewID
+
       ElseIf hasShipUpgrade(player.ID, 11) And crewcnt < 2 And check Then
          If crewcnt = 0 And Not check Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to 2 Wanted Crew", player.ID, Logic!Gamecntr, True, getLeader()
          crewcnt = crewcnt + 1

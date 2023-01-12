@@ -2713,6 +2713,23 @@ Dim SQL
    Set rst = Nothing
 End Function
 
+Public Function hasShipUpgrades(ByVal playerID, ByVal ShipUpgradeID As Integer) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+   'may need to manage "On Job" status
+   SQL = "SELECT PlayerSupplies.CardID "
+   SQL = SQL & "FROM ShipUpgrade INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON ShipUpgrade.ShipUpgradeID = SupplyDeck.ShipUpgradeID "
+   SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & playerID & " AND ShipUpgrade.ShipUpgradeID=" & ShipUpgradeID
+   
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   While Not rst.EOF  'count em
+       hasShipUpgrades = hasShipUpgrades + 1
+       rst.MoveNext
+   Wend
+   rst.Close
+   Set rst = Nothing
+End Function
+
 Public Function doMercDiscard(ByVal playerID) As Boolean
 Dim rst As New ADODB.Recordset
 Dim SQL
@@ -3224,22 +3241,17 @@ Public Function doSeizeCrew(ByVal playerID, ByVal CardID, ByVal wanted) As Integ
 Dim result As Integer, CrewID
 
    CrewID = varDLookup("CrewID", "SupplyDeck", "CardID=" & CardID)
-   
-   If hasGear(playerID, 20, CrewID) Then
-      PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " flashes their fake Alliance Ident.Card", playerID, Logic!Gamecntr, True, CrewID
-      Exit Function
-   End If
 
    If RollDice(6) > 1 Then
       If wanted > 1 Then
          If RollDice(6) = 1 Then '2nd roll for Grange Bros
             'busted
          Else
-            PutMsg player.PlayName & "'s Crew members " & getCrewName(CardID) & " both managed to narrowly AVOID detection and arrest.", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & "'s Crew members " & getCrewName(CardID) & " both managed to AVOID detection and arrest.", playerID, Logic!Gamecntr
             Exit Function
          End If
       Else
-         PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " narrowly managed to AVOID detection and arrest.", playerID, Logic!Gamecntr
+         PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " narrowly manages to AVOID detection and arrest.", playerID, Logic!Gamecntr
          Exit Function
       End If
    End If
@@ -3303,8 +3315,9 @@ End Sub
 ' Return True if Cruiser was faced.
 Public Function doMoveAlliance(ByVal playerID, ByVal SectorID) As Boolean
 Dim rst As New ADODB.Recordset
-Dim SQL, pay As Integer, CryBaby As Integer, crewcnt As Integer, GearID As Integer
-   
+Dim SQL, pay As Integer, CryBaby As Integer, GearID As Integer, crewcnt As Integer, allcrew As Integer, stash As Integer
+Dim frmSeize As frmSeized2
+
    'Move Crusier to your Sector,
    If getCruiserSector <> SectorID Then
       MoveShip 5, SectorID
@@ -3319,10 +3332,10 @@ Dim SQL, pay As Integer, CryBaby As Integer, crewcnt As Integer, GearID As Integ
    'does player have Cry Baby?
    CryBaby = hasShipUpgrade(playerID, 1)
    If CryBaby > 0 Then
-      If MessBox("Do you want to deploy (and discard) the Cry Baby to decoy the Alliance Cruisier?", "Alliance Cruiser Alert!", "Deploy", "Nope", 0, 0, 1) = 0 Then
+      If MessBox("Do you want to deploy (and discard) the Cry Baby to decoy the Alliance Cruisier?", "Alliance Cruiser Alert!", "Deploy", "Not now", 0, 0, 1) = 0 Then
          'discard it and go
          doDiscardGear playerID, CryBaby
-         PutMsg player.PlayName & "'s Nav log: Cry Baby Deployed, Cruiser decoyed!", player.ID, Logic!Gamecntr, True, 0, 0, 1
+         PutMsg player.PlayName & "'s Nav log: Cry Baby deployed, Cruiser decoyed!", player.ID, Logic!Gamecntr, True, 0, 0, 1
          moveAutoAI 5
          Exit Function
       End If
@@ -3352,20 +3365,45 @@ Dim SQL, pay As Integer, CryBaby As Integer, crewcnt As Integer, GearID As Integ
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       GearID = hasCrewGearAttribute(playerID, rst!CrewID, "IgnoreWanted")
+      stash = hasShipUpgrades(playerID, 11) * 2
       If GearID > 0 Then
          'skip this Crew that has Alliance Ident Card
          PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " makes use of " & varDLookup("GearName", "Gear", "GearID=" & GearID) & " to avoid detection", playerID, Logic!Gamecntr, True, rst!CrewID
-      ElseIf hasShipUpgrade(playerID, 11) And crewcnt < 2 Then
-         If crewcnt = 0 Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to 2 Wanted Crew", playerID, Logic!Gamecntr, True, getLeader()
+      ElseIf stash > 0 And crewcnt < stash Then
+         'Concealed Smuggling Compartments hides up to 2 Wanted Crew
          crewcnt = crewcnt + 1
+         allcrew = allcrew + 1
+         If frmSeize Is Nothing Then
+            Set frmSeize = New frmSeized2
+         End If
+         frmSeize.crewList.AddItem rst!CrewName
+         frmSeize.crewList.ItemData(frmSeize.crewList.NewIndex) = rst!CardID
+         
       Else
-         doSeizeCrew playerID, rst!CardID, rst!wanted
+         allcrew = allcrew + 1
+         If crewcnt = 0 Then
+            doSeizeCrew playerID, rst!CardID, rst!wanted
+         Else
+            frmSeize.crewList.AddItem rst!CrewName
+            frmSeize.crewList.ItemData(frmSeize.crewList.NewIndex) = rst!CardID
+         End If
+
       End If
       rst.MoveNext
    Wend
    rst.Close
+   
+   If crewcnt = stash And allcrew > stash Then 'we need to decide who goes into the CSC
+      frmSeize.fullstash = stash
+      frmSeize.Caption = "Select " & stash & " crew to hide in the Smuggling Compartments"
+      frmSeize.Show 1
+   ElseIf crewcnt > 0 Then
+      PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to " & stash & " Wanted Crew", playerID, Logic!Gamecntr, True, 0, 0, 11
+   End If
+   
    doMoveAlliance = True
    Set rst = Nothing
+   Set frmSeize = Nothing
 End Function
 
 'move the Cruiser adjacent the sector given
@@ -3798,7 +3836,7 @@ End Function
 
 Public Function isSolid(ByVal playerID, ByVal ContactID) As Boolean
 
-   If ContactID = 0 Or playerID = 0 Then Exit Function
+   If Nz(ContactID, 0) = 0 Or playerID = 0 Then Exit Function
    isSolid = (varDLookup("Solid" & ContactID, "Players", "PlayerID=" & playerID) = 1)
    
    If Not isSolid And ContactID = 5 Then 'alliance card gives solid with Harken

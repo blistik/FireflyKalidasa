@@ -5,6 +5,11 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
+v 1.8.3 ~ 09 Jan 2023 -   Jan 2023
+fix: AI Bot on stories with Wanted Only Crew
+fix: rework handling of Concealed Storage Compartments
+cfg: Simon Tam Tech skill now 2
+
 v 1.8.2 ~ 05 Jan 2023 - 08 Jan 2023
 new: Story - "Robots make the long hauls." - expands the Solid Contacts required
 add: Gear - Mal's Bonnet

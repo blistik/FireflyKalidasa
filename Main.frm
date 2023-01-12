@@ -310,7 +310,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   285
          Index           =   4
-         Left            =   15260
+         Left            =   14295
          Picture         =   "Main.frx":45CF8
          ScaleHeight     =   285
          ScaleWidth      =   240
@@ -327,7 +327,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   285
          Index           =   3
-         Left            =   14840
+         Left            =   13875
          Picture         =   "Main.frx":460CA
          ScaleHeight     =   285
          ScaleWidth      =   240
@@ -344,7 +344,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   285
          Index           =   2
-         Left            =   14420
+         Left            =   13455
          Picture         =   "Main.frx":4649C
          ScaleHeight     =   285
          ScaleWidth      =   240
@@ -361,7 +361,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   285
          Index           =   1
-         Left            =   14000
+         Left            =   13050
          Picture         =   "Main.frx":4686E
          ScaleHeight     =   285
          ScaleWidth      =   240
@@ -378,7 +378,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   240
          Index           =   8
-         Left            =   12980
+         Left            =   12140
          Picture         =   "Main.frx":46C40
          ScaleHeight     =   240
          ScaleWidth      =   240
@@ -394,7 +394,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   240
          Index           =   7
-         Left            =   12560
+         Left            =   11840
          Picture         =   "Main.frx":46F49
          ScaleHeight     =   240
          ScaleWidth      =   240
@@ -410,7 +410,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   240
          Index           =   6
-         Left            =   12140
+         Left            =   11540
          Picture         =   "Main.frx":47252
          ScaleHeight     =   240
          ScaleWidth      =   240
@@ -426,7 +426,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   240
          Index           =   5
-         Left            =   11720
+         Left            =   11240
          Picture         =   "Main.frx":4755B
          ScaleHeight     =   240
          ScaleWidth      =   240
@@ -442,7 +442,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   240
          Index           =   4
-         Left            =   11300
+         Left            =   10940
          Picture         =   "Main.frx":47864
          ScaleHeight     =   240
          ScaleWidth      =   240
@@ -458,7 +458,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   240
          Index           =   3
-         Left            =   10880
+         Left            =   10640
          Picture         =   "Main.frx":47B6D
          ScaleHeight     =   240
          ScaleWidth      =   240
@@ -474,7 +474,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   240
          Index           =   2
-         Left            =   10460
+         Left            =   10340
          Picture         =   "Main.frx":47E76
          ScaleHeight     =   240
          ScaleWidth      =   240
@@ -506,7 +506,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   240
          Index           =   9
-         Left            =   13400
+         Left            =   12440
          Picture         =   "Main.frx":48488
          ScaleHeight     =   240
          ScaleWidth      =   240
@@ -830,6 +830,14 @@ On Error GoTo err_handler
          frmAction.txtContra = "0"
          
       End If
+      
+      'Bree sells parts to any Solids
+      If hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) >= Val(frmAction.txtParts) And Val(frmAction.txtParts) > 0 And isSolid(player.ID, ContactID) Then
+         DB.Execute "UPDATE Players SET Parts = Parts-" & frmAction.txtParts & ", Pay = Pay + " & Val(frmAction.txtParts) * 300 & " WHERE PlayerID=" & player.ID
+         PutMsg player.PlayName & " used Bree's Black Market Ties to sell " & frmAction.txtParts & " Parts to " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!Gamecntr
+         frmAction.txtParts = "0"
+      End If
+      
       'Deal with Harken to source Fuel (not a Buy action
       If frmAction.txtFuel.Enabled And doBuyFuelParts(player.ID, Val(frmAction.txtFuel), 0, True) <= getMoney(player.ID) And ContactID = 5 Then
          If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.txtFuel) / 2) Then
@@ -864,6 +872,7 @@ On Error GoTo err_handler
          frmAction.txtPass = "0"
          frmAction.txtFug = "0"
       End If
+            
       
       drawLine 1, -1
       actionSeq = ASselect 'in limbo awaiting user to select
@@ -1478,7 +1487,7 @@ Dim frmJobEdit As frmJobEditor, x
    Case "pcguide"
       x = ShellExecute(x, "OPEN", App.Path & "\FireflyForPC.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
    Case "about"
-      MessBox "Firefly + Blue Sun/Kalidasa  V" & App.Major & "." & App.Minor & "." & App.Revision & vbNewLine & "*Freeware* - use at your own risk" & vbNewLine & "Made by: Vee Bee-er (c)2021-22 BLiSoftware", "About", "Shiny"
+      MessBox "Firefly + Blue Sun/Kalidasa  V" & App.Major & "." & App.Minor & "." & App.Revision & vbNewLine & "*Freeware* - use at your own risk" & vbNewLine & "Made by: Vee Bee-er (c)2021-23 BLiSoftware", "About", "Shiny"
    Case "jobs"
     Set frmJobEdit = New frmJobEditor
     frmJobEdit.Show 1
@@ -1865,9 +1874,18 @@ Dim frmJoSel As frmJobSel
       .Label7.Visible = .chkShore.Enabled
       
       'FUEL & PARTS
-      '.txtFuel.Enabled = ((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone) And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0) Or (Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0) = 5 And isSolid(player.ID, 5))
       .txtFuel.Enabled = CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 And (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone)) Or (Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0) = 5 And isSolid(player.ID, 5)) Or getHaven(SectorID) > 0)
-      .txtParts.Enabled = ((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone) And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0)
+      .txtParts.Enabled = (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone) And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0)) Or (hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) > 0 And isSolid(player.ID, varDLookup("ContactID", "Contact", "SectorID=" & SectorID))) 'Bree sells parts to Solids
+      If hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) > 0 Then
+         If .cmd(2).Enabled = False Then
+            .txtParts.ToolTipText = "Sell(Deal) Parts for $300ea"
+         Else
+            .txtParts.ToolTipText = "Buy or Sell(Deal) Parts for $300ea"
+         End If
+      Else
+         .txtParts.ToolTipText = "Buy Parts qty $300ea"
+      End If
+      
       setBackColour .txtFuel
       setBackColour .txtParts
       
