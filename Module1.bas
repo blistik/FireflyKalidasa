@@ -3393,7 +3393,7 @@ Dim frmSeize As frmSeized2
    Wend
    rst.Close
    
-   If crewcnt = stash And allcrew > stash Then 'we need to decide who goes into the CSC
+   If crewcnt = stash And allcrew > stash And stash > 0 Then 'we need to decide who goes into the CSC
       frmSeize.fullstash = stash
       frmSeize.Caption = "Select " & stash & " crew to hide in the Smuggling Compartments"
       frmSeize.Show 1

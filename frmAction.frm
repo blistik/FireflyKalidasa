@@ -553,8 +553,8 @@ Private Sub cbo_Click()
 End Sub
 
 Private Sub chkShore_Click()
-      txtFuel.Enabled = (chkShore.Value = 0)
-      txtParts.Enabled = (chkShore.Value = 0)
+      txtFuel.Enabled = (chkShore.Value = 0 Or getHaven(getPlayerSector(player.ID)) > 0)
+      txtParts.Enabled = (chkShore.Value = 0 And getHaven(getPlayerSector(player.ID)) = 0)
       setBackColour txtFuel
       setBackColour txtParts
 End Sub
@@ -648,6 +648,9 @@ Dim x, SectorID
              'shore leave only
             actionSeq = ASBuyShore
          End If
+         chkShore.Visible = False
+         Label4.Visible = False
+         Label7.Visible = False
          
          Select Case actionSeq
          Case ASBuyShore, ASBuyHaven
@@ -655,6 +658,7 @@ Dim x, SectorID
          Case ASBuySelect
             buydone = True
             actionSeq = ASBuyEnd
+            
          Case ASBuySelDiscard
 '            'save selected card as Seq = 6 and draw cards up to 3
             actionSeq = ASBuyDrew 'bounce back and refresh frmAction via timer

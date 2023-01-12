@@ -5,10 +5,16 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
-v 1.8.3 ~ 09 Jan 2023 -   Jan 2023
+v 1.8.4 ~ 12 Jan 2023 pm
+fix: able to get shore leave & fuel at Havens together in 1 buy
+fix: prevent shore leave being selected during a supplies buy
+fix: handling of Wanted Rolls when no Concealed Storage Compartments exist
+
+v 1.8.3 ~ 09 Jan 2023 -  12 Jan 2023
 fix: AI Bot on stories with Wanted Only Crew
 fix: rework handling of Concealed Storage Compartments
 cfg: Simon Tam Tech skill now 2
+add: Bree's Part selling skill
 
 v 1.8.2 ~ 05 Jan 2023 - 08 Jan 2023
 new: Story - "Robots make the long hauls." - expands the Solid Contacts required
