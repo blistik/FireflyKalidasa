@@ -359,7 +359,7 @@ Dim rst As New ADODB.Recordset, SQL, x, y
       lbl(1) = rst!GearDescr
       lbl(2).Visible = (Nz(rst!Name) <> "")
       If Nz(rst!Name) <> "" Then
-         lbl(2) = "owned by: " & rst!Name
+         lbl(2) = "held by: " & rst!Name
       End If
       lbl(3) = ""
       'lbl(4) = Trim(IIf(rst!fight >= 1, rst!fight & " Fight  ", "") & IIf(rst!tech >= 1, rst!tech & " Tech  ", "") & IIf(rst!Negotiate >= 1, rst!Negotiate & " Negotiate", ""))

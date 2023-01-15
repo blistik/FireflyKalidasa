@@ -504,6 +504,7 @@ With sftTree
          Index = .AddItem(CStr(rst!CardID))
          .ItemData(Index) = rst!CardID
          .CellItemData(Index, 0) = 3 'upgrd
+         .CellItemData(Index, 1) = rst!ShipUpgradeID
          .ItemLevel(Index) = 2
          If rst!Seq = 6 Then
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
@@ -575,7 +576,12 @@ With sftTree
                   'determine how many cards can be accepted
                   max = MAXJOBCARDACCEPT + getGearFeature(player.ID, "MaxSupplies") 'accept only up to 2 cards + modifier
                   ' check for ship upgrades that there are Slots left. Drives OK (but only 1), and only 3 upgrades. if (getShipUpgrades(player.id)< 3 and .CellItemData(index, 0) = 3) 'upgrd
-                  If getSelected("R") < max And companionsOK(player.ID, .CellItemData(Index, 0), .CellItemData(Index, 1)) And ((getCost("R") + .CellItemData(Index, 8)) <= getMoney(player.ID)) And ((.CellItemData(Index, 0) = 1 And (getCrewCount(player.ID) + getCrewSelected("R")) < CrewCapacity(player.ID)) Or .CellItemData(Index, 0) = 2 Or (.CellItemData(Index, 0) = 3 And ((getShipUpgrades(player.ID) + getUpgradesSelected("R") < 3 And Not isDriveCore(.ItemData(Index))) Or (isDriveCore(.ItemData(Index)) And getDriveCoresSelected("R") = 0)))) Then
+                  If getSelected("R") < max And companionsOK(player.ID, .CellItemData(Index, 0), .CellItemData(Index, 1)) And _
+                     ((getCost("R") + .CellItemData(Index, 8)) <= getMoney(player.ID)) And _
+                     ((.CellItemData(Index, 0) = 1 And (getCrewCount(player.ID) + getCrewSelected("R")) < CrewCapacity(player.ID) + getCrewSpaceSelected("R")) Or _
+                       .CellItemData(Index, 0) = 2 Or _
+                      (.CellItemData(Index, 0) = 3 And ((getShipUpgrades(player.ID) + getUpgradesSelected("R") < 3 And Not isDriveCore(.ItemData(Index))) Or (isDriveCore(.ItemData(Index)) And getDriveCoresSelected("R") = 0)))) Then
+                     
                      .ItemDataString(Index) = "R"
                      Set .ItemPicture(Index) = AssetImages.Overlay("L", "R")
                   Else
@@ -587,7 +593,13 @@ With sftTree
          Case "R"  'deal
             If actionSeq = ASBuySelect Then
                   .ItemDataString(Index) = "UN"
-                  Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
+                  'check if trying to de-select crew expansion which leaves too many crew to carry
+                  If .CellItemData(Index, 0) = 3 And (getCrewCount(player.ID) + getCrewSelected("R")) > CrewCapacity(player.ID) + getCrewSpaceSelected("R") Then
+                     .ItemDataString(Index) = "R" 'block de-selection until crew de-selected
+                     playsnd 9
+                  Else
+                     Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
+                  End If
             End If
             
          Case "O"  'discard
@@ -645,6 +657,19 @@ Dim Index As Integer
       For Index = 0 To .ListCount - 1
          If .ItemDataString(Index) = status And .CellItemData(Index, 0) = 3 Then
             getUpgradesSelected = getUpgradesSelected + 1
+         End If
+      Next Index
+   
+   End With
+
+End Function
+
+Private Function getCrewSpaceSelected(ByVal status As String) As Integer
+Dim Index As Integer
+   With sftTree
+      For Index = 0 To .ListCount - 1
+         If .ItemDataString(Index) = status And .CellItemData(Index, 0) = 3 Then
+            getCrewSpaceSelected = getCrewSpaceSelected + varDLookup("ExtraCrewSpace", "ShipUpgrade", "ShipUpgradeID=" & .CellItemData(Index, 1))
          End If
       Next Index
    

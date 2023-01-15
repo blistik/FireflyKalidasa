@@ -851,13 +851,16 @@ End Function
 
 'this Controls all the Story Goals, their Jobs and the WIN
 Public Function CheckWon(ByVal playerID) As Boolean
-Dim rst As New ADODB.Recordset, SQL, frmWin As frmWinner
-
+Dim rst As New ADODB.Recordset, SQL, frmWin As frmWinner, goaldone As Boolean
+On Error Resume Next
+   goaldone = True
    SQL = "SELECT * FROM Players WHERE PlayerID=" & playerID
-   
    rst.Open SQL, DB, adOpenDynamic, adLockReadOnly
    If Not rst.EOF Then
-      CheckWon = doGoalCheck(playerID, Logic!StoryID, rst!Goals, rst!Seq)
+      While Not CheckWon And goaldone
+         CheckWon = doGoalCheck(playerID, Logic!StoryID, rst!Goals, rst!Seq, goaldone)
+         rst.Requery
+      Wend
    End If
 
    rst.Close
@@ -874,8 +877,8 @@ Dim rst As New ADODB.Recordset, SQL, frmWin As frmWinner
 Set rst = Nothing
 End Function
 
-Private Function doGoalCheck(ByVal playerID, ByVal StoryID, ByVal Goal, ByVal Seq) As Boolean
-Dim rst As New ADODB.Recordset, goaldone As Boolean, a() As String
+Private Function doGoalCheck(ByVal playerID, ByVal StoryID, ByVal Goal, ByVal Seq, ByRef goaldone As Boolean) As Boolean
+Dim rst As New ADODB.Recordset, a() As String
 Dim SQL, x, cnt As Integer
    If Goal = -1 Then Exit Function
    goaldone = True 'until proven otherwise
@@ -999,7 +1002,8 @@ Dim SQL, x, cnt As Integer
       If goaldone And Nz(rst!Instructions) <> "" And Not doGoalCheck Then
          PutMsg player.PlayName & ", you have completed Goal " & Goal + 1 & vbNewLine & rst!Instructions, playerID, Logic!Gamecntr, True, getLeader()
       End If
-      
+   Else
+      goaldone = False
       
    End If
    rst.Close
@@ -2054,13 +2058,16 @@ Dim SQL
    Set rst = Nothing
 End Function
 
-Public Function hasDisgruntled(ByVal playerID, Optional ByVal moraleboost As Boolean = False) As Boolean
+Public Function hasDisgruntled(ByVal playerID, Optional ByVal moraleboost As Boolean = False, Optional ByVal moralonly As Boolean = False) As Boolean
 Dim rst As New ADODB.Recordset
 Dim SQL
    SQL = "SELECT Crew.CrewID, Crew.Disgruntled "
    SQL = SQL & "FROM Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck "
    SQL = SQL & "ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID "
    SQL = SQL & "WHERE disgruntled > 0 AND PlayerSupplies.PlayerID=" & playerID
+   If moralonly Then
+      SQL = SQL & " AND Crew.Moral = 1"
+   End If
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    Do While Not rst.EOF
       If moraleboost Then
@@ -3800,10 +3807,12 @@ Dim SQL
          If rst!WinProfession > 0 And Not hasCrewAttribute(playerID, cstrProfession(rst!WinProfession)) And hasNavReqs Then  'check we meet fail conditions
             If rst!FailFuel < 0 And Abs(rst!FailFuel) > varDLookup("Fuel", "Players", "PlayerID = " & playerID) Then
                hasNavReqs = False
-            End If
-            If rst!FailParts < 0 And Abs(rst!FailParts) > varDLookup("Parts", "Players", "PlayerID = " & playerID) Then
+            ElseIf rst!FailParts < 0 And Abs(rst!FailParts) > varDLookup("Parts", "Players", "PlayerID = " & playerID) Then
+               hasNavReqs = False
+            ElseIf rst!FailFuel = 0 And rst!FailParts = 0 Then 'no combined test
                hasNavReqs = False
             End If
+            
          End If
          
          If rst!Profession > 0 And hasNavReqs Then

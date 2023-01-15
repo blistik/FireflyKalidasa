@@ -1,10 +1,23 @@
 Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 Mar 2021
 
 Dev Ideas:
+change gear icon on Ship to Fight/Tech/Negot icon
 
 Test Issues pending: 
 
 Version updates:
+v 1.8.5 ~ 13 Jan 2023 pm - 15 Jan 2023
+gui: add provision for any Crew mini-picture. File name "Sm" & [Picture] field value. 16x16 jpg
+gui: added avatars for Serenity heroes
+gui: replaced disgruntled label with icon for a crew
+gui: gear takes its primary skill modifier icon
+fix: multiple Goals can be acheived and detected in one turn.
+fix: check/warning on immoral job only includes disgruntled *moral* crew to prevent false alert
+fix: allow buying of more crew over ships capacity if also buying Expanded Crew Quarters
+fix: Abandoned Tanker Nav options check - uses WinProfession value set to 1-Mechanic
+fix: If an Alert token appears in your sector between your turn, no longer will try and resolve it
+bot: updated to v1.0.4 to include some of these fixes.
+
 v 1.8.4 ~ 12 Jan 2023 pm
 fix: able to get shore leave & fuel at Havens together in 1 buy
 fix: prevent shore leave being selected during a supplies buy
@@ -15,6 +28,7 @@ fix: AI Bot on stories with Wanted Only Crew
 fix: rework handling of Concealed Storage Compartments
 cfg: Simon Tam Tech skill now 2
 add: Bree's Part selling skill
+bot: updated to v1.0.3
 
 v 1.8.2 ~ 05 Jan 2023 - 08 Jan 2023
 new: Story - "Robots make the long hauls." - expands the Solid Contacts required
@@ -35,7 +49,7 @@ fix: tweak to AI Bot Job/Move logic
 fix: loophole when fullburn, could spam click and move 2 sectors in one turn
 fix: AI Bot no longer progresses past goals that it does not test for.
 map: remove path from 73 -> 96, non adjacent rule
-
+bot: updated to v1.0.2
 
 v 1.8.1 ~ 03 Jan 2023 - 05 Jan 2023
 add: AI Bot will get Solids in turn first, then do random jobs after that
@@ -48,6 +62,7 @@ fix: accidental closure of Nav and Action panels
 fix: Clear Disgruntled for Gun Hands that are returned to the discards
 fix: Event log time format, creating issues for High Score times
 fix: Nav Card  "Bluff Your Way Through" was ignoring Havens
+bot: updated to v1.0.1
 
 Version updates:
 v 1.8.0 ~ 24 Dec 2022 - 31 Dec 2022
@@ -55,6 +70,7 @@ new: buy Fuel & Buy Shoreleave at another player's Haven
 new: Support for AI Player bot (via headless client app)
 add: random Crew selection option for a Story
 add: Ship Upgrade option for Story
+bot: initial release v1.0.0
 
 v1.7.9 ~ 11 Oct 2022 - 22 Dec 2022
 new: Havens supported, new option in Story editor

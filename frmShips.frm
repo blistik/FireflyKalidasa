@@ -154,7 +154,7 @@ Begin VB.Form frmShips
       MaskColor       =   16777215
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   20
+         NumListImages   =   25
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "frmShips.frx":0652
             Key             =   "UN"
@@ -235,12 +235,32 @@ Begin VB.Form frmShips
             Picture         =   "frmShips.frx":87D8
             Key             =   "MA"
          EndProperty
+         BeginProperty ListImage21 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmShips.frx":8C2A
+            Key             =   "fight"
+         EndProperty
+         BeginProperty ListImage22 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmShips.frx":8F7C
+            Key             =   "negot"
+         EndProperty
+         BeginProperty ListImage23 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmShips.frx":94CE
+            Key             =   "tech"
+         EndProperty
+         BeginProperty ListImage24 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmShips.frx":9820
+            Key             =   "dis"
+         EndProperty
+         BeginProperty ListImage25 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmShips.frx":9B72
+            Key             =   "serenity"
+         EndProperty
       EndProperty
    End
    Begin VB.Image DragIcon 
       Height          =   480
       Left            =   1560
-      Picture         =   "frmShips.frx":8C2A
+      Picture         =   "frmShips.frx":9EC4
       Top             =   2490
       Visible         =   0   'False
       Width           =   480
@@ -318,7 +338,35 @@ Private Sub Form_Load()
        .ButtonStyle = buttonsSftTreeAll
 
     End With
+    loadImages
+    
 End Sub
+
+Private Sub loadImages()
+Dim Index, SQL
+Dim rst As New ADODB.Recordset
+   SQL = "SELECT Distinct Picture FROM Crew"
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   While Not rst.EOF
+      If Dir(App.Path & "\Pictures\Sm" & rst!Picture) <> "" Then
+         AssetImages.ListImages.Add , Left(rst!Picture, Len(rst!Picture) - 4), LoadPicture(App.Path & "\Pictures\Sm" & rst!Picture)
+      End If
+      rst.MoveNext
+   Wend
+   
+End Sub
+Private Function findImageKey(ByVal key As String) As Integer
+Dim x
+   key = Left(key, Len(key) - 4) 'remove .jpg
+   With AssetImages
+      For x = 1 To .ListImages.Count - 1
+         If key = .ListImages.Item(x).key Then
+            findImageKey = x
+            Exit For
+         End If
+      Next x
+   End With
+End Function
 
 Public Sub RefreshShips()
    'keep yours at the top
@@ -370,6 +418,7 @@ With sftTree
       .CellText(Index, 1) = rst!ship & " - " & PlayCode(rst!playerID).PlayName & IIf(rst!playerID = player.ID, " [me]", "")
       .CellForeColor(Index, 1) = 0
       .CellBackColor(Index, 1) = getPlayerColor(rst!playerID)
+      Set .ItemPicture(Index) = AssetImages.ListImages("serenity").Picture
       If Logic!player = rst!playerID Then
          .CellText(Index, 2) = " << IN PLAY >>"
       Else
@@ -426,12 +475,14 @@ With sftTree
          .CellItemData(Index, 7) = rst2!Disgruntled
          .CellItemData(Index, 8) = rst2!pay
          .ItemLevel(Index) = 2
-         If rst2!leader = 1 Then
-            Set .ItemPicture(Index) = LoadPicture(App.Path & "\Pictures\Sm" & rst2!Picture)
-         ElseIf rst2!OffJob = 0 Then
-            Set .ItemPicture(Index) = AssetImages.Overlay("L", IIf(rst2!leader = 1, "LD", "P"))
-         Else
+         'set Crew's Avatar
+         If rst2!OffJob = 1 Then
             Set .ItemPicture(Index) = AssetImages.Overlay("L", IIf(rst2!leader = 1, "LD", "O"))
+         ElseIf findImageKey(rst2!Picture) > 0 Then
+            'Set .ItemPicture(Index) =  LoadPicture(App.Path & "\Pictures\Sm" & rst2!Picture)
+            Set .ItemPicture(Index) = AssetImages.ListImages(findImageKey(rst2!Picture)).Picture
+         Else
+            Set .ItemPicture(Index) = AssetImages.Overlay("L", IIf(rst2!leader = 1, "LD", "P"))
          End If
 
          .CellText(Index, 1) = rst2!CrewName & "  -  " & rst2!CrewDescr
@@ -537,11 +588,12 @@ With sftTree
          Else
             .CellFont(Index, 8).Strikethrough = True
          End If
-         
-         .CellText(Index, 9) = IIf(rst2!Disgruntled > 0, "Disgruntled ", "") & Nz(rst2!KeyWords) & IIf(rst2!Pilot = 1 And hasShipUpgrade(rst!playerID, 10), "TRANSPORT", "")
+         'IIf(rst2!Disgruntled > 0, "Disgruntled ", "") &
+         .CellText(Index, 9) = Nz(rst2!KeyWords) & IIf(rst2!Pilot = 1 And hasShipUpgrade(rst!playerID, 10), "TRANSPORT", "")
          .CellForeColor(Index, 9) = 0
          If rst2!Disgruntled > 0 Then
-            .CellBackColor(Index, 9) = 11468799
+            .CellBackColor(Index, 9) = 8898502 ' 11468799
+            Set .CellPicture(Index, 9) = AssetImages.ListImages("dis").Picture
          ElseIf Not IsNull(rst2!KeyWords) Or (rst2!Pilot = 1 And hasShipUpgrade(rst!playerID, 10)) Then
             .CellForeColor(Index, 9) = 65280
          End If
@@ -563,6 +615,12 @@ With sftTree
             .ItemLevel(Index) = 3
             If InStr(rst3!GearName, "Charts") > 0 Or InStr(rst3!GearName, "Contract") > 0 Then
                Set .ItemPicture(Index) = AssetImages.Overlay("L", "MA")
+            ElseIf rst3!fight > 0 Then
+               Set .ItemPicture(Index) = AssetImages.Overlay("L", "fight")
+            ElseIf rst3!tech > 0 Then
+               Set .ItemPicture(Index) = AssetImages.Overlay("L", "tech")
+            ElseIf rst3!Negotiate > 0 Then
+               Set .ItemPicture(Index) = AssetImages.Overlay("L", "negot")
             Else
                Set .ItemPicture(Index) = AssetImages.Overlay("L", "GR")
             End If
@@ -677,6 +735,12 @@ With sftTree
          .ItemLevel(Index) = 2
          If InStr(rst2!GearName, "Charts") > 0 Or InStr(rst2!GearName, "Contract") > 0 Then
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "MA")
+         ElseIf rst2!fight > 0 Then
+            Set .ItemPicture(Index) = AssetImages.Overlay("L", "fight")
+         ElseIf rst2!tech > 0 Then
+            Set .ItemPicture(Index) = AssetImages.Overlay("L", "tech")
+         ElseIf rst2!Negotiate > 0 Then
+            Set .ItemPicture(Index) = AssetImages.Overlay("L", "negot")
          Else
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "GR")
          End If

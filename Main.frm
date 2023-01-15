@@ -937,6 +937,8 @@ On Error GoTo err_handler
       actionSeq = ASselect 'in limbo awaiting user to select
       If x = -1 Then
          PutMsg player.PlayName & " took some free Shore Leave at the Haven", player.ID, Logic!Gamecntr, True, getLeader()
+      ElseIf x > 0 Then
+         PutMsg player.PlayName & " went on Shore Leave at a Haven for $" & CStr(Abs(x)), player.ID, Logic!Gamecntr
       End If
       showActions
       
@@ -1015,9 +1017,9 @@ On Error GoTo err_handler
       'Check if WON!
       If CheckWon(player.ID) Then
          If MessBox("Do you want to end the game for all players?", "End Game?", "Yes", "No", getLeader()) = 0 Then
-         'If MsgBox("Do you want to end the game for all players?", vbQuestion + vbYesNo, "End Game?") = vbYes Then
             PutMsg PlayCode(thisPlayer).PlayName & " has ENDED the Game", thisPlayer, Logic!Gamecntr
             Logic.Update "Seq", "E"
+            EndGame
             Exit Sub
          End If
       End If
@@ -1051,7 +1053,7 @@ End Sub
 Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
 Dim ChatTxt As String, x
   playsnd 13
-  Select Case Button.Key
+  Select Case Button.key
   Case "start"  'host
     
     Select Case Logic!Seq
@@ -1088,11 +1090,11 @@ Dim ChatTxt As String, x
         End If
 
      Case Else
-        x = MsgBox("Game in progress. If you want to re-join, use JOIN button." & vbNewLine & "otherwise press OK to reset the Game", vbExclamation + vbOKCancel, "Game in Progress")
+        x = MsgBox("Game in progress. If you want to re-join, use JOIN button." & vbNewLine & "otherwise press OK to RESET the Game", vbExclamation + vbOKCancel, "Game in Progress")
         Select Case x
         Case vbOK
             Logic.Update "Seq", "E"
-            MsgBox "Game has been reset, press Host to start", vbInformation
+            MsgBox "Game has been reset, press Host again to start", vbInformation
         End Select
      End Select
        
@@ -1141,21 +1143,7 @@ Dim ChatTxt As String, x
        Exit Sub
     End If
 
-    killAllForms
-    
-    If Logic!player = player.ID Then setNextPlayer player.ID
-    DB.Execute "Update Players Set Name = NULL WHERE PlayerID = " & player.ID
-    If Nz(varDLookup("PlayerID", "Players", "Name IS NOT NULL"), 0) = 0 Then
-       Logic.Update "Seq", "E"
-       Logic.Update "GameCntr", 0
-    End If
-
-    player.ID = 0
-    player.Color = ""
-    player.PlayName = ""
-    pickStartSector = -1
-    actionSeq = ASidle
-    initToolbar False
+    EndGame
     
   Case "chat"
     ChatTxt = InputBox("Enter your message", "Chat")
@@ -1265,6 +1253,24 @@ Dim ChatTxt As String, x
     x = ShellExecute(x, "OPEN", App.Path & "\FireflyForPC.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
   
   End Select
+End Sub
+
+Private Sub EndGame()
+   killAllForms
+    
+    If Logic!player = player.ID Then setNextPlayer player.ID
+    DB.Execute "Update Players Set Name = NULL WHERE PlayerID = " & player.ID
+    If Nz(varDLookup("PlayerID", "Players", "Name IS NOT NULL"), 0) = 0 Then
+       Logic.Update "Seq", "E"
+       Logic.Update "GameCntr", 0
+    End If
+
+    player.ID = 0
+    player.Color = ""
+    player.PlayName = ""
+    pickStartSector = -1
+    actionSeq = ASidle
+    initToolbar False
 End Sub
 
 Private Sub initBoard()
@@ -1411,7 +1417,7 @@ Private Sub Toolbar1_ButtonMenuClick(ByVal ButtonMenu As MSComctlLib.ButtonMenu)
 Dim frmJobEdit As frmJobEditor, x
 
    playsnd 13
-   Select Case ButtonMenu.Key
+   Select Case ButtonMenu.key
    Case "alljobs"
       If actionSeq < ASDeal Or actionSeq > ASDealEnd Then
          If frmJob Is Nothing Then
@@ -1679,7 +1685,9 @@ Dim frmJoSel As frmJobSel
    SectorID = getPlayerSector(player.ID)
    SoloGame = isSoloGame() 'as a player may drop out
    
-   If ignoreToken <> SectorID Then resolveToken SectorID
+   If ignoreToken <> SectorID And Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) Then 'must be moving into the sector to resolve token
+      resolveToken SectorID
+   End If
    
    'check that the REAVER is or is not here
    If getCutterSector(SectorID) > 0 Then
@@ -2073,8 +2081,8 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
       Exit Function
    End If
    
-   If finalstate = JOB_SUCCESS And rst!Immoral = 1 And hasDisgruntled(playerID) Then
-      If MessBox("Warning: Completing this Immoral Job with Disgruntle Crew will result in Crew leaving." & vbNewLine & "Are you sure you want to continue?", "Immoral Job Consequences", "Don't Care", "Oh No", getLeader()) = 1 Then
+   If finalstate = JOB_SUCCESS And rst!Immoral = 1 And hasDisgruntled(playerID, False, True) Then
+      If MessBox("Warning: Completing this Immoral Job with Disgruntle Moral Crew will likely result in Crew leaving." & vbNewLine & "Are you sure you want to continue?", "Immoral Job Consequences", "Don't Care", "Oh No", getLeader()) = 1 Then
          frmAction.workdone = False
          Exit Function
       End If
@@ -3434,7 +3442,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          Exit Function
          
       ElseIf rst!WinProfession > 0 And Not hasCrewAttribute(player.ID, cstrProfession(rst!WinProfession)) Then
-         result = 2
+         result = 2 'go to lose option
          
       ElseIf rst!skill = 0 Then 'no test, just do Win outcomes
          result = 0

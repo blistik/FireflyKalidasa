@@ -2121,13 +2121,17 @@ End Function
 
 'this Controls all the Story Goals, their Jobs and the WIN
 Public Function CheckWon(ByVal playerID) As Boolean
-Dim rst As New ADODB.Recordset, SQL
-
+Dim rst As New ADODB.Recordset, SQL, goaldone As Boolean
+   
+   goaldone = True
    SQL = "SELECT * FROM Players WHERE PlayerID=" & playerID
    
    rst.Open SQL, DB, adOpenDynamic, adLockReadOnly
    If Not rst.EOF Then
-      CheckWon = doGoalCheck(playerID, Logic!StoryID, rst!Goals, rst!Seq)
+      While Not CheckWon And goaldone
+         CheckWon = doGoalCheck(playerID, Logic!StoryID, rst!Goals, rst!Seq, goaldone)
+         rst.Requery
+      Wend
    End If
 
    rst.Close
@@ -2142,8 +2146,8 @@ Dim rst As New ADODB.Recordset, SQL
 Set rst = Nothing
 End Function
 
-Private Function doGoalCheck(ByVal playerID, ByVal StoryID, ByVal Goal, ByVal Seq) As Boolean
-Dim rst As New ADODB.Recordset, goaldone As Boolean, a() As String
+Private Function doGoalCheck(ByVal playerID, ByVal StoryID, ByVal Goal, ByVal Seq, ByRef goaldone As Boolean) As Boolean
+Dim rst As New ADODB.Recordset, a() As String
 Dim SQL, x, cnt As Integer
    If Goal = -1 Then Exit Function
    goaldone = True 'until proven otherwise
@@ -2205,7 +2209,8 @@ Dim SQL, x, cnt As Integer
       If goaldone And Nz(rst!Instructions) <> "" And Not doGoalCheck Then
          PutMsg player.PlayName & " has completed Goal " & Goal + 1 & vbNewLine & rst!Instructions, playerID, Logic!Gamecntr
       End If
-      
+   Else
+      goaldone = False
    End If
    rst.Close
    Set rst = Nothing

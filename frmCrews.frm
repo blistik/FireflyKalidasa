@@ -56,6 +56,17 @@ Begin VB.Form frmCrewSel
       Top             =   60
       Width           =   3255
    End
+   Begin LaVolpeAlphaImg.AlphaImgCtl disgruntledPic 
+      Height          =   750
+      Left            =   2610
+      Top             =   3330
+      Width           =   750
+      _ExtentX        =   1323
+      _ExtentY        =   1323
+      Image           =   "frmCrews.frx":0000
+      Trans           =   83886080
+      Effects         =   "frmCrews.frx":1E06
+   End
    Begin LaVolpeAlphaImg.AlphaImgCtl skillPic 
       Height          =   660
       Index           =   2
@@ -64,7 +75,7 @@ Begin VB.Form frmCrewSel
       Width           =   735
       _ExtentX        =   1296
       _ExtentY        =   1164
-      Effects         =   "frmCrews.frx":0000
+      Effects         =   "frmCrews.frx":1E1E
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl skillPic 
       Height          =   660
@@ -74,7 +85,7 @@ Begin VB.Form frmCrewSel
       Width           =   735
       _ExtentX        =   1296
       _ExtentY        =   1164
-      Effects         =   "frmCrews.frx":0018
+      Effects         =   "frmCrews.frx":1E36
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl skillPic 
       Height          =   660
@@ -84,7 +95,7 @@ Begin VB.Form frmCrewSel
       Width           =   735
       _ExtentX        =   1296
       _ExtentY        =   1164
-      Effects         =   "frmCrews.frx":0030
+      Effects         =   "frmCrews.frx":1E4E
    End
    Begin VB.Label lblLeader2 
       Appearance      =   0  'Flat
@@ -101,7 +112,7 @@ Begin VB.Form frmCrewSel
       ForeColor       =   &H0080FF80&
       Height          =   2085
       Left            =   720
-      TabIndex        =   13
+      TabIndex        =   12
       Top             =   1260
       Width           =   285
       WordWrap        =   -1  'True
@@ -122,34 +133,10 @@ Begin VB.Form frmCrewSel
       ForeColor       =   &H0080FF80&
       Height          =   2085
       Left            =   4980
-      TabIndex        =   12
+      TabIndex        =   11
       Top             =   1260
       Width           =   285
       WordWrap        =   -1  'True
-   End
-   Begin VB.Label lbl 
-      Alignment       =   2  'Center
-      Appearance      =   0  'Flat
-      BackColor       =   &H80000005&
-      BackStyle       =   0  'Transparent
-      Caption         =   "Disgruntled"
-      BeginProperty Font 
-         Name            =   "Britannic Bold"
-         Size            =   14.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00C0FFFF&
-      Height          =   375
-      Index           =   9
-      Left            =   2160
-      TabIndex        =   11
-      ToolTipText     =   "Origin"
-      Top             =   3720
-      Width           =   1665
    End
    Begin VB.Label lbl 
       Appearance      =   0  'Flat
@@ -355,7 +342,7 @@ Begin VB.Form frmCrewSel
       Width           =   6000
       _ExtentX        =   10583
       _ExtentY        =   14446
-      Effects         =   "frmCrews.frx":0048
+      Effects         =   "frmCrews.frx":1E66
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl pic 
       Height          =   3555
@@ -364,7 +351,7 @@ Begin VB.Form frmCrewSel
       Width           =   2865
       _ExtentX        =   5054
       _ExtentY        =   6271
-      Effects         =   "frmCrews.frx":0060
+      Effects         =   "frmCrews.frx":1E7E
    End
 End
 Attribute VB_Name = "frmCrewSel"
@@ -535,13 +522,14 @@ Dim rst As New ADODB.Recordset, SQL, x, y
       
       lbl(8) = "CardID: " & Nz(rst!CardID, 0) & "    CrewID: " & rst!CrewID
       
-      lbl(9) = IIf(rst!Disgruntled > 0, "Disgruntled ", "")
-      If rst!Disgruntled > 0 Then
-         lbl(9).Visible = True
-         'lbl(9).BackColor = &HC0C0FF
-      Else
-         lbl(9).Visible = False
-      End If
+      disgruntledPic.Visible = (rst!Disgruntled > 0)
+      'lbl(9) = IIf(rst!Disgruntled > 0, "Disgruntled ", "")
+'      If rst!Disgruntled > 0 Then
+'         lbl(9).Visible = True
+'         'lbl(9).BackColor = &HC0C0FF
+'      Else
+'         lbl(9).Visible = False
+'      End If
       
       AlphaImg.TransparentColor = 0
       AlphaImg.TransparentColorMode = lvicUseTransparentColor

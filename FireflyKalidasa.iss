@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.8.4"
+#define MyAppVersion "1.8.5"
 #define MyAppPublisher "VeeBee-er"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -23,7 +23,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputBaseFilename=FireflyKalidasaSetupV1.8.4
+OutputBaseFilename=FireflyKalidasaSetupV1.8.5
 SetupIconFile=D:\Progs\GitHub\FireflyKalidasa\serenity.ico
 Compression=lzma
 SolidCompression=yes
@@ -49,7 +49,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\bin\Forque.ttf";  DestDir: "{autofonts}
 
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireFlyAIBot.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\VerseMapTool.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa.mdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa.mdb"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
 Source: "D:\Progs\GitHub\FireflyKalidasa\Firefly_rulebook.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyBlueSun_rulebook.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa_rulebook.pdf"; DestDir: "{app}"; Flags: ignoreversion
@@ -263,6 +263,14 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\skill1.bmp"; DestDir: "{app}\p
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\skill2.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\skill3.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\bonnet.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmSimon.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmJayne.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmRiver.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmZoe.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmShepherd.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmKaylee.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmInara.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmWash.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Alert.WAV"; DestDir: "{app}\sounds"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Beep.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion

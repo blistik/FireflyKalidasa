@@ -196,7 +196,7 @@ Begin VB.Form frmCrewLst
       MaskColor       =   16777215
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   17
+         NumListImages   =   18
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "frmCrewLst.frx":0348
             Key             =   "UN"
@@ -264,6 +264,10 @@ Begin VB.Form frmCrewLst
          BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "frmCrewLst.frx":7910
             Key             =   "UP"
+         EndProperty
+         BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmCrewLst.frx":7D62
+            Key             =   "dis"
          EndProperty
       EndProperty
    End
@@ -581,12 +585,16 @@ With sftTree
          End If
          totalpay = totalpay + rst2!pay
          
-         .CellText(Index, 9) = IIf(rst2!wanted > 0, "Wanted", "") & IIf(rst2!Disgruntled > 0, IIf(rst2!wanted > 0, " / ", "") & "Disgruntled", "")
+         .CellText(Index, 9) = IIf(rst2!wanted > 0, "Wanted", "") ' & IIf(rst2!Disgruntled > 0, IIf(rst2!wanted > 0, " / ", "") & "Disgruntled", "")
          .CellForeColor(Index, 9) = 0
-         If rst2!wanted > 0 Then
+         
+         If rst2!Disgruntled > 0 Then
+            .CellBackColor(Index, 9) = 8898502 ' 11468799
+            Set .CellPicture(Index, 9) = AssetImages.ListImages("dis").Picture
+         
+         ElseIf rst2!wanted > 0 Then
             .CellBackColor(Index, 9) = &HC0C0FF
-         ElseIf rst2!Disgruntled > 0 Then
-            .CellBackColor(Index, 9) = 11468799
+         
          End If
          
          rst2.MoveNext

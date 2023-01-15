@@ -274,7 +274,7 @@ Begin VB.Form Main
       MaskColor       =   16777215
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   20
+         NumListImages   =   21
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "main.frx":0A9A
             Key             =   "UN"
@@ -355,6 +355,10 @@ Begin VB.Form Main
             Picture         =   "main.frx":8C20
             Key             =   "MA"
          EndProperty
+         BeginProperty ListImage21 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "main.frx":9072
+            Key             =   "dis"
+         EndProperty
       EndProperty
    End
    Begin VB.Label lblSolid 
@@ -385,7 +389,7 @@ Begin VB.Form Main
       Width           =   240
       _ExtentX        =   423
       _ExtentY        =   423
-      Effects         =   "main.frx":9072
+      Effects         =   "main.frx":93C4
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
       Height          =   240
@@ -396,7 +400,7 @@ Begin VB.Form Main
       Width           =   240
       _ExtentX        =   423
       _ExtentY        =   423
-      Effects         =   "main.frx":908A
+      Effects         =   "main.frx":93DC
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
       Height          =   240
@@ -407,7 +411,7 @@ Begin VB.Form Main
       Width           =   240
       _ExtentX        =   423
       _ExtentY        =   423
-      Effects         =   "main.frx":90A2
+      Effects         =   "main.frx":93F4
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
       Height          =   240
@@ -418,7 +422,7 @@ Begin VB.Form Main
       Width           =   240
       _ExtentX        =   423
       _ExtentY        =   423
-      Effects         =   "main.frx":90BA
+      Effects         =   "main.frx":940C
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
       Height          =   240
@@ -429,7 +433,7 @@ Begin VB.Form Main
       Width           =   240
       _ExtentX        =   423
       _ExtentY        =   423
-      Effects         =   "main.frx":90D2
+      Effects         =   "main.frx":9424
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
       Height          =   240
@@ -440,7 +444,7 @@ Begin VB.Form Main
       Width           =   240
       _ExtentX        =   423
       _ExtentY        =   423
-      Effects         =   "main.frx":90EA
+      Effects         =   "main.frx":943C
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
       Height          =   240
@@ -451,7 +455,7 @@ Begin VB.Form Main
       Width           =   240
       _ExtentX        =   423
       _ExtentY        =   423
-      Effects         =   "main.frx":9102
+      Effects         =   "main.frx":9454
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
       Height          =   240
@@ -462,7 +466,7 @@ Begin VB.Form Main
       Width           =   240
       _ExtentX        =   423
       _ExtentY        =   423
-      Effects         =   "main.frx":911A
+      Effects         =   "main.frx":946C
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
       Height          =   240
@@ -473,7 +477,7 @@ Begin VB.Form Main
       Width           =   240
       _ExtentX        =   423
       _ExtentY        =   423
-      Effects         =   "main.frx":9132
+      Effects         =   "main.frx":9484
    End
 End
 Attribute VB_Name = "Main"
@@ -1453,10 +1457,11 @@ With sftTree
             .CellFont(Index, 8).Strikethrough = True
          End If
          
-         .CellText(Index, 9) = IIf(rst2!Disgruntled > 0, "Disgruntled ", "") & Nz(rst2!KeyWords) & IIf(rst2!Pilot = 1 And hasShipUpgrade(rst!playerID, 10), "TRANSPORT", "")
+         .CellText(Index, 9) = Nz(rst2!KeyWords) & IIf(rst2!Pilot = 1 And hasShipUpgrade(rst!playerID, 10), "TRANSPORT", "")
          .CellForeColor(Index, 9) = 0
          If rst2!Disgruntled > 0 Then
-            .CellBackColor(Index, 9) = 11468799
+            .CellBackColor(Index, 9) = 8898502 ' 11468799
+            Set .CellPicture(Index, 9) = AssetImages.ListImages("dis").Picture
          ElseIf Not IsNull(rst2!KeyWords) Or (rst2!Pilot = 1 And hasShipUpgrade(rst!playerID, 10)) Then
             .CellForeColor(Index, 9) = 65280
          End If
