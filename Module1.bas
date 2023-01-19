@@ -3365,6 +3365,7 @@ Dim frmSeize As frmSeized2
    
    DB.Execute "UPDATE Players SET Warrants = 0, Pay = Pay - " & pay & ", Contraband=0, Fugitive = 0 WHERE PlayerID = " & playerID
    
+   stash = hasShipUpgrades(playerID, 11) * 2
    'Roll for each Wanted Crew: 1-Remove Crew, 2+ Crew safe
    SQL = "SELECT PlayerSupplies.CardID, Crew.* "    ', Crew.* "
    SQL = SQL & "FROM Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID "
@@ -3372,7 +3373,7 @@ Dim frmSeize As frmSeized2
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       GearID = hasCrewGearAttribute(playerID, rst!CrewID, "IgnoreWanted")
-      stash = hasShipUpgrades(playerID, 11) * 2
+      
       If GearID > 0 Then
          'skip this Crew that has Alliance Ident Card
          PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " makes use of " & varDLookup("GearName", "Gear", "GearID=" & GearID) & " to avoid detection", playerID, Logic!Gamecntr, True, rst!CrewID
@@ -3739,7 +3740,7 @@ Dim SQL
       End If
          
       'check Job Requirements
-      If (rst!Contraband = -14 And rst!PContraband = 0) Or (rst!Passenger = -14 And rst!PPassenger = 0) Or (rst!Fugitive = -14 And rst!PFugitive = 0) Then
+      If (rst!Contraband = -14 And rst!PContraband = 0) Or (rst!Fugitive = 0 And rst!Passenger = -14 And rst!PPassenger = 0) Or (rst!Passenger = 0 And rst!Fugitive = -14 And rst!PFugitive = 0) Or (rst!Fugitive = -14 And rst!Passenger = -14 And rst!PFugitive + rst!PPassenger = 0) Then
          hasJobReqs = False
       ElseIf rst!cargo + rst!PCargo < 0 Or (rst!Contraband + rst!PContraband < 0 And rst!Contraband > -14) Or (rst!Fugitive + rst!PFugitive < 0 And rst!Fugitive > -14) Or (rst!Passenger + rst!PPassenger < 0 And rst!Passenger > -14) Or rst!fuel + rst!PFuel < 0 Or rst!parts + rst!PParts < 0 Then
          hasJobReqs = False

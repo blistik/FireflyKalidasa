@@ -1131,9 +1131,11 @@ Dim ChatTxt As String, x
             actionSeq = ASidle
             initBoard
             refreshSolid
+            
             'Verse.Timer1.Enabled = True
             showEvents
             initToolbar True, False
+            
         End If
      End Select
 
@@ -1703,8 +1705,11 @@ Dim frmJoSel As frmJobSel
       CruiserCutter = SectorID 'set it as faced regardless of outcome
       If isOutlaw(player.ID) And actionSeq <> ASNavEvade Then  'it just arrived so face it
          showNav -2
-         frmAction.moseydone = True 'Full Stop!
-         frmAction.fullburndone = True
+         If Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) Then 'only stop if Flying
+            frmAction.moseydone = True 'Full Stop!
+            frmAction.fullburndone = True
+            
+         End If
          Exit Sub
       End If
    End If
@@ -1713,8 +1718,11 @@ Dim frmJoSel As frmJobSel
       CruiserCutter = SectorID 'set it as faced regardless of outcome
       If isOutlaw(player.ID) And actionSeq <> ASNavEvade Then  'it just arrived so face it
          showNav -3
-         frmAction.moseydone = True 'Full Stop!
-         frmAction.fullburndone = True
+         If Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) Then 'only stop if Flying
+            frmAction.moseydone = True 'Full Stop!
+            frmAction.fullburndone = True
+            
+         End If
          Exit Sub
       End If
    End If
@@ -1817,6 +1825,7 @@ Dim frmJoSel As frmJobSel
          Else
             moseyrng = rst!MoseyRange + getRangeMod(player.ID, 2)
          End If
+         If moseyrng > 2 Then moseyrng = 2 'set maximum possible
          .lblMosey.Caption = moseyrng - MoseyMovesDone
          If moseyrng = MoseyMovesDone Then .moseydone = True
          If Not SoloGame And .checkNoOfActions > 1 Then

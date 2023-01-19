@@ -38,7 +38,7 @@ Begin VB.Form Starter
    End
    Begin VB.CheckBox chkAI 
       BackColor       =   &H00CBE1ED&
-      Caption         =   "auto move Crusier, Corvette && Reavers"
+      Caption         =   "auto move Crusier, Corvette && Cutters"
       Enabled         =   0   'False
       Height          =   195
       Left            =   2100

@@ -7,6 +7,7 @@ Begin VB.Form frmGoals
    ClientTop       =   390
    ClientWidth     =   9330
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmGoals.frx":0000
@@ -113,7 +114,7 @@ Begin VB.Form frmGoals
       Left            =   1380
       Style           =   2  'Dropdown List
       TabIndex        =   7
-      ToolTipText     =   "Planetary Sector to be at for Goal"
+      ToolTipText     =   "Planetary Sector to be at for Goal to be met"
       Top             =   2730
       Width           =   1245
    End
@@ -123,6 +124,7 @@ Begin VB.Form frmGoals
       Height          =   255
       Left            =   7230
       TabIndex        =   19
+      ToolTipText     =   "limit job lists to only those specifically made for goals"
       Top             =   1920
       Value           =   1  'Checked
       Width           =   1305
@@ -253,6 +255,7 @@ Begin VB.Form frmGoals
       Left            =   1380
       TabIndex        =   3
       Text            =   "0"
+      ToolTipText     =   "proceed past this many"
       Top             =   1230
       Width           =   885
    End
@@ -391,7 +394,7 @@ Begin VB.Form frmGoals
       Alignment       =   2  'Center
       BackColor       =   &H00CBE1ED&
       BorderStyle     =   1  'Fixed Single
-      Caption         =   "Misbehave Limit"
+      Caption         =   "Misbehaves"
       Height          =   285
       Index           =   4
       Left            =   120
@@ -585,7 +588,7 @@ Dim x
    End If
    With lstContacts
       For x = 0 To .ListCount - 1
-         If .Selected(x) Then
+         If .selected(x) Then
             getSolid = getSolid & IIf(getSolid = "", "", ",") & CStr(.ItemData(x))
          End If
       Next x
@@ -603,7 +606,7 @@ Dim x, y, a() As String
          For y = LBound(a) To UBound(a)
             For x = 0 To .ListCount - 1
                If .ItemData(x) = Val(a(y)) Then
-                  .Selected(x) = True
+                  .selected(x) = True
                   Exit For
                End If
             Next x
@@ -630,7 +633,7 @@ Dim SQL
       txt(4) = CStr(rst!tech)
       txt(5) = CStr(rst!Negotiate)
       txt(6) = CStr(rst!SolidCount)
-      txt(7) = CStr(rst!passenger)
+      txt(7) = CStr(rst!Passenger)
       If rst!SectorID > 0 Then SetCombo cbo(2), "", rst!SectorID
       chkWin.Value = rst!Win
    End If

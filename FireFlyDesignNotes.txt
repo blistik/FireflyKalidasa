@@ -6,6 +6,20 @@ change gear icon on Ship to Fight/Tech/Negot icon
 Test Issues pending: 
 
 Version updates:
+v 1.8.6 ~ 18 Jan 2023
+gui: add 46 more mini-pics for crew display
+gui: misbehave count (when used for goals) is displayed on re-start
+fix: Mosey limted to 2 in all combos and mods
+fix: load mini-pic missing last crew (Zoe)
+fix: Corvette Contact wanted crew seize logic
+fix: Cruiser and Corvette contact causing Full Stop at start of turn, not flying
+fix: Job Requirements Check for when either Passenger OR Fugitives are to be delivered
+fix: menu issue when rt-click on fugitive in non planetary sector
+cfg: Jubal fight to 1 and moved to Beaumonde
+cfg: remove bad path sector 20->1
+cfg: Job task 445 updated to -4 contraband to offload.
+
+
 v 1.8.5 ~ 13 Jan 2023 pm - 15 Jan 2023
 gui: add provision for any Crew mini-picture. File name "Sm" & [Picture] field value. 16x16 jpg
 gui: added avatars for Serenity heroes

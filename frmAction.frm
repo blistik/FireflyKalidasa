@@ -569,6 +569,15 @@ Private Sub FDPane1_OnHidden()
    End Select
 End Sub
 
+Private Sub Form_Load()
+   Dim x As Integer
+   x = CStr(countMisbehaves(player.ID))
+   If x > 0 Then
+      lblMis.Caption = CStr(x)
+      lblMis.Visible = True
+   End If
+End Sub
+
 Private Sub txtCargo_DblClick()
    If txtCargo.Enabled Then txtCargo.Text = CStr(Val(txtCargo.Text) + 1)
 End Sub

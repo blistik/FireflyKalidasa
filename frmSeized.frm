@@ -125,7 +125,8 @@ End Sub
 'return how many crew up for selection
 Public Function RefreshList(ByVal check As Boolean) As Integer
 Dim rst As New ADODB.Recordset
-Dim SQL, crewcnt As Integer, GearID As Integer
+Dim SQL, crewcnt As Integer, GearID As Integer, allcrew As Integer, stash As Integer
+   stash = hasShipUpgrades(player.ID, 11) * 2
    crewList.Clear
    SQL = "SELECT PlayerSupplies.CardID, Crew.* "
    SQL = SQL & "FROM Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID "
@@ -134,12 +135,12 @@ Dim SQL, crewcnt As Integer, GearID As Integer
    While Not rst.EOF
    
       GearID = hasCrewGearAttribute(player.ID, rst!CrewID, "IgnoreWanted")
+      
       If GearID > 0 Then
          'skip this Crew that has Alliance Ident Card or other similar Wanted bypass
-         If Not check Then PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " makes use of " & varDLookup("GearName", "Gear", "GearID=" & GearID) & " to avoid detection", player.ID, Logic!Gamecntr, True, rst!CrewID
+         If check Then PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " makes use of " & varDLookup("GearName", "Gear", "GearID=" & GearID) & " to avoid detection", player.ID, Logic!Gamecntr, True, rst!CrewID
 
-      ElseIf hasShipUpgrade(player.ID, 11) And crewcnt < 2 And check Then
-         If crewcnt = 0 And Not check Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to 2 Wanted Crew", player.ID, Logic!Gamecntr, True, getLeader()
+      ElseIf stash > 0 And crewcnt < stash And check Then
          crewcnt = crewcnt + 1
       Else
          crewList.AddItem rst!CrewName
@@ -148,7 +149,8 @@ Dim SQL, crewcnt As Integer, GearID As Integer
       rst.MoveNext
    Wend
    rst.Close
-   
+   'All Safe?
+   If check And crewcnt > 0 And crewList.ListCount = 0 Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to " & stash & " Wanted Crew", player.ID, Logic!Gamecntr, True, getLeader()
    RefreshList = crewList.ListCount
 
 

@@ -359,7 +359,7 @@ Private Function findImageKey(ByVal key As String) As Integer
 Dim x
    key = Left(key, Len(key) - 4) 'remove .jpg
    With AssetImages
-      For x = 1 To .ListImages.Count - 1
+      For x = 1 To .ListImages.Count
          If key = .ListImages.Item(x).key Then
             findImageKey = x
             Exit For
@@ -989,11 +989,11 @@ On Error GoTo err_handler
                End If
 
                mnuPopup(2).Visible = (hasGearAttribute(player.ID, "LabourContract", .CellItemData(Index, 2)) > 0) And (Not frmAction.buydone) And (actionSeq = ASselect) And .CellItemData(Index, 2) > 0 ' is gear with LabourContract
-               mnuPopup(0).Visible = (.CellItemData(Index, 0) < 6)
+               mnuPopup(0).Visible = (.CellItemData(Index, 0) < 6 Or mnuPopup(1).Visible = False)
                
             End If
                 
-            If .CellItemData(Index, 0) = 1 Or mnuPopup(0).Visible Or mnuPopup(1).Visible Or mnuPopup(3).Visible Or mnuPopup(4).Visible Then PopupMenu mnuPop
+            If .CellItemData(Index, 0) = 1 Or (mnuPopup(0).Visible And .CellItemData(Index, 0) < 6) Or mnuPopup(1).Visible Or mnuPopup(3).Visible Or mnuPopup(4).Visible Then PopupMenu mnuPop
             
         End With
       End If
