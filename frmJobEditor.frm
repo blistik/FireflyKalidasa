@@ -252,7 +252,7 @@ Begin VB.Form frmJobEditor
          Left            =   4560
          TabIndex        =   28
          Text            =   "0"
-         ToolTipText     =   "pay $ shown negative value (eg.-7000)"
+         ToolTipText     =   " 4-attempt botched. 5- Move Cruiser to sector, EVADE.  6-Move Corvette to sector,EVADE.  - 100x pay $"
          Top             =   660
          Width           =   885
       End
@@ -288,7 +288,7 @@ Begin VB.Form frmJobEditor
          Left            =   2670
          TabIndex        =   26
          Text            =   "0"
-         ToolTipText     =   $"frmJobEditor.frx":1C966
+         ToolTipText     =   $"frmJobEditor.frx":1C98B
          Top             =   660
          Width           =   885
       End

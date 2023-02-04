@@ -3,7 +3,7 @@ Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SFTTREEX.OCX"
 Begin VB.Form frmStories 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "View/Edit Story"
-   ClientHeight    =   4725
+   ClientHeight    =   4980
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   12015
@@ -12,12 +12,12 @@ Begin VB.Form frmStories
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmStories.frx":0000
-   ScaleHeight     =   4725
+   ScaleHeight     =   4980
    ScaleWidth      =   12015
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
    Begin SftTree.SftTree sftTree 
-      Height          =   1485
+      Height          =   1755
       Left            =   60
       TabIndex        =   18
       TabStop         =   0   'False
@@ -25,7 +25,7 @@ Begin VB.Form frmStories
       Width           =   11895
       _Version        =   262144
       _ExtentX        =   20981
-      _ExtentY        =   2619
+      _ExtentY        =   3096
       _StockProps     =   237
       ForeColor       =   8833235
       BackColor       =   3353720
@@ -66,7 +66,7 @@ Begin VB.Form frmStories
       EndProperty
       ColHeaderAppearance=   2
       ButtonStyle     =   0
-      Columns         =   16
+      Columns         =   15
       ColTitle0       =   "Goal"
       ColBmp0         =   "frmStories.frx":14C1F
       ColWidth1       =   267
@@ -109,42 +109,38 @@ Begin VB.Form frmStories
       ColWidth12      =   33
       ColTitle12      =   "SectorID"
       ColBmp12        =   "frmStories.frx":14D6F
-      ColWidth13      =   30
-      ColTitle13      =   "Corv"
+      ColWidth13      =   33
+      ColTitle13      =   "Add Crew"
       ColBmp13        =   "frmStories.frx":14D8B
       ColWidth14      =   30
-      ColTitle14      =   "Cruis"
+      ColTitle14      =   "Passengers"
       ColBmp14        =   "frmStories.frx":14DA7
-      ColWidth15      =   30
-      ColTitle15      =   "Passengers"
-      ColBmp15        =   "frmStories.frx":14DC3
-      MouseIcon       =   "frmStories.frx":14DDF
+      MouseIcon       =   "frmStories.frx":14DC3
       ColHeaderBackColor=   0
       ColHeaderForeColor=   65280
       ForeColor       =   8833235
       BackColor       =   3353720
       RowColHeaderAppearance=   0
-      RowColPicture   =   "frmStories.frx":14DFB
+      RowColPicture   =   "frmStories.frx":14DDF
       LeftButtonOnly  =   0   'False
       RowHeaderStyle  =   128
       RowHeaderAppearance=   0
-      ColPict0        =   "frmStories.frx":14E17
-      ColPict1        =   "frmStories.frx":14E33
-      ColPict2        =   "frmStories.frx":14E4F
-      ColPict3        =   "frmStories.frx":14E6B
-      ColPict4        =   "frmStories.frx":14E87
-      ColPict5        =   "frmStories.frx":14EA3
-      ColPict6        =   "frmStories.frx":14EBF
-      ColPict7        =   "frmStories.frx":14EDB
-      ColPict8        =   "frmStories.frx":14EF7
-      ColPict9        =   "frmStories.frx":14F13
-      ColPict10       =   "frmStories.frx":14F2F
-      ColPict11       =   "frmStories.frx":14F4B
-      ColPict12       =   "frmStories.frx":14F67
-      ColPict13       =   "frmStories.frx":14F83
-      ColPict14       =   "frmStories.frx":14F9F
-      ColPict15       =   "frmStories.frx":14FBB
-      BackgroundPicture=   "frmStories.frx":14FD7
+      ColPict0        =   "frmStories.frx":14DFB
+      ColPict1        =   "frmStories.frx":14E17
+      ColPict2        =   "frmStories.frx":14E33
+      ColPict3        =   "frmStories.frx":14E4F
+      ColPict4        =   "frmStories.frx":14E6B
+      ColPict5        =   "frmStories.frx":14E87
+      ColPict6        =   "frmStories.frx":14EA3
+      ColPict7        =   "frmStories.frx":14EBF
+      ColPict8        =   "frmStories.frx":14EDB
+      ColPict9        =   "frmStories.frx":14EF7
+      ColPict10       =   "frmStories.frx":14F13
+      ColPict11       =   "frmStories.frx":14F2F
+      ColPict12       =   "frmStories.frx":14F4B
+      ColPict13       =   "frmStories.frx":14F67
+      ColPict14       =   "frmStories.frx":14F83
+      BackgroundPicture=   "frmStories.frx":14F9F
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End
@@ -239,6 +235,17 @@ Begin VB.Form frmStories
       TabIndex        =   12
       Top             =   60
       Width           =   10605
+      Begin VB.CheckBox chkHavenStorage 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "w/storage"
+         Height          =   195
+         Left            =   5250
+         TabIndex        =   32
+         ToolTipText     =   "use Havens for storing stuff"
+         Top             =   1920
+         Visible         =   0   'False
+         Width           =   1080
+      End
       Begin VB.CheckBox chkUpgrade 
          BackColor       =   &H00CBE1ED&
          Caption         =   "custom Drive or Upgrade"
@@ -342,13 +349,13 @@ Begin VB.Form frmStories
          Width           =   1995
       End
       Begin VB.TextBox txt 
-         Height          =   1155
+         Height          =   1395
          Index           =   6
          Left            =   180
          MaxLength       =   255
          MultiLine       =   -1  'True
          TabIndex        =   1
-         Text            =   "frmStories.frx":14FF3
+         Text            =   "frmStories.frx":14FBB
          Top             =   930
          Width           =   3525
       End
@@ -522,7 +529,7 @@ Begin VB.Form frmStories
       Index           =   5
       Left            =   60
       TabIndex        =   30
-      Top             =   4410
+      Top             =   4680
       Width           =   11895
    End
    Begin VB.Menu mnuPopup 
@@ -550,6 +557,11 @@ Attribute VB_Exposed = False
 Option Explicit
 Public StoryID As Integer
 
+Private Sub chkHavens_Click()
+   chkHavenStorage.Visible = (chkHavens.Value = 1)
+   If Not chkHavenStorage.Visible Then chkHavenStorage.Value = 0
+End Sub
+
 Private Sub cmd_Click(Index As Integer)
 Dim frmGoal As frmGoals, SQL
 
@@ -570,6 +582,7 @@ Dim frmGoal As frmGoals, SQL
       SQL = SQL & " StartingJobs = " & IIf(getList(lstContacts) = "", "NULL", "'" & getList(lstContacts) & "'") & ","
       SQL = SQL & " ExcludeCrew = " & IIf(getList(lstCrew) = "", "NULL", "'" & getList(lstCrew) & "'") & ","
       SQL = SQL & " Havens = " & chkHavens.Value & ","
+      SQL = SQL & " HavenStorage = " & chkHavenStorage.Value & ","
       SQL = SQL & " UpgradeDrive = " & chkUpgrade.Value & ","
       SQL = SQL & " RandomCrew = " & chkRandomCrew.Value
       SQL = SQL & " WHERE StoryID = " & StoryID
@@ -611,7 +624,7 @@ End Sub
 
 Private Sub Form_Load()
    LoadCombo lstContacts, "contact", " WHERE ContactID > 0"
-   LoadCombo lstCrew, "crew", " WHERE Crew.CrewID NOT IN (41, 54) Order by CrewName"
+   LoadCombo lstCrew, "crew", " Order by CrewName"
    refreshHeader
    RefreshGoals
 End Sub
@@ -649,6 +662,8 @@ Dim SQL, Index
          Label2 = "Exclude Crew (" & CStr(SetList(lstCrew, Nz(rst!ExcludeCrew))) & " selected)"
          lbl(5).Caption = getHighScorer
          chkHavens.Value = rst!Havens
+         chkHavenStorage.Visible = (chkHavens.Value = 1)
+         chkHavenStorage.Value = rst!HavenStorage
          chkRandomCrew.Value = rst!RandomCrew
          chkUpgrade.Value = rst!UpgradeDrive
       Else 'new
@@ -699,9 +714,8 @@ Dim SQL, Index
          .CellText(Index, 10) = rst!Negotiate & ""
          .CellText(Index, 11) = rst!Misbehaves & ""
          .CellText(Index, 12) = rst!SectorID & ""
-         .CellText(Index, 13) = rst!MeetCorvette & ""
-         .CellText(Index, 14) = rst!MeetCruiser & ""
-         .CellText(Index, 15) = rst!Passenger & ""
+         .CellText(Index, 13) = rst!AddCrew & ""
+         .CellText(Index, 14) = rst!Passenger & ""
          
          rst.MoveNext
       Wend

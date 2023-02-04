@@ -623,6 +623,10 @@ On Error GoTo err_handler
       player.ID = 0
    ElseIf (status = "H" Or status = "L") And player.ID = 0 Then 'ready to join
       player.ID = getNewPlayer()
+      If player.ID = 0 Then
+         MsgBox "No available player slots", vbExclamation, "AI Bot: Fail to join"
+         End
+      End If
       player.PlayName = varDLookup("Ship", "Players", "PlayerID=" & player.ID)  '"FireflyAI" & CStr(player.ID)
       DB.Execute "Update Players SET Name ='" & player.PlayName & "', AI = 1 WHERE PlayerID = " & player.ID & " AND Name IS NULL"
       

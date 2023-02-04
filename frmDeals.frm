@@ -65,13 +65,13 @@ Begin VB.Form frmDeals
       Columns         =   9
       ColTitle0       =   "Card ID"
       ColBmp0         =   "frmDeals.frx":03CE
-      ColWidth1       =   200
+      ColWidth1       =   253
       ColTitle1       =   "Contact / Instructions"
       ColBmp1         =   "frmDeals.frx":03EA
       ColWidth2       =   117
       ColTitle2       =   "Job Type / Planet"
       ColBmp2         =   "frmDeals.frx":0406
-      ColWidth3       =   120
+      ColWidth3       =   147
       ColTitle3       =   "Needs / System"
       ColBmp3         =   "frmDeals.frx":0422
       ColWidth4       =   41

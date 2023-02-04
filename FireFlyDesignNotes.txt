@@ -1,11 +1,34 @@
 Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 Mar 2021
 
 Dev Ideas:
-change gear icon on Ship to Fight/Tech/Negot icon
 
 Test Issues pending: 
+after a job result to evade, mosey was not available, but full burn was
 
 Version updates:
+v 1.8.7 ~ 21 Jan 2023 - 4 Feb 2023
+add: launch AI Bots from startup form
+add: Havens Storage Transfer facility
+add: Alliance Ident Card for Guests (discard on use)
+add: Goals can add excluded Crew to Ship's Crew on completion
+add: Story - "Rescue River"
+add: Story - "Find a Crew - of Big Damn Heroes"
+add: more Job result special functions. eg. 6-Corvette move to job sector
+gui: replace windows inputbox with custom graphical version
+gui: add quick re-join option on startup
+gui: add dbl-click tally increase on goods barter form and display cost
+gui: add event log for when Crew are discarded manually
+fix: Fendris ability - If your Leader gets Disgruntled, Disgruntle Fendris instead
+fix: Alliance Ship encounters needed tweaking after 'If Flying, Full Stop' change
+fix: error if working a job and don't have your jobs list open
+fix: Leaders subject to Medic Check when 'killed' rather than always disgruntled
+fix: Jayne's Holdout Pistol was giving its skill point to every crew member.
+fix: Wanted Crew with Alliance Ident Card was not triggering the Ship's Outlaw status
+fix: PvP Trading - clear goods values if 'Change' is made and tweak accept process
+cfg: applied the Indentured attribute to Mudders without specific Indentured description
+cfg: updated Lund's attributes - Soldier, 2 fight & $200
+bot: updated to v1.0.5 to handle no player slots
+
 v 1.8.6 ~ 18 Jan 2023
 gui: add 46 more mini-pics for crew display
 gui: misbehave count (when used for goals) is displayed on re-start

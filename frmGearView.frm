@@ -347,7 +347,7 @@ End Sub
 Private Sub refreshGear(ByVal CardID)
 Dim rst As New ADODB.Recordset, SQL, x, y
 
-   SQL = "SELECT Gear.*, SupplyDeck.CardID, SupplyDeck.SupplyID, Supply.Colour, Supply.SupplyName, PlayerSupplies.PlayerID, Players.Name "
+   SQL = "SELECT Gear.*, SupplyDeck.CardID, SupplyDeck.Seq, SupplyDeck.SupplyID, Supply.Colour, Supply.SupplyName, PlayerSupplies.PlayerID, Players.Name "
    SQL = SQL & "FROM Players RIGHT JOIN (PlayerSupplies RIGHT JOIN (Supply RIGHT JOIN (Gear LEFT JOIN SupplyDeck ON Gear.GearID = SupplyDeck.GearID) ON Supply.SupplyID = SupplyDeck.SupplyID) ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Players.PlayerID = PlayerSupplies.PlayerID "
    SQL = SQL & "WHERE SupplyDeck.CardID=" & CardID
 
@@ -357,9 +357,18 @@ Dim rst As New ADODB.Recordset, SQL, x, y
       lbl(0) = rst!GearDescr
       lbl(0).ToolTipText = rst!GearDescr
       lbl(1) = rst!GearDescr
-      lbl(2).Visible = (Nz(rst!Name) <> "")
+      
       If Nz(rst!Name) <> "" Then
          lbl(2) = "held by: " & rst!Name
+         lbl(2).Visible = True
+      ElseIf rst!Seq > 0 And rst!Seq < 5 Then
+         y = Nz(varDLookup("Name", "Players", "PlayerID = " & rst!Seq), "")
+         If y <> "" Then
+            lbl(2) = "at " & y & "'s haven"
+            lbl(2).Visible = True
+         End If
+      Else
+         lbl(2).Visible = False
       End If
       lbl(3) = ""
       'lbl(4) = Trim(IIf(rst!fight >= 1, rst!fight & " Fight  ", "") & IIf(rst!tech >= 1, rst!tech & " Tech  ", "") & IIf(rst!Negotiate >= 1, rst!Negotiate & " Negotiate", ""))

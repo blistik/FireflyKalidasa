@@ -15,6 +15,15 @@ Begin VB.Form frmGoals
    ScaleWidth      =   9330
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.ListBox lstCrew 
+      BackColor       =   &H00CBE1ED&
+      Height          =   1635
+      Left            =   6090
+      Style           =   1  'Checkbox
+      TabIndex        =   34
+      Top             =   270
+      Width           =   1995
+   End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
       Caption         =   "view"
@@ -31,7 +40,7 @@ Begin VB.Form frmGoals
       Index           =   4
       Left            =   8580
       Style           =   1  'Graphical
-      TabIndex        =   35
+      TabIndex        =   33
       Top             =   2730
       Width           =   645
    End
@@ -51,7 +60,7 @@ Begin VB.Form frmGoals
       Index           =   3
       Left            =   8580
       Style           =   1  'Graphical
-      TabIndex        =   34
+      TabIndex        =   32
       Top             =   2160
       Width           =   645
    End
@@ -59,44 +68,22 @@ Begin VB.Form frmGoals
       Alignment       =   2  'Center
       Height          =   285
       Index           =   7
-      Left            =   5730
+      Left            =   4860
       TabIndex        =   13
       Text            =   "0"
       ToolTipText     =   "add Passengers on Goal completion"
       Top             =   750
       Width           =   885
    End
-   Begin VB.CheckBox chkMeet 
-      BackColor       =   &H00CBE1ED&
-      Caption         =   "Meet with Cruiser"
-      Height          =   405
-      Index           =   1
-      Left            =   5730
-      TabIndex        =   15
-      ToolTipText     =   "be in same Sector as Cruiser"
-      Top             =   1500
-      Width           =   1035
-   End
-   Begin VB.CheckBox chkMeet 
-      BackColor       =   &H00CBE1ED&
-      Caption         =   "Meet with Corvette"
-      Height          =   405
-      Index           =   0
-      Left            =   5730
-      TabIndex        =   14
-      ToolTipText     =   "be in same Sector as Corvette"
-      Top             =   1080
-      Width           =   1035
-   End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
       Height          =   285
       Index           =   6
-      Left            =   5730
+      Left            =   4860
       TabIndex        =   12
       Text            =   "0"
       ToolTipText     =   "Any Solids to this count"
-      Top             =   270
+      Top             =   290
       Width           =   885
    End
    Begin VB.CheckBox chkWin 
@@ -122,10 +109,10 @@ Begin VB.Form frmGoals
       BackColor       =   &H00CBE1ED&
       Caption         =   "Goal Specific"
       Height          =   255
-      Left            =   7230
-      TabIndex        =   19
+      Left            =   7050
+      TabIndex        =   17
       ToolTipText     =   "limit job lists to only those specifically made for goals"
-      Top             =   1920
+      Top             =   2490
       Value           =   1  'Checked
       Width           =   1305
    End
@@ -146,7 +133,7 @@ Begin VB.Form frmGoals
       Index           =   2
       Left            =   8190
       Style           =   1  'Graphical
-      TabIndex        =   18
+      TabIndex        =   16
       Top             =   1410
       Width           =   1035
    End
@@ -166,7 +153,7 @@ Begin VB.Form frmGoals
       Index           =   1
       Left            =   8190
       Style           =   1  'Graphical
-      TabIndex        =   17
+      TabIndex        =   15
       Top             =   960
       Width           =   1035
    End
@@ -186,7 +173,7 @@ Begin VB.Form frmGoals
       Index           =   0
       Left            =   8190
       Style           =   1  'Graphical
-      TabIndex        =   16
+      TabIndex        =   14
       Top             =   510
       Visible         =   0   'False
       Width           =   1035
@@ -216,7 +203,7 @@ Begin VB.Form frmGoals
       MultiLine       =   -1  'True
       TabIndex        =   8
       Top             =   3360
-      Width           =   8385
+      Width           =   8415
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -282,11 +269,11 @@ Begin VB.Form frmGoals
    Begin VB.ListBox lstContacts 
       BackColor       =   &H00CBE1ED&
       Height          =   1635
-      Left            =   2640
+      Left            =   2520
       Style           =   1  'Checkbox
       TabIndex        =   9
       Top             =   290
-      Width           =   2985
+      Width           =   2175
    End
    Begin VB.Label lbl 
       BackColor       =   &H00CBE1ED&
@@ -294,20 +281,21 @@ Begin VB.Form frmGoals
       Caption         =   "add Passenger/s"
       Height          =   285
       Index           =   13
-      Left            =   5730
-      TabIndex        =   33
+      Left            =   4800
+      TabIndex        =   31
       Top             =   570
       Width           =   1365
    End
    Begin VB.Label lbl 
       BackColor       =   &H00CBE1ED&
-      Caption         =   "...OR this Solid Count"
+      BackStyle       =   0  'Transparent
+      Caption         =   "Add Crew on Goal completion"
       Height          =   225
       Index           =   12
-      Left            =   5070
-      TabIndex        =   32
+      Left            =   6060
+      TabIndex        =   30
       Top             =   90
-      Width           =   1515
+      Width           =   2205
    End
    Begin VB.Label lbl 
       BackColor       =   &H00CBE1ED&
@@ -316,7 +304,7 @@ Begin VB.Form frmGoals
       Height          =   285
       Index           =   11
       Left            =   2670
-      TabIndex        =   31
+      TabIndex        =   29
       Top             =   2520
       Width           =   2655
    End
@@ -327,7 +315,7 @@ Begin VB.Form frmGoals
       Height          =   285
       Index           =   10
       Left            =   2670
-      TabIndex        =   30
+      TabIndex        =   28
       Top             =   1950
       Width           =   3045
    End
@@ -338,7 +326,7 @@ Begin VB.Form frmGoals
       Height          =   285
       Index           =   9
       Left            =   120
-      TabIndex        =   29
+      TabIndex        =   27
       Top             =   3150
       Width           =   6315
    End
@@ -346,11 +334,11 @@ Begin VB.Form frmGoals
       Alignment       =   2  'Center
       BackColor       =   &H00CBE1ED&
       BorderStyle     =   1  'Fixed Single
-      Caption         =   "Planet"
+      Caption         =   "Planet or Ship"
       Height          =   285
       Index           =   8
       Left            =   120
-      TabIndex        =   28
+      TabIndex        =   26
       Top             =   2730
       Width           =   1215
    End
@@ -362,7 +350,7 @@ Begin VB.Form frmGoals
       Height          =   285
       Index           =   7
       Left            =   120
-      TabIndex        =   27
+      TabIndex        =   25
       Top             =   2340
       Width           =   1215
    End
@@ -374,7 +362,7 @@ Begin VB.Form frmGoals
       Height          =   285
       Index           =   6
       Left            =   120
-      TabIndex        =   26
+      TabIndex        =   24
       Top             =   1950
       Width           =   1215
    End
@@ -386,7 +374,7 @@ Begin VB.Form frmGoals
       Height          =   285
       Index           =   5
       Left            =   120
-      TabIndex        =   25
+      TabIndex        =   23
       Top             =   1590
       Width           =   1215
    End
@@ -398,7 +386,7 @@ Begin VB.Form frmGoals
       Height          =   285
       Index           =   4
       Left            =   120
-      TabIndex        =   24
+      TabIndex        =   22
       Top             =   1200
       Width           =   1215
    End
@@ -410,7 +398,7 @@ Begin VB.Form frmGoals
       Height          =   285
       Index           =   3
       Left            =   120
-      TabIndex        =   23
+      TabIndex        =   21
       Top             =   810
       Width           =   1215
    End
@@ -422,20 +410,20 @@ Begin VB.Form frmGoals
       Height          =   285
       Index           =   2
       Left            =   120
-      TabIndex        =   22
+      TabIndex        =   20
       Top             =   450
       Width           =   1215
    End
    Begin VB.Label lbl 
       BackColor       =   &H00CBE1ED&
       BackStyle       =   0  'Transparent
-      Caption         =   "Solid with these Contacts"
+      Caption         =   "Solid with these Contacts OR this Solid Count"
       Height          =   285
       Index           =   1
-      Left            =   2670
-      TabIndex        =   21
+      Left            =   2520
+      TabIndex        =   19
       Top             =   90
-      Width           =   2655
+      Width           =   3315
    End
    Begin VB.Label lbl 
       Alignment       =   2  'Center
@@ -445,7 +433,7 @@ Begin VB.Form frmGoals
       Height          =   285
       Index           =   0
       Left            =   120
-      TabIndex        =   20
+      TabIndex        =   18
       Top             =   90
       Width           =   1215
    End
@@ -480,6 +468,7 @@ Dim SQL
       If Nz(varDLookup("StoryID", "StoryGoals", "StoryID=" & StoryID & " AND Goal=" & Goal), 0) = StoryID Then
          SQL = "UPDATE StoryGoals SET Instructions = " & "'" & SQLFilter(txt(8)) & "',"
          SQL = SQL & "Solid = " & IIf(getSolid = "", "NULL", "'" & getSolid & "'") & ","
+         SQL = SQL & "AddCrew = " & IIf(getList(lstCrew) = "", "NULL", "'" & getList(lstCrew) & "'") & ","
          SQL = SQL & "SolidCount = " & CStr(Val(txt(6))) & ","
          SQL = SQL & "IssueJobID = " & IIf(GetCombo(cbo(1)) = -1, "0", GetCombo(cbo(1))) & ","
          SQL = SQL & "CompleteJobID = " & IIf(GetCombo(cbo(0)) = -1, "0", GetCombo(cbo(0))) & ","
@@ -490,19 +479,18 @@ Dim SQL
          SQL = SQL & "Tech = " & CStr(Val(txt(4))) & ","
          SQL = SQL & "Negotiate = " & CStr(Val(txt(5))) & ","
          SQL = SQL & "SectorID = " & IIf(GetCombo(cbo(2)) = -1, "0", GetCombo(cbo(2))) & ","
-         SQL = SQL & "MeetCorvette = " & CStr(chkMeet(0).Value) & ","
-         SQL = SQL & "MeetCruiser = " & CStr(chkMeet(1).Value) & ","
          SQL = SQL & "Passenger = " & CStr(Val(txt(7)))
          SQL = SQL & " WHERE StoryID = " & StoryID & " AND Goal = " & Goal
          
          
       Else
-         SQL = "INSERT INTO StoryGoals (StoryID, Goal, Instructions, Solid, SolidCount, IssueJobID, CompleteJobID, Cash, TurnLimit, Misbehaves, Fight, "
-         SQL = SQL & "Tech, Negotiate, SectorID, Win, MeetCorvette, MeetCruiser, Passenger) VALUES ("
+         SQL = "INSERT INTO StoryGoals (StoryID, Goal, Instructions, Solid, AddCrew, SolidCount, IssueJobID, CompleteJobID, Cash, TurnLimit, Misbehaves, Fight, "
+         SQL = SQL & "Tech, Negotiate, SectorID, Win, Passenger) VALUES ("
          SQL = SQL & CStr(StoryID) & ","
          SQL = SQL & CStr(Goal) & ","
          SQL = SQL & "'" & SQLFilter(txt(8)) & "',"
          SQL = SQL & IIf(getSolid = "", "NULL", "'" & getSolid & "'") & ","
+         SQL = SQL & IIf(getList(lstCrew) = "", "NULL", "'" & getList(lstCrew) & "'") & ","
          SQL = SQL & CStr(Val(txt(6))) & ","
          SQL = SQL & IIf(GetCombo(cbo(1)) = -1, "0", GetCombo(cbo(1))) & ","
          SQL = SQL & IIf(GetCombo(cbo(0)) = -1, "0", GetCombo(cbo(0))) & ","
@@ -514,8 +502,6 @@ Dim SQL
          SQL = SQL & CStr(Val(txt(5))) & ","
          SQL = SQL & IIf(GetCombo(cbo(2)) = -1, "0", GetCombo(cbo(2))) & ","
          SQL = SQL & CStr(chkWin.Value) & ","
-         SQL = SQL & CStr(chkMeet(0).Value) & ","
-         SQL = SQL & CStr(chkMeet(1).Value) & ","
          SQL = SQL & CStr(Val(txt(7))) & ")"
       End If
       
@@ -541,9 +527,12 @@ Dim SQL
 End Sub
 
 Private Sub Form_Load()
-Dim x
+Dim x, filter As String
+   
    LoadCombo lstContacts, "contact", " WHERE ContactID > 0"
    LoadCombo cbo(2), "planet"
+   filter = Nz(varDLookup("ExcludeCrew", "Story", "StoryID=" & StoryID))
+   If filter <> "" Then LoadCombo lstCrew, "crew", " WHERE CrewID IN(" & filter & ")"
    comboRefresh
    Me.lbl(0).Caption = "Goal " & CStr(Goal)
    If Nz(varDLookup("StoryID", "StoryGoals", "StoryID=" & StoryID & " AND Goal=" & Goal), 0) = StoryID Then
@@ -562,8 +551,6 @@ Dim x
       cbo(1).Enabled = True
       lstContacts.Enabled = False
       chkWin.Enabled = False
-      chkMeet(0).Enabled = False
-      chkMeet(1).Enabled = False
    End If
    
    
@@ -616,6 +603,40 @@ Dim x, y, a() As String
    
 End Sub
 
+Private Function getList(cbo As Control) As String
+Dim x
+   With cbo
+      For x = 0 To .ListCount - 1
+         If .selected(x) Then
+            getList = getList & IIf(getList = "", "", ",") & CStr(.ItemData(x))
+         End If
+      Next x
+   End With
+   
+End Function
+
+Private Function SetList(cbo As Control, ByVal theList As String) As Integer
+Dim x, y, a() As String
+
+   If theList = "" Then Exit Function
+   With cbo
+   
+         a = Split(theList, ",")
+         For y = LBound(a) To UBound(a)
+            For x = 0 To .ListCount - 1
+               If .ItemData(x) = Val(a(y)) Then
+                  .selected(x) = True
+                  SetList = SetList + 1
+                  Exit For
+               End If
+            Next x
+         Next y
+      
+   End With
+   
+End Function
+
+
 Private Sub refreshGoal()
 Dim rst As New ADODB.Recordset
 Dim SQL
@@ -624,6 +645,7 @@ Dim SQL
    If Not rst.EOF Then
       txt(8) = Nz(rst!Instructions)
       setSolid Nz(rst!Solid)
+      SetList lstCrew, Nz(rst!AddCrew)
       SetCombo cbo(1), "", rst!IssueJobID
       SetCombo cbo(0), "", rst!CompleteJobID
       txt(0) = CStr(rst!Cash)

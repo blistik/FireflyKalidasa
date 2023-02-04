@@ -314,7 +314,7 @@ With sftTree
          .CellText(Index, 8) = IIf(rst!Negotiate > 0, CStr(rst!Negotiate), "")
          .CellForeColor(Index, 8) = 0
          If rst!Negotiate > 0 Then .CellBackColor(Index, 8) = 5373777
-          Set .ItemPicture(Index) = LoadPicture(App.Path & "\Pictures\Sm" & rst!Picture)
+         Set .ItemPicture(Index) = LoadPicture(App.Path & "\Pictures\Sm" & rst!Picture)
 '         If (rst!JobStatus = 1 Or rst!JobStatus = 2) Then
 '            Set .ItemPicture(Index) = AssetImages.Overlay("L", "D")
 '         Else
@@ -451,10 +451,9 @@ Private Sub mnuPopUp_Click(Index As Integer)
    Select Case Index
    Case 0
       If .ListIndex < 1 Or Left(.CellText(.ListIndex, 1), 4) = "Goal" Then Exit Sub
-      If MessBox("Are you sure you want to ditch the Job: " & .CellText(.ListIndex, 1) & "?", "Discard Job", "Ditch", "Nope", getLeader()) = 0 Then
-      'If MsgBox("Are you sure you want to ditch the Job: " & .CellText(.ListIndex, 1) & "?", vbOKCancel + vbQuestion, "Discard Job") = vbOK Then
+      If MessBox("Are you sure you want to ditch the Job: " & .CellText(.ListIndex, 1) & "?", "Discard Job", "Ditch it", "Nope", getLeader()) = 0 Then
          removeJob player.ID, .ItemData(.ListIndex)
-         If actionSeq > ASidle And actionSeq < ASEnd Then
+         If actionSeq > ASidle And actionSeq < ASend Then
             Main.showActions
          End If
          RefreshJobs

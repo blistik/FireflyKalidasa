@@ -172,22 +172,20 @@ Dim msg
  
 End Function
 
-Public Sub ClearBoard()
+Public Sub ClearBoard() 'resets all tables and values for new game
 Dim x
    For x = 1 To 4
       PlayCode(x).PlayName = ""
    Next x
    
    DB.Execute "UPDATE Players SET Name = Null, Seq=0, SectorID = Null, Leader=0, Pay = 0, Warrants=0, Goals = 0, Fuel = 0, Parts = 0, Cargo = 0, Contraband = 0, " & _
-              "Fugitive = 0, Passenger = 0, AI = 0, Solid1 = 0, Solid2 = 0, Solid3 = 0, Solid4 = 0, Solid5 = 0, Solid6 = 0, Solid7 = 0, Solid8 = 0, Solid9 = 0"
-   'set starting positions for NPC ships - setup now in Timing startup
-   'For x = 5 To 6 + NumOfReavers
-   '   DB.Execute "UPDATE Players SET SectorID = " & varDLookup("StartSectorID", "Players", "PlayerID=" & CStr(x)) & " WHERE PlayerID= " & CStr(x)
-   'Next x
+              "Fugitive = 0, Passenger = 0, HFuel = 0, HParts = 0, HCargo = 0, HContraband = 0, HFugitive = 0, HPassenger = 0, HPay = 0, " & _
+              "AI = 0, Solid1 = 0, Solid2 = 0, Solid3 = 0, Solid4 = 0, Solid5 = 0, Solid6 = 0, Solid7 = 0, Solid8 = 0, Solid9 = 0"
    
    DB.Execute "DELETE * from Events"
    DB.Execute "DELETE * from PlayerSupplies"
    DB.Execute "DELETE * from PlayerJobs"
+   DB.Execute "DELETE * from HavenSupplies"
    DB.Execute "UPDATE Crew Set Disgruntled = 0"
    DB.Execute "UPDATE SupplyDeck Set Seq = 0"
    DB.Execute "UPDATE ContactDeck Set Seq = 0"
@@ -672,6 +670,11 @@ Public Function useHavens(ByVal StoryID) As Boolean
    useHavens = (varDLookup("Havens", "Story", "StoryID=" & StoryID) = "1")
 
 End Function
+Public Function useHavenStorage(ByVal StoryID) As Boolean
+   
+   useHavenStorage = (varDLookup("HavenStorage", "Story", "StoryID=" & StoryID) = "1")
+
+End Function
 
 Public Function getHaven(ByVal SectorID) As Integer
    
@@ -793,6 +796,10 @@ Public Function getCorvetteSeq() As Integer
    getCorvetteSeq = varDLookup("Seq", "Players", "PlayerID=6")
 End Function
 
+'return the playerid of specific Ship in the sector
+Public Function isShipHere(ByVal playerID, ByVal SectorID) As Integer
+      isShipHere = Nz(varDLookup("PlayerID", "Players", "PlayerID = " & playerID & " AND SectorID=" & SectorID), 0)
+End Function
 
 'return the playerid of any Alliance Ship in the sector
 Public Function getCruiserCorvette(ByVal SectorID) As Integer
@@ -879,14 +886,21 @@ End Function
 
 Private Function doGoalCheck(ByVal playerID, ByVal StoryID, ByVal Goal, ByVal Seq, ByRef goaldone As Boolean) As Boolean
 Dim rst As New ADODB.Recordset, a() As String
-Dim SQL, x, cnt As Integer
+Dim SQL, x, cnt As Integer, SectorID As Integer
    If Goal = -1 Then Exit Function
    goaldone = True 'until proven otherwise
    SQL = "SELECT * FROM StoryGoals WHERE StoryID=" & StoryID & " AND Goal = " & CStr(Goal + 1)
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
+      'Misbehaves
+      If goaldone And rst!Misbehaves > 0 Then
+         frmAction.lblMis.Visible = True
+         If countMisbehaves(playerID) < rst!Misbehaves Then
+            goaldone = False
+         End If
+      End If
       'SOLID
-      If rst!SolidCount > 0 Then
+      If goaldone And rst!SolidCount > 0 Then
          For x = 1 To NO_OF_CONTACTS
             If isSolid(playerID, x) Then
                cnt = cnt + 1
@@ -934,29 +948,28 @@ Dim SQL, x, cnt As Integer
       End If
       'be at a Sector
       If goaldone And rst!SectorID > 0 Then
-         If getPlayerSector(playerID) <> rst!SectorID Then
-            goaldone = False
-         End If
-      End If
-      'Misbehaves
-      If goaldone And rst!Misbehaves > 0 Then
-         frmAction.lblMis.Visible = True
-         If countMisbehaves(playerID) < rst!Misbehaves Then
+         SectorID = getPlayerSector(playerID)
+         If Not ((rst!SectorID = 1 And getCruiserSector() = SectorID) Or (rst!SectorID = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!SectorID)) Then
             goaldone = False
          End If
       End If
       
-      If goaldone And rst!MeetCruiser > 0 Then
-         If getCruiserSector() <> getPlayerSector(playerID) Then
-            goaldone = False
-         End If
-      End If
-      If goaldone And rst!MeetCorvette > 0 Then
-         If getCorvetteSector() <> getPlayerSector(playerID) Then
-            goaldone = False
-         End If
-      End If
+'      If goaldone And rst!MeetCruiser > 0 Then
+'         If getCruiserSector() <> getPlayerSector(playerID) Then
+'            goaldone = False
+'         End If
+'      End If
+'      If goaldone And rst!MeetCorvette > 0 Then
+'         If getCorvetteSector() <> getPlayerSector(playerID) Then
+'            goaldone = False
+'         End If
+'      End If
       ' END of positive Tests ================================================
+      
+      'load up excluded crew if there is room - must reain the last test before reaching success
+      If goaldone And Nz(rst!AddCrew) <> "" Then
+         goaldone = goalAddCrew(playerID, rst!AddCrew)
+      End If
       
       'If we still good and we have Win flag, we WIN
       If goaldone And rst!Win > 0 Then
@@ -972,7 +985,7 @@ Dim SQL, x, cnt As Integer
          End If
       End If
       
-      'load any Passengers is there is room
+      'load any Passengers if there is room
       If goaldone And rst!Passenger > 0 Then
          If CargoCapacity(playerID) - CargoSpaceUsed(playerID) < rst!Passenger Then
             MessBox "You have no Room for " & rst!Passenger & " Passenger/s", "Passenger/s", "Ooops", "", getLeader()
@@ -982,7 +995,8 @@ Dim SQL, x, cnt As Integer
          End If
       End If
       
-      'if we here and goaldone then Goal IS Done
+      
+      '======= Success. if we here and goaldone is still true, then Goal IS Done ============
       If goaldone Then
          addGoal playerID, 1
       End If
@@ -997,7 +1011,7 @@ Dim SQL, x, cnt As Integer
 
       End If
       
-     
+      
       ' we good to give new instructions
       If goaldone And Nz(rst!Instructions) <> "" And Not doGoalCheck Then
          PutMsg player.PlayName & ", you have completed Goal " & Goal + 1 & vbNewLine & rst!Instructions, playerID, Logic!Gamecntr, True, getLeader()
@@ -1009,6 +1023,27 @@ Dim SQL, x, cnt As Integer
    rst.Close
    Set rst = Nothing
 
+End Function
+
+Public Function goalAddCrew(ByVal playerID, ByVal AddCrew As String) As Boolean
+Dim x, a() As String, crewcnt As Integer
+
+   If AddCrew = "" Then Exit Function
+   
+   a = Split(AddCrew, ",")
+   crewcnt = UBound(a) - LBound(a) + 1
+   ' Val (a(x))
+   If CrewCapacity(playerID) - getCrewCount(playerID) < crewcnt Then
+      MessBox "You have not enough room for the " & CStr(crewcnt) & " extra Crew", "Crew Space", "Oh No!", "", getLeader()
+      Exit Function
+   End If
+      
+   For x = LBound(a) To UBound(a)
+      DB.Execute "UPDATE SupplyDeck SET Seq =" & playerID & " WHERE CardID = " & getCrewCardID(Val(a(x)))
+      'add the card to the players deck
+      DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & playerID & ", " & getCrewCardID(Val(a(x))) & ")"
+   Next x
+   goalAddCrew = True
 End Function
 
 Public Function countMisbehaves(ByVal playerID) As Integer
@@ -1188,6 +1223,48 @@ normal_exit:
    
 err_handler:
    MsgBox "MessBox Error: " & vbCrLf & Err.Description
+   Resume normal_exit
+
+End Function
+
+Public Function InputBoxx(ByVal msg As String, ByVal title As String, Optional DefaultVal As String = "0", Optional ByVal CrewID As Integer = 0, Optional ByVal GearID As Integer = 0, Optional ByVal ShipUpgradeID As Integer = 0, Optional ByVal ContactID As Integer = 0) As Integer
+Dim frmPop As frmInputBox
+On Error GoTo err_handler
+  
+   Set frmPop = New frmInputBox
+   With frmPop
+      .lblMsg = msg
+      .Caption = title
+      .txtVal.Text = DefaultVal
+      If CrewID > 0 Or GearID > 0 Or ShipUpgradeID > 0 Or ContactID > 0 Then
+         .Width = 10320
+         .Height = 5040
+         .lblMsg.Height = 1600
+         .cmd(0).top = 1900
+         .txtVal.top = 1900
+         .pic.Visible = True
+      End If
+      If CrewID > 0 Then
+         Set .pic.Picture = LoadPicture(App.Path & "\pictures\" & varDLookup("Picture", "Crew", "CrewID=" & CrewID))
+      ElseIf GearID > 0 Then
+         Set .pic.Picture = LoadPicture(App.Path & "\pictures\" & varDLookup("Picture", "Gear", "GearID=" & GearID))
+      ElseIf ShipUpgradeID > 0 Then
+         Set .pic.Picture = LoadPicture(App.Path & "\pictures\" & varDLookup("Picture", "ShipUpgrade", "ShipUpgradeID=" & ShipUpgradeID))
+      ElseIf ContactID > 0 Then
+         Set .pic.Picture = LoadPicture(App.Path & "\pictures\" & varDLookup("Picture", "Contact", "ContactID=" & ContactID))
+      End If
+
+      playsnd 10
+      frmPop.Show 1, Main
+      InputBoxx = .result
+   End With
+
+   
+normal_exit:
+   Exit Function
+   
+err_handler:
+   MsgBox "InputBoxx Error: " & vbCrLf & Err.Description
    Resume normal_exit
 
 End Function
@@ -1847,6 +1924,10 @@ End Function
 
 Public Function getCrewID(ByVal CardID) As Integer
    getCrewID = Nz(varDLookup("CrewID", "SupplyDeck", "CardID=" & CardID), 0)
+End Function
+
+Public Function getCrewCardID(ByVal CrewID) As Integer
+   getCrewCardID = Nz(varDLookup("CardID", "SupplyDeck", "CrewID=" & CrewID), 0)
 End Function
 
 Public Function getPlanetID(ByVal playerID) As Integer
@@ -2615,24 +2696,25 @@ Dim SQL
    Set rst = Nothing
 End Function
 
-'return value of a player's crew's *any* gear attrib
+'return CardID of a player's crew's *any* gear attrib
 Public Function hasCrewGearAttribute(ByVal playerID, ByVal CrewID As Integer, ByVal Attrib As String) As Integer
 Dim rst As New ADODB.Recordset
 Dim SQL
    If Attrib = "" Then Exit Function
    
-   SQL = "SELECT Max(Gear." & Attrib & ") AS MaxVal "
+   SQL = "SELECT SupplyDeck.CardID "
    SQL = SQL & "FROM PlayerSupplies INNER JOIN (Gear INNER JOIN SupplyDeck ON Gear.GearID = SupplyDeck.GearID) ON PlayerSupplies.CardID = SupplyDeck.CardID "
-   SQL = SQL & "GROUP BY PlayerSupplies.PlayerID, PlayerSupplies.CrewID "
-   SQL = SQL & "Having PlayerSupplies.playerID = " & playerID & " And PlayerSupplies.CrewID = " & CrewID
+   SQL = SQL & "Where PlayerSupplies.playerID = " & playerID & " And PlayerSupplies.CrewID = " & CrewID & " AND Gear." & Attrib & " <> 0 "
+   SQL = SQL & "ORDER BY SupplyDeck.CardID"
    
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
-       hasCrewGearAttribute = rst!MaxVal
+       hasCrewGearAttribute = rst!CardID
    End If
    rst.Close
    Set rst = Nothing
 End Function
+
 
 'return true if a player has any crew's gear that has a keyword
 Public Function hasGearKeyword(ByVal playerID, ByVal Keyword As String, Optional ByVal CrewID As Integer = 0) As Boolean
@@ -2702,6 +2784,12 @@ Dim SQL
    End If
    
    Set rst = Nothing
+End Function
+
+Public Function discardGearOnUse(ByVal GearID As Integer) As Boolean
+   If GearID = 0 Then Exit Function
+   discardGearOnUse = varDLookup("Discard", "Gear", "GearID =" & GearID)
+
 End Function
 
 Public Function hasShipUpgrade(ByVal playerID, ByVal ShipUpgradeID As Integer) As Integer
@@ -2821,7 +2909,7 @@ Dim SQL
          rst2.Close
          '------------------------------------------------------------
       Else 'koshized rules apply, with exceptions
-         If hasGear(playerID, 37) And LCase(skill) = "fight" Then
+         If hasGear(playerID, 37, rst!CrewID) And LCase(skill) = "fight" Then
             getSkill = getSkill + 1
          End If
       
@@ -2873,23 +2961,26 @@ Dim frmStory As New frmStories
    End With
 End Function
 
-'NB: for only one crew, supply crewID and use -1 for remove all, 1-add to Moral Only, 2 for add all disgruntled, 3-remove disgruntle Moral Only
+'NB: for only one crew, supply crewID and use -1 for remove all, 1-add to Moral Only, 2 for add all disgruntled, 3-remove disgruntle Moral Only, 4-all fired regardless of original mode, 6-add moral crew only (on win)
 Public Function doDisgruntled(ByVal playerID, ByVal mode, Optional ByVal CrewID As Integer = 0) As Integer
 Dim rst As New ADODB.Recordset
-Dim SQL, leader
+Dim SQL, leader, CardID, CrewName As String, Disgruntled As Integer, Fendris As Boolean, FendrisUsed As Boolean
 
    If mode = 6 Then mode = 1 'moral crew only (on win)
 
-   'see if Leader is recieving a 2nd disgruntle -all crew fired!
+   'see if Leader is receiving a 2nd disgruntle -all crew fired!
    leader = varDLookup("Leader", "Players", "PlayerID=" & playerID)
+   'if doing only the leader, check for Fendris and switch
+   Fendris = hasCrew(playerID, 26)
 
    
    SQL = "SELECT Crew.*, SupplyDeck.CardID "
    SQL = SQL & "FROM (Players INNER JOIN PlayerSupplies ON Players.PlayerID = PlayerSupplies.PlayerID) INNER JOIN (Crew INNER JOIN SupplyDeck "
    SQL = SQL & "ON Crew.CrewID = SupplyDeck.CrewID) ON PlayerSupplies.CardID = SupplyDeck.CardID "
    SQL = SQL & "WHERE PlayerSupplies.OffJob = 0 AND Players.PlayerID=" & playerID
-   
-   If hasCrewAttribute(playerID, "Disgruntled", 0, leader) And (mode = 2 Or (mode = 1 And hasCrewAttribute(playerID, "Moral", 0, leader))) And (CrewID = 0 Or CrewID = leader) Then
+      
+   'Leader check to see if all fired
+   If hasCrewAttribute(playerID, "Disgruntled", 0, leader) And (mode = 2 Or (mode = 1 And hasCrewAttribute(playerID, "Moral", 0, leader))) And (CrewID = 0 Or CrewID = leader) And Not Fendris Then
       mode = 4 'all fired regardless of original mode
       If getCrewCount(playerID) > 1 Then
          PutMsg player.PlayName & "'s entire Crew has been Fired by a disgruntled Captain!", playerID, Logic!Gamecntr, True, leader
@@ -2913,21 +3004,36 @@ Dim SQL, leader
          Case -1, 3 'remove all/moral only disgruntled
             DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & rst!CrewID
          Case 1, 2, 4 'moral only / all
-            If rst!Moral = 1 Or mode >= 2 Then
-               If rst!Disgruntled > 0 Or mode = 4 Then 'if this is the 2nd disgruntled or fired then crew go to discard pile, gear returns to ship
+            If rst!Moral = 1 Or mode >= 2 Then 'they are either disgruntled or leaving
+               'if leader, then do Fendris check & switch
+               If leader = rst!CrewID And Fendris Then
+                  CrewID = 26
+                  CardID = 31
+                  CrewName = "Fendris"
+                  Disgruntled = varDLookup("Disgruntled", "Crew", "CrewID =" & CrewID)
+                  PutMsg "Fendris takes the heat for the Captain", playerID, Logic!Gamecntr, True, 26
+                  FendrisUsed = True
+               Else
+                  CrewID = rst!CrewID
+                  CardID = rst!CardID
+                  CrewName = rst!CrewName
+                  Disgruntled = rst!Disgruntled
+               End If
+               
+               If Disgruntled > 0 Or mode = 4 Then 'if this is the 2nd disgruntled or fired then crew go to discard pile, gear returns to ship
                   'remove Disgruntled
-                  DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & rst!CrewID
-                  If rst!CrewID <> leader Then
-                     PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " left the Ship, fully disgruntled", playerID, Logic!Gamecntr
+                  DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & CrewID
+                  If CrewID <> leader Then
+                     PutMsg player.PlayName & "'s Crew member " & CrewName & " left the Ship, fully disgruntled", playerID, Logic!Gamecntr
                      'remove any Gear from Crew
-                     DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE PlayerID = " & playerID & " AND CrewID = " & rst!CrewID
+                     DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE PlayerID = " & playerID & " AND CrewID = " & CrewID
                      'remove from players hand
-                     DB.Execute "DELETE FROM PlayerSupplies WHERE PlayerID = " & playerID & " AND CardID = " & rst!CardID
+                     DB.Execute "DELETE FROM PlayerSupplies WHERE PlayerID = " & playerID & " AND CardID = " & CardID
                      'return to discard pile
-                     DB.Execute "UPDATE SupplyDeck SET Seq = 5 WHERE CardID =" & rst!CardID
+                     DB.Execute "UPDATE SupplyDeck SET Seq = 5 WHERE CardID =" & CardID
                   End If
                Else 'add a Disgruntled
-                  DB.Execute "UPDATE Crew SET Disgruntled = 1 WHERE CrewID = " & rst!CrewID
+                  DB.Execute "UPDATE Crew SET Disgruntled = 1 WHERE CrewID = " & CrewID
                End If
             End If
          
@@ -2936,6 +3042,7 @@ Dim SQL, leader
       rst.MoveNext
    Wend
    rst.Close
+   If FendrisUsed Then mode = 7
    doDisgruntled = mode
       
    Set rst = Nothing
@@ -3067,7 +3174,7 @@ Dim SQL, u, v As Integer, w As Integer, x As Integer, y As Integer, z As Integer
    If hasShipUpgrade(playerID, 9) > 0 Then
       x = x + 1
       DB.Execute "UPDATE Players SET Pay = Pay + 500 WHERE PlayerID = " & playerID
-      msg = msg & "and Chop Shop added $500, "
+      msg = msg & "and Chop Shop took $500, "
    End If
    
    v = CargoCapacity(playerID)
@@ -3188,10 +3295,6 @@ Dim result As Integer, x As Integer, CrewID
 
    CrewID = varDLookup("CrewID", "SupplyDeck", "CardID=" & CardID)
    
-   If CrewID = varDLookup("Leader", "Players", "PlayerID=" & playerID) Then
-      doDisgruntled playerID, 2, CrewID
-      Exit Function
-   End If
 
    'Simon Tam adds 2 to Dice Roll for Medic Check
    If getPerkAttributeCrew(playerID, "MedicCheck") > 0 Then x = 2
@@ -3221,7 +3324,13 @@ Dim result As Integer, x As Integer, CrewID
    End If
    
    '-----==== DEAD =====------ R.I.P.
-   
+   'leader to be disgruntled
+   If CrewID = varDLookup("Leader", "Players", "PlayerID=" & playerID) Then
+      x = doDisgruntled(playerID, 2, CrewID)
+      If x <> 7 Then PutMsg player.PlayName & "'s Leader " & getCrewName(CardID) & " was injured and is not too happy about it.", playerID, Logic!Gamecntr, True, CrewID
+      doKillCrew = 0
+      Exit Function
+   End If
    'some crew go back to discard pile, "KillDiscard" Perk
    'eg.When Killed, Discard instead of removing from Play
    If getPerkAttributeCrew(playerID, "KillDiscard", CardID) > 0 Then
@@ -3278,12 +3387,53 @@ Dim result As Integer, CrewID
 End Function
 
 'update their pile status - 0 removed, 5 -discarded
+Public Sub doHavenCrew(ByVal CardID, Optional ByVal status As Variant = 0)
+Dim CrewID
+
+   CrewID = varDLookup("CrewID", "SupplyDeck", "CardID=" & CardID)
+   
+   DB.Execute "UPDATE SupplyDeck SET Seq = " & status & " WHERE CardID = " & CardID
+   If status > 0 Then   'load
+      DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & CardID & ")"
+      DB.Execute "DELETE FROM HavenSupplies WHERE CardID = " & CardID
+   Else                 'offload
+      'remove any Gear first
+      DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = " & CrewID
+      'delete the card to the players deck
+      DB.Execute "DELETE FROM PlayerSupplies WHERE CardID = " & CardID
+      'add them to the HavenSupplies
+      DB.Execute "INSERT INTO HavenSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & CardID & ")"
+   End If
+   
+End Sub
+
+'use for linked, unlinked Gear and any ShipUpgrade
+Public Sub doHavenGear(ByVal CardID, Optional ByVal status As Variant = 0)
+
+   
+   'playsnd 12
+   'update their pile status - 0 removed, 5 -discarded or playerid
+   DB.Execute "UPDATE SupplyDeck SET Seq = " & status & " WHERE CardID = " & CardID
+   
+   If status > 0 Then   'load
+      DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & CardID & ")"
+      DB.Execute "DELETE FROM HavenSupplies WHERE CardID = " & CardID
+   Else                 'offload
+      'delete the card to the players deck
+      DB.Execute "DELETE FROM PlayerSupplies WHERE CardID = " & CardID
+      'add them to the HavenSupplies
+      DB.Execute "INSERT INTO HavenSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & CardID & ")"
+   End If
+   
+End Sub
+
+'update their pile status - 0 removed, 5 -discarded
 Public Sub doDiscardCrew(ByVal CardID, Optional ByVal status As Variant = 5)
 Dim CrewID
 
    CrewID = varDLookup("CrewID", "SupplyDeck", "CardID=" & CardID)
 
-   
+   'update their pile status - 0 removed, 5 -discarded or playerid
    DB.Execute "UPDATE SupplyDeck SET Seq = " & status & " WHERE CardID = " & CardID
    'remove any Gear first
    DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = " & CrewID
@@ -3310,7 +3460,7 @@ Public Sub doDiscardGear(ByVal playerID, ByVal CardID)
    End If
    
    playsnd 12
-   'update their pile status - 0 removed, 5 -discarded
+   'update their pile status - 0 removed, 5 -discarded or playerid
    DB.Execute "UPDATE SupplyDeck SET Seq =5 WHERE CardID = " & CardID
 
    'delete the card to the players deck
@@ -3322,7 +3472,8 @@ End Sub
 ' Return True if Cruiser was faced.
 Public Function doMoveAlliance(ByVal playerID, ByVal SectorID) As Boolean
 Dim rst As New ADODB.Recordset
-Dim SQL, pay As Integer, CryBaby As Integer, GearID As Integer, crewcnt As Integer, allcrew As Integer, stash As Integer
+Dim SQL, pay As Integer, CryBaby As Integer, CardID As Integer, GearID As Integer, DisCardID As Integer
+Dim crewcnt As Integer, allcrew As Integer, stash As Integer, discard As Boolean
 Dim frmSeize As frmSeized2
 
    'Move Crusier to your Sector,
@@ -3358,7 +3509,10 @@ Dim frmSeize As frmSeized2
          If pay > rst!pay Then 'take alls that's left
             pay = rst!pay
          End If
+         PutMsg player.PlayName & " pays for Warrants outstanding", player.ID, Logic!Gamecntr
       End If
+      If rst!Contraband > 0 Then PutMsg player.PlayName & " has " & rst!Contraband & " Contraband confiscated", player.ID, Logic!Gamecntr
+      If rst!Fugitive > 0 Then PutMsg player.PlayName & " has " & rst!Fugitive & " Fugitives seized", player.ID, Logic!Gamecntr
    End If
    
    rst.Close
@@ -3372,11 +3526,18 @@ Dim frmSeize As frmSeized2
    SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & playerID & " AND Crew.Wanted>0"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      GearID = hasCrewGearAttribute(playerID, rst!CrewID, "IgnoreWanted")
-      
+      CardID = hasCrewGearAttribute(playerID, rst!CrewID, "IgnoreWanted")
+      GearID = Nz(varDLookup("GearID", "SupplyDeck", "CardID=" & CardID), 0)
+      discard = discardGearOnUse(GearID)
+      If discard Then
+         If MessBox("Do you want " & rst!CrewName & " to use their 'one time use' " & varDLookup("GearName", "Gear", "GearID=" & GearID) & "?", "Discard Gear?", "Yes", "No", 0, GearID) = 1 Then
+            GearID = 0
+         End If
+      End If
       If GearID > 0 Then
          'skip this Crew that has Alliance Ident Card
          PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " makes use of " & varDLookup("GearName", "Gear", "GearID=" & GearID) & " to avoid detection", playerID, Logic!Gamecntr, True, rst!CrewID
+         If discard Then DisCardID = CardID
       ElseIf stash > 0 And crewcnt < stash Then
          'Concealed Smuggling Compartments hides up to 2 Wanted Crew
          crewcnt = crewcnt + 1
@@ -3397,9 +3558,12 @@ Dim frmSeize As frmSeized2
          End If
 
       End If
+
       rst.MoveNext
+      
    Wend
    rst.Close
+   If DisCardID > 0 Then doDiscardGear player.ID, DisCardID
    
    If crewcnt = stash And allcrew > stash And stash > 0 Then 'we need to decide who goes into the CSC
       frmSeize.fullstash = stash
@@ -3565,9 +3729,9 @@ Dim SQL
    SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & playerID & " AND Crew.Wanted>0"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      If Not hasGear(playerID, 20, rst!CrewID) Then ' has warrant, but may have Harken's Card
+      'If Not hasGear(playerID, 20, rst!CrewID) Then ' has warrant, but may have Harken's Card
          isOutlaw = True
-      End If
+      'End If
       rst.MoveNext
    Wend
    rst.Close
@@ -4398,7 +4562,7 @@ End Function
 
 Public Function hasHigginsJayneWork(ByVal CardID) As Boolean
 Dim ContactID
-   If CardID = 0 Then Exit Function
+   If CardID < 1 Then Exit Function
    ContactID = Nz(varDLookup("ContactID", "ContactDeck", "CardID=" & CardID), 0)
 
    If ContactID <> 8 Then Exit Function 'not higgy

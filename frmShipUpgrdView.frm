@@ -279,7 +279,7 @@ End Sub
 Private Sub refreshGear(ByVal CardID)
 Dim rst As New ADODB.Recordset, SQL, x, y
 
-   SQL = "SELECT ShipUpgrade.*, SupplyDeck.CardID, SupplyDeck.SupplyID, Supply.Colour, Supply.SupplyName, PlayerSupplies.PlayerID, Players.Name "
+   SQL = "SELECT ShipUpgrade.*, SupplyDeck.CardID, SupplyDeck.SupplyID, SupplyDeck.Seq, Supply.Colour, Supply.SupplyName, PlayerSupplies.PlayerID, Players.Name "
    SQL = SQL & "FROM Players RIGHT JOIN (PlayerSupplies RIGHT JOIN (Supply RIGHT JOIN (ShipUpgrade LEFT JOIN SupplyDeck ON ShipUpgrade.ShipUpgradeID = SupplyDeck.ShipUpgradeID) ON Supply.SupplyID = SupplyDeck.SupplyID) ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Players.PlayerID = PlayerSupplies.PlayerID "
    SQL = SQL & "WHERE SupplyDeck.CardID=" & CardID
 
@@ -287,9 +287,18 @@ Dim rst As New ADODB.Recordset, SQL, x, y
    If Not rst.EOF Then
       cboGear.ToolTipText = rst!UpgradeName
       lbl(1) = rst!UpgradeDescr
-      lbl(2).Visible = (Nz(rst!Name) <> "")
+      
       If Nz(rst!Name) <> "" Then
          lbl(2) = "owned by: " & rst!Name
+         lbl(2).Visible = True
+      ElseIf rst!Seq > 0 And rst!Seq < 5 Then
+         y = Nz(varDLookup("Name", "Players", "PlayerID = " & rst!Seq), "")
+         If y <> "" Then
+            lbl(2) = "at " & y & "'s haven"
+            lbl(2).Visible = True
+         End If
+      Else
+         lbl(2).Visible = False
       End If
       
       lbl(5) = Nz(rst!Keyword)

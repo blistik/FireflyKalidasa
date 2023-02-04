@@ -6,13 +6,14 @@ Begin VB.Form frmPopup
    ClientHeight    =   1800
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   6630
+   ClientWidth     =   6615
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmPopup.frx":0000
    ScaleHeight     =   1800
-   ScaleWidth      =   6630
+   ScaleWidth      =   6615
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton cmd 
@@ -29,13 +30,13 @@ Begin VB.Form frmPopup
       EndProperty
       Height          =   405
       Index           =   1
-      Left            =   4620
+      Left            =   4530
       Style           =   1  'Graphical
       TabIndex        =   3
       TabStop         =   0   'False
       Top             =   1110
       Visible         =   0   'False
-      Width           =   1905
+      Width           =   1995
    End
    Begin VB.PictureBox pic 
       AutoSize        =   -1  'True
@@ -64,11 +65,11 @@ Begin VB.Form frmPopup
       EndProperty
       Height          =   405
       Index           =   0
-      Left            =   2370
+      Left            =   2280
       Style           =   1  'Graphical
       TabIndex        =   1
       Top             =   1110
-      Width           =   1905
+      Width           =   1995
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl picDice 
       Height          =   915

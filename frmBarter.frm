@@ -103,7 +103,7 @@ Begin VB.Form frmBarter
       Left            =   3270
       Style           =   1  'Graphical
       TabIndex        =   7
-      Top             =   3090
+      Top             =   3140
       Width           =   1125
    End
    Begin VB.TextBox txtDeal 
@@ -136,6 +136,26 @@ Begin VB.Form frmBarter
       Top             =   2790
       Width           =   345
    End
+   Begin VB.Label lblCost 
+      Alignment       =   1  'Right Justify
+      BorderStyle     =   1  'Fixed Single
+      Caption         =   "$0"
+      Height          =   260
+      Left            =   3705
+      TabIndex        =   17
+      ToolTipText     =   "Money in hand"
+      Top             =   2820
+      Width           =   660
+   End
+   Begin VB.Label Label3 
+      BackStyle       =   0  'Transparent
+      Caption         =   "Cost"
+      Height          =   315
+      Left            =   3270
+      TabIndex        =   16
+      Top             =   2850
+      Width           =   465
+   End
    Begin VB.Label Label2 
       BackStyle       =   0  'Transparent
       Caption         =   "Goods for purchase"
@@ -158,7 +178,7 @@ Begin VB.Form frmBarter
       Alignment       =   1  'Right Justify
       BorderStyle     =   1  'Fixed Single
       Caption         =   "$0"
-      Height          =   285
+      Height          =   260
       Left            =   3710
       TabIndex        =   9
       ToolTipText     =   "Money in hand"
@@ -255,7 +275,7 @@ Dim total As Long
    
    Select Case Index
    Case 0 'buy
-      total = Val(txtDeal(0)) * fuel + Val(txtDeal(1)) * parts + Val(txtDeal(2)) * contra
+      total = calcCost
       If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) < (Val(txtDeal(0)) + Val(txtDeal(1))) / 2 + Val(txtDeal(2)) Then
          MessBox "You don't have enough Cargo Space for that deal", "Tight for room", "Ooops", "", 0, 0, 6
          Exit Sub
@@ -304,9 +324,22 @@ Dim SQL, x
    If Not rst.EOF Then
       txtDeal(3) = CStr(rst!fuel)
       txtDeal(4) = CStr(rst!parts)
-      txtDeal(5) = CStr(rst!Contraband)
+      txtDeal(5) = CStr(rst!contraband)
    End If
    rst.Close
    Set rst = Nothing
 End Sub
 
+Private Sub txtDeal_Change(Index As Integer)
+   calcCost
+End Sub
+
+Private Sub txtDeal_DblClick(Index As Integer)
+   txtDeal(Index).Text = CStr(Val(txtDeal(Index).Text) + 1)
+   calcCost
+End Sub
+
+Private Function calcCost() As Integer
+   calcCost = Val(txtDeal(0)) * fuel + Val(txtDeal(1)) * parts + Val(txtDeal(2)) * contra
+   lblCost.Caption = CStr(calcCost)
+End Function

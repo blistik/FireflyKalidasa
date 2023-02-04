@@ -533,7 +533,7 @@ Attribute VB_Exposed = False
 Option Explicit
 Public WithEvents Verse As Board
 Attribute Verse.VB_VarHelpID = -1
-Private usedStitchSkill As Boolean
+Private usedStitchSkill As Boolean, dontnagme As Boolean, rejoininprogress As Boolean
 Public frmJob As frmJobs, frmShip As frmShips, frmDeal As frmDeals, frmBuy As frmSupply, frmStat As frmStats
 
 Private Sub MDIForm_Load()
@@ -570,7 +570,7 @@ End Sub
 Private Sub MDIForm_QueryUnload(Cancel As Integer, UnloadMode As Integer)
    DockFrame1.SaveStates "Firefly"
    If Me.Visible Then
-      If MessBox("Are you sure you want to close the game?", "Closing Game", "I'm outa here", "Nope") = 0 Then
+      If MessBox("Are you sure you want to close the game?", "Closing Game", "I'm outta here", "Nope") = 0 Then
          If DB.State = adStateOpen Then DB.Close
          End
       Else
@@ -595,6 +595,11 @@ On Error GoTo err_handler
    SupplyID = Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0)
 
    status = GetSeqX(thisPlayer)
+   
+   If status = "R" And player.ID = 0 And Not dontnagme Then
+      dontnagme = Not reJoin
+   End If
+   
    'aminmate the current player
    If status = "R" And player.ID > 0 Then animatePlayer thisPlayer
 
@@ -742,7 +747,8 @@ On Error GoTo err_handler
    
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASFullburnEnd Then   'fullburn Cycle - your go
       PutMsg player.PlayName & " fullburned to sector " & SectorID, player.ID, Logic!Gamecntr
-      If resolveToken(SectorID) = 6 And isOutlaw(player.ID) Then 'no Nav card when Corvette arrives
+      x = resolveToken(SectorID)
+      If (x = 5 Or x = 6) And isOutlaw(player.ID) Then 'no Nav card when Alliance arrives
          frmAction.fullburndone = True
          If actionSeq <> ASNavEvade Then
             actionSeq = ASselect 'in limbo awaiting user to select
@@ -990,6 +996,11 @@ On Error GoTo err_handler
          End If
          
          actionSeq = ASselect 'in limbo awaiting user to select
+      
+      ElseIf GetCombo(frmAction.cbo) = -1 Then 'Haven Supplies
+         doHavenSupplies
+         actionSeq = ASselect 'in limbo awaiting user to select
+      
       Else
          If doWork(player.ID, GetCombo(frmAction.cbo)) = 0 Then ' normal exit
             actionSeq = ASselect 'in limbo awaiting user to select
@@ -1119,24 +1130,8 @@ Dim ChatTxt As String, x
          End If
 
      Case Else
-        If MessBox("Do you want to rejoin in " & IIf(getPlayerCount() > 1, "Multiplayer", "Single Player") & " mode?" & vbNewLine & vbNewLine & "Press OK to join the Game", "Game in Progress", "OK", "Cancel", 1) = 0 Then
-        'x = MsgBox("Game in progress. Do you want to rejoin it in " & IIf(getPlayerCount() > 1, "MP", "SP") & " mode?" & vbNewLine & "press OK to join the Game", vbExclamation + vbOKCancel, "Game in Progress")
-        'Select Case x
-        'Case vbOK
-            player.ID = getNewPlayer()
-            player.PlayName = Nz(varDLookup("Name", "Players", "PlayerID =" & player.ID))
-            getPlayerCount True
-            SoloGame = isSoloGame()
-            pickStartSector = 2  'flag the selection is done
-            actionSeq = ASidle
-            initBoard
-            refreshSolid
-            
-            'Verse.Timer1.Enabled = True
-            showEvents
-            initToolbar True, False
-            
-        End If
+        reJoin
+     
      End Select
 
   Case "exit"  'END the Game
@@ -1256,6 +1251,29 @@ Dim ChatTxt As String, x
   
   End Select
 End Sub
+
+Private Function reJoin() As Boolean
+   If rejoininprogress Then
+      Exit Function
+   End If
+   rejoininprogress = True
+   If MessBox("Do you want to rejoin in " & IIf(getPlayerCount() > 1, "Multiplayer", "Single Player") & " mode?" & vbNewLine & vbNewLine & "Press OK to join the Game", "Game in Progress", "OK", "Cancel", 1) = 0 Then
+       player.ID = getNewPlayer()
+       player.PlayName = Nz(varDLookup("Name", "Players", "PlayerID =" & player.ID))
+       getPlayerCount True
+       SoloGame = isSoloGame()
+       pickStartSector = 2  'flag the selection is done
+       actionSeq = ASidle
+       initBoard
+       refreshSolid
+       
+       'Verse.Timer1.Enabled = True
+       showEvents
+       initToolbar True, False
+       reJoin = True
+   End If
+   rejoininprogress = False
+End Function
 
 Private Sub EndGame()
    killAllForms
@@ -1616,6 +1634,7 @@ Dim rst As New ADODB.Recordset
             frmNav.NavOption = 0
             actionSeq = ASnavEnd
             .NavCardID = 0
+            .FDPane1.PaneVisible = False
             PutMsg player.PlayName & " is Shielded from a Reaver Cutter attack by the Alliance Corvette", player.ID, Logic!Gamecntr, True, getLeader()
             
          'skip Customs Inspection if solid with Harken
@@ -1623,6 +1642,7 @@ Dim rst As New ADODB.Recordset
             frmNav.NavOption = 0
             actionSeq = ASnavEnd
             .NavCardID = 0
+            .FDPane1.PaneVisible = False
             PutMsg player.PlayName & " being Solid with Harken avoided a Customs Inspection", player.ID, Logic!Gamecntr, True, getLeader()
          Else
             .NavCardID = rst!CardID
@@ -1671,9 +1691,7 @@ Dim rst As New ADODB.Recordset
       
       .lblUnseen = getZoneDesc(Zone) & "unseen: " & getUnseenNavDeck(Zone)
       
-      If .NavCardID <> 0 Then
-         .FDPane1.PaneVisible = True
-      End If
+      .FDPane1.PaneVisible = (.NavCardID <> 0)
       
    End With
       
@@ -1701,21 +1719,16 @@ Dim frmJoSel As frmJobSel
       CruiserCutter = SectorID
    End If
    
-   If getCruiserCorvette(SectorID) = 5 And CruiserCutter <> SectorID Then
+   If isShipHere(5, SectorID) = 5 And CruiserCutter <> SectorID Then
       CruiserCutter = SectorID 'set it as faced regardless of outcome
       If isOutlaw(player.ID) And actionSeq <> ASNavEvade Then  'it just arrived so face it
          showNav -2
-         If Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) Then 'only stop if Flying
-            frmAction.moseydone = True 'Full Stop!
-            frmAction.fullburndone = True
-            
-         End If
          Exit Sub
       End If
    End If
-   If getCruiserCorvette(SectorID) = 6 And CorvetteSeq <> getCorvetteSeq Then
+   If isShipHere(6, SectorID) = 6 And CorvetteSeq <> getCorvetteSeq Then
       CorvetteSeq = getCorvetteSeq
-      CruiserCutter = SectorID 'set it as faced regardless of outcome
+      'CruiserCutter = SectorID 'set it as faced regardless of outcome
       If isOutlaw(player.ID) And actionSeq <> ASNavEvade Then  'it just arrived so face it
          showNav -3
          If Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) Then 'only stop if Flying
@@ -2003,6 +2016,13 @@ Dim frmJoSel As frmJobSel
          rst.MoveNext
       Wend
       rst.Close
+      
+      'do supply transfer at Haven
+      If getHaven(SectorID) = player.ID And useHavenStorage(Logic!StoryID) Then
+         .cbo.AddItem "Supplies Transfer at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
+         .cbo.ItemData(.cbo.NewIndex) = -1
+      End If
+      
       'Make Work if at a Planet
       If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & SectorID), 63) <> 63 And Nz(varDLookup("PlanetID", "Planet", "SectorID=" & SectorID), 64) <> 64 Then 'but not Cruiser/Corvette dummy planetID 63,64
          .cbo.AddItem "Make Work at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
@@ -2130,7 +2150,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
             'and if Niska - Kill 1 Crew
             'add a Warrant and clear any Solid with Harken (5)
             doJobWarrant playerID, ContactID, CardID
-            frmJob.RefreshJobs
+            If Not (frmJob Is Nothing) Then frmJob.RefreshJobs
             Main.drawLine 0, -1
             clearPicMB
             Exit Function
@@ -2167,10 +2187,10 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
       If rst!Contraband <> 0 Then
          If rst!Contraband = 14 Then
             If Int(CargoCapacity(playerID) - CargoSpaceUsed(playerID)) > 0 Then
-               cargofit = Val(InputBox("How much Contraband do you want to load onboard?", "Load Contraband", CStr(Int(CargoCapacity(playerID) - CargoSpaceUsed(playerID)))))
+               cargofit = InputBoxx("How much Contraband do you want to load onboard?", "Load Contraband", CStr(Int(CargoCapacity(playerID) - CargoSpaceUsed(playerID))), getLeader())
             End If
          ElseIf rst!Contraband = -14 Then
-            cargofit = Val(InputBox("How much Contraband do you want to deliver?", "Deliver Contraband", varDLookup("Contraband", "Players", "PlayerID=" & playerID)))
+            cargofit = InputBoxx("How much Contraband do you want to deliver?", "Deliver Contraband", varDLookup("Contraband", "Players", "PlayerID=" & playerID), getLeader())
             If cargofit > varDLookup("Contraband", "Players", "PlayerID=" & playerID) Then
                cargofit = varDLookup("Contraband", "Players", "PlayerID=" & playerID)
             End If
@@ -2197,10 +2217,10 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
       If rst!Passenger <> 0 Then
          If rst!Passenger = 14 Then
             If Int(CargoCapacity(playerID) - CargoSpaceUsed(playerID)) > 0 Then
-               cargofit = Val(InputBox("How many Passengers do you want to take onboard?", "Load Passengers", CStr(Int(CargoCapacity(playerID) - CargoSpaceUsed(playerID)))))
+               cargofit = InputBoxx("How many Passengers do you want to take onboard?", "Load Passengers", CStr(Int(CargoCapacity(playerID) - CargoSpaceUsed(playerID))), getLeader())
             End If
          ElseIf rst!Passenger = -14 Then
-            cargofit = Val(InputBox("How many Passengers do you want to deliver?", "Deliver Passengers", varDLookup("Passenger", "Players", "PlayerID=" & playerID)))
+            cargofit = InputBoxx("How many Passengers do you want to deliver?", "Deliver Passengers", varDLookup("Passenger", "Players", "PlayerID=" & playerID), getLeader())
             If cargofit > varDLookup("Passenger", "Players", "PlayerID=" & playerID) Then
                cargofit = varDLookup("Passenger", "Players", "PlayerID=" & playerID)
             End If
@@ -2231,11 +2251,11 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
          If rst!Fugitive = 14 Then
          
             If Int(CargoCapacity(playerID) - CargoSpaceUsed(playerID)) > 0 Then
-               fugifit = Val(InputBox("How many Fugitives do you want to take onboard?", "Load Fugitives", CStr(Int(CargoCapacity(playerID) - CargoSpaceUsed(playerID)))))
+               fugifit = InputBoxx("How many Fugitives do you want to take onboard?", "Load Fugitives", CStr(Int(CargoCapacity(playerID) - CargoSpaceUsed(playerID))), getLeader())
             End If
 
          ElseIf rst!Fugitive = -14 Then
-            fugifit = Val(InputBox("How many Fugitives do you want to deliver?", "Deliver Fugitives", varDLookup("Fugitive", "Players", "PlayerID=" & playerID)))
+            fugifit = InputBoxx("How many Fugitives do you want to deliver?", "Deliver Fugitives", varDLookup("Fugitive", "Players", "PlayerID=" & playerID), getLeader())
             If fugifit > varDLookup("Fugitive", "Players", "PlayerID=" & playerID) Then
                fugifit = varDLookup("Fugitive", "Players", "PlayerID=" & playerID)
             End If
@@ -2636,6 +2656,13 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                actionSeq = ASNavEvade
                doWork = 1 ' Evade
                
+            Case 8 'move Corvette to sector and EVADE - work done
+               MoveShip 6, SectorID
+               PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!Gamecntr, True
+               actionSeq = ASNavEvade
+               doWork = 1 ' Evade
+              
+               
             Case Is > 99 'paid extra
                payment = payment + rst!WinResult
             
@@ -2653,14 +2680,35 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
             
          Case 1 'inter
             'no change
-            If rst!IntermediateResult < 99 Then
+            Select Case rst!IntermediateResult
+            Case 4 'attempt botched
+               PutMsg player.PlayName & " botches the final part of the job", playerID, Logic!Gamecntr, True, getLeader()
+               Exit Function
+            
+            Case 5 'move Cruiser to sector and EVADE - work done
+               MoveShip 5, SectorID
+               If getHaven(SectorID) > 0 Then
+                  PutMsg player.PlayName & "'s Nav log: refuge found at this Haven, the Alliance Cruiser sails on by", playerID, Logic!Gamecntr, True, 0, 0, 1
+                  moveAutoAI 5
+               Else
+                  PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!Gamecntr, True
+                  actionSeq = ASNavEvade
+                  doWork = 1 ' Evade
+               End If
+            Case 6 'move Corvette to sector and EVADE - work done
+               MoveShip 6, SectorID
+               PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!Gamecntr, True
+               actionSeq = ASNavEvade
+               doWork = 1 ' Evade
+               
+            Case Is < -99 'make payment
                If getMoney(playerID) >= (rst!IntermediateResult * -1) Then
                   payment = payment + rst!IntermediateResult
                Else
                   PutMsg player.PlayName & " doesn't have enough Money to pay the $" & CStr(Abs(rst!IntermediateResult)) & " fee, Job botched.", playerID, Logic!Gamecntr, True, getLeader()
                   Exit Function 'fail
                End If
-            End If
+            End Select
    
          Case 2 'half pay
             'handled below
@@ -2691,8 +2739,13 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                   Exit Function 'fail
                End If
                
-             Case 4 'attempt botched
+            Case 4 'attempt botched
                PutMsg player.PlayName & " botches the final negotiation and the job", playerID, Logic!Gamecntr, True, getLeader()
+               Exit Function
+             
+            Case 5, 6 'move Cruiser/Corvette to sector
+               PutMsg player.PlayName & " botches the job and has attracted some attention from the Alliance", playerID, Logic!Gamecntr, True, getLeader()
+               MoveShip rst!FailResult, SectorID
                Exit Function
                
             Case Is < -99
@@ -2797,7 +2850,9 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
 
    'update the status of the job
    DB.Execute "UPDATE PlayerJobs SET JobStatus =" & finalstate & " WHERE PlayerID = " & playerID & " AND CardID = " & CardID
-   frmJob.RefreshJobs
+   If Not (frmJob Is Nothing) Then
+      frmJob.RefreshJobs
+   End If
    Main.drawLine 0, -1
 
    'if we got this far, we're good!
@@ -3104,16 +3159,16 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
          End If
       
          'if card accepts a bribe, ask for $100 a point
-         If rst!bribe = 1 Or hasPerkAttributeValue(playerID, "Bribe", Wskill) Then
+         If Wskill = 3 And rst!bribe = 1 Or hasPerkAttributeValue(playerID, "Bribe", Wskill) Then
             Do
-               bribe = Val(InputBox("They accept Bribes, $100 per skill point" & vbNewLine & vbNewLine & "Enter the number of POINTS you would bribe with..", "Money Talks", "0"))
+               bribe = InputBoxx("They accept Bribes, $100 per skill point" & vbNewLine & vbNewLine & "Enter the number of POINTS you would bribe with..", "Money Talks", "0", getLeader(), getLeader())
                If bribe > 20 Then
                   MessBox "Seems a bit much don't ya think? Try that again..", "Too much!", "Ooops", "", getLeader()
                ElseIf bribe * 100 <= getMoney(playerID) Then 'can pay
                   getMoney playerID, (bribe * 100 * -1)
                   Exit Do
                Else
-                  MessBox "Why you low-down thief, whatcha tryin' to pull?  Try again!", "Insufficient dough!", "Gorram it", "", getLeader()
+                  MessBox "Why you low-down thief, whatcha tryin' to pull?  Try again!", "Insufficient dough!", "Sorry", "", getLeader()
                End If
             Loop
          End If
@@ -3461,7 +3516,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          'if card accepts a bribe, ask for $100 a point
          If rst!bribe = 1 Or (getPerkAttributeCrew(player.ID, "Bribe") > 0 And rst!skill = 3) Then
             Do
-               bribe = Val(InputBox("They accept Bribes on this Job, $100 per skill point" & vbNewLine & vbNewLine & "Enter the number of points you would bribe with..", "Money Talks", "0"))
+               bribe = InputBoxx("They will accept Bribes, $100 per skill point" & vbNewLine & vbNewLine & "Enter the number of points you would bribe with..", "Money Talks", "0", getLeader())
                If bribe > 20 Then
                   MessBox "Seems a bit much don't ya think? Try that again..", "Too much!", "Ooops", "", getLeader()
                ElseIf bribe * 100 <= getMoney(player.ID) Then 'can pay
@@ -3484,7 +3539,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             Case 1, 2 'stay onboard
                DB.Execute "UPDATE PlayerSupplies SET OffJob = 1 WHERE CardID = 51"
                If Not (frmShip Is Nothing) Then frmShip.RefreshShips  'update display
-               PutMsg player.PlayName & "'s River Tam cowers onboard and won't be playin'", player.ID, Logic!Gamecntr, True, 32, 0, 0, 0, 0, dice
+               PutMsg player.PlayName & "'s River Tam hides in her bunk and won't be helpin'", player.ID, Logic!Gamecntr, True, 32, 0, 0, 0, 0, dice
             Case 3 'fight
                If rst!skill = 1 Then
                   riverskill = 2
@@ -3701,7 +3756,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          ElseIf rst!WinFuel = 14 Then ' all you can load
             skillcnt = (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID)) * 2
             Do
-               x = Val(InputBox("Select up to " & skillcnt & " Fuel to salvage", "Salvage Fuel"))
+               x = InputBoxx("Select up to " & skillcnt & " Fuel to salvage", "Salvage Fuel", getLeader())
                If x <= skillcnt And x > -1 Then
                   skillcnt = x
                   Exit Do
@@ -3720,7 +3775,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             Do
                y = varDLookup("Parts", "Players", "PlayerID=" & player.ID)
                If y = 0 Then Exit Do
-               x = Val(InputBox("How many Parts (you have " & y & ") would you like to sell for $500ea?", "Sell Parts", "0"))
+               x = InputBoxx("How many Parts (you have " & y & ") would you like to sell for $500ea?", "Sell Parts", "0", getLeader())
                If x > y Then
                   MessBox "Invalid Parts quantity", "Parts Requirements", "Ooops", "", getLeader()
                Else
@@ -3796,10 +3851,10 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
                      x = RollDice(6)
                      If x > 4 Then
                         getMoney player.ID, 2000
-                        PutMsg player.PlayName & " rolls a " & x & " and wins $2000", player.ID, Logic!Gamecntr, True, getLeader()
+                        PutMsg player.PlayName & " rolls a " & x & " and wins $2000", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, x
                      Else
                         getMoney player.ID, -1000
-                        PutMsg player.PlayName & " rolls a " & x & " and loses $1000", player.ID, Logic!Gamecntr, True, getLeader()
+                        PutMsg player.PlayName & " rolls a " & x & " and loses $1000", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, x
                      End If
                   End If
                
@@ -4018,8 +4073,14 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          Case 4 'alliance pays you a visit
             'for each Wanted Crew: 1-Remove Crew, 2+ Crew safe
             'may use Cry Baby - or other modifiers? eg. Concealed Smuggling Compartments
+            x = isOutlaw(player.ID)
             If doMoveAlliance(player.ID, SectorID) Then
                CruiserCutter = SectorID 'set it as faced
+               If Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) And x Then 'only stop if Flying
+                  frmAction.moseydone = True 'Full Stop!
+                  frmAction.fullburndone = True
+               End If
+
             Else
                frmAction.fullburndone = False
             End If
@@ -4046,8 +4107,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             RefreshBoard
          Case 7 'corvette contact
             Set frmSeize = New frmSeized
-            If frmSeize.RefreshList(True) > 0 Then 'some are not stashed
-               frmSeize.RefreshList False
+            If frmSeize.RefreshList > 0 Then 'some are not stashed
                frmSeize.Show 1
             End If
             If SeizeAllFugi(player.ID) Then
@@ -4591,7 +4651,6 @@ Dim rst As New ADODB.Recordset
             PutMsg player.PlayName & " Reshuffling MisbehaveDeck due to " & rst!CardName, player.ID, Logic!Gamecntr
             ShuffleDeck "Misbehave"
          End If
-         
 
       Else
          PutMsg player.PlayName & " Reshuffling MisbehaveDeck due to end of deck", player.ID, Logic!Gamecntr
@@ -4600,4 +4659,16 @@ Dim rst As New ADODB.Recordset
       End If
       rst.Close
       
+End Function
+
+Private Function doHavenSupplies()
+Dim frmHavn As New frmHaven
+
+   With frmHavn
+      .Show 1
+      frmAction.workdone = .success
+   End With
+   
+   Set frmHavn = Nothing
+
 End Function

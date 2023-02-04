@@ -25,7 +25,7 @@ Begin VB.Form frmTrader
       TabIndex        =   35
       Text            =   "0"
       Top             =   1110
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -35,7 +35,7 @@ Begin VB.Form frmTrader
       TabIndex        =   33
       Text            =   "0"
       Top             =   1110
-      Width           =   885
+      Width           =   700
    End
    Begin VB.Timer Timing 
       Enabled         =   0   'False
@@ -123,7 +123,7 @@ Begin VB.Form frmTrader
       TabIndex        =   20
       Text            =   "0"
       Top             =   780
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -134,7 +134,7 @@ Begin VB.Form frmTrader
       TabIndex        =   19
       Text            =   "0"
       Top             =   450
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -145,7 +145,7 @@ Begin VB.Form frmTrader
       TabIndex        =   18
       Text            =   "0"
       Top             =   780
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -156,7 +156,7 @@ Begin VB.Form frmTrader
       TabIndex        =   17
       Text            =   "0"
       Top             =   450
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -167,7 +167,7 @@ Begin VB.Form frmTrader
       TabIndex        =   16
       Text            =   "0"
       Top             =   780
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -178,7 +178,7 @@ Begin VB.Form frmTrader
       TabIndex        =   15
       Text            =   "0"
       Top             =   450
-      Width           =   885
+      Width           =   700
    End
    Begin VB.ListBox lstSupplies 
       BackColor       =   &H00CBE1ED&
@@ -198,7 +198,7 @@ Begin VB.Form frmTrader
       TabIndex        =   5
       Text            =   "0"
       Top             =   780
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -208,7 +208,7 @@ Begin VB.Form frmTrader
       TabIndex        =   4
       Text            =   "0"
       Top             =   450
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -218,7 +218,7 @@ Begin VB.Form frmTrader
       TabIndex        =   3
       Text            =   "0"
       Top             =   780
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -228,7 +228,7 @@ Begin VB.Form frmTrader
       TabIndex        =   2
       Text            =   "0"
       Top             =   450
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -238,7 +238,7 @@ Begin VB.Form frmTrader
       TabIndex        =   1
       Text            =   "0"
       Top             =   780
-      Width           =   885
+      Width           =   700
    End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
@@ -248,7 +248,7 @@ Begin VB.Form frmTrader
       TabIndex        =   0
       Text            =   "0"
       Top             =   450
-      Width           =   885
+      Width           =   700
    End
    Begin VB.Label lblAccept 
       Alignment       =   2  'Center
@@ -548,7 +548,7 @@ Private Sub Timing_Timer()
    ElseIf cmd(2).Caption <> "Offer" Then 'offer outstanding
       Logic.Requery
       lblAccept.Visible = (isHost And Logic!ClientAccept = 1) Or (Not isHost And Logic!HostAccept = 1)
-      cmd(2).Enabled = Not lblAccept.Visible
+      cmd(2).Enabled = (Not lblAccept.Visible And cmd(2).Caption <> "Done")
       If Logic!HostAccept = 1 And Logic!ClientAccept = 1 Then
          If isHost Then
             processOffer
@@ -615,11 +615,13 @@ Dim x, SQL, CrewID
    
    With lstSupplies(0)
    For x = 0 To .ListCount - 1
-      If .Selected(x) Then
+      If .selected(x) Then
          SQL = "UPDATE PlayerSupplies Set CrewID=0, PlayerID = " & TraderID & " WHERE CardID=" & CStr(.ItemData(x))
          DB.Execute SQL
          CrewID = getCrewID(.ItemData(x))
          If CrewID > 0 Then DB.Execute "UPDATE PlayerSupplies Set CrewID=0 WHERE CrewID=" & CrewID
+         SQL = "UPDATE SupplyDeck Set Seq = " & TraderID & " WHERE CardID=" & CStr(.ItemData(x))
+         DB.Execute SQL
       End If
    Next x
    End With
@@ -629,6 +631,8 @@ Dim x, SQL, CrewID
          DB.Execute SQL
          CrewID = getCrewID(.ItemData(x))
          If CrewID > 0 Then DB.Execute "UPDATE PlayerSupplies Set CrewID=0 WHERE CrewID=" & CrewID
+         SQL = "UPDATE SupplyDeck Set Seq = " & player.ID & " WHERE CardID=" & CStr(.ItemData(x))
+         DB.Execute SQL
    Next x
    End With
    ClearTrade
@@ -675,12 +679,12 @@ Dim u, v, x, y, z
    y = y + Val(txt(7))
    y = y + Val(txt(8))
    y = y + Val(txt(9))
-   If x > y Then  'you are getting more
+   If x > y Then  'you are giving more
       If CargoCapacity(TraderID) - CargoSpaceUsed(TraderID) < (x - y) Then 'no room
          MsgBox "Other Trader has not enough room for extra Goods", vbExclamation
          Exit Function
       End If
-   ElseIf y > x Then 'receiver getting more
+   ElseIf y > x Then 'you are getting more
       If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) < (y - x) Then 'no room
          MsgBox "You have not enough room for extra Goods", vbExclamation
          Exit Function
@@ -693,11 +697,11 @@ Dim u, v, x, y, z
    y = 0
    With lstSupplies(0)
    For z = 0 To .ListCount - 1
-      If .Selected(z) And getCrewID(.ItemData(z)) > 0 Then
+      If .selected(z) And getCrewID(.ItemData(z)) > 0 Then
          x = x + 1
       End If
       
-      If .Selected(z) And getShipUpgradeID(.ItemData(z)) > 0 Then
+      If .selected(z) And getShipUpgradeID(.ItemData(z)) > 0 Then
          u = u + 1
       End If
    Next z
@@ -767,15 +771,15 @@ Dim SQL, x As Integer
          MsgBox "You don't have that much Cargo!", vbExclamation
          Exit Function
       End If
-      If rst!Contraband < Val(txt(1)) Then
+      If rst!contraband < Val(txt(1)) Then
          MsgBox "You don't have that much Contraband!", vbExclamation
          Exit Function
       End If
-      If rst!Passenger < Val(txt(2)) Then
+      If rst!passenger < Val(txt(2)) Then
          MsgBox "You don't have that many Passengers!", vbExclamation
          Exit Function
       End If
-      If rst!Fugitive < Val(txt(3)) Then
+      If rst!fugitive < Val(txt(3)) Then
          MsgBox "You don't have that many Fugitives!", vbExclamation
          Exit Function
       End If
@@ -795,7 +799,7 @@ Dim SQL, x As Integer
    
    With lstSupplies(0)
    For x = 0 To .ListCount - 1
-      If .Selected(x) Then
+      If .selected(x) Then
          SQL = "INSERT INTO TradeSupplies (PlayerID, CardID) Values (" & player.ID & ", " & CStr(.ItemData(x)) & ")"
          DB.Execute SQL
       End If
@@ -859,13 +863,20 @@ Dim SQL, x
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
        txt(6) = CStr(rst!cargo)
-       txt(7) = CStr(rst!Contraband)
-       txt(8) = CStr(rst!Passenger)
-       txt(9) = CStr(rst!Fugitive)
+       txt(7) = CStr(rst!contraband)
+       txt(8) = CStr(rst!passenger)
+       txt(9) = CStr(rst!fugitive)
        txt(10) = CStr(rst!fuel)
        txt(11) = CStr(rst!parts)
        txt(13) = CStr(rst!pay)
-       
+   Else
+       txt(6) = "0"
+       txt(7) = "0"
+       txt(8) = "0"
+       txt(9) = "0"
+       txt(10) = "0"
+       txt(11) = "0"
+       txt(13) = "0"
    End If
    For x = 0 To 13
       If Val(txt(x)) > 0 Then

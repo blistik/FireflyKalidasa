@@ -123,9 +123,9 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 'return how many crew up for selection
-Public Function RefreshList(ByVal check As Boolean) As Integer
+Public Function RefreshList() As Integer
 Dim rst As New ADODB.Recordset
-Dim SQL, crewcnt As Integer, GearID As Integer, allcrew As Integer, stash As Integer
+Dim SQL, CardID As Integer, GearID As Integer, stash As Integer, discard As Boolean, DisCardID As Integer
    stash = hasShipUpgrades(player.ID, 11) * 2
    crewList.Clear
    SQL = "SELECT PlayerSupplies.CardID, Crew.* "
@@ -133,28 +133,41 @@ Dim SQL, crewcnt As Integer, GearID As Integer, allcrew As Integer, stash As Int
    SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & player.ID & " AND Crew.Wanted>0"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-   
-      GearID = hasCrewGearAttribute(player.ID, rst!CrewID, "IgnoreWanted")
-      
+      'does this crew hold gear that ignores warrant rolls?
+      CardID = hasCrewGearAttribute(player.ID, rst!CrewID, "IgnoreWanted")
+      GearID = Nz(varDLookup("GearID", "SupplyDeck", "CardID=" & CardID), 0)
+      'is is a one time use?
+      discard = discardGearOnUse(GearID)
+      If discard Then
+         If MessBox("Do you want " & rst!CrewName & " to use their 'one time use' " & varDLookup("GearName", "Gear", "GearID=" & GearID) & "?", "Discard Gear?", "Yes", "No", 0, GearID) = 1 Then
+            GearID = 0
+         End If
+      End If
       If GearID > 0 Then
          'skip this Crew that has Alliance Ident Card or other similar Wanted bypass
-         If check Then PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " makes use of " & varDLookup("GearName", "Gear", "GearID=" & GearID) & " to avoid detection", player.ID, Logic!Gamecntr, True, rst!CrewID
-
-      ElseIf stash > 0 And crewcnt < stash And check Then
-         crewcnt = crewcnt + 1
+         PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " makes use of " & varDLookup("GearName", "Gear", "GearID=" & GearID) & " to avoid detection", player.ID, Logic!Gamecntr, True, rst!CrewID
+         If discard Then DisCardID = CardID
       Else
          crewList.AddItem rst!CrewName
          crewList.ItemData(crewList.NewIndex) = rst!CardID
       End If
       rst.MoveNext
+
    Wend
    rst.Close
-   'All Safe?
-   If check And crewcnt > 0 And crewList.ListCount = 0 Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to " & stash & " Wanted Crew", player.ID, Logic!Gamecntr, True, getLeader()
-   RefreshList = crewList.ListCount
+   'discard the one time use gear - only handles one! - Forged Alliance Ident Card
+   If DisCardID > 0 Then doDiscardGear player.ID, DisCardID
 
+   'All Safe?
+   If crewList.ListCount > 0 And stash > 0 Then PutMsg player.PlayName & "'s Nav log: Concealed Smuggling Compartments hides up to " & stash & " Wanted Crew", player.ID, Logic!Gamecntr, True, 0, 0, 11
+   If crewList.ListCount > stash Then
+      RefreshList = crewList.ListCount
+   Else
+      RefreshList = 0
+   End If
 
 End Function
+
 
 'return how many crew up for selection
 Public Function RefreshDiscardList() As Integer

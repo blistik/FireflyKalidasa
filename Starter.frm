@@ -8,13 +8,33 @@ Begin VB.Form Starter
    ClientWidth     =   5760
    Icon            =   "Starter.frx":0000
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "Starter.frx":0442
    ScaleHeight     =   4725
    ScaleWidth      =   5760
    StartUpPosition =   1  'CenterOwner
+   Begin VB.CommandButton cmd 
+      BackColor       =   &H00FF8080&
+      Caption         =   "add a bot player"
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   375
+      Index           =   3
+      Left            =   2550
+      Style           =   1  'Graphical
+      TabIndex        =   16
+      Top             =   2550
+      Visible         =   0   'False
+      Width           =   1905
+   End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
       Caption         =   "..."
@@ -332,6 +352,7 @@ Dim frmCrewList As frmCrewLst
       Logic.Update "StoryID", GetCombo(cbo)
       cbo.Enabled = False
       cmd(1).Enabled = False
+      cmd(3).Enabled = False
       'shuffle the decks
       PutMsg "Decks are Shuffled"
       ShuffleDeck "Contact", True
@@ -393,7 +414,8 @@ Dim frmCrewList As frmCrewLst
          End If
          Timing.Enabled = True
       End If
-   
+   Case 3
+      x = ShellExecute(x, "OPEN", App.Path & "\FireflyAIBot.exe ", DataB, vbNullString, 1)                '1=normal, 2=min, 3=max, 4=behind
    End Select
   
   Exit Sub
@@ -411,6 +433,7 @@ Private Sub Form_Load()
   player.Color = ""
   player.PlayName = ""
   cmd(0).Enabled = False
+  cmd(3).Visible = isHost
   
 End Sub
 

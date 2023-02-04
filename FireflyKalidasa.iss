@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.8.6"
+#define MyAppVersion "1.8.7"
 #define MyAppPublisher "VeeBee-er"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -23,7 +23,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputBaseFilename=FireflyKalidasaSetupV1.8.6
+OutputBaseFilename=FireflyKalidasaSetupV1.8.7
 SetupIconFile=D:\Progs\GitHub\FireflyKalidasa\serenity.ico
 Compression=lzma
 SolidCompression=yes
@@ -272,7 +272,6 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmShepherd.jpg"; DestDir: "{ap
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmKaylee.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmInara.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmWash.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmBarkeepBex.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmBarkeepBob.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmBester.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
@@ -319,6 +318,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmTimebomb.jpg"; DestDir: "{ap
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmTracey.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmTwo-Fry.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmYolonda.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmGoal.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 ; SOUNDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Alert.WAV"; DestDir: "{app}\sounds"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Beep.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
