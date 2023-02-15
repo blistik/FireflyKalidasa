@@ -1101,6 +1101,7 @@ Dim ChatTxt As String, x
         End If
 
      Case Else
+        dontnagme = True
         x = MsgBox("Game in progress. If you want to re-join, use JOIN button." & vbNewLine & "otherwise press OK to RESET the Game", vbExclamation + vbOKCancel, "Game in Progress")
         Select Case x
         Case vbOK
@@ -1130,8 +1131,8 @@ Dim ChatTxt As String, x
          End If
 
      Case Else
-        reJoin
-     
+        dontnagme = reJoin
+
      End Select
 
   Case "exit"  'END the Game

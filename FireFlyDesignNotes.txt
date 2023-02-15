@@ -2,10 +2,17 @@ Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 
 
 Dev Ideas:
 
+
 Test Issues pending: 
 after a job result to evade, mosey was not available, but full burn was
 
 Version updates:
+v 1.8.8 ~ 15 Feb 2023
+gui: PutMsg for Middlemans extra $100 deal
+fix: Goods Bonus check when Dealing
+fix: PutMsg text limit
+bot: tweak refuel trigger
+
 v 1.8.7 ~ 21 Jan 2023 - 4 Feb 2023
 add: launch AI Bots from startup form
 add: Havens Storage Transfer facility

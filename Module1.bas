@@ -1034,7 +1034,7 @@ Dim x, a() As String, crewcnt As Integer
    crewcnt = UBound(a) - LBound(a) + 1
    ' Val (a(x))
    If CrewCapacity(playerID) - getCrewCount(playerID) < crewcnt Then
-      MessBox "You have not enough room for the " & CStr(crewcnt) & " extra Crew", "Crew Space", "Oh No!", "", getLeader()
+      MessBox "You have not enough room for the " & CStr(crewcnt) & " extra Crew. Free up room and pick them up at the end of a Turn.", "Crew Space", "Oh No!", "", getLeader()
       Exit Function
    End If
       
@@ -1069,13 +1069,13 @@ Private Sub addGoal(ByVal playerID, Optional ByVal change As Integer = 1)
 End Sub
 
 
-Public Sub PutMsg(msg, Optional playerID = 0, Optional turn = 0, Optional ByVal force As Boolean = False, Optional ByVal CrewID As Integer = 0, Optional ByVal GearID As Integer = 0, Optional ByVal ShipUpgradeID As Integer = 0, Optional ByVal ContactID As Integer = 0, Optional ByVal refreshShip As Integer = 0, Optional ByVal dice As Integer = 0)
+Public Sub PutMsg(ByVal msg As String, Optional playerID = 0, Optional turn = 0, Optional ByVal force As Boolean = False, Optional ByVal CrewID As Integer = 0, Optional ByVal GearID As Integer = 0, Optional ByVal ShipUpgradeID As Integer = 0, Optional ByVal ContactID As Integer = 0, Optional ByVal refreshShip As Integer = 0, Optional ByVal dice As Integer = 0)
 Dim SQL, frmPop As frmPopup
 On Error GoTo err_handler
 
    If Left(msg, 3) <> "Wai" Then 'waiting for game to start
       SQL = "INSERT INTO Events (Eventtime, Event, PlayerID, Turn, RefreshShip"
-      SQL = SQL & ") Values (#" & Format(Now, "MM-DD-YY HH:nn") & "#, '" & SQLFilter(msg) & "', " & playerID & ", " & turn & ", " & refreshShip
+      SQL = SQL & ") Values (#" & Format(Now, "MM-DD-YY HH:nn") & "#, '" & SQLFilter(msg, 255) & "', " & playerID & ", " & turn & ", " & refreshShip
       SQL = SQL & ")"
       DB.Execute SQL
    End If
@@ -1399,8 +1399,13 @@ Public Function getZoneDesc(ByVal Zone) As String
       
 End Function
 
-Public Function SQLFilter(ByVal Source)
+Public Function SQLFilter(ByVal Source As String, Optional ByVal size As Integer = 0) As String
 Dim x, y
+
+   If Source = "" Then Exit Function
+
+   If size > 0 Then Source = Left(Source, size)
+
 '  Looks for single quotes and doubles them ('') to create a literal
    x = 1
    Do
@@ -2248,13 +2253,20 @@ Dim SQL
    If car = 0 And con = 0 Then Exit Function
    
    'get crew bargaining bonuses
-   perk = getPerkAttributeValue(playerID, "GoodsBonus")
+   perk = getPerkAttributeSum(playerID, "GoodsBonus")
    Select Case perk
+   Case 0
    Case 1
       con = con + 100
+      If Not check And contra > 0 Then PutMsg player.PlayName & "'s Middleman gets a better Contraband deal", player.ID, Logic!Gamecntr, True, 67
    Case 2
       con = con + 100
       car = car + 100
+      If Not check And cargo + contra > 0 Then PutMsg player.PlayName & "'s leader Murphy gets a better deal", player.ID, Logic!Gamecntr, True, 70
+   Case Else
+      con = con + 200
+      car = car + 100
+      If Not check And cargo + contra > 0 Then PutMsg player.PlayName & "'s leader Murphy and the Middleman get a better deal", player.ID, Logic!Gamecntr, True, 70
    End Select
    
    SQL = "SELECT * from Players "
@@ -2534,6 +2546,23 @@ Dim SQL
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
        getPerkAttributeValue = rst.Fields(Attrib)
+   End If
+   rst.Close
+   Set rst = Nothing
+End Function
+'return the summated value of the Perk attribute
+Public Function getPerkAttributeSum(ByVal playerID, ByVal Attrib As String) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+   If Attrib = "" Then Exit Function
+   'may need to manage "On Job" status
+   SQL = "SELECT SUM(Perk." & Attrib & ") AS SumVal"
+   SQL = SQL & " FROM Perk INNER JOIN (PlayerSupplies INNER JOIN (Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID) ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Perk.PerkID = Crew.PerkID "
+   SQL = SQL & "WHERE PlayerSupplies.OffJob = 0 AND PlayerSupplies.PlayerID=" & playerID & " AND Perk." & Attrib & " <> 0"
+   
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+       getPerkAttributeSum = Nz(rst!SumVal, 0)
    End If
    rst.Close
    Set rst = Nothing
