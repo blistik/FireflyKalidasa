@@ -315,7 +315,7 @@ Begin VB.Form frmShips
          Visible         =   0   'False
       End
       Begin VB.Menu mnuPopup 
-         Caption         =   "Poach Crew"
+         Caption         =   "make a Better Offer"
          Index           =   4
          Visible         =   0   'False
       End
@@ -1465,7 +1465,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   frmShUp.discardMode = 2
                   frmShUp.Show 1
                   If frmShUp.CardID = 0 Then Exit Sub ' didn't happen
-                  PutMsg player.PlayName & " sent The Salesman off for a nice Ship Upgrade", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " sent The Salesman off to buy a nice Ship Upgrade", player.ID, Logic!Gamecntr
 
                'Remove from Play at Harvest, Red Sun to take $500. This counts as Immoral.
                ElseIf getPerkAttributeCrew(player.ID, "Indentured", .CellItemData(x, 1)) > 0 And getPlayerSector(player.ID) = 16 Then
@@ -1476,9 +1476,10 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                
                Else
                   PutMsg player.PlayName & " decided to part company with " & getCrewName(sftTree.CellItemData(x, 1)), player.ID, Logic!Gamecntr
-                  doDiscardCrew .CellItemData(x, 1), status
+                  
                End If
                
+               doDiscardCrew .CellItemData(x, 1), status
                
                
                RefreshShips
