@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SFTTREEX.OCX"
+Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SftTreeX.ocx"
 Begin VB.Form frmStories 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "View/Edit Story"
@@ -143,6 +143,27 @@ Begin VB.Form frmStories
       BackgroundPicture=   "frmStories.frx":14F9F
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
+   End
+   Begin VB.CommandButton cmd 
+      BackColor       =   &H00FF8080&
+      Caption         =   "Scores"
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   345
+      Index           =   8
+      Left            =   10800
+      Style           =   1  'Graphical
+      TabIndex        =   33
+      ToolTipText     =   "show the scores for this story"
+      Top             =   2340
+      Width           =   1035
    End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
@@ -564,6 +585,7 @@ End Sub
 
 Private Sub cmd_Click(Index As Integer)
 Dim frmGoal As frmGoals, SQL
+Dim frmScores As frmScore
 
    Select Case Index
    Case 0 ' save
@@ -618,6 +640,11 @@ Dim frmGoal As frmGoals, SQL
       
    Case 7 'close
       Me.Hide
+   
+   Case 8 'scores
+      Set frmScores = New frmScore
+      frmScores.StoryID = StoryID
+      frmScores.Show 1
       
    End Select
 End Sub

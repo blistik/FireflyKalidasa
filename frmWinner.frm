@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SFTTREEX.OCX"
+Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SftTreeX.ocx"
 Begin VB.Form frmWinner 
    BorderStyle     =   0  'None
    Caption         =   "win"

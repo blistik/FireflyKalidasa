@@ -7,6 +7,13 @@ Test Issues pending:
 after a job result to evade, mosey was not available, but full burn was
 
 Version updates:
+v 1.8.9 ~ 24 Feb 2023
+fix: issue with "discarding" The Salesman and Mudders (at Harvest)
+add: "Check latest release" menu item
+add: Stencil font for "Solid" label on the board
+add: Scores view/clear in Story Editor
+
+Version updates:
 v 1.8.8 ~ 15 Feb 2023
 gui: PutMsg for Middlemans extra $100 deal
 fix: Goods Bonus check when Dealing

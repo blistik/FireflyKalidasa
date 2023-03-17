@@ -182,7 +182,7 @@ Begin VB.Form frmAction
       Style           =   2  'Dropdown List
       TabIndex        =   12
       Top             =   1950
-      Width           =   2505
+      Width           =   2660
    End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&

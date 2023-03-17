@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{714D09E3-B193-11D3-A192-00A0CC26207F}#1.0#0"; "XDockFloat.dll"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.2#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.2#0"; "mscomctl.ocx"
 Begin VB.MDIForm Main 
    BackColor       =   &H80000006&
    Caption         =   "Firefly - The PC Game"
@@ -270,7 +270,7 @@ Begin VB.MDIForm Main
             ImageKey        =   "help"
             Style           =   5
             BeginProperty ButtonMenus {66833FEC-8583-11D1-B16A-00C0F0283628} 
-               NumButtonMenus  =   7
+               NumButtonMenus  =   8
                BeginProperty ButtonMenu1 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "firefly"
                   Text            =   "Firefly Rulebook"
@@ -296,6 +296,10 @@ Begin VB.MDIForm Main
                   Text            =   "AI Player Bot"
                EndProperty
                BeginProperty ButtonMenu7 {66833FEE-8583-11D1-B16A-00C0F0283628} 
+                  Key             =   "check"
+                  Text            =   "Check"
+               EndProperty
+               BeginProperty ButtonMenu8 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "about"
                   Text            =   "About"
                EndProperty
