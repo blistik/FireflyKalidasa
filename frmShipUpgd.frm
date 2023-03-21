@@ -135,7 +135,7 @@ Private Sub Form_Load()
       Me.Caption = "Buy a Ship upgrade"
       Label1 = "Pick a Ship Upgrade to buy at Half Listed Price"
    End If
-   LoadCombo cbo, "shipupgd", IIf(discardMode = 1, "=" & CStr(player.ID) & " AND ShipUpgrade.DriveCore<>1", IIf(discardMode = 3, "=5 AND ShipUpgrade.ShipUpgradeID = 1", IIf(discardMode = 5, "=5 AND ShipUpgrade.DriveCore = 1", IIf(discardMode = 6, ">4", "=5"))))
+   LoadCombo cbo, "shipupgd", IIf(discardMode = 1, "=" & CStr(player.ID) & " AND ShipUpgrade.DriveCore<>1", IIf(discardMode = 3, "=5 AND ShipUpgrade.ShipUpgradeID = 1", IIf(discardMode = 5, "=5 AND ShipUpgrade.DriveCore = 1", IIf(discardMode = 6, ">4", IIf(discardMode = 4, "=5 AND ShipUpgrade.DriveCore<>1", "=5")))))
 
 End Sub
 

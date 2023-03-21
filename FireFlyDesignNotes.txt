@@ -7,11 +7,19 @@ Test Issues pending:
 after a job result to evade, mosey was not available, but full burn was
 
 Version updates:
-v 1.8.9 ~ 24 Feb 2023
+v 1.8.9 ~ 24 Feb 2023 - 21 Mar 2023
+new: Gear- Wash's Lucky Dinosaurs
 fix: issue with "discarding" The Salesman and Mudders (at Harvest)
-add: "Check latest release" menu item
-add: Stencil font for "Solid" label on the board
+fix: Premium Salvage - exclude Drive Cores (FAQ 4.1)
+fix: Deploying Cry Baby on Cruiser Contact after FullBurn returns you to drawing a Nav Card (FAQ 4.1)
+fix: Heavy Load Jobs +1 Fuel now accumulative fuel use for FullBurn (FAQ 4.1)
+add: "Check latest release" menu item directing to GitHib
+add: Stencil font for "Solid" label on the board included in package
 add: Scores view/clear in Story Editor
+add: Arrange Stash options before Hold Decompression (Fire Nav Card)
+gui: instant update of "Fuel:" on Ship display when initiating Full Burn
+cfg: add Holder & Head Goon pictures to package
+cfg: Alliance Cruiser reshuffle card set to Full stop, as different to Alliance Contact.
 
 Version updates:
 v 1.8.8 ~ 15 Feb 2023

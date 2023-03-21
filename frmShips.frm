@@ -385,7 +385,7 @@ Public Sub RefreshShips()
 End Sub
 
 Private Sub refreshShip(filter, Optional ByVal doClear As Boolean = True)
-Dim Index, SQL, w, x, y, z
+Dim Index, SQL, v, w, x, y, z
 Dim totalfight, totaltech, totalnego, totalpay, lastplayer, fight As Integer, tech As Integer, nego As Integer
 Dim discardF As Boolean, discardT As Boolean, discardN As Boolean
 Dim rst As New ADODB.Recordset
@@ -774,7 +774,7 @@ With sftTree
       rst2.Close
        
       'CARGO-----------------------------------
-      y = .AddItem("Cargo Hold")
+      y = .AddItem("Cargo Hold / Stash")
       .ItemLevel(y) = 1
       
       SQL = "SELECT * FROM Players WHERE PlayerID=" & rst!playerID
@@ -845,9 +845,10 @@ With sftTree
          End If
 
       End If
+      v = StashCapacity(rst!playerID)
       w = CargoCapacity(rst!playerID)
       x = CargoSpaceUsed(rst!playerID)
-      .CellText(y, 2) = "Cargo Cap: " & w & ",  Goods: " & CStr(x) & "  Spare: " & CStr((w - x))
+      .CellText(y, 2) = "Hold Capacity: " & CStr(w - v) & ",  Stash Capacity: " & CStr(v) & ",  Carrying: " & CStr(x) & "  Spare: " & CStr((w - x))
       If (w - CargoSpaceUsed(rst!playerID)) < 1 Then .CellForeColor(y, 2) = QBColor(12)
       
       If z = y Then .Collapse y, True
@@ -1672,6 +1673,22 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
    If frmAction.FDPane1.PaneVisible Then Main.showActions
 End Sub
 
+Public Sub refreshFuel(ByVal playerID As Integer)
+Dim Index
+With sftTree
+
+   For Index = 0 To .ListCount - 1
+      If .CellItemData(Index, 0) = 6 And .CellItemData(Index, 4) = playerID Then
+        .CellText(Index, 1) = "Fuel: " & CStr(Nz(varDLookup("Fuel", "Players", "PlayerID = " & playerID), 0))
+         Exit For
+      End If
+   Next Index
+   
+   End With
+End Sub
+
+
 Private Sub Timer1_Timer()
    RefreshShips
 End Sub
+

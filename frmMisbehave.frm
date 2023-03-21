@@ -282,6 +282,7 @@ Dim x
          actionSeq = ASnavEnd
       Case 2
          doDiscardGear player.ID, hasGearCard(player.ID, 33)
+         PutMsg player.PlayName & " uses the Operative's Sword as an Ace in the Hole", player.ID, Logic!Gamecntr, True, 0, 33
          MBOption = 3
          actionSeq = ASnavEnd
    End Select

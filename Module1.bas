@@ -3847,11 +3847,11 @@ Public Function beaDirtySlaver(ByVal playerID) As Boolean
          If MessBox("Wright, the Dirty Slaver, can get an extra $100 per Fugitive. This will upset your Moral Crew." & vbNewLine & "Do you want to take the money anyway?", "Immoral Money", "Yes Way", "No Way", 86) = 0 Then
             doDisgruntled playerID, 1
             beaDirtySlaver = True
-            PutMsg player.PlayName & " used Dirt Slaver to get an extra $100 per Fugitive.", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " used their Dirty Slaver to get an extra $100 per Fugitive.", playerID, Logic!Gamecntr
          End If
       Else 'of course you'll take the money
          beaDirtySlaver = True
-         PutMsg player.PlayName & " used Dirt Slaver to get an extra $100 per Fugitive.", playerID, Logic!Gamecntr
+         PutMsg player.PlayName & " used their Dirty Slaver to get an extra $100 per Fugitive.", playerID, Logic!Gamecntr
       End If
    End If
 
@@ -4071,7 +4071,7 @@ End Function
 Public Function getExtraBurn(ByVal playerID) As Integer
 Dim rst As New ADODB.Recordset
 Dim SQL
-   SQL = "SELECT Max(ContactDeck.ExtraFuel) as cnt "
+   SQL = "SELECT Sum(ContactDeck.ExtraFuel) as cnt "
    SQL = SQL & "FROM PlayerJobs INNER JOIN ContactDeck ON PlayerJobs.CardID = ContactDeck.CardID "
    SQL = SQL & "WHERE PlayerJobs.PlayerID=" & playerID & " AND (PlayerJobs.JobStatus=1 OR PlayerJobs.JobStatus=2) AND ContactDeck.ExtraFuel>0"
 

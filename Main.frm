@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{714D09E3-B193-11D3-A192-00A0CC26207F}#1.0#0"; "XDockFloat.dll"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.2#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.2#0"; "MSCOMCTL.OCX"
 Begin VB.MDIForm Main 
    BackColor       =   &H80000006&
    Caption         =   "Firefly - The PC Game"
@@ -297,7 +297,7 @@ Begin VB.MDIForm Main
                EndProperty
                BeginProperty ButtonMenu7 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "check"
-                  Text            =   "Check"
+                  Text            =   "Check latest Release"
                EndProperty
                BeginProperty ButtonMenu8 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "about"
@@ -752,9 +752,12 @@ On Error GoTo err_handler
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASFullburnEnd Then   'fullburn Cycle - your go
       PutMsg player.PlayName & " fullburned to sector " & SectorID, player.ID, Logic!Gamecntr
       x = resolveToken(SectorID)
+      'check if Alliance is in the Sector
+      If x = 0 Then x = getCruiserCorvette(SectorID)
       If (x = 5 Or x = 6) And isOutlaw(player.ID) Then 'no Nav card when Alliance arrives
-         frmAction.fullburndone = True
-         If actionSeq <> ASNavEvade Then
+         If actionSeq = ASNavEvade Then
+            frmAction.fullburndone = True
+         Else
             actionSeq = ASselect 'in limbo awaiting user to select
             showActions   'throw it back to the action window
          End If
@@ -1524,6 +1527,9 @@ Dim frmJobEdit As frmJobEditor, x
     frmJobEdit.Show 1
    Case "bot"
       x = ShellExecute(x, "OPEN", App.Path & "\FireflyAIBot.exe ", DataB, vbNullString, 1)               '1=normal, 2=min, 3=max, 4=behind
+      
+   Case "check"
+      x = ShellExecute(x, "OPEN", "https://github.com/blistik/FireflyKalidasa/releases", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
    End Select
 
 End Sub
@@ -1703,7 +1709,7 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Public Sub showActions()
-Dim SQL, SectorID, onlyFullburn As Boolean
+Dim SQL, SectorID, onlyFullburn As Boolean, x As Integer
 Dim rst As New ADODB.Recordset, reaverActive As Boolean, moseyrng As Integer
 Dim frmJoSel As frmJobSel
 
@@ -1830,8 +1836,9 @@ Dim frmJoSel As frmJobSel
          .chkRange2.Enabled = (hasShipUpgrade(player.ID, 17) > 0 And FullburnMovesDone = 0 And .cmd(1).Enabled And Val(.lblFuelOn.Caption) >= rst!burnFuel + getExtraBurn(player.ID))
          .lblRange2.Visible = (hasShipUpgrade(player.ID, 17) > 0)
          
-         .lblFuelRq.Caption = rst!burnFuel + getExtraBurn(player.ID) + .chkRange2.Value
-         If getExtraBurn(player.ID) > 0 Then
+         x = getExtraBurn(player.ID)
+         .lblFuelRq.Caption = rst!burnFuel + x + .chkRange2.Value
+         If x > 0 Then
             .lblFuelRq.BackColor = 9109503
          Else
             .lblFuelRq.BackColor = &HCBE1ED
@@ -3492,7 +3499,7 @@ Dim SQL, SectorID, skillcnt, skillwin, skillint, skilldiscards, x, y, z, bribe A
 Dim dice As Integer, riverskill As Integer, fruityBar As Integer, result '0=win,1-inter,2=fail
 Dim rst As New ADODB.Recordset
 Dim frmShUp As frmShipUpgd, frmDiscardGr As frmDiscardGear, frmBart As frmBarter
-Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
+Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized, frmStsh As frmStash
 
    'grab the Nav Option chosen
    SQL = "SELECT NavOption.* "
@@ -3599,7 +3606,14 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          End If
          
          If dice = 1 Then  'reroll ones?
-            If hasGear(player.ID, 35) And rst!skill = 1 Then 'Inara's Bow
+            If hasGear(player.ID, 56) Then  'Wash's Dinos
+              
+               Do While dice = 1
+                  dice = RollDice(6, True)
+               Loop
+               PutMsg player.PlayName & " uses Wash's Lucky Dinosaurs to reRoll a 1 and got a " & CStr(dice), player.ID, Logic!Gamecntr, True, 0, 56, 0, 0, 0, dice
+               
+            ElseIf hasGear(player.ID, 35) And rst!skill = 1 Then 'Inara's Bow
                x = hasGearCrew(player.ID, 35)
                If x > 0 Then
                   If hasCrewAttribute(player.ID, "Companion", 0, x) Then
@@ -3829,8 +3843,9 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             frmSalvage.salvageCount = rst!WinGoods
             frmSalvage.Show 1
          ElseIf rst!WinGoods = -99 Then
-            DB.Execute "UPDATE Players Set Fuel = 0, Parts = 0, Cargo = 0, Contraband = 0 WHERE PlayerID = " & player.ID
-            PutMsg player.PlayName & " lost all Goods overboard", player.ID, Logic!Gamecntr
+            Set frmStsh = New frmStash
+            frmStsh.Show 1
+            PutMsg player.PlayName & " lost any Goods in hold overboard", player.ID, Logic!Gamecntr
          End If
          
          If rst!WinKillCrew <> 0 Then
@@ -4087,7 +4102,10 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
                End If
 
             Else
-               frmAction.fullburndone = False
+               If rst!WinKeepFlying = 1 Then
+                  frmAction.fullburndone = False
+                  actionSeq = ASFullburnEnd
+               End If
             End If
          
          Case 5 'move adjacent if failed
@@ -4439,6 +4457,9 @@ Dim Havens As Boolean
          FullburnMovesDone = FullburnMovesDone + 1
          If FullburnMovesDone = 1 And Val(frmAction.lblFuelRq.Caption) > 0 Then burnFuel player.ID, Val(frmAction.lblFuelRq.Caption)
          If HemmorrhagingFuel Then burnFuel player.ID, 1
+         If Not frmShip Is Nothing Then
+            frmShip.refreshFuel player.ID
+         End If
          drawLine 0, -2, Index
          wormHoleOpen = False
          drawLine 2, -1
