@@ -85,14 +85,19 @@ Dim x, cnt
          If crewList.selected(x) Then
          
             'update their pile status - 0 removed, 5 -discarded
-            DB.Execute "UPDATE SupplyDeck SET Seq =" & IIf(getPerkAttributeCrew(player.ID, "KillDiscard", crewList.ItemData(x)) > 0 Or discard, 5, 0) & " WHERE CardID = " & crewList.ItemData(x)
+            DB.Execute "UPDATE SupplyDeck SET Seq =" & IIf(getPerkAttributeCrew(player.ID, "KillDiscard", crewList.ItemData(x)) > 0 Or discard, DISCARDED, 0) & " WHERE CardID = " & crewList.ItemData(x)
             'remove any Gear first
             DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = (SELECT CrewID FROM SupplyDeck WHERE CardID =" & crewList.ItemData(x) & ")"
             'delete the card to the players deck
             DB.Execute "DELETE FROM PlayerSupplies WHERE PlayerID =" & player.ID & " AND CardID = " & crewList.ItemData(x)
             'clear disgruntled
             DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = (SELECT CrewID FROM SupplyDeck WHERE CardID =" & crewList.ItemData(x) & ")"
-         
+            
+            If removeBounty(getCrewID(crewList.ItemData(x))) Then
+               If DrawDeck("Contact", 10, 1) Then PutMsg "New Bounty available"
+            End If
+            PutMsg player.PlayName & "'s Crew member " & getCrewName(crewList.ItemData(x)) & " was Seized by the Alliance", player.ID, Logic!Gamecntr
+
          End If
       Next x
       Me.Hide

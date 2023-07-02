@@ -159,11 +159,20 @@ Begin VB.Form frmBarter
    Begin VB.Label Label2 
       BackStyle       =   0  'Transparent
       Caption         =   "Goods for purchase"
+      BeginProperty Font 
+         Name            =   "Britannic Bold"
+         Size            =   11.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       Height          =   315
-      Left            =   540
+      Left            =   270
       TabIndex        =   15
-      Top             =   2550
-      Width           =   1425
+      Top             =   2520
+      Width           =   2055
    End
    Begin VB.Label Label8 
       BackStyle       =   0  'Transparent
@@ -324,7 +333,7 @@ Dim SQL, x
    If Not rst.EOF Then
       txtDeal(3) = CStr(rst!fuel)
       txtDeal(4) = CStr(rst!parts)
-      txtDeal(5) = CStr(rst!contraband)
+      txtDeal(5) = CStr(rst!Contraband)
    End If
    rst.Close
    Set rst = Nothing

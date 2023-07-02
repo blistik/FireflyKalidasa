@@ -71,7 +71,7 @@ Begin VB.Form frmShips
       ColTitle1       =   "Names & Titles"
       ColBmp1         =   "frmShips.frx":03EA
       ColWidth2       =   227
-      ColTitle2       =   "Perks and Quirks"
+      ColTitle2       =   "Perks & Quirks"
       ColBmp2         =   "frmShips.frx":0406
       ColWidth3       =   67
       ColTitle3       =   "Ability"
@@ -319,6 +319,16 @@ Begin VB.Form frmShips
          Index           =   4
          Visible         =   0   'False
       End
+      Begin VB.Menu mnuPopup 
+         Caption         =   "Off next Job"
+         Index           =   5
+         Visible         =   0   'False
+      End
+      Begin VB.Menu mnuPopup 
+         Caption         =   "On next Job"
+         Index           =   6
+         Visible         =   0   'False
+      End
    End
 End
 Attribute VB_Name = "frmShips"
@@ -358,6 +368,7 @@ Dim rst As New ADODB.Recordset
       End If
       rst.MoveNext
    Wend
+   rst.Close
    
 End Sub
 Private Function findImageKey(ByVal key As String) As Integer
@@ -421,7 +432,7 @@ With sftTree
       .CellBackColor(Index, 0) = getPlayerColor(rst!playerID)
       .CellForeColor(Index, 0) = 0
       .ItemLevel(Index) = 0
-      .CellText(Index, 1) = rst!ship & " - " & PlayCode(rst!playerID).PlayName & IIf(rst!playerID = player.ID, " [me]", "")
+      .CellText(Index, 1) = rst!ship & " - " & PlayCode(rst!playerID).PlayName ' & IIf(rst!playerID = player.ID, " [me]", "")
       .CellForeColor(Index, 1) = 0
       .CellBackColor(Index, 1) = getPlayerColor(rst!playerID)
       Set .ItemPicture(Index) = AssetImages.ListImages("serenity").Picture
@@ -483,7 +494,7 @@ With sftTree
          .ItemLevel(Index) = 2
          'set Crew's Avatar
          If rst2!OffJob = 1 Then
-            Set .ItemPicture(Index) = AssetImages.Overlay("L", IIf(rst2!leader = 1, "LD", "O"))
+            Set .ItemPicture(Index) = AssetImages.Overlay(findImageKey(rst2!Picture), IIf(rst2!leader = 1, "LD", "O"))  '"L"
          ElseIf findImageKey(rst2!Picture) > 0 Then
             'Set .ItemPicture(Index) =  LoadPicture(App.Path & "\Pictures\Sm" & rst2!Picture)
             Set .ItemPicture(Index) = AssetImages.ListImages(findImageKey(rst2!Picture)).Picture
@@ -620,7 +631,9 @@ With sftTree
             .CellItemData(Index, 4) = rst!playerID
             .CellItemData(Index, 5) = rst2!CrewID
             .ItemLevel(Index) = 3
-            If InStr(rst3!GearName, "Charts") > 0 Or InStr(rst3!GearName, "Contract") > 0 Then
+            If rst2!OffJob = 1 Then
+               Set .ItemPicture(Index) = AssetImages.Overlay("L", "O")
+            ElseIf InStr(rst3!GearName, "Charts") > 0 Or InStr(rst3!GearName, "Contract") > 0 Then
                Set .ItemPicture(Index) = AssetImages.Overlay("L", "MA")
             ElseIf rst3!fight > 0 Then
                Set .ItemPicture(Index) = AssetImages.Overlay("L", "fight")
@@ -639,7 +652,7 @@ With sftTree
             '.CellText(Index, 3) =
             '.CellText(index, 4) =
             .CellText(Index, 5) = IIf(rst3!fight > 0, CStr(rst3!fight), "")
-            If rst3!discard = 1 And rst3!fight > 0 Then
+            If rst3!discard = 1 And rst3!fight > 0 And rst2!OffJob = 0 Then
                discardF = True
                .CellForeColor(Index, 5) = 65280
             Else
@@ -653,7 +666,7 @@ With sftTree
             End If
                         
             .CellText(Index, 6) = IIf(rst3!tech > 0, CStr(rst3!tech), "")
-            If rst3!discard = 1 And rst3!tech > 0 Then
+            If rst3!discard = 1 And rst3!tech > 0 And rst2!OffJob = 0 Then
                discardT = True
                .CellForeColor(Index, 6) = 255
             Else
@@ -667,7 +680,7 @@ With sftTree
             End If
             
             .CellText(Index, 7) = IIf(rst3!Negotiate > 0, CStr(rst3!Negotiate), "")
-            If rst3!discard = 1 And rst3!Negotiate > 0 Then
+            If rst3!discard = 1 And rst3!Negotiate > 0 And rst2!OffJob = 0 Then
                discardN = True
                .CellForeColor(Index, 7) = 255
             Else
@@ -871,6 +884,9 @@ With sftTree
          .CellText(Index, 2) = IIf(rst2!DriveCore = 1, "DriveCore: ", "") & rst2!UpgradeDescr
          .CellForeColor(Index, 2) = 8823762
          .CellText(Index, 3) = IIf(rst2!burnFuel > 0, "Full Burn Fuel:" & rst2!burnFuel & ", ", "") & IIf(rst2!DriveCore = 1, "BurnRange: " & CStr(rst2!BurnRange + 5) & ", MoseyRange: " & CStr(rst2!MoseyRange), "")
+         'Keywords
+         .CellText(Index, 9) = IIf(rst2!ShipUpgradeID = 10 And Not hasCrewAttribute(rst!playerID, "Pilot"), "", Nz(rst2!Keyword, ""))
+         .CellForeColor(Index, 9) = 65280
          .ItemLevel(Index) = 2
          Set .ItemPicture(Index) = AssetImages.Overlay("LN", IIf(rst2!DriveCore = 1, "SU", "UP"))
          rst2.MoveNext
@@ -1291,7 +1307,7 @@ Dim Index As Long, CrewID, CardID
       
       .DropHighlight = -1
       RefreshShips
-      If actionSeq > ASidle And actionSeq < ASend Then
+      If actionSeq > ASidle And actionSeq < ASend And actionSeq <> ASBountySkill Then
          Main.showActions
       Else
          If Not (Main.frmJob Is Nothing) Then
@@ -1334,6 +1350,8 @@ On Error GoTo err_handler
       If Button = 2 Then
          With sftTree
             If .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 1 And .CellItemData(Index, 3) = 0 And .CellItemData(Index, 7) > 0 And (CrewCapacity(player.ID) - getCrewCount(player.ID) >= 1) And getMoney(player.ID) >= .CellItemData(Index, 8) And actionSeq = ASselect Then 'poach disgruntled other player
+               mnuPopup(6).Visible = False
+               mnuPopup(5).Visible = False
                mnuPopup(4).Visible = True 'poach crew
                mnuPopup(3).Visible = False
                mnuPopup(2).Visible = False
@@ -1341,6 +1359,8 @@ On Error GoTo err_handler
                mnuPopup(0).Visible = False
                sftTreeListIndex = Index
             ElseIf .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 0 And actionSeq = ASselect Then 'trade with player
+               mnuPopup(6).Visible = False
+               mnuPopup(5).Visible = False
                mnuPopup(3).Visible = True  'Trade
                mnuPopup(4).Visible = False
                mnuPopup(2).Visible = False
@@ -1372,6 +1392,13 @@ On Error GoTo err_handler
                mnuPopup(2).Visible = (hasGearAttribute(player.ID, "LabourContract", .CellItemData(Index, 2)) > 0) And (Not frmAction.buydone) And (actionSeq = ASselect) And .CellItemData(Index, 2) > 0 ' is gear with LabourContract
                mnuPopup(0).Visible = (.CellItemData(Index, 0) < 6 Or mnuPopup(1).Visible = False)
                
+               If .CellItemData(Index, 0) = 1 And getLeader() <> .CellItemData(Index, 2) Then
+                  mnuPopup(5).Visible = Not isOffJob(.CellItemData(Index, 1)) 'Off Job
+                  mnuPopup(6).Visible = Not mnuPopup(5).Visible  'On Job
+               Else
+                  mnuPopup(6).Visible = False
+                  mnuPopup(5).Visible = False
+               End If
             End If
                 
             If .CellItemData(Index, 0) = 1 Or (mnuPopup(0).Visible And .CellItemData(Index, 0) < 6 And .CellItemData(Index, 0) > 0 And .CellItemData(Index, 0) <> 4) Or mnuPopup(1).Visible Or mnuPopup(3).Visible Or mnuPopup(4).Visible Then PopupMenu mnuPop
@@ -1455,7 +1482,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             'MsgBox "CardID = " & .CellItemData(x, 1)
             Select Case .CellItemData(x, 0) ' 1-crew 2-linked gear, 3-unlinked gear, 5-ship upgd
             Case 1 'CREW
-               status = 5
+               status = DISCARDED
                If .CellItemData(x, 2) = 68 Then 'buy ShipUpGrd at half price
                   If frmAction.buydone Then
                      MessBox "Must have a Buy Action available!", "Buy Action", "Ooops", "", getLeader()
@@ -1538,7 +1565,10 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   Main.drawLine 2, 133, 104
                   wormHoleOpen = True
                   PutMsg player.PlayName & " used the " & .CellText(x, 1), player.ID, Logic!Gamecntr
-                  
+               
+               Case 57 '"The Best in the House"
+                  doDisgruntled player.ID, -1
+                  PutMsg player.PlayName & " shouted the crew " & .CellText(x, 1) & ". Everyone's happy again!", player.ID, Logic!Gamecntr
                End Select
                
                doDiscardGear player.ID, .CellItemData(x, 1)
@@ -1667,8 +1697,11 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             
             RefreshShips
             Main.showActions
-
-      End Select
+         Case 5, 6 'Off / On next Job
+            DB.Execute "UPDATE PlayerSupplies SET OffJob =" & IIf(Index = 5, "1", "0") & " WHERE CardID = " & .CellItemData(x, 1)
+            RefreshShips
+            Main.showActions
+         End Select
    End With
    If frmAction.FDPane1.PaneVisible Then Main.showActions
 End Sub

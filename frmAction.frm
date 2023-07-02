@@ -45,7 +45,7 @@ Begin VB.Form frmAction
       EndProperty
       Height          =   315
       Index           =   7
-      Left            =   2250
+      Left            =   2290
       Style           =   1  'Graphical
       TabIndex        =   35
       ToolTipText     =   "resolve Alert Tokens"
@@ -182,7 +182,7 @@ Begin VB.Form frmAction
       Style           =   2  'Dropdown List
       TabIndex        =   12
       Top             =   1950
-      Width           =   2660
+      Width           =   2685
    End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
@@ -264,6 +264,20 @@ Begin VB.Form frmAction
       Top             =   70
       Width           =   1125
    End
+   Begin VB.Label lblBounty 
+      Alignment       =   2  'Center
+      BackColor       =   &H00C0E0FF&
+      BorderStyle     =   1  'Fixed Single
+      Caption         =   "0"
+      ForeColor       =   &H000000C0&
+      Height          =   285
+      Left            =   1960
+      TabIndex        =   41
+      ToolTipText     =   "Bounties"
+      Top             =   2400
+      Visible         =   0   'False
+      Width           =   345
+   End
    Begin VB.Label lblMis 
       Alignment       =   2  'Center
       BackColor       =   &H00FFFF80&
@@ -271,12 +285,12 @@ Begin VB.Form frmAction
       Caption         =   "0"
       ForeColor       =   &H000000C0&
       Height          =   285
-      Left            =   1650
+      Left            =   1560
       TabIndex        =   40
       ToolTipText     =   "Misbehaves"
       Top             =   2400
       Visible         =   0   'False
-      Width           =   435
+      Width           =   350
    End
    Begin VB.Label lblRange2 
       BackStyle       =   0  'Transparent
@@ -378,7 +392,7 @@ Begin VB.Form frmAction
       TabIndex        =   18
       ToolTipText     =   "Turns"
       Top             =   2400
-      Width           =   435
+      Width           =   350
    End
    Begin VB.Label lblSupply 
       BackColor       =   &H00CBE1ED&
@@ -570,11 +584,16 @@ Private Sub FDPane1_OnHidden()
 End Sub
 
 Private Sub Form_Load()
-   Dim x As Integer
-   x = CStr(countMisbehaves(player.ID))
+   Dim x As Integer, y As Integer
+   x = countMisbehaves(player.ID)
+   y = countBounties(player.ID)
    If x > 0 Then
       lblMis.Caption = CStr(x)
       lblMis.Visible = True
+   End If
+   If y > 0 Then
+      lblBounty.Caption = CStr(y)
+      lblBounty.Visible = True
    End If
 End Sub
 
@@ -752,6 +771,7 @@ Public Sub endAction()
    disgruntledone = False
    chkRange2.Value = 0
    HemmorrhagingFuel = False
+   SurvShuttlePerk = False
    turnExtraRange = 0
    TheBigBlack = 0
    HigginsDealPerk = False

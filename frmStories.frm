@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SftTreeX.ocx"
+Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SFTTREEX.OCX"
 Begin VB.Form frmStories 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "View/Edit Story"
@@ -8,7 +8,6 @@ Begin VB.Form frmStories
    ClientTop       =   390
    ClientWidth     =   12015
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmStories.frx":0000
@@ -256,6 +255,26 @@ Begin VB.Form frmStories
       TabIndex        =   12
       Top             =   60
       Width           =   10605
+      Begin VB.CheckBox chkMoveCutter 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "move a Reaver Cutter after Fullburns"
+         Height          =   195
+         Left            =   180
+         TabIndex        =   35
+         ToolTipText     =   "randomally move a cutter after Fullburns"
+         Top             =   2430
+         Width           =   3045
+      End
+      Begin VB.CheckBox chkBounty 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "Bounties"
+         Height          =   195
+         Left            =   5250
+         TabIndex        =   34
+         ToolTipText     =   "enable Bounty Hunts"
+         Top             =   2160
+         Width           =   1080
+      End
       Begin VB.CheckBox chkHavenStorage 
          BackColor       =   &H00CBE1ED&
          Caption         =   "w/storage"
@@ -271,7 +290,7 @@ Begin VB.Form frmStories
          BackColor       =   &H00CBE1ED&
          Caption         =   "custom Drive or Upgrade"
          Height          =   195
-         Left            =   3960
+         Left            =   3840
          TabIndex        =   9
          ToolTipText     =   "pick Upgrade or Drive"
          Top             =   2400
@@ -281,7 +300,7 @@ Begin VB.Form frmStories
          BackColor       =   &H00CBE1ED&
          Caption         =   "Random Crew"
          Height          =   195
-         Left            =   3960
+         Left            =   3840
          TabIndex        =   8
          ToolTipText     =   "assigned a random crew instead of selecting them"
          Top             =   2160
@@ -302,7 +321,7 @@ Begin VB.Form frmStories
          BackColor       =   &H00CBE1ED&
          Caption         =   "use Havens"
          Height          =   195
-         Left            =   3960
+         Left            =   3840
          TabIndex        =   7
          ToolTipText     =   "use Havens for starting locations"
          Top             =   1920
@@ -492,10 +511,10 @@ Begin VB.Form frmStories
          Caption         =   "Crew && Max $"
          Height          =   285
          Index           =   3
-         Left            =   3960
+         Left            =   3840
          TabIndex        =   17
          Top             =   1560
-         Width           =   1215
+         Width           =   1365
       End
       Begin VB.Label Label1 
          BackStyle       =   0  'Transparent
@@ -513,10 +532,10 @@ Begin VB.Form frmStories
          Caption         =   "No. of Cutters"
          Height          =   285
          Index           =   2
-         Left            =   3960
+         Left            =   3840
          TabIndex        =   15
          Top             =   1170
-         Width           =   1215
+         Width           =   1365
       End
       Begin VB.Label lbl 
          Alignment       =   2  'Center
@@ -525,10 +544,10 @@ Begin VB.Form frmStories
          Caption         =   "Fuel && Parts"
          Height          =   285
          Index           =   1
-         Left            =   3960
+         Left            =   3840
          TabIndex        =   14
          Top             =   780
-         Width           =   1215
+         Width           =   1365
       End
       Begin VB.Label lbl 
          Alignment       =   2  'Center
@@ -537,10 +556,10 @@ Begin VB.Form frmStories
          Caption         =   "Cash"
          Height          =   285
          Index           =   0
-         Left            =   3960
+         Left            =   3840
          TabIndex        =   13
          Top             =   390
-         Width           =   1215
+         Width           =   1365
       End
    End
    Begin VB.Label lbl 
@@ -606,7 +625,9 @@ Dim frmScores As frmScore
       SQL = SQL & " Havens = " & chkHavens.Value & ","
       SQL = SQL & " HavenStorage = " & chkHavenStorage.Value & ","
       SQL = SQL & " UpgradeDrive = " & chkUpgrade.Value & ","
-      SQL = SQL & " RandomCrew = " & chkRandomCrew.Value
+      SQL = SQL & " RandomCrew = " & chkRandomCrew.Value & ","
+      SQL = SQL & " Bounty = " & chkBounty.Value & ","
+      SQL = SQL & " MoveCutter = " & chkMoveCutter.Value
       SQL = SQL & " WHERE StoryID = " & StoryID
       DB.Execute SQL
       
@@ -650,7 +671,7 @@ Dim frmScores As frmScore
 End Sub
 
 Private Sub Form_Load()
-   LoadCombo lstContacts, "contact", " WHERE ContactID > 0"
+   LoadCombo lstContacts, "contact", " WHERE ContactID > 0 and ContactID < 10"
    LoadCombo lstCrew, "crew", " Order by CrewName"
    refreshHeader
    RefreshGoals
@@ -692,6 +713,8 @@ Dim SQL, Index
          chkHavenStorage.Visible = (chkHavens.Value = 1)
          chkHavenStorage.Value = rst!HavenStorage
          chkRandomCrew.Value = rst!RandomCrew
+         chkBounty.Value = rst!Bounty
+         chkMoveCutter.Value = rst!MoveCutter
          chkUpgrade.Value = rst!UpgradeDrive
       Else 'new
          DB.Execute "Insert into Story (StoryID,StoryTitle, Active) VALUES (" & StoryID & ",'add a new story title here..',1)"
@@ -734,7 +757,7 @@ Dim SQL, Index
          .CellText(Index, 3) = IIf(rst!CompleteJobID > 0, varDLookup("JobName", "ContactDeck", "CardID=" & rst!CompleteJobID), "")
          .CellText(Index, 4) = IIf(rst!SolidCount > 0, "Any " & rst!SolidCount, Nz(rst!Solid))
          .CellText(Index, 5) = rst!Cash & ""
-         .CellText(Index, 6) = rst!Win & ""
+         .CellText(Index, 6) = rst!win & ""
          .CellText(Index, 7) = rst!TurnLimit & ""
          .CellText(Index, 8) = rst!fight & ""
          .CellText(Index, 9) = rst!tech & ""

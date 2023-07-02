@@ -99,7 +99,7 @@ Dim ShipUpgradeID, cost, pay
    Else
       If discardMode = 1 Then
          doRemoveUpgrade player.ID, CardID
-         DB.Execute "UPDATE SupplyDeck SET Seq =5 WHERE CardID = " & CardID
+         DB.Execute "UPDATE SupplyDeck SET Seq =" & DISCARDED & " WHERE CardID = " & CardID
          'remv the card from the players deck
          DB.Execute "DELETE FROM PlayerSupplies WHERE PlayerID = " & player.ID & " AND CardID =" & CardID
       

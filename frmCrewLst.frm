@@ -525,7 +525,7 @@ With sftTree
       Case Else 'pay crew
          SQL = "SELECT PlayerSupplies.CardID, Crew.*, Perk.PerkDescription"
          SQL = SQL & " FROM Perk INNER JOIN (Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID) ON Perk.PerkID = Crew.PerkID "
-         SQL = SQL & "WHERE Leader=0 AND PlayerSupplies.OffJob=0 AND Crew.Pay>0 AND PlayerSupplies.PlayerID=" & player.ID
+         SQL = SQL & "WHERE Leader=0 AND Crew.Pay>0 AND PlayerSupplies.PlayerID=" & player.ID    'removed AND PlayerSupplies.OffJob=0 - FAQ4.1
          If noMoralDisgruntle Then SQL = SQL & " AND Crew.Moral = 0"
       End Select
       rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly

@@ -58,7 +58,7 @@ Public Enum actionSeqCntr
    ASEnd     'end action, selectnext player
 End Enum
 Public actionSeq As actionSeqCntr, NumOfReavers As Integer, ContactList As String
-Public Trail(0 To 7) As Integer 'record the trail of sectors travelled in a burn
+Public Trail(0 To 8) As Integer 'record the trail of sectors travelled in a burn
 Public MoseyMovesDone As Integer, FullburnMovesDone As Integer
 'Public Bitpic() As Control
 Public Const JOB_SUCCESS As Integer = 3      'final JobStatus value once complete
@@ -94,7 +94,7 @@ On Error Resume Next
   
 End Function
 
-Public Sub PutMsg(msg, Optional playerID = 0, Optional turn = 0, Optional ByVal force As Boolean = False, Optional ByVal CrewID As Integer = 0, Optional ByVal GearID As Integer = 0, Optional ByVal ShipUpgradeID As Integer = 0, Optional ByVal ContactID As Integer = 0, Optional ByVal refreshShip As Integer = 0, Optional ByVal dice As Integer = 0)
+Public Sub PutMsg(msg, Optional playerID = 0, Optional turn = 0, Optional ByVal force As Boolean = False, Optional ByVal CrewID As Integer = 0, Optional ByVal GearID As Integer = 0, Optional ByVal ShipUpgradeID As Integer = 0, Optional ByVal ContactID As Integer = 0, Optional ByVal refreshShip As Integer = 0, Optional ByVal Dice As Integer = 0)
 Dim SQL
 On Error GoTo err_handler
 
@@ -274,6 +274,14 @@ Public Function getFuel(ByVal playerID)
   getFuel = varDLookup("Fuel", "Players", "PlayerID=" & playerID)
 End Function
 
+Public Function getCrewCardID(ByVal CrewID) As Integer
+   getCrewCardID = Nz(varDLookup("CardID", "SupplyDeck", "CrewID=" & CrewID), 0)
+End Function
+
+Public Function getSkillCrew(ByVal CrewID, ByVal skill As String) As Integer
+   getSkillCrew = Nz(varDLookup(skill, "Crew", "CrewID=" & CrewID), 0)
+End Function
+
 Public Function Nz(ByVal vvarValue As Variant, _
   Optional ByVal vvarValueIfNull As Variant = vbNullString) As Variant
 
@@ -291,6 +299,25 @@ errhandler:
 
 End Function
 
+Public Function getCrewName(ByVal CardID, Optional ByVal CrewID As Integer = 0) As String
+Dim rst As New ADODB.Recordset
+Dim SQL
+
+   SQL = "SELECT Crew.CrewName FROM Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID WHERE "
+   If CrewID > 0 Then
+      SQL = SQL & " SupplyDeck.CrewID = " & CrewID
+   Else
+      SQL = SQL & " SupplyDeck.CardID = " & CardID
+   End If
+   
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      getCrewName = rst!CrewName
+   End If
+   rst.Close
+   Set rst = Nothing
+
+End Function
 
 Public Function setNextLeader(ByVal lastplayer, ByVal leader)
 Dim rst As New ADODB.Recordset
@@ -335,6 +362,30 @@ Dim SQL
 
 Set rst = Nothing
 End Sub
+
+Public Function getCrew(ByVal SupplyID) As Boolean
+Dim rst As New ADODB.Recordset, SQL, CrewID, crewcnt
+
+   SQL = "SELECT SupplyDeck.CardID, Crew.* FROM Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID WHERE Seq=5 AND Wanted = 0 AND Moral = 0 AND Crew.CrewID NOT IN (23,54)"
+   SQL = SQL & " AND SupplyID = " & SupplyID
+   If getLeader = 69 Then 'add Atherton check
+      SQL = SQL & " AND Crew.Companion = 0"
+   End If
+   SQL = SQL & " Order by Pay"
+   rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
+   If Not rst.EOF Then
+      If getMoney(player.ID) > rst!Pay Then 'can afford it
+         DB.Execute "UPDATE SupplyDeck SET Seq =" & player.ID & " WHERE CardID = " & rst!CardID
+         'add the card to the players deck
+         DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & rst!CardID & ")"
+         getMoney player.ID, rst!Pay * -1
+         PutMsg player.PlayName & " hires " & rst!CrewName, player.ID, Logic!Gamecntr
+         
+         getCrew = True
+      End If
+   End If
+   rst.Close
+End Function
 
 Public Sub getRandomCrew(ByVal noOfCrew As Integer, ByVal leader)
 Dim rst As New ADODB.Recordset, SQL, CrewID, maxCrewID, crewcnt
@@ -565,9 +616,12 @@ Dim SQL, b(1 To 2) As Long, x As Integer, y As Long, z As Long, adjacent
    adjacent = getAdjacentRows(fromSectorID)
    SQL = "SELECT Board.* FROM Board WHERE Board.SectorID IN (" & adjacent & ")"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
-   While Not rst.EOF
+   Do While Not rst.EOF
       If (getCutterSector(rst!SectorID) > 0 And Not (canMosey And toSectorID = rst!SectorID)) Or beenHereBefore(rst!SectorID) Then
          'Beep
+      ElseIf toSectorID = rst!SectorID Then 'its next to us, just go there
+         getNextSector = rst!SectorID
+         Exit Do
       Else
          'find the adjacent sector closest to the closest player
          z = Int(Sqr((b(1) - Int(rst!SHeight / 2 + rst!STop)) ^ 2 + (b(2) - Int(rst!SWidth / 2 + rst!SLeft)) ^ 2))
@@ -577,19 +631,51 @@ Dim SQL, b(1 To 2) As Long, x As Integer, y As Long, z As Long, adjacent
          End If
       End If
       rst.MoveNext
-   Wend
+   Loop
    rst.Close
    Set rst = Nothing
 End Function
 
 Public Function beenHereBefore(ByVal SectorID As Integer) As Boolean
 Dim x
-   For x = 0 To 7
+   For x = 0 To 8
       If Trail(x) = SectorID And SectorID > 0 Then
          beenHereBefore = True
          Exit For
       End If
    Next x
+End Function
+
+Public Function getBounty(ByVal SupplyID)
+Dim rst As New ADODB.Recordset, x
+Dim SQL
+
+   SQL = "SELECT ContactDeck.CardID, ContactDeck.JobName, SupplyDeck.CardID AS CrewCardID "
+   SQL = SQL & "FROM ContactDeck INNER JOIN (Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID) ON ContactDeck.FugitiveID = Crew.CrewID "
+   SQL = SQL & "WHERE ContactDeck.ContactID = 10 AND ContactDeck.Seq = 5 AND SupplyDeck.SupplyID = " & SupplyID
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      DB.Execute "UPDATE ContactDeck SET Seq =" & player.ID & " WHERE CardID = " & rst!CardID
+      'add the card to the players deck
+      DB.Execute "INSERT INTO PlayerJobs (PlayerID, CardID) VALUES (" & player.ID & ", " & rst!CardID & ")"
+      'remove crew from supply
+      DB.Execute "UPDATE SupplyDeck SET Seq =0 WHERE CardID = " & rst!CrewCardID
+      getBounty = rst!CardID
+      PutMsg player.PlayName & " claims a Bounty " & rst!JobName, player.ID, Logic!Gamecntr
+   End If
+   rst.Close
+   If Not IsEmpty(getBounty) Then
+      'draw another one
+'      SQL = "SELECT * FROM ContactDeck WHERE Seq > 5 AND ContactID = 10 Order by Seq"
+'      rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
+'      If Not rst.EOF Then
+'         rst.Update "Seq", 5
+'         PutMsg "New Bounty available"
+'      End If
+'      rst.Close
+      If DrawDeck("Contact", 10, 1) Then PutMsg "New Bounty available"
+   End If
+Set rst = Nothing
 End Function
 
 Public Function getJob(ByVal ContactID)
@@ -635,7 +721,7 @@ Dim SQL
 
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
-      getJobCrewBonus = Nz(rst!pay, 0)
+      getJobCrewBonus = Nz(rst!Pay, 0)
    End If
    rst.Close
    Set rst = Nothing
@@ -648,6 +734,8 @@ Dim SQL
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
       getJobSector = rst!SectorID
+      If getJobSector = 1 Then getJobSector = getCruiserSector
+      If getJobSector = 2 Then getJobSector = getCorvetteSector
    End If
    rst.Close
 
@@ -754,10 +842,13 @@ Dim SQL, y, CardID, cnt, primeKey As String
    End If
    rst.Close
    
-   
-   
    Set rst = Nothing
+
 End Sub
+
+Public Function isBountyEnabled() As Boolean
+   isBountyEnabled = (varDLookup("Bounty", "Story", "StoryID=" & Logic!StoryID) = 1)
+End Function
 
 Public Function isSolid(ByVal playerID, ByVal ContactID) As Boolean
 
@@ -1619,6 +1710,39 @@ Dim SQL
    Set rst = Nothing
 End Function
 
+Public Function doKillCrew(ByVal killCrew As Integer)
+Dim rst As New ADODB.Recordset
+Dim SQL, Dice As Integer, cnt As Integer
+         
+   SQL = "SELECT SupplyDeck.CardID, Crew.*"
+   SQL = SQL & " FROM Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID"
+   SQL = SQL & " Where PlayerSupplies.playerID = " & player.ID & " And Crew.leader = 0"
+   SQL = SQL & " ORDER BY Crew.Pay"
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   Do While Not rst.EOF
+      If hasCrewAttribute(player.ID, "Medic") Then
+         Dice = RollDice(6)
+      End If
+      If Dice > 4 Then
+         PutMsg player.PlayName & "'s Medic saved " & rst!CrewName, player.ID, Logic!Gamecntr
+      Else
+         'update their pile status - 0 removed, 5 -discarded
+         DB.Execute "UPDATE SupplyDeck SET Seq =5 WHERE CardID = " & rst!CardID
+         'remove any Gear first
+         DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = " & rst!CrewID
+         'delete the card to the players deck
+         DB.Execute "DELETE FROM PlayerSupplies WHERE PlayerID =" & player.ID & " AND CardID = " & rst!CardID
+         'clear disgruntled
+         DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & rst!CrewID
+         PutMsg player.PlayName & " lost " & rst!CrewName & " in the meelee", player.ID, Logic!Gamecntr
+      End If
+      cnt = cnt + 1
+      If cnt = killCrew Then Exit Do
+      rst.MoveNext
+   Loop
+   rst.Close
+End Function
+
 ' returns the (first) CrewID if that crew has a given Perk column attribute, may be more than one crew that has it tho
 Public Function getPerkAttributeCrew(ByVal playerID, ByVal Attrib As String, Optional ByVal CardID As Integer = 0, Optional ByVal CrewID As Integer = 0) As Integer
 Dim rst As New ADODB.Recordset
@@ -1643,7 +1767,6 @@ Dim SQL
    Set rst = Nothing
 End Function
 
-
 Public Function getPlanetID(ByVal playerID) As Integer
 Dim SectorID
    SectorID = varDLookup("SectorID", "Players", "PlayerID=" & playerID)
@@ -1659,10 +1782,10 @@ Dim SQL
    rst.Open SQL, DB, adOpenDynamic, adLockOptimistic
    If Not rst.EOF Then
       If change <> 0 Then
-         rst!pay = rst!pay + change
+         rst!Pay = rst!Pay + change
          rst.Update
       End If
-      getMoney = rst!pay
+      getMoney = rst!Pay
    End If
    rst.Close
    Set rst = Nothing
@@ -2154,6 +2277,14 @@ Dim SQL, x, cnt As Integer
    SQL = "SELECT * FROM StoryGoals WHERE StoryID=" & StoryID & " AND Goal = " & CStr(Goal + 1)
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
+   
+         'Bounties
+      If goaldone And rst!Bounties > 0 Then
+         If countBounties(playerID) < rst!Bounties Then
+            goaldone = False
+         End If
+      End If
+      
       'SOLID
       If rst!SolidCount > 0 Then
          For x = 1 To NO_OF_CONTACTS
@@ -2174,7 +2305,7 @@ Dim SQL, x, cnt As Integer
          Next x
       End If
       
-      If rst!SolidCount = 0 And Nz(rst!Solid) = "" And rst!Cash = 0 Then goaldone = False 'AI can never reach goal
+      If rst!SolidCount = 0 And Nz(rst!Solid) = "" And rst!Cash = 0 And rst!Bounties = 0 Then goaldone = False 'AI can never reach goal
      
       'money
       If goaldone And rst!Cash > 0 Then
@@ -2186,7 +2317,7 @@ Dim SQL, x, cnt As Integer
       ' END of positive Tests ================================================
       
       'If we still good and we have Win flag, we WIN
-      If goaldone And rst!Win > 0 Then
+      If goaldone And rst!win > 0 Then
          doGoalCheck = True
       End If
             
@@ -2228,6 +2359,19 @@ Private Sub addGoal(ByVal playerID, Optional ByVal change As Integer = 1)
 
 End Sub
 
+Public Function countBounties(ByVal playerID) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+   SQL = "SELECT Count(*) AS cnt FROM PlayerJobs INNER JOIN ContactDeck ON PlayerJobs.CardID = ContactDeck.CardID "
+   SQL = SQL & "WHERE ContactDeck.ContactID=10 AND PlayerJobs.JobStatus=3 AND PlayerJobs.PlayerID=" & playerID
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      countBounties = rst!cnt
+   End If
+   rst.Close
+   Set rst = Nothing
+End Function
+
 Public Function getContactList(ByVal StoryID) As String
 Dim Goal As Integer, tmpCL As String
    Goal = varDLookup("Goals", "Players", "PlayerID = " & player.ID) + 1
@@ -2252,4 +2396,50 @@ Dim SQL
    End If
    rst.Close
    Set rst = Nothing
+End Function
+
+Public Function pushBounties() As Boolean 'back into bottom of deck
+Dim SQL As String, MaxSeq As Integer
+Dim rst As New ADODB.Recordset
+
+   SQL = "SELECT max(Seq) as MaxSeq "
+   SQL = SQL & "FROM ContactDeck "
+   SQL = SQL & "Where ContactDeck.ContactID = 10"
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      MaxSeq = rst!MaxSeq
+   End If
+   rst.Close
+   SQL = "SELECT Seq "
+   SQL = SQL & "FROM ContactDeck "
+   SQL = SQL & "Where ContactDeck.ContactID = 10 and ContactDeck.Seq = " & DISCARDED
+   rst.Open SQL, DB, adOpenDynamic, adLockOptimistic
+   While Not rst.EOF
+      MaxSeq = MaxSeq + 1
+      rst.Update "Seq", MaxSeq
+      pushBounties = True
+      rst.MoveNext
+   Wend
+   rst.Close
+
+End Function
+
+Public Function DrawDeck(ByVal Deck As String, ByVal ID As Integer, ByVal draw As Integer, Optional ByVal Seq As Integer = DISCARDED) As Boolean
+Dim rst As New ADODB.Recordset
+Dim SQL, cnt
+   cnt = 0
+   SQL = "SELECT * FROM " & Deck & "Deck WHERE Seq > 6 AND " & Deck & "ID =" & CStr(ID) & " ORDER BY Seq"
+   rst.Open SQL, DB, adOpenDynamic, adLockOptimistic
+   Do While Not rst.EOF
+      DrawDeck = True
+      cnt = cnt + 1
+      rst!Seq = Seq
+      rst.Update
+      If draw = cnt Then Exit Do
+      rst.MoveNext
+   Loop
+   rst.Close
+   
+   Set rst = Nothing
+
 End Function

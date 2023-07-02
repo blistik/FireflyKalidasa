@@ -2,28 +2,36 @@ VERSION 5.00
 Begin VB.Form frmJobEditor 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "View/Edit Jobs"
-   ClientHeight    =   5445
+   ClientHeight    =   5640
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   15540
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmJobEditor.frx":0000
-   ScaleHeight     =   5445
+   ScaleHeight     =   5640
    ScaleWidth      =   15540
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.ComboBox cbo 
+      Height          =   315
+      Index           =   11
+      Left            =   11430
+      Sorted          =   -1  'True
+      Style           =   2  'Dropdown List
+      TabIndex        =   80
+      Top             =   2730
+      Width           =   1815
+   End
    Begin VB.PictureBox Picture1 
       AutoSize        =   -1  'True
-      Height          =   2475
+      Height          =   2175
       Left            =   10100
-      Picture         =   "frmJobEditor.frx":1A191
-      ScaleHeight     =   2415
+      ScaleHeight     =   2115
       ScaleWidth      =   4050
       TabIndex        =   79
-      Top             =   2820
+      Top             =   3120
       Width           =   4110
    End
    Begin VB.CommandButton cmd 
@@ -209,11 +217,23 @@ Begin VB.Form frmJobEditor
       TabIndex        =   59
       Top             =   2640
       Width           =   9795
+      Begin VB.TextBox txt 
+         Alignment       =   2  'Center
+         ForeColor       =   &H00000080&
+         Height          =   285
+         Index           =   13
+         Left            =   6600
+         TabIndex        =   82
+         Text            =   "0"
+         ToolTipText     =   "do not use with Niska Job + Warrant"
+         Top             =   660
+         Width           =   885
+      End
       Begin VB.ComboBox cbo 
          ForeColor       =   &H00000080&
          Height          =   315
          Index           =   4
-         Left            =   6450
+         Left            =   6600
          Style           =   2  'Dropdown List
          TabIndex        =   31
          Top             =   970
@@ -222,15 +242,16 @@ Begin VB.Form frmJobEditor
       Begin VB.CheckBox chk 
          Alignment       =   1  'Right Justify
          BackColor       =   &H00CBE1ED&
-         Caption         =   "Fail Kill 1 Crew"
+         Caption         =   "Fail Kill Crew"
          DataField       =   "do not use for Niska job with Warrant"
          ForeColor       =   &H00000080&
          Height          =   285
          Index           =   3
-         Left            =   5580
+         Left            =   8040
          TabIndex        =   30
          ToolTipText     =   "do not use with Niska Job + Warrant"
-         Top             =   660
+         Top             =   210
+         Visible         =   0   'False
          Width           =   1440
       End
       Begin VB.TextBox txt 
@@ -238,10 +259,10 @@ Begin VB.Form frmJobEditor
          ForeColor       =   &H00000080&
          Height          =   285
          Index           =   12
-         Left            =   6450
+         Left            =   6600
          TabIndex        =   29
          Text            =   "0"
-         ToolTipText     =   $"frmJobEditor.frx":1C8D0
+         ToolTipText     =   $"frmJobEditor.frx":1A191
          Top             =   330
          Width           =   885
       End
@@ -288,7 +309,7 @@ Begin VB.Form frmJobEditor
          Left            =   2670
          TabIndex        =   26
          Text            =   "0"
-         ToolTipText     =   $"frmJobEditor.frx":1C98B
+         ToolTipText     =   $"frmJobEditor.frx":1A24C
          Top             =   660
          Width           =   885
       End
@@ -312,6 +333,18 @@ Begin VB.Form frmJobEditor
          TabIndex        =   24
          Top             =   300
          Width           =   1155
+      End
+      Begin VB.Label lbl 
+         BackColor       =   &H00CBE1ED&
+         BackStyle       =   0  'Transparent
+         Caption         =   "Fail Kill Crew"
+         ForeColor       =   &H00000080&
+         Height          =   225
+         Index           =   23
+         Left            =   5580
+         TabIndex        =   83
+         Top             =   690
+         Width           =   1005
       End
       Begin VB.Label Label6 
          BackStyle       =   0  'Transparent
@@ -954,6 +987,17 @@ Begin VB.Form frmJobEditor
       End
    End
    Begin VB.Label lbl 
+      BackColor       =   &H00CBE1ED&
+      BackStyle       =   0  'Transparent
+      Caption         =   "Wanted Fugitive"
+      Height          =   285
+      Index           =   22
+      Left            =   10110
+      TabIndex        =   81
+      Top             =   2790
+      Width           =   1545
+   End
+   Begin VB.Label lbl 
       Alignment       =   2  'Center
       BackColor       =   &H00CBE1ED&
       BackStyle       =   0  'Transparent
@@ -1005,7 +1049,23 @@ Private Sub cbo_Click(Index As Integer)
    Select Case Index
    Case 2
       RefreshJob GetCombo(cbo(Index))
-
+   Case 5
+      If GetCombo(cbo(5)) = 10 Then
+         Picture1.top = 3120
+         cbo(11).Visible = True
+      Else
+         cbo(11).Visible = False
+         cbo(11).ListIndex = -1
+         Picture1.top = 2820
+         If Picture1.Tag <> "s" Then Picture1.Picture = LoadPicture(App.Path & "\Pictures\Salvage.jpg")
+         Picture1.Tag = "s"
+      End If
+   Case 11
+      If GetCombo(cbo(11)) > 0 Then
+         Picture1.Picture = LoadPicture(App.Path & "\Pictures\" & varDLookup("picture", "Crew", "CrewID=" & GetCombo(cbo(11))))
+         Picture1.Tag = ""
+      End If
+   
    End Select
 End Sub
 Private Sub cbo_KeyDown(Index As Integer, KeyCode As Integer, Shift As Integer)
@@ -1048,6 +1108,7 @@ Dim x
       editTask Index + 2
    Case 7, 8, 9
       editTask Index - 1, True
+
    End Select
 End Sub
 
@@ -1059,13 +1120,14 @@ Dim x
    LoadCombo cbo(1), "jobtype"
    LoadCombo cbo(2), "contactdeck"
    LoadCombo cbo(3), "skill"
-   LoadCombo cbo(4), "contact", " WHERE ContactID > 0"
+   LoadCombo cbo(4), "contact", " WHERE ContactID > 0 and ContactID < 10"
    LoadCombo cbo(5), "contact"
    LoadCombo cbo(6), "task", "WHERE SectorID > 0"
    LoadCombo cbo(7), "task", "WHERE SectorID > 0"
    LoadCombo cbo(8), "task", "WHERE SectorID > 0"
-   LoadCombo cbo(9), "contact", " WHERE ContactID > 0"
+   LoadCombo cbo(9), "contact", " WHERE ContactID > 0 and ContactID < 10"
    LoadCombo cbo(10), "skill"
+   LoadCombo cbo(11), "crew", " WHERE Leader = 0 Order by CrewName"
    
    lstKeyword.AddItem "EXPLOSIVES"
    lstKeyword.AddItem "FAKEID"
@@ -1111,6 +1173,7 @@ Dim SQL
       SetCombo cbo(7), "", rst!Job2ID
       SetCombo cbo(8), "", rst!Job3ID
       SetCombo cbo(10), "", rst!BonusPerSkill
+      SetCombo cbo(11), "", rst!FugitiveID
       
       SetProflist lstProf, rst!ProfessionID
       SetProflist lstReqProf, rst!RequireProfession
@@ -1123,15 +1186,16 @@ Dim SQL
       txt(5) = Nz(rst!fight)
       txt(6) = Nz(rst!tech)
       txt(7) = Nz(rst!Negotiate)
-      txt(8) = Nz(rst!Win)
+      txt(8) = Nz(rst!win)
       txt(9) = Nz(rst!WinResult)
       txt(10) = Nz(rst!Intermediate)
       txt(11) = Nz(rst!IntermediateResult)
       txt(12) = Nz(rst!FailResult)
+      txt(13) = Nz(rst!FailKillCrew)
       chk(0).Value = rst!Immoral
       chk(1).Value = rst!KeywordBonus
       chk(2).Value = rst!WinOptKeyword
-      chk(3).Value = rst!FailKillCrew
+      'chk(3).Value = rst!FailKillCrew
       chk(4).Value = rst!KeywordOrSkill
       chk(5).Value = rst!KeywordOrSolid
       chk(6).Value = rst!RemoveDisgruntled
@@ -1139,6 +1203,7 @@ Dim SQL
       chk(8).Value = rst!illegal
       chk(9).Value = rst!GoodDeeds
       
+
    End If
    rst.Close
    Set rst = Nothing
@@ -1266,11 +1331,16 @@ On Error GoTo err_handler
    Else
       SQL = SQL & ", BonusPerSkill=" & GetCombo(cbo(10))
    End If
+   If GetCombo(cbo(11)) = -1 Then
+      SQL = SQL & ", FugitiveID=0"
+   Else
+      SQL = SQL & ", FugitiveID=" & GetCombo(cbo(11))
+   End If
    SQL = SQL & ", Win=" & CStr(Val(txt(8)))
    SQL = SQL & ", WinResult=" & CStr(Val(txt(9)))
    SQL = SQL & ", WinOptKeyword=" & chk(2).Value
    SQL = SQL & ", FailResult=" & CStr(Val(txt(12)))
-   SQL = SQL & ", FailKillCrew=" & chk(3).Value
+   SQL = SQL & ", FailKillCrew=" & CStr(Val(txt(13))) 'chk(3).Value
    If GetCombo(cbo(4)) = -1 Then
       SQL = SQL & ", FailLoseRep=0"
    Else

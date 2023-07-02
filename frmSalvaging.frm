@@ -5,15 +5,104 @@ Begin VB.Form frmSalvaging
    ClientHeight    =   1890
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   3675
+   ClientWidth     =   3795
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmSalvaging.frx":0000
    ScaleHeight     =   1890
-   ScaleWidth      =   3675
+   ScaleWidth      =   3795
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.CommandButton cmdOB 
+      BackColor       =   &H00FF8080&
+      Caption         =   "-"
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   6.75
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   285
+      Index           =   3
+      Left            =   2140
+      Style           =   1  'Graphical
+      TabIndex        =   19
+      ToolTipText     =   "toss 1 Contraband overboard"
+      Top             =   1460
+      Visible         =   0   'False
+      Width           =   285
+   End
+   Begin VB.CommandButton cmdOB 
+      BackColor       =   &H00FF8080&
+      Caption         =   "-"
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   6.75
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   285
+      Index           =   2
+      Left            =   2140
+      Style           =   1  'Graphical
+      TabIndex        =   18
+      ToolTipText     =   "toss 1 Cargo overboard"
+      Top             =   1110
+      Visible         =   0   'False
+      Width           =   285
+   End
+   Begin VB.CommandButton cmdOB 
+      BackColor       =   &H00FF8080&
+      Caption         =   "-"
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   6.75
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   285
+      Index           =   1
+      Left            =   2140
+      Style           =   1  'Graphical
+      TabIndex        =   17
+      ToolTipText     =   "toss 1 Part overboard"
+      Top             =   750
+      Visible         =   0   'False
+      Width           =   285
+   End
+   Begin VB.CommandButton cmdOB 
+      BackColor       =   &H00FF8080&
+      Caption         =   "-"
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   6.75
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   285
+      Index           =   0
+      Left            =   2140
+      Style           =   1  'Graphical
+      TabIndex        =   16
+      ToolTipText     =   "toss 1 Fuel overboard"
+      Top             =   390
+      Visible         =   0   'False
+      Width           =   285
+   End
    Begin VB.TextBox txtDeal 
       Alignment       =   2  'Center
       BackColor       =   &H00CBE1ED&
@@ -66,20 +155,20 @@ Begin VB.Form frmSalvaging
       TabIndex        =   12
       TabStop         =   0   'False
       Text            =   "0"
-      Top             =   1440
+      Top             =   1460
       Visible         =   0   'False
       Width           =   345
    End
    Begin VB.PictureBox pic 
       BackColor       =   &H00CBE1ED&
       Height          =   780
-      Left            =   2280
+      Left            =   2565
       Picture         =   "frmSalvaging.frx":4F61A
       ScaleHeight     =   48
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   71
       TabIndex        =   11
-      Top             =   90
+      Top             =   120
       Width           =   1125
    End
    Begin VB.TextBox txtDeal 
@@ -89,7 +178,7 @@ Begin VB.Form frmSalvaging
       Left            =   1380
       TabIndex        =   3
       Text            =   "0"
-      Top             =   1440
+      Top             =   1460
       Width           =   345
    End
    Begin VB.TextBox txtDeal 
@@ -136,10 +225,10 @@ Begin VB.Form frmSalvaging
       EndProperty
       Height          =   315
       Index           =   0
-      Left            =   2280
+      Left            =   2565
       Style           =   1  'Graphical
       TabIndex        =   5
-      Top             =   990
+      Top             =   1020
       Width           =   1125
    End
    Begin VB.CommandButton cmd 
@@ -156,10 +245,10 @@ Begin VB.Form frmSalvaging
       EndProperty
       Height          =   315
       Index           =   1
-      Left            =   2280
+      Left            =   2565
       Style           =   1  'Graphical
       TabIndex        =   4
-      Top             =   1410
+      Top             =   1425
       Width           =   1125
    End
    Begin VB.Label lbl 
@@ -308,7 +397,29 @@ Dim total, x
 
 End Sub
 
+Private Sub cmdOB_Click(Index As Integer)
+Dim SQL
+   SQL = "UPDATE Players Set "
+   Select Case Index
+   Case 0
+      SQL = SQL & "Fuel = Fuel - 1"
+   Case 1
+      SQL = SQL & "Parts = Parts - 1"
+   Case 2
+      SQL = SQL & "Cargo = Cargo - 1"
+   Case 3
+      SQL = SQL & "Contraband = Contraband - 1"
+   End Select
+   
+   SQL = SQL & " WHERE PlayerID = " & player.ID
+   DB.Execute SQL
+   
+   initHeld
+   
+End Sub
+
 Private Sub Form_Load()
+Dim x
    Select Case mode
    Case 1
       Me.Caption = "Load up to " & salvageCount & " Salvage. Spare storage: " & CStr(CargoCapacity(player.ID) - CargoSpaceUsed(player.ID))
@@ -327,16 +438,22 @@ Private Sub Form_Load()
       cmd(1).Visible = False
    End Select
    Label1 = "Qty   Hold"
+
    initHeld
+
 End Sub
 
 
 Private Sub initHeld()
 Dim rst As New ADODB.Recordset
 Dim SQL, x
-   For x = 4 To 7
-      txtDeal(x).Visible = True
-   Next x
+
+   Select Case mode
+   Case 1
+      Me.Caption = "Load up to " & salvageCount & " Salvage. Spare storage: " & CStr(CargoCapacity(player.ID) - CargoSpaceUsed(player.ID))
+   Case 2
+      Me.Caption = "Load up to " & salvageCount & " Goods. Spare storage: " & CStr(CargoCapacity(player.ID) - CargoSpaceUsed(player.ID))
+   End Select
 
    SQL = "SELECT * FROM Players WHERE PlayerID = " & player.ID
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
@@ -348,6 +465,12 @@ Dim SQL, x
    End If
    rst.Close
    Set rst = Nothing
+   
+   For x = 0 To 3
+      txtDeal(x + 4).Visible = True
+      cmdOB(x).Visible = (mode < 3 And Val(txtDeal(x + 4)) > 0)
+   Next x
+   
 End Sub
 
 

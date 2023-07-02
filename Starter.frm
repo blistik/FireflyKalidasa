@@ -354,7 +354,7 @@ Dim frmCrewList As frmCrewLst
       cmd(1).Enabled = False
       cmd(3).Enabled = False
       'shuffle the decks
-      PutMsg "Decks are Shuffled"
+      
       ShuffleDeck "Contact", True
       ShuffleDeck "Supply", True
       'exclude Crew per Story
@@ -368,11 +368,15 @@ Dim frmCrewList As frmCrewLst
       DrawDeck "Supply", 7, 3
       ShuffleDeck "Nav", True, (Lst.ListCount > 2) 'Reshuffle Cards at end for 3 or more players
       ShuffleDeck "Misbehave", False, True
-      
-      'do story specific setup
-      If Logic!StoryID = 12 Then 'take Wash out of Deck
-         DB.Execute "UPDATE SupplyDeck SET Seq = 0  WHERE CardID = 1"
+      PutMsg "Decks are Shuffled"
+      If isBountyEnabled Then
+         DrawDeck "Contact", 10, 3
       End If
+      
+      'do story specific setup// - now done in doExcludes
+'      If Logic!StoryID = 12 Then 'take Wash out of Deck
+'         DB.Execute "UPDATE SupplyDeck SET Seq = 0  WHERE CardID = 1"
+'      End If
       
       'show who has entered game
       cnt = 0

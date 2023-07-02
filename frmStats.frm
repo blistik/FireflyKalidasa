@@ -241,7 +241,7 @@ Dim rst As ADODB.Recordset, SQL, x
    If Val(lblTitle.Tag) <> Logic!StoryID Then
       LoadStory Logic!StoryID
       Set rst = New ADODB.Recordset
-      SQL = "SELECT * FROM Contact WHERE ContactID > 0"
+      SQL = "SELECT * FROM Contact WHERE ContactID > 0  and ContactID < 10 "
       rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       While Not rst.EOF
          lblContact(rst!ContactID) = rst!ContactName & ":  " & rst!DealDescr & vbNewLine & IIf(rst!ContactID = 5, "Sells Fuel: $100", IIf(rst!cargo = 0, "", "Buys Cargo: $" & rst!cargo & " && Contraband: $" & rst!Contraband))

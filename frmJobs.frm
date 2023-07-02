@@ -266,7 +266,7 @@ With sftTree
    While Not rst3.EOF
       Index = .AddItem(CStr(rst3!playerID) & IIf(isOutlaw(rst3!playerID), " - outlaw", ""))
       .ItemLevel(Index) = 0
-      .CellText(Index, 1) = rst3!ship & " - " & PlayCode(rst3!playerID).PlayName & IIf(rst3!playerID = player.ID, " [me]", "")
+      .CellText(Index, 1) = rst3!ship & " - " & PlayCode(rst3!playerID).PlayName ' & IIf(rst3!playerID = player.ID, " [me]", "")
       For x = 0 To 8
          .CellForeColor(Index, x) = 0
          .CellBackColor(Index, x) = getPlayerColor(rst3!playerID)
@@ -279,7 +279,7 @@ With sftTree
       SQL = SQL & " WHERE PlayerJobs.JobStatus < " & JOB_SUCCESS & " AND PlayerJobs.PlayerID=" & rst3!playerID
       
       If player.ID <> rst3!playerID Then 'hide inactives
-         SQL = SQL & " AND PlayerJobs.JobStatus IN (1,2)"
+         SQL = SQL & " AND (PlayerJobs.JobStatus IN (1,2) or ContactDeck.ContactID = 10)"
       End If
       SQL = SQL & " ORDER BY Contact.ContactName,PlayerJobs.CardID"
       
@@ -288,6 +288,7 @@ With sftTree
          Index = .AddItem(CStr(rst!CardID))
          .ItemData(Index) = rst!CardID
          .CellItemData(Index, 0) = rst!JobStatus
+         .CellItemData(Index, 2) = rst!ContactID
          .CellText(Index, 1) = rst!ContactName & " - " & rst!JobName
          .CellForeColor(Index, 1) = 0
          .CellBackColor(Index, 1) = rst!Colour
@@ -478,7 +479,7 @@ Private Sub sftTree_ItemClick(ByVal Index As Long, ByVal ColNum As Integer, ByVa
         End With
       ElseIf Button = 2 Then
          With sftTree
-            mnuPopup(0).Enabled = (.CellItemData(Index, 0) = 0 And .ItemData(Index) > 0 And .ItemLevel(Index) = 1)
+            mnuPopup(0).Enabled = (.CellItemData(Index, 0) = 0 And .ItemData(Index) > 0 And .ItemLevel(Index) = 1) And .CellItemData(Index, 2) <> 10
             If (.CellItemData(Index, 0) = 0 And .ItemData(Index) > 0 And .ItemLevel(Index) = 1) Then PopupMenu mnuPop
             
         End With

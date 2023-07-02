@@ -2,11 +2,45 @@ Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 
 
 Dev Ideas:
 
-
 Test Issues pending: 
-after a job result to evade, mosey was not available, but full burn was
+
 
 Version updates:
+v 1.9.0 ~ 10 May 2023 - 1 Jul 2023
+new: Crew - Chari
+new: Crew - The Guardian
+new: Gear - "The Best in the House"
+new: Gear - Scan-proof Shades
+new: Upgrade - Inara's Shuttle
+new: Upgrade - Doctor's Shuttle
+new: Upgrade - Surveyer's Shuttle
+new: Bounty Hunts - Own Crew, Supply Planets & Rival Crews (not Cortex Alerts)
+new: Story - Bounty Bonanza.  Claim & Deliver 3 Bounties to win
+add: ability to dump Goods from Hold when loading Goods
+add: ability to set a Crew ON or OFF a Job. Set before starting Work.
+add: Story option - move a Reaver Cutter after every Fullburn, prior to Nav Card
+add: Goal option - 'number of bounties' delivered
+fix: pay expected of all Crew, not just those ON Job (FAQ 4.1)
+fix: doing immoral jobs also causes disgruntled to moral crew that stayed on ship
+fix: Simon Tam's +2 medic check
+fix: single-use gear on Crew "off-job" no longer considered for use.
+gui: add Nav Card Backgrounds & color schemes
+gui: Deals page is sorted with Bounties at the top for ease of tracking
+cfg: Job - 'Bilking the Yokels', needed skill type set
+cfg: Nav - 'Still Some Good Stuff Here' & 'Fill 'er Up!' set to Salvage Ops
+bot: updated to v1.0.8
+bot: will pickup Bounties at Supply Planets
+bot: will actively seek Bounties when enabled in the story card.
+bot: can act as a Attacker or Defender in a Showdown
+bot: can reach 'number of bounties' goal
+bot: will hire crew to replace losses (after better offer/bounty jump)
+
+
+v 1.8.10 ~ 25 Mar 2023
+fix: soft lock when auto re-joining with only AI remaining in game.
+bot: updated to v1.0.7 to include path finding fix.
+
+
 v 1.8.9 ~ 24 Feb 2023 - 21 Mar 2023
 new: Gear- Wash's Lucky Dinosaurs
 fix: issue with "discarding" The Salesman and Mudders (at Harvest)
@@ -217,6 +251,21 @@ v1.0.4 ~ 25 Mar 2021 minor tweaks and fixes
 
 v1.0.3 ~ 24 Mar 2021 Initial Release of FireFly - The PC Game
 
+Bounty Notes:
+When a fugitive is apprehended and their bounty 
+claimed, reveal a new Bounty card.
+
+Every time the Alliance Cruiser Nav card is drawn, return 
+the 3 faceup Bounty cards to the bottom of the Bounty 
+deck and reveal 3 new cards. 
+
+If a card for a character that has been killed or removed 
+from the game is revealed, remove it from the game and 
+replace it with another
+
+If Reavers kill your passenger and fugitive tokens, any 
+bound fugitives you are transporting are removed from play
+
 New content ideas:
 Mr Universe Job name ideas (13 done):
 Lawforce Flags
@@ -248,5 +297,5 @@ Work
 Orig Board 
 H: 15510 W: 22740
 
-Big Board
-Board.Width = 30220
+Kalidasa Board
+H: 15510 W: 30220

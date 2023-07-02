@@ -88,6 +88,7 @@ Dim x, cnt
             PutMsg player.PlayName & "'s Crew member " & crewList.List(x) & " hides in the Concealed Smuggling Compartments", player.ID, Logic!Gamecntr
          Else
             doSeizeCrew player.ID, crewList.ItemData(x), varDLookup("Wanted", "Crew", "CrewID=" & getCrewID(crewList.ItemData(x)))
+
          End If
       Next x
       Me.Hide

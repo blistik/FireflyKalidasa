@@ -7,7 +7,6 @@ Begin VB.Form frmGoals
    ClientTop       =   390
    ClientWidth     =   9330
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmGoals.frx":0000
@@ -15,6 +14,17 @@ Begin VB.Form frmGoals
    ScaleWidth      =   9330
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.TextBox txt 
+      Alignment       =   2  'Center
+      Height          =   285
+      Index           =   9
+      Left            =   4860
+      TabIndex        =   35
+      Text            =   "0"
+      ToolTipText     =   "the number of Bounties delivered to meet the Goal"
+      Top             =   1230
+      Width           =   885
+   End
    Begin VB.ListBox lstCrew 
       BackColor       =   &H00CBE1ED&
       Height          =   1635
@@ -278,6 +288,17 @@ Begin VB.Form frmGoals
    Begin VB.Label lbl 
       BackColor       =   &H00CBE1ED&
       BackStyle       =   0  'Transparent
+      Caption         =   "Bounties delvd"
+      Height          =   285
+      Index           =   14
+      Left            =   4800
+      TabIndex        =   36
+      Top             =   1050
+      Width           =   1305
+   End
+   Begin VB.Label lbl 
+      BackColor       =   &H00CBE1ED&
+      BackStyle       =   0  'Transparent
       Caption         =   "add Passenger/s"
       Height          =   285
       Index           =   13
@@ -387,6 +408,7 @@ Begin VB.Form frmGoals
       Index           =   4
       Left            =   120
       TabIndex        =   22
+      ToolTipText     =   "the number of Misbehaves to meet the Goal"
       Top             =   1200
       Width           =   1215
    End
@@ -479,13 +501,14 @@ Dim SQL
          SQL = SQL & "Tech = " & CStr(Val(txt(4))) & ","
          SQL = SQL & "Negotiate = " & CStr(Val(txt(5))) & ","
          SQL = SQL & "SectorID = " & IIf(GetCombo(cbo(2)) = -1, "0", GetCombo(cbo(2))) & ","
-         SQL = SQL & "Passenger = " & CStr(Val(txt(7)))
+         SQL = SQL & "Passenger = " & CStr(Val(txt(7))) & ","
+         SQL = SQL & "Bounties = " & CStr(Val(txt(9)))
          SQL = SQL & " WHERE StoryID = " & StoryID & " AND Goal = " & Goal
          
          
       Else
          SQL = "INSERT INTO StoryGoals (StoryID, Goal, Instructions, Solid, AddCrew, SolidCount, IssueJobID, CompleteJobID, Cash, TurnLimit, Misbehaves, Fight, "
-         SQL = SQL & "Tech, Negotiate, SectorID, Win, Passenger) VALUES ("
+         SQL = SQL & "Tech, Negotiate, SectorID, Win, Passenger, Bounties) VALUES ("
          SQL = SQL & CStr(StoryID) & ","
          SQL = SQL & CStr(Goal) & ","
          SQL = SQL & "'" & SQLFilter(txt(8)) & "',"
@@ -502,7 +525,8 @@ Dim SQL
          SQL = SQL & CStr(Val(txt(5))) & ","
          SQL = SQL & IIf(GetCombo(cbo(2)) = -1, "0", GetCombo(cbo(2))) & ","
          SQL = SQL & CStr(chkWin.Value) & ","
-         SQL = SQL & CStr(Val(txt(7))) & ")"
+         SQL = SQL & CStr(Val(txt(7))) & ","
+         SQL = SQL & CStr(Val(txt(9))) & ")"
       End If
       
       DB.Execute SQL
@@ -656,8 +680,9 @@ Dim SQL
       txt(5) = CStr(rst!Negotiate)
       txt(6) = CStr(rst!SolidCount)
       txt(7) = CStr(rst!Passenger)
+      txt(9) = CStr(rst!Bounties)
       If rst!SectorID > 0 Then SetCombo cbo(2), "", rst!SectorID
-      chkWin.Value = rst!Win
+      chkWin.Value = rst!win
    End If
    rst.Close
    Set rst = Nothing

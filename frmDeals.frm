@@ -244,7 +244,7 @@ End Sub
 
 
 Public Function RefreshDeals() As Variant
-Dim Index, SQL
+Dim Index, SQL, showBounty As Boolean
 Dim rst As New ADODB.Recordset
 Dim rst2 As New ADODB.Recordset
 Dim rst3 As New ADODB.Recordset
@@ -254,6 +254,7 @@ With sftTree
    .Clear
    
    SectorID = varDLookup("SectorID", "Players", "PlayerID=" & player.ID)
+   showBounty = (varDLookup("Bounty", "Story", "StoryID=" & Logic!StoryID) = 1)
    If Left(dealFilter, 5) = "local" Then
       If dealFilter = "localdeal" Then
          Me.Caption = "Local Deals for Consideration"
@@ -267,7 +268,6 @@ With sftTree
          HigginsDealPerk = True
       ElseIf hasCrew(player.ID, 75) And dealFilter = "locals" And Not hasCrew(player.ID, 22) And SectorID <> 16 Then
          If MessBox("Do you want Deal with Higgins instead?", "Fess - Phone Home Deals", "Deal", "Not now", 75) = 0 Then
-         'If MsgBox("Do you want Deal with Higgins instead?", vbQuestion + vbYesNo, "Fess - Phone Home Deals") = vbYes Then
             ContactID = 8
             HigginsDealPerk = True
          End If
@@ -283,9 +283,9 @@ With sftTree
    If Left(dealFilter, 5) = "local" Then
       SQL = SQL & "WHERE ContactID = " & ContactID
    Else
-      SQL = SQL & "WHERE ContactID <> 0"
+      SQL = SQL & "WHERE ContactID <> 0" & IIf(showBounty, "", " AND ContactID < 10")
    End If
-   SQL = SQL & " ORDER BY ContactName"
+   SQL = SQL & " Order by ContactID mod 10"
    rst3.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst3.EOF
       Index = .AddItem(CStr(rst3!ContactID) & IIf(isSolid(player.ID, rst3!ContactID), " - Solid", ""))
@@ -325,8 +325,19 @@ With sftTree
             .ItemDataString(Index) = "O"
          End If
          .CellText(Index, 1) = rst!JobName
-         .CellForeColor(Index, 1) = 0
          .CellBackColor(Index, 1) = rst!Colour
+         If rst!ContactID = 10 Then
+            x = varDLookup("Seq", "SupplyDeck", "CrewID=" & rst!FugitiveID)
+            Select Case x
+            Case 1, 2, 3, 4
+               .CellBackColor(Index, 1) = getPlayerColor(x)
+               .CellFont(Index, 1).Bold = True
+            Case DISCARDED
+               .CellFont(Index, 1).Bold = True
+            End Select
+         End If
+         .CellForeColor(Index, 1) = 0
+        
          .CellText(Index, 2) = rst!JobTypeDescr & IIf(rst!JobType2 <> "-", "/" & rst!JobType2, "") & IIf(rst!illegal = 1, "/illegal", "") & IIf(rst!Immoral = 1, "/immoral", "")
          If rst!illegal = 1 Or rst!Immoral Then
             .CellBackColor(Index, 2) = 3355647
@@ -354,7 +365,7 @@ With sftTree
 
          
          If rst!Job1ID > 0 Then
-            SQL = "SELECT Planet.PlanetName, Planet.System, Job.* FROM Job INNER JOIN Planet ON Job.SectorID = Planet.SectorID WHERE JobID =" & rst!Job1ID
+            SQL = "SELECT Planet.PlanetName, Planet.System, Job.* FROM Job LEFT JOIN Planet ON Job.SectorID = Planet.SectorID WHERE JobID =" & rst!Job1ID
             rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
             If Not rst2.EOF Then
                 Index = .AddItem(CStr(rst2!JobID))
@@ -376,7 +387,7 @@ With sftTree
                   
                   .CellBackColor(Index, 3) = &HC0FFC0
                End If
-               .CellText(Index, 3) = rst2!System
+               .CellText(Index, 3) = Nz(rst2!System)
                Set .ItemPicture(Index) = AssetImages.Overlay("LN", "LN")
                .CellItemData(Index, 1) = rst2!SectorID
             Else
@@ -499,7 +510,6 @@ With sftTree
                   End If
                Case ASDealSelect
                   'determine how many cards can be accepted
-                  
                   max = MAXINACTIVEJOBS - getPlayerJobs(player.ID, "0")
 
                   If getSelected("R") < max Then  'accept only up to 2 cards, not exceeding 6 in hand

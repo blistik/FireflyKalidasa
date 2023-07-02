@@ -339,11 +339,17 @@ Dim rst As New ADODB.Recordset
 Dim SQL, Index
    With sftTree
       .Clear
+'      SQL = "SELECT SupplyDeck.CardID, Gear.* "
+'      SQL = SQL & "FROM Gear INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Gear.GearID = SupplyDeck.GearID "
+'      SQL = SQL & "WHERE PlayerSupplies.CrewID > 0 AND PlayerSupplies.PlayerID=" & player.ID & " AND Gear.Discard=1 and Gear." & skill & " > 0"
+      
       SQL = "SELECT SupplyDeck.CardID, Gear.* "
-      SQL = SQL & "FROM Gear INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Gear.GearID = SupplyDeck.GearID "
-      SQL = SQL & "WHERE PlayerSupplies.CrewID > 0 AND PlayerSupplies.PlayerID=" & player.ID & " AND Gear.Discard=1 and Gear." & skill & " > 0"
+      SQL = SQL & "FROM ((Gear INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Gear.GearID = SupplyDeck.GearID) "
+      SQL = SQL & "INNER JOIN SupplyDeck AS SupplyDeck_1 ON PlayerSupplies.CrewID = SupplyDeck_1.CrewID) INNER JOIN PlayerSupplies AS PlayerSupplies_1 ON SupplyDeck_1.CardID = PlayerSupplies_1.CardID "
+      SQL = SQL & "Where PlayerSupplies.playerID = " & player.ID & " And Gear.discard = 1 And Gear." & skill & " > 0 And PlayerSupplies_1.OffJob = 0"
+      
       If kosher Then
-         SQL = SQL & " AND PlayerSupplies.CrewID = 60" ' Lund
+         SQL = SQL & " AND (PlayerSupplies.CrewID = 60 or Gear.GearID = 59)" ' Lund & Inaras knife
       End If
       
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
