@@ -6,3 +6,5 @@ There is extensive use of SQL and ADO Recordsets to feed game functions.
 The application uses 2 licenced ActiveX Components. SftTree (SoftelVDM) & XDockFloat (DSXtech)
 
 This Windows PC Application is provided Open Source, and made available as Freeware. All rights remain with Gale Force Nine and the respective rights holders for the source content and material.
+
+Head over to https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game/page/1  for bug reports and development updates.
