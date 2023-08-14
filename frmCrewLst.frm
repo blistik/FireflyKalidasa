@@ -547,7 +547,7 @@ With sftTree
          
          .CellText(Index, 3) = Trim(IIf(rst2!Mechanic = 1, "Mechanic  ", "") & IIf(rst2!Pilot = 1, "Pilot  ", "") & IIf(rst2!Companion = 1, "Companion  ", "") & _
                IIf(rst2!Merc = 1, "Merc  ", "") & IIf(rst2!Soldier = 1, "Soldier  ", "") & IIf(rst2!HillFolk = 1, "HillFolk  ", "") & _
-               IIf(rst2!Grifter = 1, "Grifter ", "") & IIf(rst2!Medic = 1, "Medic ", "") & IIf(rst2!Mudder = 1, "Mudder", ""))
+               IIf(rst2!Grifter = 1, "Grifter ", "") & IIf(rst2!Medic = 1, "Medic ", "") & IIf(rst2!Mudder = 1, "Mudder ", "") & IIf(rst2!Lawman = 1, "Lawman", ""))
          .CellForeColor(Index, 3) = 65280
          .CellText(Index, 4) = IIf(rst2!Moral = 1, "Moral ", "")
          If rst2!Moral = 1 Then

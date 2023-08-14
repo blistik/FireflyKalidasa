@@ -13,6 +13,27 @@ Begin VB.Form frmAction
    Picture         =   "frmAction.frx":030A
    ScaleHeight     =   3150
    ScaleWidth      =   3900
+   Begin VB.CommandButton cmd 
+      BackColor       =   &H00FF8080&
+      Caption         =   "Cruiser call"
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   315
+      Index           =   8
+      Left            =   2290
+      Style           =   1  'Graphical
+      TabIndex        =   42
+      ToolTipText     =   "move to Cruiser to your location"
+      Top             =   2760
+      Width           =   1545
+   End
    Begin VB.TextBox txtFuel 
       Height          =   345
       Left            =   2450
@@ -633,6 +654,7 @@ End Sub
 
 Private Sub cmd_Click(Index As Integer)
 Dim x, SectorID
+   SectorID = getPlayerSector(player.ID)
    
    Select Case Index
       Case 0 'mosey
@@ -667,8 +689,7 @@ Dim x, SectorID
       Case 2 'buy
          If MoseyMovesDone > 0 Then moseydone = True 'already moseyed
          If FullburnMovesDone > 0 Then fullburndone = True
-         SectorID = getPlayerSector(player.ID)
-         
+                  
          If getHaven(SectorID) > 0 Then
             actionSeq = ASBuyHaven
          
@@ -737,9 +758,17 @@ Dim x, SectorID
          MessBox "Select an Alert Token to resolve", "Alert Token", "Will Do", "", getLeader()
          actionSeq = ASResolveAlert
          playsnd 8
-      
+         
+      Case 8 'Cruiser call
+         cmd(8).Enabled = False
+         PutMsg player.PlayName & "'s Lawman Dobson calls the Alliance Cruiser to his location", player.ID, Logic!Gamecntr
+         moseydone = True
+         fullburndone = True
+         doMoveAlliance player.ID, SectorID
+         actionSeq = ASAllianceCall
+
    End Select
-   For x = 0 To 7
+   For x = 0 To 8
       cmd(x).Enabled = False
    Next x
    

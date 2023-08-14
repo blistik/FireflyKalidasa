@@ -11,6 +11,7 @@ Public Enum actionSeqCntr
    ASMoseyEnd 'throw to main loop after each mosey move
    ASfullburn
    ASFullburnEnd
+   ASAllianceCall
    ASNav
    ASnavEnd
    ASNavEvade
@@ -158,6 +159,12 @@ Dim msg
       Case "4"
          msg = "Waiting for " & PlayCode(4).PlayName & " [GREEN] to finish their GO"
       End Select
+   Case "F"
+      If Logic!trader > 0 Then
+         msg = "Waiting for a Showdown to complete between " & PlayCode(Logic!player).PlayName & " and " & PlayCode(Logic!trader).PlayName
+      Else
+         msg = "Waiting for a Showdown to complete by " & PlayCode(Logic!player).PlayName
+      End If
    Case "T"
       msg = "Waiting for Player Trading to complete"
    
@@ -423,6 +430,12 @@ Dim currentSectorID, adjacent, a() As String, x
          Exit For
       End If
    Next x
+
+End Function
+
+Public Function isAI(ByVal playerID) As Boolean
+   
+   isAI = (varDLookup("AI", "Players", "PlayerID=" & playerID) = 1)
 
 End Function
 
@@ -819,6 +832,18 @@ End Function
 
 Public Function getZone(ByVal SectorID As Integer) As String
   getZone = Nz(varDLookup("Zones", "Board", "SectorID=" & SectorID))
+End Function
+
+Public Function getZoneDesc(ByVal Zone) As String
+   Select Case Zone
+   Case "A"
+      getZoneDesc = "Alliance Nav "
+   Case "B"
+      getZoneDesc = "Border Nav "
+   Case "R"
+      getZoneDesc = "Rim Nav "
+   End Select
+      
 End Function
 
 Public Function getSupplyName(ByVal SupplyID As Integer) As String
@@ -1428,18 +1453,6 @@ Dim SQL
    Set rst = Nothing
 End Function
 
-Public Function getZoneDesc(ByVal Zone) As String
-   Select Case Zone
-   Case "A"
-      getZoneDesc = "Alliance Nav "
-   Case "B"
-      getZoneDesc = "Border Nav "
-   Case "R"
-      getZoneDesc = "Rim Nav "
-   End Select
-      
-End Function
-
 Public Function SQLFilter(ByVal Source As String, Optional ByVal size As Integer = 0) As String
 Dim x, y
 
@@ -2044,7 +2057,7 @@ End Function
 ' returns bonus cash & parts based on Job Card and jobtype
 Public Function getJobBonus(ByVal playerID, ByVal CardID, ByRef parts As Integer) As Integer
 Dim rst As New ADODB.Recordset
-Dim SQL, bonusmod As Integer
+Dim SQL, bonusmod As Integer, perk As Integer
 
    getJobBonus = 0
    bonusmod = 1
@@ -2097,6 +2110,15 @@ Dim SQL, bonusmod As Integer
       
       If rst!BonusPerSkill > 0 Then
          getJobBonus = getJobBonus + (rst!bonus * getSkill(playerID, cstrSkill(rst!BonusPerSkill)))
+      End If
+      
+      'look for bounty bonus
+      If rst!ContactID = 10 Then
+         perk = getPerkAttributeSum(playerID, "BountyBonus")
+         If perk > 0 Then
+            PutMsg player.PlayName & " gets an extra $" & perk & " Bounty bonus for having Lawmen in the crew", playerID, Logic!Gamecntr, True, getLeader()
+            getJobBonus = getJobBonus + perk
+         End If
       End If
       
    End If
@@ -2997,6 +3019,9 @@ Dim SQL
       End If
       'Head Goon
       If countCrewAttribute(playerID, "Merc") > 2 And rst!CrewID = 65 And skill = cstrSkill(3) Then
+         getSkill = getSkill + 2
+      End If
+      If rst!CrewID = 94 And getZone(getPlayerSector(playerID)) = "B" And skill = cstrSkill(1) Then   'Sheriff Bourne
          getSkill = getSkill + 2
       End If
 
@@ -4495,7 +4520,7 @@ Dim SQL, b(1 To 3) As Long, y As Long, z As Long, adjacent
    If Target = 1 Then Target = getCruiserSector()
    If Target = 2 Then Target = getCorvetteSector()
    If SectorID = Target Then Exit Function
-   If Target = 0 Then Exit Function
+   If Target = 0 Or SectorID = 0 Then Exit Function
 
    SQL = "SELECT Board.STop, Board.SLeft, Board.SHeight, Board.SWidth, Board.Zones "
    SQL = SQL & "FROM Board WHERE Board.SectorID = " & Target

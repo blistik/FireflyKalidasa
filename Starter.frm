@@ -425,7 +425,7 @@ Dim frmCrewList As frmCrewLst
   Exit Sub
   
 err_handler:
-  MsgBox Err.Description, vbCritical, "Error"
+  MsgBox Err.Description, vbCritical, "Setup Error"
   UpdateLst
 End Sub
 

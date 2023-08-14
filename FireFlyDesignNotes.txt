@@ -4,8 +4,27 @@ Dev Ideas:
 
 Test Issues pending: 
 
-
 Version updates:
+v 1.9.1 ~ 10 Jul 2023 - 14 Aug 2023
+add: Lawman profession
+new: Crew - Agent McGinnis
+new: Crew - Dobson
+new: Crew - Sheriff Bourne
+new: Crew - Fed Marshal
+new: Crew - Deputy
+new: Crew - Ensign
+fix: opening Deal browser prior to selecting starting sector
+fix: The Guardian's re-roll on Showdowns
+fix: Surveyer Shuttle perk to discard a Nav card
+fix: Bribes on Nav Cards
+fix: Cortland's bribes on Work completion negotiations
+cfg: Wash's Dinos & Best in the House gear config fix
+bot: updated to v1.0.9
+bot: use Chari to force re-rolls
+bot: add support for lawmen and their perks
+bot: overhaul buy/refuel/deal/work logic
+bot: fix repeated crew hires in a turn
+
 v 1.9.0 ~ 10 May 2023 - 1 Jul 2023
 new: Crew - Chari
 new: Crew - The Guardian

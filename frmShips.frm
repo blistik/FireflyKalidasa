@@ -463,7 +463,7 @@ With sftTree
       Else
          .CellBackColor(Index, 4) = 16711680
       End If
-      .CellText(Index, 9) = "Goals: " & CStr(rst!Goals)
+      .CellText(Index, 9) = "Goals: " & CStr(rst!Goals) & " Turns: " & CStr(Logic!Gamecntr - 1) & IIf(isBountyEnabled, " Bounties: " & CStr(countBounties(player.ID)), "")
       
       'CREW---------------------------------------------
       Index = .AddItem("Crew")
@@ -508,7 +508,7 @@ With sftTree
          
          .CellText(Index, 3) = Trim(IIf(rst2!Mechanic = 1, "Mechanic  ", "") & IIf(rst2!Pilot = 1, "Pilot  ", "") & IIf(rst2!Companion = 1 Or hasGearCrew(rst!playerID, 36) = rst2!CrewID, "Companion  ", "") & _
                IIf(rst2!Merc = 1, "Merc  ", "") & IIf(rst2!Soldier = 1, "Soldier  ", "") & IIf(rst2!HillFolk = 1, "HillFolk  ", "") & _
-               IIf(rst2!Grifter = 1, "Grifter ", "") & IIf(rst2!Medic = 1, "Medic ", "") & IIf(rst2!Mudder = 1, "Mudder", ""))
+               IIf(rst2!Grifter = 1, "Grifter ", "") & IIf(rst2!Medic = 1, "Medic ", "") & IIf(rst2!Mudder = 1, "Mudder ", "") & IIf(rst2!Lawman = 1, "Lawman", ""))
          .CellForeColor(Index, 3) = 65280
 
          .CellText(Index, 4) = IIf(rst2!wanted > 0, "Wanted", "") & IIf(rst2!Moral = 1, IIf(rst2!wanted > 0, "/", "") & "Moral ", "")
@@ -528,11 +528,15 @@ With sftTree
                .CellFont(Index, 5).Bold = True
             End If
          End If
-         If rst2!CrewID = 76 Then
+         If rst2!CrewID = 76 Then  'Foreman
             If countCrewAttribute(rst!playerID, "Mudder") > 2 Then
                fight = fight + 2
                .CellFont(Index, 5).Bold = True
             End If
+         End If
+         If rst2!CrewID = 94 And getZone(rst!SectorID) = "B" Then 'Sheriff Bourne
+            fight = fight + 2
+            .CellFont(Index, 5).Bold = True
          End If
          
          If getPerkAttributeCrew(rst!playerID, "fight", rst2!CardID) > 0 Then
@@ -994,7 +998,7 @@ With sftTree
          
          .CellText(Index, 3) = Trim(IIf(rst2!Mechanic = 1, "Mechanic  ", "") & IIf(rst2!Pilot = 1, "Pilot  ", "") & IIf(rst2!Companion = 1 Or hasGearCrew(rst!playerID, 36) = rst2!CrewID, "Companion  ", "") & _
                IIf(rst2!Merc = 1, "Merc  ", "") & IIf(rst2!Soldier = 1, "Soldier  ", "") & IIf(rst2!HillFolk = 1, "HillFolk  ", "") & _
-               IIf(rst2!Grifter = 1, "Grifter ", "") & IIf(rst2!Medic = 1, "Medic ", "") & IIf(rst2!Mudder = 1, "Mudder", ""))
+               IIf(rst2!Grifter = 1, "Grifter ", "") & IIf(rst2!Medic = 1, "Medic ", "") & IIf(rst2!Mudder = 1, "Mudder ", "") & IIf(rst2!Lawman = 1, "Lawman", ""))
          .CellForeColor(Index, 3) = 65280
 
          .CellText(Index, 4) = IIf(rst2!wanted > 0, "Wanted", "") & IIf(rst2!Moral = 1, IIf(rst2!wanted > 0, "/", "") & "Moral ", "")
@@ -1307,7 +1311,7 @@ Dim Index As Long, CrewID, CardID
       
       .DropHighlight = -1
       RefreshShips
-      If actionSeq > ASidle And actionSeq < ASend And actionSeq <> ASBountySkill Then
+      If actionSeq > ASidle And actionSeq < ASend And actionSeq <> ASBountySkill And actionSeq <> ASfullburn And actionSeq <> ASmosey And actionSeq <> ASNav Then
          Main.showActions
       Else
          If Not (Main.frmJob Is Nothing) Then

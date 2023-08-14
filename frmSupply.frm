@@ -341,7 +341,7 @@ With sftTree
          .CellText(Index, 2) = rst!PerkDescription
          .CellText(Index, 3) = Trim(IIf(rst!Mechanic = 1, "Mechanic  ", "") & IIf(rst!Pilot = 1, "Pilot  ", "") & IIf(rst!Companion = 1, "Companion  ", "") & _
                IIf(rst!Merc = 1, "Merc  ", "") & IIf(rst!Soldier = 1, "Soldier  ", "") & IIf(rst!HillFolk = 1, "HillFolk  ", "") & _
-               IIf(rst!Grifter = 1, "Grifter ", "") & IIf(rst!Medic = 1, "Medic", ""))
+               IIf(rst!Grifter = 1, "Grifter ", "") & IIf(rst!Medic = 1, "Medic ", "") & IIf(rst!Mudder = 1, "Mudder ", "") & IIf(rst!Lawman = 1, "Lawman", ""))
          .CellForeColor(Index, 3) = 65280
          
          .CellText(Index, 4) = IIf(rst!wanted > 0, "Wanted", "") & IIf(rst!Moral = 1, IIf(rst!wanted > 0, "/", "") & "Moral ", "")

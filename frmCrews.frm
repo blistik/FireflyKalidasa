@@ -448,9 +448,9 @@ Dim rst As New ADODB.Recordset, SQL, x, y
    If Not rst.EOF Then
       lbl(0) = rst!CrewDescr
       lbl(1) = Nz(rst!PerkDescription)
-      lbl(2) = IIf(rst!Mechanic = 1, "Mechanic  ", "") & IIf(rst!Pilot = 1, "Pilot  ", "") & IIf(rst!Companion = 1, "Companion  ", "") & _
+      lbl(2) = Trim(IIf(rst!Mechanic = 1, "Mechanic  ", "") & IIf(rst!Pilot = 1, "Pilot  ", "") & IIf(rst!Companion = 1, "Companion  ", "") & _
                IIf(rst!Merc = 1, "Merc  ", "") & IIf(rst!Soldier = 1, "Soldier  ", "") & IIf(rst!HillFolk = 1, "HillFolk  ", "") & _
-               IIf(rst!Grifter = 1, "Grifter ", "") & IIf(rst!Medic = 1, "Medic ", "") & IIf(rst!Mudder = 1, "Mudder", "")
+               IIf(rst!Grifter = 1, "Grifter ", "") & IIf(rst!Medic = 1, "Medic ", "") & IIf(rst!Mudder = 1, "Mudder ", "") & IIf(rst!Lawman = 1, "Lawman", ""))
       lbl(2).Visible = (Len(lbl(2)) > 0)
       lbl(2).Tag = IIf(rst!Mechanic = 1, "Crew.Mechanic = 1", "")
       lbl(2).Tag = lbl(2).Tag & IIf(rst!Pilot = 1, IIf(lbl(2).Tag = "", "", " AND ") & "Crew.Pilot=1", "")
@@ -461,6 +461,7 @@ Dim rst As New ADODB.Recordset, SQL, x, y
       lbl(2).Tag = lbl(2).Tag & IIf(rst!Grifter = 1, IIf(lbl(2).Tag = "", "", " AND ") & "Crew.Grifter=1", "")
       lbl(2).Tag = lbl(2).Tag & IIf(rst!Medic = 1, IIf(lbl(2).Tag = "", "", " AND ") & "Crew.Medic=1", "")
       lbl(2).Tag = lbl(2).Tag & IIf(rst!Mudder = 1, IIf(lbl(2).Tag = "", "", " AND ") & "Crew.Mudder=1", "")
+      lbl(2).Tag = lbl(2).Tag & IIf(rst!Lawman = 1, IIf(lbl(2).Tag = "", "", " AND ") & "Crew.Lawman=1", "")
            
       lbl(3) = IIf(rst!Moral = 1, "Moral    ", "") & IIf(rst!wanted > 0, "Wanted ", "")
       lbl(3).Visible = (rst!Moral = 1 Or rst!wanted > 0)

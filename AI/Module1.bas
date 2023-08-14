@@ -161,6 +161,12 @@ Dim msg
       Case "4"
          msg = "Waiting for " & PlayCode(4).PlayName & " [GREEN] to finish their GO"
       End Select
+   Case "F"
+      If Logic!Trader > 0 Then
+         msg = "Waiting for a Showdown to complete between " & PlayCode(Logic!player).PlayName & " and " & PlayCode(Logic!Trader).PlayName
+      Else
+         msg = "Waiting for a Showdown to complete by " & PlayCode(Logic!player).PlayName
+      End If
    Case "T"
       msg = "Waiting for Player Trading to complete"
    
@@ -364,14 +370,23 @@ Set rst = Nothing
 End Sub
 
 Public Function getCrew(ByVal SupplyID) As Boolean
-Dim rst As New ADODB.Recordset, SQL, CrewID, crewcnt
-
-   SQL = "SELECT SupplyDeck.CardID, Crew.* FROM Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID WHERE Seq=5 AND Wanted = 0 AND Moral = 0 AND Crew.CrewID NOT IN (23,54)"
+Dim rst As New ADODB.Recordset, SQL, CrewID, crewcnt, imposter
+   imposter = ""
+   If hasCrew(player.ID, 23) Then
+      imposter = "41,54"
+   ElseIf hasCrew(player.ID, 41) Then
+      imposter = "23,54"
+   ElseIf hasCrew(player.ID, 54) Then
+      imposter = "23,41"
+   End If
+   SQL = "SELECT SupplyDeck.CardID, Crew.* FROM Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID WHERE Seq=5 AND Wanted = 0 AND Moral = 0"
+   If imposter <> "" Then SQL = SQL & " AND Crew.CrewID NOT IN (" & imposter & ")"
    SQL = SQL & " AND SupplyID = " & SupplyID
    If getLeader = 69 Then 'add Atherton check
       SQL = SQL & " AND Crew.Companion = 0"
    End If
    SQL = SQL & " Order by Pay"
+   imposter = 0
    rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
    If Not rst.EOF Then
       If getMoney(player.ID) > rst!Pay Then 'can afford it
@@ -379,8 +394,23 @@ Dim rst As New ADODB.Recordset, SQL, CrewID, crewcnt
          'add the card to the players deck
          DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & rst!CardID & ")"
          getMoney player.ID, rst!Pay * -1
+         If rst!CrewID = 23 Or rst!CrewID = 41 Or rst!CrewID = 54 Then 'we have deception
+            If haveCrewAnyone(23) And rst!CrewID <> 23 Then
+               doDiscardCrew 28
+               imposter = 23
+            ElseIf haveCrewAnyone(41) And rst!CrewID <> 41 Then
+               doDiscardCrew 70
+               imposter = 41
+            ElseIf haveCrewAnyone(54) And rst!CrewID <> 54 Then
+               doDiscardCrew 100
+               imposter = 54
+            End If
+         End If
          PutMsg player.PlayName & " hires " & rst!CrewName, player.ID, Logic!Gamecntr
-         
+         If imposter > 0 Then
+            PutMsg getCrewName(0, imposter) & " has turned up as " & rst!CrewName & " on " & player.PlayName & "'s Ship"
+         End If
+                  
          getCrew = True
       End If
    End If
@@ -436,6 +466,21 @@ Dim rst As New ADODB.Recordset, SQL, CrewID, maxCrewID, crewcnt, noOfCrew
       End If
    Wend
    rst.Close
+End Function
+
+Public Function haveCrewAnyone(ByVal CrewID) As Boolean
+Dim rst As New ADODB.Recordset
+Dim SQL
+   'may need to manage "On Job" status
+   SQL = "SELECT PlayerSupplies.PlayerID, SupplyDeck.CrewID "
+   SQL = SQL & "FROM PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID "
+   SQL = SQL & "WHERE SupplyDeck.CrewID=" & CrewID
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+         haveCrewAnyone = True
+   End If
+   rst.Close
+   Set rst = Nothing
 End Function
 
 Public Sub dealDriveAndJobs(ByVal playerID)
@@ -725,6 +770,7 @@ Dim SQL
    End If
    rst.Close
    Set rst = Nothing
+   
 End Function
 
 Public Function getJobSector(ByVal CardID, ByVal JobID) As Integer
@@ -1743,6 +1789,22 @@ Dim SQL, Dice As Integer, cnt As Integer
    rst.Close
 End Function
 
+'update their pile status - 0 removed, 5 -discarded
+Public Sub doDiscardCrew(ByVal CardID, Optional ByVal status As Variant = 5)
+Dim CrewID
+
+   CrewID = varDLookup("CrewID", "SupplyDeck", "CardID=" & CardID)
+
+   'update their pile status - 0 removed, 5 -discarded or playerid
+   DB.Execute "UPDATE SupplyDeck SET Seq = " & status & " WHERE CardID = " & CardID
+   'remove any Gear first
+   DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = " & CrewID
+   'delete the card to the players deck
+   DB.Execute "DELETE FROM PlayerSupplies WHERE CardID = " & CardID
+
+   
+End Sub
+
 ' returns the (first) CrewID if that crew has a given Perk column attribute, may be more than one crew that has it tho
 Public Function getPerkAttributeCrew(ByVal playerID, ByVal Attrib As String, Optional ByVal CardID As Integer = 0, Optional ByVal CrewID As Integer = 0) As Integer
 Dim rst As New ADODB.Recordset
@@ -1762,6 +1824,24 @@ Dim SQL
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
        getPerkAttributeCrew = rst!CrewID
+   End If
+   rst.Close
+   Set rst = Nothing
+End Function
+
+'return the summated value of the Perk attribute
+Public Function getPerkAttributeSum(ByVal playerID, ByVal Attrib As String) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+   If Attrib = "" Then Exit Function
+   'may need to manage "On Job" status
+   SQL = "SELECT SUM(Perk." & Attrib & ") AS SumVal"
+   SQL = SQL & " FROM Perk INNER JOIN (PlayerSupplies INNER JOIN (Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID) ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Perk.PerkID = Crew.PerkID "
+   SQL = SQL & "WHERE PlayerSupplies.OffJob = 0 AND PlayerSupplies.PlayerID=" & playerID & " AND Perk." & Attrib & " <> 0"
+   
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+       getPerkAttributeSum = Nz(rst!SumVal, 0)
    End If
    rst.Close
    Set rst = Nothing
@@ -2113,8 +2193,8 @@ Dim SQL
    Set rst = Nothing
 End Function
 
-'mercs = 1 count then, mercs=2 count e'ryone else
-Public Function getSkill(ByVal playerID, ByVal skill As String, Optional ByVal mercs As Integer = 0, Optional ByVal noDiscards As Boolean = False, Optional ByVal kosher As Boolean = False) As Integer
+'Mode = 1 for Showdowns
+Public Function getSkill(ByVal playerID, ByVal skill As String, Optional ByVal mode As Integer = 0) As Integer
 Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
 Dim SQL
    getSkill = 0
@@ -2124,12 +2204,6 @@ Dim SQL
    SQL = SQL & "ON Crew.CrewID = SupplyDeck.CrewID) ON PlayerSupplies.CardID = SupplyDeck.CardID "
    SQL = SQL & "WHERE PlayerSupplies.OffJob = 0 AND Players.PlayerID=" & playerID
    
-   If mercs = 1 Then
-      SQL = SQL & " AND Crew.Merc = 1"
-   ElseIf mercs = 2 Then
-      SQL = SQL & " AND Crew.Merc = 0"
-   End If
-
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       getSkill = getSkill + rst.Fields(skill)
@@ -2140,7 +2214,7 @@ Dim SQL
          getSkill = getSkill + 1
       End If
 
-      If rst!HillFolk = 1 And mercs = 0 Then
+      If rst!HillFolk = 1 Then
          'check for HillFolk fight bonus
          If countCrewAttribute(playerID, "HillFolk") > 2 And skill = cstrSkill(1) Then getSkill = getSkill + 1
       End If
@@ -2148,37 +2222,27 @@ Dim SQL
       If countCrewAttribute(playerID, "Merc") > 2 And rst!CrewID = 65 And skill = cstrSkill(3) Then
          getSkill = getSkill + 2
       End If
-
-      'no kosherised rule or its Lund who can have gear counted
-      If Not kosher Or rst!CrewID = 60 Then
-         'grab skill from gear crew is carrying-----------------------------
-         SQL = "SELECT Gear.* "
-         SQL = SQL & "FROM (Gear INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Gear.GearID = SupplyDeck.GearID) INNER JOIN Crew ON PlayerSupplies.CrewID = Crew.CrewID "
-         SQL = SQL & "WHERE PlayerSupplies.CrewID=" & rst!CrewID
-         If noDiscards Then
-            SQL = SQL & " AND Gear.Discard=0"
-         End If
-         
-         If mercs = 1 Then
-            SQL = SQL & " AND Crew.Merc = 1"
-         ElseIf mercs = 2 Then
-            SQL = SQL & " AND Crew.Merc = 0"
-         End If
-         
-         rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
-         While Not rst2.EOF
-            getSkill = getSkill + rst2.Fields(skill)
-            rst2.MoveNext
-         Wend
-         rst2.Close
-         '------------------------------------------------------------
-      Else 'koshized rules apply, with exceptions
-         If hasGear(playerID, 37) And LCase(skill) = "fight" Then
-            getSkill = getSkill + 1
-         End If
-      
+      If rst!CrewID = 94 And getZone(getPlayerSector(playerID)) = "B" And skill = cstrSkill(1) Then   'Sheriff Bourne
+         getSkill = getSkill + 2
       End If
-      
+      If mode = 1 And rst!PerkID = 62 And skill = cstrSkill(1) Then    'Marshal & Deputy & Ensign
+         getSkill = getSkill + 1
+      End If
+     
+
+      'grab skill from gear crew is carrying-----------------------------
+      SQL = "SELECT Gear.* "
+      SQL = SQL & "FROM (Gear INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Gear.GearID = SupplyDeck.GearID) INNER JOIN Crew ON PlayerSupplies.CrewID = Crew.CrewID "
+      SQL = SQL & "WHERE PlayerSupplies.CrewID=" & rst!CrewID
+
+      rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+      While Not rst2.EOF
+        getSkill = getSkill + rst2.Fields(skill)
+        rst2.MoveNext
+      Wend
+      rst2.Close
+      '------------------------------------------------------------
+
       
       rst.MoveNext
    Wend

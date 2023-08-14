@@ -8,6 +8,7 @@ Begin VB.Form frmShowdown
    ClientTop       =   390
    ClientWidth     =   11970
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmShowdown.frx":0000
@@ -34,7 +35,7 @@ Begin VB.Form frmShowdown
       Style           =   1  'Graphical
       TabIndex        =   12
       ToolTipText     =   "force your Rival to re-roll"
-      Top             =   3090
+      Top             =   3150
       Visible         =   0   'False
       Width           =   1395
    End
@@ -57,7 +58,7 @@ Begin VB.Form frmShowdown
       Style           =   1  'Graphical
       TabIndex        =   11
       ToolTipText     =   "use The Guardian to re-roll"
-      Top             =   3090
+      Top             =   3150
       Visible         =   0   'False
       Width           =   1035
    End
@@ -103,7 +104,7 @@ Begin VB.Form frmShowdown
       Style           =   1  'Graphical
       TabIndex        =   2
       ToolTipText     =   "add any single use Gear that may help, then ACCEPT the outcome"
-      Top             =   3090
+      Top             =   3150
       Width           =   1035
    End
    Begin VB.Timer Timing 
@@ -122,6 +123,25 @@ Begin VB.Form frmShowdown
       TabIndex        =   0
       Top             =   1530
       Width           =   5655
+   End
+   Begin VB.Label Label1 
+      BackStyle       =   0  'Transparent
+      Caption         =   "Discardable Gear cannot be withdrawn once selected "
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   6.75
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H0000C0C0&
+      Height          =   195
+      Left            =   180
+      TabIndex        =   13
+      Top             =   2940
+      Width           =   5355
    End
    Begin VB.Label lblTotal2 
       Alignment       =   2  'Center
