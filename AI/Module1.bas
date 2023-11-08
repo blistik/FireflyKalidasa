@@ -1037,9 +1037,9 @@ Dim x
       Do
          x = RollDice(152)
         
-         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And getZone(x) <> "A" And x > 1 Then
+         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And getZone(x) <> "A" And x > 2 Then
             MoveShip ship, x
-            PutMsg "Cutter turns up at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), " the unknown..")
+            PutMsg "A Cutter is sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), "the unknown..")
             doMoveCutterPlanetary = True
             Exit Do
          End If
@@ -1495,9 +1495,9 @@ Dim x
    
       Do
          x = RollDice(152)
-         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And x <> 63 And x <> 64 Then
+         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And x > 2 Then
             MoveShip 6, x
-            PutMsg "Corvette turns up at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), " the unknown..")
+            PutMsg "The Corvette is sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), " the unknown..")
             doMoveCorvettePlanetary = True
             Exit Do
          End If
@@ -1514,7 +1514,7 @@ Dim x
          x = RollDice(71)
          If Nz(varDLookup("Zones", "Board", "SectorID=" & x & " And Haven=0"), "B") = "A" And getClearSector(x) <> "" Then
             MoveShip 5, x
-            PutMsg "Cruiser turns up at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), "SectorID " & x)
+            PutMsg "The Cruiser is sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), "SectorID " & x)
             doMoveCruiserToFreeSector = True
             Exit Do
          End If
@@ -2263,6 +2263,11 @@ Public Function cstrProfession(ByVal Profession) As String
       cstrProfession = varDLookup("ProfessionName", "Profession", "ProfessionID=" & Profession)
    End Select
       
+End Function
+
+Public Function hasWarrant() As Boolean
+   hasWarrant = (varDLookup("Warrants", "Players", "PlayerID=" & player.ID) > 0)
+
 End Function
 
 'return true if a player that has an active crew, or with linked gear, that has a keyword

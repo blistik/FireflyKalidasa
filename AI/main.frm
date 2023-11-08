@@ -789,6 +789,11 @@ On Error GoTo err_handler
       targetSector = 0
       bountyCardID = 0
       
+      If getCruiserSector = SectorID And hasWarrant Then
+         PutMsg player.PlayName & " pays fine for Warrants", player.ID, Logic!Gamecntr
+         DB.Execute "UPDATE Players SET Warrants=0, Pay = " & IIf(getMoney(player.ID) < 1000, "0", "Pay - 1000") & " WHERE PlayerID =" & player.ID
+      End If
+      
       'need fuel??
       If ((fuelleft < 3 And FullburnMovesDone = 0) Or fuelleft < 2) And getMoney(player.ID) > 0 And Not fullburndone Then     'head for nearest supply as our top priority
          If SectorID = targetSupplySector Then
@@ -871,6 +876,10 @@ On Error GoTo err_handler
                workdone = True
             End If
          ElseIf SectorID = varDLookup("SectorID", "Contact", "ContactID=" & targetContact) And (IsEmpty(targetJobCard) Or IsNull(targetJobCard)) Then 'yes, we're at the Contact
+            If targetContact = 2 And hasWarrant() And isSolid(player.ID, targetContact) And getMoney(player.ID) > 1999 Then
+               PutMsg player.PlayName & " gets Badger to clear Warrants for $1000", player.ID, Logic!Gamecntr
+               DB.Execute "UPDATE Players SET Warrants=0, Pay = Pay - 1000 WHERE PlayerID =" & player.ID
+            End If
             'pickup a job
             targetJobCard = getJob(targetContact)
             If IsEmpty(targetJobCard) Then
@@ -2329,23 +2338,7 @@ Dim msg As String
 
    If bountyCardID = 0 Then Exit Function
    
-'   SQL = "SELECT * FROM ShowDownScores"
-'   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
-'   While Not rst.EOF
-'      If rst!playerID = player.ID Then
-'         ASkill = rst!skill
-'         ADice = rst!Dice
-'      Else
-'         DefenderID = rst!playerID
-'         DSkill = rst!skill
-'         DDice = rst!Dice
-'      End If
-'      rst.MoveNext
-'   Wend
-'   rst.Close
-   
 
-   'If ASkill + ADice > DSkill + DDice Then
    If processBountyJumpScore(DefenderID) Then
       msg = " wins"
       
@@ -2372,7 +2365,8 @@ Dim msg As String
       assignDeal player.ID, bountyCardID
       processBountyJump = True
       'Agent McGinnis is a bad loser
-      If hasCrew(DefenderID, 92) Then PutMsg PlayCode(DefenderID).PlayName & "s Agent McGinnis tries to issue a Warrant, but they don't apply to Robots!", DefenderID, Logic!Gamecntr
+      If hasCrew(DefenderID, 92) Then issueWarrant player.ID, DefenderID
+      'PutMsg PlayCode(DefenderID).PlayName & "s Agent McGinnis tries to issue a Warrant, but they don't apply to Robots!", DefenderID, Logic!Gamecntr
      
    Else
       msg = " has lost"
@@ -2416,7 +2410,7 @@ End Function
 Private Sub issueWarrant(ByVal takerID As Integer, ByVal giverID As Integer)
 
    DB.Execute "UPDATE Players set Warrants = Warrants + 1 WHERE PlayerID = " & CStr(takerID)
-   PutMsg "Agent McGinnis didn't take kindly to the result and has issued a Warrant to " & PlayCode(takerID).PlayName, giverID, Logic!Gamecntr
+   PutMsg "Agent McGinnis didn't take kindly to the Showdown result and has issued a Warrant to " & PlayCode(takerID).PlayName, giverID, Logic!Gamecntr
    
 End Sub
 

@@ -2712,7 +2712,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                IIf(rst!KeywordBonus = 1, rst!KeyWords, "") & IIf(rst!ProfessionID = 0, "", " " & cstrProfession(rst!ProfessionID)) & IIf(rst!BonusPerSkill > 0, " /" & cstrSkill(rst!BonusPerSkill), "") & _
                IIf(rst!Job3ID > 0, "Bonus Job", "") & IIf(payment > 0, "  plus $" & CStr(payment), "") & IIf(payment < 0, "  minus $" & CStr(Abs(payment)), "") & _
                IIf(getPerkAttributeSum(playerID, "BountyBonus") > 0 And ContactID = 10, "  Bounty bonus $" & getPerkAttributeSum(playerID, "BountyBonus"), "")
-
+            frmCrew.cmd.Caption = "Pay"
             frmCrew.Show 1
             payCrewTotal = frmCrew.payTotal
          End If
@@ -4672,11 +4672,11 @@ Dim frmSS As New frmSkillSel, Skilltype As Integer, skill As Integer, Dice As In
       End If
       'Agent McGinnis is a bad loser
       If hasCrew(player.ID, 92) Then
-         If isAI(DefenderID) Then
-            PutMsg player.PlayName & "s Agent McGinnis tries to issue a Warrant, but they don't apply to Robot ships!", player.ID, Logic!Gamecntr, True, 92
-         Else
+         'If isAI(DefenderID) Then
+         '   PutMsg player.PlayName & "s Agent McGinnis tries to issue a Warrant, but they don't apply to Robot ships!", player.ID, Logic!Gamecntr, True, 92
+         'Else
             issueWarrant DefenderID, player.ID
-         End If
+         'End If
       End If
    End If
    Logic.Requery
@@ -4714,8 +4714,8 @@ End Sub
 
 Private Sub issueWarrant(ByVal takerID As Integer, ByVal giverID As Integer)
 
-   DB.Execute "UPDATE Players set Warrants = Warrants + 1 WHERE PlayerID = " & CStr(takerID)
-   PutMsg PlayCode(giverID).PlayName & "'s Agent McGinnis didn't take kindly to the result and has issued a Warrant to " & PlayCode(takerID).PlayName, giverID, Logic!Gamecntr, True, 92
+   DB.Execute "UPDATE Players set Warrants = Warrants + 1, Solid5 = 0 WHERE PlayerID = " & CStr(takerID)  'clear Harken Solid
+   PutMsg PlayCode(giverID).PlayName & "'s Agent McGinnis didn't take kindly to the Showdown result and has issued a Warrant to " & PlayCode(takerID).PlayName, giverID, Logic!Gamecntr, True, 92
 End Sub
 
 ' use for Nav type Skill Tests (not Work)

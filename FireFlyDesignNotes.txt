@@ -5,6 +5,19 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
+v 1.9.2 ~ 3 Nov 2023 - 8 Nov 2023
+fix: If both Emma & Lucy on the crew - allow removing disgruntled from either
+fix: Pay Crew - when none selected, now says "selected=0" 
+fix: Discarding The Salesman during or after a BUY action gives option to discard without using his buy perk
+fix: Disable "TRADE" with AI ships
+fix: Nav opt "A Legitimate Tip" only available if Cruiser is not already in the same sector as the Outlaw
+fix: NPC Ship Planetary sector move to exclude sector 1 or 2 (ghost planets)
+fix: receiving a Warrant from Agent McGinnis now also clears SOLID with Harken
+bot: updated to v1.1.0
+bot: able to be hit with a Warrant from Agent McGinnis
+bot: will Deal with Badger if solid to clear any Warrants
+bot: will pay fine to Cruiser if carrying a Warrant
+
 v 1.9.1 ~ 10 Jul 2023 - 14 Aug 2023
 add: Lawman profession
 new: Crew - Agent McGinnis

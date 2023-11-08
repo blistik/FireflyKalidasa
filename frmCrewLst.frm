@@ -448,6 +448,7 @@ Dim totalfight As Integer, totaltech As Integer, totalnego As Integer
    payTotal = 0
    crewcnt = 0
    With sftTree
+      .CellText(0, 1) = "selected=0"
       For Index = 0 To .ListCount - 1
          If .ItemDataString(Index) = "R" Then
             pay = pay + .CellItemData(Index, 8)

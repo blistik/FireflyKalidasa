@@ -455,6 +455,7 @@ With sftTree
          .CellText(Index, 4) = rst!PlanetName
       End If
       .CellItemData(Index, 4) = rst!playerID
+      .CellItemData(Index, 5) = rst!AI
       .CellItemData(Index, 6) = rst!SectorID
       If rst!Zones = "B" Then
          .CellBackColor(Index, 4) = 0
@@ -1354,58 +1355,58 @@ On Error GoTo err_handler
       If Button = 2 Then
          With sftTree
             If .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 1 And .CellItemData(Index, 3) = 0 And .CellItemData(Index, 7) > 0 And (CrewCapacity(player.ID) - getCrewCount(player.ID) >= 1) And getMoney(player.ID) >= .CellItemData(Index, 8) And actionSeq = ASselect Then 'poach disgruntled other player
-               mnuPopup(6).Visible = False
-               mnuPopup(5).Visible = False
-               mnuPopup(4).Visible = True 'poach crew
-               mnuPopup(3).Visible = False
-               mnuPopup(2).Visible = False
-               mnuPopup(1).Visible = False
-               mnuPopup(0).Visible = False
+               mnuPopUp(6).Visible = False
+               mnuPopUp(5).Visible = False
+               mnuPopUp(4).Visible = True 'poach crew
+               mnuPopUp(3).Visible = False
+               mnuPopUp(2).Visible = False
+               mnuPopUp(1).Visible = False
+               mnuPopUp(0).Visible = False
                sftTreeListIndex = Index
-            ElseIf .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 0 And actionSeq = ASselect Then 'trade with player
-               mnuPopup(6).Visible = False
-               mnuPopup(5).Visible = False
-               mnuPopup(3).Visible = True  'Trade
-               mnuPopup(4).Visible = False
-               mnuPopup(2).Visible = False
-               mnuPopup(1).Visible = False
-               mnuPopup(0).Visible = False
+            ElseIf .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 0 And .CellItemData(Index, 5) = 0 And actionSeq = ASselect Then 'trade with player
+               mnuPopUp(6).Visible = False
+               mnuPopUp(5).Visible = False
+               mnuPopUp(3).Visible = True  'Trade
+               mnuPopUp(4).Visible = False
+               mnuPopUp(2).Visible = False
+               mnuPopUp(1).Visible = False
+               mnuPopUp(0).Visible = False
                sftTreeListIndex = Index
             ElseIf .CellItemData(Index, 4) <> player.ID Then 'not yours
                Exit Sub
             Else
-               mnuPopup(0).Visible = True 'View
-               mnuPopup(3).Visible = False
-               mnuPopup(4).Visible = False
+               mnuPopUp(0).Visible = True 'View
+               mnuPopUp(3).Visible = False
+               mnuPopUp(4).Visible = False
                sftTreeListIndex = Index
                'discard check
                If .CellItemData(Index, 0) = 1 And getPlanetID(player.ID) > 0 And .CellItemData(Index, 3) = 0 Then 'crew
-                  mnuPopup(1).Visible = True
+                  mnuPopUp(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 2 Or .CellItemData(Index, 0) = 3 And actionSeq = ASselect Then  'gear
-                  mnuPopup(1).Visible = True
+                  mnuPopUp(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 5 And Not isDriveCore(.CellItemData(Index, 1)) Then   'shipUpgrds
-                  mnuPopup(1).Visible = True
+                  mnuPopUp(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 6 Or .CellItemData(Index, 0) = 7 Or .CellItemData(Index, 0) = 8 Or .CellItemData(Index, 0) = 10 Then  'goods
-                  mnuPopup(1).Visible = True
+                  mnuPopUp(1).Visible = True
                ElseIf (.CellItemData(Index, 0) = 9 Or .CellItemData(Index, 0) = 11) And getPlanetID(player.ID) > 0 Then  'passengers/fugi
-                  mnuPopup(1).Visible = True
+                  mnuPopUp(1).Visible = True
                Else
-                  mnuPopup(1).Visible = False
+                  mnuPopUp(1).Visible = False
                End If
                
-               mnuPopup(2).Visible = (hasGearAttribute(player.ID, "LabourContract", .CellItemData(Index, 2)) > 0) And (Not frmAction.buydone) And (actionSeq = ASselect) And .CellItemData(Index, 2) > 0 ' is gear with LabourContract
-               mnuPopup(0).Visible = (.CellItemData(Index, 0) < 6 Or mnuPopup(1).Visible = False)
+               mnuPopUp(2).Visible = (hasGearAttribute(player.ID, "LabourContract", .CellItemData(Index, 2)) > 0) And (Not frmAction.buydone) And (actionSeq = ASselect) And .CellItemData(Index, 2) > 0 ' is gear with LabourContract
+               mnuPopUp(0).Visible = (.CellItemData(Index, 0) < 6 Or mnuPopUp(1).Visible = False)
                
                If .CellItemData(Index, 0) = 1 And getLeader() <> .CellItemData(Index, 2) Then
-                  mnuPopup(5).Visible = Not isOffJob(.CellItemData(Index, 1)) 'Off Job
-                  mnuPopup(6).Visible = Not mnuPopup(5).Visible  'On Job
+                  mnuPopUp(5).Visible = Not isOffJob(.CellItemData(Index, 1)) 'Off Job
+                  mnuPopUp(6).Visible = Not mnuPopUp(5).Visible  'On Job
                Else
-                  mnuPopup(6).Visible = False
-                  mnuPopup(5).Visible = False
+                  mnuPopUp(6).Visible = False
+                  mnuPopUp(5).Visible = False
                End If
             End If
                 
-            If .CellItemData(Index, 0) = 1 Or (mnuPopup(0).Visible And .CellItemData(Index, 0) < 6 And .CellItemData(Index, 0) > 0 And .CellItemData(Index, 0) <> 4) Or mnuPopup(1).Visible Or mnuPopup(3).Visible Or mnuPopup(4).Visible Then PopupMenu mnuPop
+            If .CellItemData(Index, 0) = 1 Or (mnuPopUp(0).Visible And .CellItemData(Index, 0) < 6 And .CellItemData(Index, 0) > 0 And .CellItemData(Index, 0) <> 4) Or mnuPopUp(1).Visible Or mnuPopUp(3).Visible Or mnuPopUp(4).Visible Then PopupMenu mnuPop
             
         End With
       End If
@@ -1487,11 +1488,16 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             Select Case .CellItemData(x, 0) ' 1-crew 2-linked gear, 3-unlinked gear, 5-ship upgd
             Case 1 'CREW
                status = DISCARDED
-               If .CellItemData(x, 2) = 68 Then 'buy ShipUpGrd at half price
-                  If frmAction.buydone Then
-                     MessBox "Must have a Buy Action available!", "Buy Action", "Ooops", "", getLeader()
+               'The Salesman - buy ShipUpGrd at half price
+               If .CellItemData(x, 2) = 68 And frmAction.buydone Then
+                  If MessBox("No Buy action available, do you want to forego The Saleman's buy perk and discard him?", "The Salesman", "Discard", "Keep", 68) = 1 Then
                      Exit Sub
                   End If
+               ElseIf .CellItemData(x, 2) = 68 And actionSeq >= ASBuy And actionSeq <= ASBuyEnd Then
+                      If MessBox("A Buy action is in progress, do you want to forego The Saleman's buy perk and discard him?", "The Salesman", "Discard", "Keep", 68) = 1 Then
+                         Exit Sub
+                      End If
+               ElseIf .CellItemData(x, 2) = 68 Then
                   'present list of upgrades to buy one at half price
                   Set frmShUp = New frmShipUpgd
                   frmShUp.discardMode = 2

@@ -2610,7 +2610,7 @@ Dim SQL
 End Function
 
 ' returns the (first) CrewID if that crew has a given Perk column attribute, may be more than one crew that has it tho
-Public Function getPerkAttributeCrew(ByVal playerID, ByVal Attrib As String, Optional ByVal CardID As Integer = 0, Optional ByVal CrewID As Integer = 0) As Integer
+Public Function getPerkAttributeCrew(ByVal playerID, ByVal Attrib As String, Optional ByVal CardID As Integer = 0, Optional ByVal CrewID As Integer = 0, Optional ByVal exclude As Boolean = False) As Integer
 Dim rst As New ADODB.Recordset
 Dim SQL
    If Attrib = "" Then Exit Function
@@ -2619,10 +2619,10 @@ Dim SQL
    SQL = SQL & " FROM Perk INNER JOIN (PlayerSupplies INNER JOIN (Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID) ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Perk.PerkID = Crew.PerkID "
    SQL = SQL & "WHERE PlayerSupplies.OffJob = 0 AND PlayerSupplies.PlayerID=" & playerID & " AND Perk." & Attrib & " <> 0"
    If CardID > 0 Then 'if the perk needs to be specific to a crew
-      SQL = SQL & " AND PlayerSupplies.CardID=" & CardID
+      SQL = SQL & " AND PlayerSupplies.CardID" & IIf(exclude, "<>", "=") & CardID
    End If
    If CrewID > 0 Then 'if the perk needs to be specific to a crew
-      SQL = SQL & " AND SupplyDeck.CrewID=" & CrewID
+      SQL = SQL & " AND SupplyDeck.CrewID" & IIf(exclude, "<>", "=") & CrewID
    End If
    
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
@@ -3214,7 +3214,12 @@ Dim frmCrew As New frmCrewSel, CrewID, filter
       filter = ""
    Else 'otherwise exclude the first crew that has the remove disgruntled perk
       CrewID = getPerkAttributeCrew(player.ID, "RemoveDisgruntled")
-      filter = " AND SupplyDeck.CrewID <> " & CrewID
+      'check to see if there is more than one with this Attribute
+      If getPerkAttributeCrew(player.ID, "RemoveDisgruntled", 0, CrewID, True) = 0 Then
+         filter = " AND SupplyDeck.CrewID <> " & CrewID
+      Else
+         filter = ""
+      End If
    End If
  
    frmCrew.crewFilter = " INNER JOIN (PlayerSupplies INNER JOIN  SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID WHERE PlayerSupplies.PlayerID=" & playerID & " AND Crew.Disgruntled=1" & filter
@@ -3622,6 +3627,8 @@ Dim CrewID
    DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = " & CrewID
    'delete the card to the players deck
    DB.Execute "DELETE FROM PlayerSupplies WHERE CardID = " & CardID
+   'clear disgruntled
+   DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & CrewID
 
    
 End Sub
@@ -3833,9 +3840,9 @@ Dim x
    
       Do
          x = RollDice(152)
-         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And x <> 63 And x <> 64 Then
+         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And x > 2 Then
             MoveShip 6, x
-            PutMsg "Corvette turns up at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), " the unknown..")
+            PutMsg "The Corvette has been sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), "the unknown..")
             doMoveCorvettePlanetary = True
             Exit Do
          End If
@@ -3850,10 +3857,9 @@ Dim x
    
       Do
          x = RollDice(152)
-        
          If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And getZone(x) <> "A" And x > 2 Then
             MoveShip ship, x
-            PutMsg "Cutter turns up at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), " the unknown..")
+            PutMsg "A Cutter has been sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), "the unknown..")
             doMoveCutterPlanetary = True
             Exit Do
          End If
@@ -3928,7 +3934,7 @@ Dim SQL
    SQL = "SELECT * FROM Players WHERE Name IS NOT NULL AND PlayerID <> " & playerID
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    Do While Not rst.EOF
-      If isOutlaw(rst!playerID) And getZone(Nz(rst!SectorID, 0)) = "A" Then
+      If isOutlaw(rst!playerID) And getZone(Nz(rst!SectorID, 0)) = "A" And rst!SectorID <> getCruiserSector Then 'check Cruiser not already there
          outlawExists = True
          Exit Do
       End If
