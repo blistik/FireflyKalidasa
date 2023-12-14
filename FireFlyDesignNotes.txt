@@ -5,6 +5,10 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
+v 1.9.3 ~ 14 Dec 2023
+cfg: increase of exclude crew field for a story
+new: added support for MariaDB Server using Provider=MSDASQL;Driver={MariaDB ODBC 3.1 Driver}
+
 v 1.9.2 ~ 3 Nov 2023 - 8 Nov 2023
 fix: If both Emma & Lucy on the crew - allow removing disgruntled from either
 fix: Pay Crew - when none selected, now says "selected=0" 
