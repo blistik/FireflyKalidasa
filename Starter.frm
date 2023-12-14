@@ -244,7 +244,12 @@ Public isHost As Boolean, started As Boolean
 Private Sub cbo_Click()
     
    If isHost Then
-      Logic.Update "StoryID", GetCombo(cbo)
+      DB.Execute "UPDATE GameSeq set StoryID = " & CStr(GetCombo(cbo))
+      
+      'Logic.Requery
+      'Logic!StoryID = GetCombo(cbo)
+      'Logic.Update
+      'Logic.Update "StoryID", GetCombo(cbo)
 '      If GetCombo(cbo) > 0 Then 'custom story
 '         If doCustomStory = 0 Then
 '            LoadCombo cbo, "story", " WHERE ACTIVE = 1 Order by StoryID"
@@ -268,7 +273,7 @@ Dim rst As New ADODB.Recordset, col, cnt, x
 Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer, randCrew As Integer
 Dim frmCrewList As frmCrewLst
          
-   On Error GoTo err_handler
+   'On Error GoTo err_handler
    playsnd 8
    UpdateLst
    
@@ -284,6 +289,7 @@ Dim frmCrewList As frmCrewLst
          PutMsg player.PlayName & " has chosen " & frmCrew.cboCrew.Text, player.ID
          cmd(0).Enabled = False
          cmd(0).Caption = "waiting"
+         Logic.Requery
          SetupPlayer player.ID, Logic!StoryID
          'drop this leaders Card into the Player's supplies
          DB.Execute "INSERT INTO PlayerSupplies (PlayerID,CardID) VALUES (" & player.ID & ", " & varDLookup("CardID", "SupplyDeck", "CrewID =" & leader) & ")"
@@ -319,11 +325,14 @@ Dim frmCrewList As frmCrewLst
             'Opt(x).Enabled = False
          Next x
          If IsEmpty(col) Or txt.Text = "" Then Exit Sub
-         rst.Open "SELECT * FROM Players WHERE Colour = '" & col & "' ORDER BY PlayerID", DB, adOpenDynamic, adLockOptimistic
+         rst.CursorLocation = adUseClient
+         rst.Open "SELECT * FROM Players WHERE Colour = '" & col & "' ORDER BY PlayerID", DB, adOpenStatic, adLockReadOnly
          If IsNull(rst!Name) Then
-            rst.Update "Name", txt.Text
+            'rst.Update "Name", txt.Text
             player.ID = rst!playerID
-            player.PlayName = txt.Text
+            player.PlayName = Trim(txt.Text)
+            DB.Execute "UPDATE Players SET Name = '" & SQLFilter(player.PlayName) & "' WHERE PlayerID = " & CStr(player.ID)
+            
             For x = 0 To 3
                opt(x).Enabled = False
             Next x
@@ -343,13 +352,15 @@ Dim frmCrewList As frmCrewLst
                End If
             Next x
             UpdateLst
-            MessBox rst!ship & " is taken by " & rst!Name, "Ship taken", "Ooops", "", 0, 0, 6
+            MessBox rst!ship & " is taken by " & player.PlayName, "Ship taken", "Ooops", "", 0, 0, 6
             
          End If
       End If
    Case 1 'start
       'lock the story & start button
-      Logic.Update "StoryID", GetCombo(cbo)
+      DB.Execute "UPDATE GameSeq set StoryID = " & GetCombo(cbo)
+      Logic.Requery
+      'Logic.Update "StoryID", GetCombo(cbo)
       cbo.Enabled = False
       cmd(1).Enabled = False
       cmd(3).Enabled = False
@@ -394,11 +405,13 @@ Dim frmCrewList As frmCrewLst
           x = Int((4 * Rnd)) + 1
           If PlayCode(x).PlayName <> "" Then nextplayer = x
       Loop While nextplayer = 0
-         
-      Logic!Seq = "L"  'pick leader
-      Logic!player = nextplayer
-      Logic!AutoAI = chkAI.Value
-      Logic.Update
+       
+      'pick leader
+      DB.Execute "UPDATE GameSeq SET Seq = 'L',Player = " & CStr(nextplayer) & ", AutoAI = " & CStr(chkAI.Value)
+      'Logic!Seq = "L"
+      'Logic!player = nextplayer
+      'Logic!AutoAI = chkAI.Value
+      'Logic.Update
       If nextplayer = player.ID Then 'your go to pick leader
          cmd(0).Enabled = True
       End If
@@ -419,7 +432,7 @@ Dim frmCrewList As frmCrewLst
          Timing.Enabled = True
       End If
    Case 3
-      x = ShellExecute(x, "OPEN", App.Path & "\FireflyAIBot.exe ", DataB, vbNullString, 1)                '1=normal, 2=min, 3=max, 4=behind
+      x = ShellExecute(x, "OPEN", App.Path & "\FireflyAIBot.exe ", datab, vbNullString, 1)                '1=normal, 2=min, 3=max, 4=behind
    End Select
   
   Exit Sub
@@ -456,6 +469,7 @@ End Sub
 Private Sub initForm()
 Dim rst As New ADODB.Recordset
    started = False
+   rst.CursorLocation = adUseClient
    rst.Open "SELECT * FROM Players WHERE PlayerID > 0 AND PlayerID < 5 ORDER BY PlayerID", DB, adOpenStatic, adLockReadOnly
    While Not rst.EOF
       opt(rst!playerID - 1).Caption = rst!ship
@@ -500,7 +514,7 @@ Dim rst As New ADODB.Recordset, col, x, playerID As Integer
    If x = "L" And Val(player.ID) = playerID Then 'your go to pick leader
        cmd(0).Enabled = True
    End If
-
+  rst.CursorLocation = adUseClient
   rst.Open "SELECT Players.*,Crew.CrewName FROM Crew RIGHT JOIN Players ON Crew.CrewID = Players.Leader Where Players.Name Is Not Null And Players.PlayerID < 5 ORDER BY Players.PlayerID", DB, adOpenStatic, adLockReadOnly
   
   While Not rst.EOF
@@ -554,16 +568,18 @@ Dim rst As New ADODB.Recordset, SQL, CrewID, maxCrewID, crewcnt
       SQL = SQL & " AND Crew.Companion = 0"
    End If
    crewcnt = 0
+   rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
    While crewcnt < noOfCrew
       rst.Requery
       CrewID = Int((maxCrewID * Rnd)) + 1
       rst.filter = "CrewID =" & CrewID
       If Not rst.EOF Then
-          DB.Execute "UPDATE SupplyDeck SET Seq =" & player.ID & " WHERE CardID = " & rst!CardID
+         DB.Execute "UPDATE SupplyDeck SET Seq =" & player.ID & " WHERE CardID = " & rst!CardID
           'add the card to the players deck
-          DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & rst!CardID & ")"
-         rst.Update "Seq", player.ID
+         DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & rst!CardID & ")"
+         DB.Execute "UPDATE SupplyDeck SET Seq = " & CStr(player.ID) & " WHERE CardID = " & CStr(rst!CardID)
+         'rst.Update "Seq", player.ID
          crewcnt = crewcnt + 1
       End If
    Wend

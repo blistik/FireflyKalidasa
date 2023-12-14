@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SftTreeX.ocx"
+Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SFTTREEX.OCX"
 Begin VB.Form frmWinner 
    BorderStyle     =   0  'None
    Caption         =   "win"
@@ -192,6 +192,7 @@ With Grid
       .Clear
       SQL = "SELECT PlayerName, Turns, PlayDate,DateDiff('n', StartDate, PlayDate) AS Mins FROM Scores WHERE StoryID=" & Logic!StoryID
       SQL = SQL & " ORDER BY Turns, DateDiff('n', StartDate, PlayDate)"
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
          Index = .AddItem(rst!PlayerName)

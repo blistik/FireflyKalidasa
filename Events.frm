@@ -133,6 +133,7 @@ End Sub
 Public Function getNewEvents() As Boolean
 Dim rst As New ADODB.Recordset
 Dim x, ship As Boolean
+   rst.CursorLocation = adUseClient
    rst.Open "SELECT * FROM Events WHERE EventID > " & LastEventNumber & " ORDER BY EventID", DB, adOpenStatic, adLockReadOnly
    While Not rst.EOF
      x = Grid.InsertItem(0, Replace(rst!event, "^", " "))

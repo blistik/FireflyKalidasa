@@ -550,6 +550,7 @@ Private Sub Timing_Timer()
       lblAccept.Visible = (isHost And Logic!ClientAccept = 1) Or (Not isHost And Logic!HostAccept = 1)
       cmd(2).Enabled = (Not lblAccept.Visible And cmd(2).Caption <> "Done")
       If Logic!HostAccept = 1 And Logic!ClientAccept = 1 Then
+         cmd(0).Enabled = False
          If isHost Then
             processOffer
          End If
@@ -573,9 +574,11 @@ On Error GoTo err_handler
 
    Logic.Requery
    If isHost Then
-      Logic.Update "HostAccept", 1
+      DB.Execute "UPDATE GameSeq SET HostAccept = 1"
+      'Logic.Update "HostAccept", 1
    Else
-      Logic.Update "ClientAccept", 1
+      DB.Execute "UPDATE GameSeq SET ClientAccept = 1"
+      'Logic.Update "ClientAccept", 1
    End If
    
    Exit Sub
@@ -647,10 +650,11 @@ Private Sub ClearTrade()
       DB.Execute "DELETE FROM TradeGoods"
       DB.Execute "DELETE FROM TradeSupplies"
    End If
-   Logic!HostAccept = 0
-   Logic!ClientAccept = 0
-   Logic!trader = 0
-   Logic.Update
+   DB.Execute "UPDATE GameSeq SET HostAccept = 0, ClientAccept = 0, Trader = 0"
+   'Logic!HostAccept = 0
+   'Logic!ClientAccept = 0
+   'Logic!trader = 0
+   'Logic.Update
    Screen.MousePointer = vbNormal
 End Sub
 
@@ -771,15 +775,15 @@ Dim SQL, x As Integer
          MsgBox "You don't have that much Cargo!", vbExclamation
          Exit Function
       End If
-      If rst!contraband < Val(txt(1)) Then
+      If rst!Contraband < Val(txt(1)) Then
          MsgBox "You don't have that much Contraband!", vbExclamation
          Exit Function
       End If
-      If rst!passenger < Val(txt(2)) Then
+      If rst!Passenger < Val(txt(2)) Then
          MsgBox "You don't have that many Passengers!", vbExclamation
          Exit Function
       End If
-      If rst!fugitive < Val(txt(3)) Then
+      If rst!Fugitive < Val(txt(3)) Then
          MsgBox "You don't have that many Fugitives!", vbExclamation
          Exit Function
       End If
@@ -820,6 +824,7 @@ Dim SQL
    SQL = SQL & "ShipUpgrade.ShipUpgradeID = SupplyDeck.ShipUpgradeID "
    SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & player.ID
    SQL = SQL & " ORDER BY Crew.CrewName & 'zz', Gear.GearName & 'zz', ShipUpgrade.UpgradeName & 'zz'"
+   rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       If Nz(rst!leader, 0) = 0 And Nz(rst!DriveCore, 0) = 0 Then
@@ -842,7 +847,7 @@ Dim SQL
    SQL = SQL & "FROM TradeSupplies INNER JOIN (ShipUpgrade RIGHT JOIN (Gear RIGHT JOIN (Crew RIGHT JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID) ON "
    SQL = SQL & "Gear.GearID = SupplyDeck.GearID) ON ShipUpgrade.ShipUpgradeID = SupplyDeck.ShipUpgradeID) ON TradeSupplies.CardID = SupplyDeck.CardID "
    SQL = SQL & "WHERE TradeSupplies.PlayerID=" & playerID
-
+   rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       If Nz(rst!leader, 0) = 0 And Nz(rst!DriveCore, 0) = 0 Then
@@ -860,12 +865,13 @@ Private Sub refreshGoodsSupplies(ByVal playerID)
 Dim rst As New ADODB.Recordset
 Dim SQL, x
    SQL = "SELECT * FROM TradeGoods WHERE PlayerID=" & playerID
+   rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
        txt(6) = CStr(rst!cargo)
-       txt(7) = CStr(rst!contraband)
-       txt(8) = CStr(rst!passenger)
-       txt(9) = CStr(rst!fugitive)
+       txt(7) = CStr(rst!Contraband)
+       txt(8) = CStr(rst!Passenger)
+       txt(9) = CStr(rst!Fugitive)
        txt(10) = CStr(rst!fuel)
        txt(11) = CStr(rst!parts)
        txt(13) = CStr(rst!pay)

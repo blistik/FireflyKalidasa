@@ -374,13 +374,15 @@ Private rerollused As Boolean, forcererollused As Boolean
 Private Sub cmd_Click(Index As Integer)
    Select Case Index
    Case 0
-      Logic.Requery
       If isHost Then
-         Logic!HostAccept = 1
+         DB.Execute "UPDATE GameSeq SET HostAccept = 1"
+         'Logic!HostAccept = 1
       Else
-         Logic!ClientAccept = 1
+         DB.Execute "UPDATE GameSeq SET ClientAccept = 1"
+         'Logic!ClientAccept = 1
       End If
-      Logic.Update
+      'Logic.Update
+      Logic.Requery
       cmd(0).Enabled = False
       cmd(1).Enabled = False
    Case 1 're-roll
@@ -388,13 +390,15 @@ Private Sub cmd_Click(Index As Integer)
       rerollused = True
       DB.Execute "Update ShowdownScores set Dice = " & Dice & " WHERE PlayerID = " & player.ID
       cmd(1).Enabled = False
-      PutMsg player.PlayName & " uses The Guardian's skill to re-roll and gets a " & Dice, player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & " uses The Guardian's skill to re-roll and gets a " & Dice, player.ID, Logic!GameCntr
       refreshPage
    Case 2 'force re-roll
       DB.Execute "Update ShowdownScores set forcereroll = 1 WHERE PlayerID = " & player.ID
       If isHost Then 'reset opponent in case it was cleared after acceptance
-         Logic!trader = OpponentID
-         Logic.Update
+         DB.Execute "UPDATE GameSeq SET Trader = " & CStr(OpponentID)
+         'Logic!trader = OpponentID
+         'Logic.Update
+         Logic.Requery
       End If
       forcererollused = True
       cmd(2).Enabled = False
@@ -404,7 +408,7 @@ Private Sub cmd_Click(Index As Integer)
 End Sub
 
 Private Sub Form_Load()
-   DB.Execute "Insert into ShowDownScores (PlayerID,SkillType,Skill,Dice) Values (" & player.ID & "," & Skilltype & "," & skill & "," & Dice & ")"
+   DB.Execute "Insert into ShowdownScores (PlayerID,SkillType,Skill,Dice) Values (" & player.ID & "," & Skilltype & "," & skill & "," & Dice & ")"
    refreshPage
    listGear player.ID, Skilltype
    listGear OpponentID, ASkillType
@@ -435,7 +439,7 @@ Private Sub lstGear_ItemCheck(Index As Integer, Item As Integer)
          'DB.Execute "Delete from ShowdownGear where CardID = " & lstGear(Index).ItemData(Item)
          'skill = skill - getGearAttrib(lstGear(Index).ItemData(Item), cstrSkill(Skilltype))
       End If
-      DB.Execute "UPDATE ShowDownScores set Skill = " & skill & " WHERE PlayerID = " & player.ID
+      DB.Execute "UPDATE ShowdownScores set Skill = " & skill & " WHERE PlayerID = " & player.ID
       refreshPage
    End If
 End Sub
@@ -462,7 +466,7 @@ Dim msg As String
             msg = " has lost"
          End If
       End If
-      PutMsg player.PlayName & msg & " the Showdown", player.ID, Logic!Gamecntr, True, getLeader()
+      PutMsg player.PlayName & msg & " the Showdown", player.ID, Logic!GameCntr, True, getLeader()
       
       Me.Hide
    End If
@@ -477,7 +481,7 @@ Private Sub refreshPage()
 Dim SQL As String
 Dim rst As New ADODB.Recordset
 
-   SQL = "SELECT * FROM ShowDownScores WHERE PlayerID = " & OpponentID
+   SQL = "SELECT * FROM ShowdownScores WHERE PlayerID = " & OpponentID
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If rst.EOF Then
       Label2 = "awaiting opponent to respond"
@@ -506,7 +510,7 @@ Dim rst As New ADODB.Recordset
       End If
       If rst!forcereroll = 1 Then
          Dice = RollDice(6, True)
-         PutMsg PlayCode(OpponentID).PlayName & " uses Chari to force you into a re-roll, and you got a " & Dice, player.ID, Logic!Gamecntr, True, 91, 0, 0, 0, 0, Dice
+         PutMsg PlayCode(OpponentID).PlayName & " uses Chari to force you into a re-roll, and you got a " & Dice, player.ID, Logic!GameCntr, True, 91, 0, 0, 0, 0, Dice
          cmd(0).Enabled = True
          cmd(1).Enabled = cmd(1).Visible And Not rerollused
          cmd(2).Enabled = cmd(2).Visible And Not forcererollused
@@ -514,11 +518,14 @@ Dim rst As New ADODB.Recordset
          DB.Execute "Update ShowdownScores set Dice = " & Dice & " WHERE PlayerID = " & player.ID
          DB.Execute "Update ShowdownScores set forcereroll = 0 WHERE PlayerID = " & OpponentID
          If isHost Then
-            Logic!HostAccept = 0
+            DB.Execute "UPDATE GameSeq SET HostAccept = 0"
+            'Logic!HostAccept = 0
          Else
-            Logic!ClientAccept = 0
+            DB.Execute "UPDATE GameSeq SET ClientAccept = 0"
+            'Logic!ClientAccept = 0
          End If
-      Logic.Update
+         'Logic.Update
+         Logic.Requery
       End If
    End If
    rst.Close
@@ -595,7 +602,7 @@ Dim x
       For x = 0 To .ListCount - 1
          If .selected(x) Then 'discard it
             doDiscardGear player.ID, .ItemData(x)
-            PutMsg player.PlayName & " discards " & getGearAttrib(.ItemData(x), "GearName"), player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " discards " & getGearAttrib(.ItemData(x), "GearName"), player.ID, Logic!GameCntr
          End If
       Next x
    End With

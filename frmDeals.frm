@@ -308,9 +308,9 @@ With sftTree
       Else
          SQL = SQL & "WHERE (Seq = " & CStr(DISCARDED) & " or Seq = " & CStr(CONSIDERED) & " ) " 'either discarded (5) or for consideration (6)
       End If
-      SQL = SQL & "AND ContactDeck.ContactID = " & rst3!ContactID
+      SQL = SQL & " AND ContactDeck.ContactID = " & rst3!ContactID
       SQL = SQL & " ORDER BY Contact.ContactName,ContactDeck.CardID"
-      
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
          cnt = cnt + 1

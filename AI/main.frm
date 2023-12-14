@@ -648,7 +648,7 @@ Dim status As Variant, errh, thisPlayer As Integer
 Dim SectorID, ContactID As Integer, SupplyID As Integer, x, y
 Dim maxConsider, fuelleft, HavenID As Integer, DefenderID As Integer, BSupplyID As Integer
 Dim bountyJumpSector As Integer, supplyBountySector As Integer, sbountyCardID As Integer
-On Error GoTo err_handler
+'On Error GoTo err_handler
 
    SectorID = getPlayerSector(player.ID)
    HavenID = Nz(varDLookup("Haven", "Board", "SectorID=" & SectorID), 0)
@@ -719,8 +719,8 @@ On Error GoTo err_handler
       
    ElseIf status = "F" And thisPlayer <> player.ID And actionSeq = ASidle And Logic!Trader = player.ID And Logic!ClientAccept = 1 Then
       If varDLookup("forcereroll", "ShowdownScores", "PlayerID=" & thisPlayer) = 1 Then  'showdown defend - check for re-roll
-         DB.Execute "UPDATE ShowDownScores Set Dice = " & RollDice(6, True) & " WHERE PlayerID = " & player.ID
-         DB.Execute "UPDATE ShowDownScores Set forcereroll = 0 WHERE PlayerID = " & thisPlayer
+         DB.Execute "UPDATE ShowdownScores Set Dice = " & RollDice(6, True) & " WHERE PlayerID = " & player.ID
+         DB.Execute "UPDATE ShowdownScores Set forcereroll = 0 WHERE PlayerID = " & thisPlayer
          Logic.Update "Trader", 0
       End If
       
@@ -752,8 +752,8 @@ On Error GoTo err_handler
       DefenderID = 0
       If varDLookup("forcereroll", "ShowdownScores", "PlayerID=" & Logic!Trader) = 1 Then 'showdown attack - check for re-roll
          x = RollDice(6, True)
-         DB.Execute "UPDATE ShowDownScores Set Dice = " & x & " WHERE PlayerID = " & player.ID
-         DB.Execute "UPDATE ShowDownScores Set forcereroll = 0 WHERE PlayerID = " & Logic!Trader
+         DB.Execute "UPDATE ShowdownScores Set Dice = " & x & " WHERE PlayerID = " & player.ID
+         DB.Execute "UPDATE ShowdownScores Set forcereroll = 0 WHERE PlayerID = " & Logic!Trader
          PutMsg player.PlayName & " is forced to re-roll and gets a " & x, player.ID, Logic!Gamecntr
       ElseIf Not processBountyJumpScore(DefenderID) And hasCrew(player.ID, 91) And Not forcererollused Then
          If DefenderID > 0 Then
@@ -1160,6 +1160,7 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
    'look at contact list and see if any are solid and remove them
    'if left with none (all solid) then reset list
       SQL = "SELECT * FROM Contact WHERE ContactID IN (" & ContactList & ")"
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       While Not rst.EOF
          If Not isSolid(player.ID, rst!ContactID) Then
@@ -1171,6 +1172,7 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
       rst.Close
       
       SQL = "SELECT * FROM Contact WHERE ContactID IN (" & tmpContacts & ")"
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       closest = 500
       While Not rst.EOF
@@ -1189,6 +1191,7 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
 
       Set rst = New ADODB.Recordset
       SQL = "SELECT * FROM Supply WHERE SectorID > 0"
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       closest = 500
       While Not rst.EOF
@@ -1203,6 +1206,7 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
       
       Set rst = New ADODB.Recordset
       SQL = "SELECT SectorID FROM Board WHERE Haven > 0"
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       While Not rst.EOF
          x = getSectorCount(SectorID, rst!SectorID)
@@ -1235,6 +1239,7 @@ Dim rst As ADODB.Recordset, SQL
 
       Set rst = New ADODB.Recordset
       SQL = "SELECT ContactID, p.CardID,JobStatus FROM ContactDeck c, PlayerJobs p WHERE c.cardID = p.CardID AND PlayerID= " & player.ID & " AND JobStatus < 2"
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       If Not rst.EOF Then
          targetContact = rst!ContactID
@@ -1250,6 +1255,7 @@ Dim rst As New ADODB.Recordset
 Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer
       Set rst = New ADODB.Recordset
       SQL = "SELECT Job.* FROM Job INNER JOIN ContactDeck ON Job.JobID = ContactDeck.Job1ID WHERE ContactDeck.CardID=" & CardID
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       If Not rst.EOF Then
          contra = IIf(rst!Contraband = 14, 7, rst!Contraband)
@@ -1279,6 +1285,7 @@ Dim rst As New ADODB.Recordset, jobpay, crewpay, perk As Integer
 Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer
       Set rst = New ADODB.Recordset
       SQL = "SELECT Pay, WinResult, ContactID, JobTypeID, JobType2D, Job.* FROM Job INNER JOIN ContactDeck ON Job.JobID = ContactDeck.Job" & JobID & "ID WHERE ContactDeck.CardID=" & CardID
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       If Not rst.EOF Then
          contra = IIf(rst!Contraband = -14, -7, rst!Contraband)
@@ -1348,12 +1355,13 @@ Dim rst As New ADODB.Recordset
       SQL = SQL & "Where NavDeck.Zones = '" & Zone & "' And NavDeck.Seq > 6 "
       SQL = SQL & "ORDER BY NavDeck.Seq"
 
-      rst.Open SQL, DB, adOpenDynamic, adLockOptimistic
+      rst.CursorLocation = adUseClient
+      rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       If rst.EOF Then  ' this happens when the reshuffle card is in the discard pile at start of game setup
          ShuffleDeck "Nav", True, False, Zone
          PutMsg player.PlayName & " Reshuffling NavDeck " & Zone & " due to end of deck", player.ID, Logic!Gamecntr
          rst.Close
-         rst.Open SQL, DB, adOpenDynamic, adLockOptimistic
+         rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       End If
       If Not rst.EOF Then
          'put special outcomes first >>>>>>>>>>>>>>>>
@@ -1470,8 +1478,9 @@ Dim rst As New ADODB.Recordset
          End If
          reshuffle = rst!reshuffle
          'pull the card out of the deck, assign it to the user for debugging
-         rst!Seq = player.ID
-         rst.Update
+         DB.Execute "UPDATE NavDeck SET Seq = " & CStr(player.ID) & " WHERE CardID = " & CStr(rst!CardID)
+         'rst!Seq = player.ID
+         'rst.Update
       End If
       rst.Close
      
@@ -1493,7 +1502,7 @@ Private Sub pullSupplies(ByVal SupplyID)
 Dim rst As ADODB.Recordset, SQL, cnt As Integer
 
       Set rst = New ADODB.Recordset
-      SQL = "SELECT * FROM SupplyDeck WHERE Seq > 6 AND SupplyID =" & SupplyID & " ORDER BY Seq"
+      SQL = "SELECT Seq FROM SupplyDeck WHERE Seq > 6 AND SupplyID =" & SupplyID & " ORDER BY Seq"
       rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
       cnt = 0
       While Not rst.EOF And cnt < 3
@@ -2020,6 +2029,7 @@ SQL = SQL & " ORDER BY PlayerID"
 With sftTree2
    If doClear Then .Clear  'otherwise Append
    'add the Player details
+   rst3.CursorLocation = adUseClient
    rst3.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst3.EOF
       Index = .AddItem(CStr(rst3!playerID) & IIf(isOutlaw(rst3!playerID), " - outlaw", ""))
@@ -2041,6 +2051,7 @@ With sftTree2
       End If
       SQL = SQL & " ORDER BY Contact.ContactName,PlayerJobs.CardID"
       
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
          Index = .AddItem(CStr(rst!CardID))
@@ -2215,7 +2226,7 @@ Dim x As Integer, y As Integer
       PutMsg player.PlayName & " rolls a 1 and uses The Guardian to re-roll a " & Dice, player.ID, Logic!Gamecntr
    End If
 
-   DB.Execute "Insert into ShowDownScores (PlayerID,SkillType,Skill,Dice) Values (" & player.ID & "," & Skilltype & "," & skill & "," & Dice & ")"
+   DB.Execute "Insert into ShowdownScores (PlayerID,SkillType,Skill,Dice) Values (" & player.ID & "," & Skilltype & "," & skill & "," & Dice & ")"
    Logic.Requery
    Logic!ClientAccept = 1
    Logic!Trader = 0
@@ -2240,7 +2251,7 @@ Dim x As Integer, y As Integer
       Dice = RollDice(6, True)
       PutMsg player.PlayName & " rolls a 1 and uses The Guardian to re-roll a " & Dice, player.ID, Logic!Gamecntr
    End If
-   DB.Execute "Insert into ShowDownScores (PlayerID,SkillType,Skill,Dice) Values (" & player.ID & "," & Skilltype & "," & skill & "," & Dice & ")"
+   DB.Execute "Insert into ShowdownScores (PlayerID,SkillType,Skill,Dice) Values (" & player.ID & "," & Skilltype & "," & skill & "," & Dice & ")"
 '   Logic.Requery
 '   Logic!HostAccept = 1
 '   Logic.Update
@@ -2387,7 +2398,7 @@ Dim SQL As String
 Dim rst As New ADODB.Recordset
 Dim ASkill, DSkill, ADice, DDice
   
-   SQL = "SELECT * FROM ShowDownScores"
+   SQL = "SELECT * FROM ShowdownScores"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       If rst!playerID = player.ID Then
@@ -2431,7 +2442,7 @@ Dim x
    SQL = SQL & " SELECT Players.PlayerID, Players.SectorID, ContactDeck.CardID, Players.Pay, ContactDeck.Pay"
    SQL = SQL & " FROM Players INNER JOIN (PlayerJobs INNER JOIN ContactDeck ON PlayerJobs.CardID = ContactDeck.CardID) ON Players.PlayerID = PlayerJobs.PlayerID"
    SQL = SQL & " Where ContactDeck.ContactID = 10 And PlayerJobs.JobStatus = 0 AND Players.PlayerID <> " & player.ID
-   SQL = SQL & " ORDER BY Players.Pay DESC, ContactDeck.Pay DESC" 'target player with most money and best bounty$$
+   SQL = SQL & " ORDER BY 3 DESC, 4 DESC" 'target player with most money and best bounty$$
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       x = getSectorCount(SectorID, rst!SectorID)

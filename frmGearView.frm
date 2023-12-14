@@ -350,8 +350,8 @@ Dim rst As New ADODB.Recordset, SQL, x, y
    SQL = "SELECT Gear.*, SupplyDeck.CardID, SupplyDeck.Seq, SupplyDeck.SupplyID, Supply.Colour, Supply.SupplyName, PlayerSupplies.PlayerID, Players.Name "
    SQL = SQL & "FROM Players RIGHT JOIN (PlayerSupplies RIGHT JOIN (Supply RIGHT JOIN (Gear LEFT JOIN SupplyDeck ON Gear.GearID = SupplyDeck.GearID) ON Supply.SupplyID = SupplyDeck.SupplyID) ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Players.PlayerID = PlayerSupplies.PlayerID "
    SQL = SQL & "WHERE SupplyDeck.CardID=" & CardID
-
-   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   rst.CursorLocation = adUseClient
+   rst.Open SQL, DB, adOpenStatic, adLockReadOnly
    If Not rst.EOF Then
       cboGear.ToolTipText = rst!GearName
       lbl(0) = rst!GearDescr

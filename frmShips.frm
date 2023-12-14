@@ -358,13 +358,15 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub loadImages()
-Dim Index, SQL
+Dim Index, SQL, pic As String
 Dim rst As New ADODB.Recordset
-   SQL = "SELECT Distinct Picture FROM Crew"
-   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   SQL = "SELECT Distinct Picture FROM Crew Where Picture IS NOT NULL"
+   rst.CursorLocation = adUseClient
+   rst.Open SQL, DB, adOpenStatic, adLockReadOnly
    While Not rst.EOF
-      If Dir(App.Path & "\Pictures\Sm" & rst!Picture) <> "" Then
-         AssetImages.ListImages.Add , Left(rst!Picture, Len(rst!Picture) - 4), LoadPicture(App.Path & "\Pictures\Sm" & rst!Picture)
+      pic = rst!Picture
+      If Dir(App.Path & "\Pictures\Sm" & pic) <> "" Then
+         AssetImages.ListImages.Add , Left(pic, Len(pic) - 4), LoadPicture(App.Path & "\Pictures\Sm" & pic)
       End If
       rst.MoveNext
    Wend
@@ -410,7 +412,7 @@ SQL = SQL & " ORDER BY PlayerID"
     
 'SQL = "SELECT Board.Zones, Planet.PlanetName, Players.* FROM (Board INNER JOIN Players ON Board.SectorID = Players.SectorID) LEFT JOIN Planet ON Players.SectorID = Planet.SectorID "
 'SQL = SQL & filter
-    
+Logic.Requery
 With sftTree
 
    For Index = 0 To .ListCount - 1
@@ -464,7 +466,7 @@ With sftTree
       Else
          .CellBackColor(Index, 4) = 16711680
       End If
-      .CellText(Index, 9) = "Goals: " & CStr(rst!Goals) & " Turns: " & CStr(Logic!Gamecntr - 1) & IIf(isBountyEnabled, " Bounties: " & CStr(countBounties(player.ID)), "")
+      .CellText(Index, 9) = "Goals: " & CStr(rst!Goals) & " Turns: " & CStr(Logic!GameCntr - 1) & IIf(isBountyEnabled, " Bounties: " & CStr(countBounties(player.ID)), "")
       
       'CREW---------------------------------------------
       Index = .AddItem("Crew")
@@ -481,6 +483,7 @@ With sftTree
       SQL = SQL & " FROM Perk INNER JOIN (Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID) ON Perk.PerkID = Crew.PerkID "
       SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & rst!playerID
       SQL = SQL & " ORDER BY Crew.Leader DESC, Crew.CrewName"
+      rst2.CursorLocation = adUseClient
       rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst2.EOF
           Index = .AddItem(CStr(rst2!CrewID))
@@ -627,6 +630,7 @@ With sftTree
          'Crew's GEAR ---------------------------
          SQL = "SELECT SupplyDeck.CardID, Gear.* FROM Gear INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Gear.GearID = SupplyDeck.GearID "
          SQL = SQL & "Where PlayerSupplies.CrewID = " & rst2!CrewID
+         rst3.CursorLocation = adUseClient
          rst3.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
          While Not rst3.EOF
             Index = .AddItem(CStr(rst3!CardID))
@@ -1355,58 +1359,58 @@ On Error GoTo err_handler
       If Button = 2 Then
          With sftTree
             If .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 1 And .CellItemData(Index, 3) = 0 And .CellItemData(Index, 7) > 0 And (CrewCapacity(player.ID) - getCrewCount(player.ID) >= 1) And getMoney(player.ID) >= .CellItemData(Index, 8) And actionSeq = ASselect Then 'poach disgruntled other player
-               mnuPopUp(6).Visible = False
-               mnuPopUp(5).Visible = False
-               mnuPopUp(4).Visible = True 'poach crew
-               mnuPopUp(3).Visible = False
-               mnuPopUp(2).Visible = False
-               mnuPopUp(1).Visible = False
-               mnuPopUp(0).Visible = False
+               mnuPopup(6).Visible = False
+               mnuPopup(5).Visible = False
+               mnuPopup(4).Visible = True 'poach crew
+               mnuPopup(3).Visible = False
+               mnuPopup(2).Visible = False
+               mnuPopup(1).Visible = False
+               mnuPopup(0).Visible = False
                sftTreeListIndex = Index
             ElseIf .CellItemData(Index, 4) <> player.ID And .CellItemData(Index, 6) = .CellItemData(0, 6) And .CellItemData(Index, 0) = 0 And .CellItemData(Index, 5) = 0 And actionSeq = ASselect Then 'trade with player
-               mnuPopUp(6).Visible = False
-               mnuPopUp(5).Visible = False
-               mnuPopUp(3).Visible = True  'Trade
-               mnuPopUp(4).Visible = False
-               mnuPopUp(2).Visible = False
-               mnuPopUp(1).Visible = False
-               mnuPopUp(0).Visible = False
+               mnuPopup(6).Visible = False
+               mnuPopup(5).Visible = False
+               mnuPopup(3).Visible = True  'Trade
+               mnuPopup(4).Visible = False
+               mnuPopup(2).Visible = False
+               mnuPopup(1).Visible = False
+               mnuPopup(0).Visible = False
                sftTreeListIndex = Index
             ElseIf .CellItemData(Index, 4) <> player.ID Then 'not yours
                Exit Sub
             Else
-               mnuPopUp(0).Visible = True 'View
-               mnuPopUp(3).Visible = False
-               mnuPopUp(4).Visible = False
+               mnuPopup(0).Visible = True 'View
+               mnuPopup(3).Visible = False
+               mnuPopup(4).Visible = False
                sftTreeListIndex = Index
                'discard check
                If .CellItemData(Index, 0) = 1 And getPlanetID(player.ID) > 0 And .CellItemData(Index, 3) = 0 Then 'crew
-                  mnuPopUp(1).Visible = True
+                  mnuPopup(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 2 Or .CellItemData(Index, 0) = 3 And actionSeq = ASselect Then  'gear
-                  mnuPopUp(1).Visible = True
+                  mnuPopup(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 5 And Not isDriveCore(.CellItemData(Index, 1)) Then   'shipUpgrds
-                  mnuPopUp(1).Visible = True
+                  mnuPopup(1).Visible = True
                ElseIf .CellItemData(Index, 0) = 6 Or .CellItemData(Index, 0) = 7 Or .CellItemData(Index, 0) = 8 Or .CellItemData(Index, 0) = 10 Then  'goods
-                  mnuPopUp(1).Visible = True
+                  mnuPopup(1).Visible = True
                ElseIf (.CellItemData(Index, 0) = 9 Or .CellItemData(Index, 0) = 11) And getPlanetID(player.ID) > 0 Then  'passengers/fugi
-                  mnuPopUp(1).Visible = True
+                  mnuPopup(1).Visible = True
                Else
-                  mnuPopUp(1).Visible = False
+                  mnuPopup(1).Visible = False
                End If
                
-               mnuPopUp(2).Visible = (hasGearAttribute(player.ID, "LabourContract", .CellItemData(Index, 2)) > 0) And (Not frmAction.buydone) And (actionSeq = ASselect) And .CellItemData(Index, 2) > 0 ' is gear with LabourContract
-               mnuPopUp(0).Visible = (.CellItemData(Index, 0) < 6 Or mnuPopUp(1).Visible = False)
+               mnuPopup(2).Visible = (hasGearAttribute(player.ID, "LabourContract", .CellItemData(Index, 2)) > 0) And (Not frmAction.buydone) And (actionSeq = ASselect) And .CellItemData(Index, 2) > 0 ' is gear with LabourContract
+               mnuPopup(0).Visible = (.CellItemData(Index, 0) < 6 Or mnuPopup(1).Visible = False)
                
                If .CellItemData(Index, 0) = 1 And getLeader() <> .CellItemData(Index, 2) Then
-                  mnuPopUp(5).Visible = Not isOffJob(.CellItemData(Index, 1)) 'Off Job
-                  mnuPopUp(6).Visible = Not mnuPopUp(5).Visible  'On Job
+                  mnuPopup(5).Visible = Not isOffJob(.CellItemData(Index, 1)) 'Off Job
+                  mnuPopup(6).Visible = Not mnuPopup(5).Visible  'On Job
                Else
-                  mnuPopUp(6).Visible = False
-                  mnuPopUp(5).Visible = False
+                  mnuPopup(6).Visible = False
+                  mnuPopup(5).Visible = False
                End If
             End If
                 
-            If .CellItemData(Index, 0) = 1 Or (mnuPopUp(0).Visible And .CellItemData(Index, 0) < 6 And .CellItemData(Index, 0) > 0 And .CellItemData(Index, 0) <> 4) Or mnuPopUp(1).Visible Or mnuPopUp(3).Visible Or mnuPopUp(4).Visible Then PopupMenu mnuPop
+            If .CellItemData(Index, 0) = 1 Or (mnuPopup(0).Visible And .CellItemData(Index, 0) < 6 And .CellItemData(Index, 0) > 0 And .CellItemData(Index, 0) <> 4) Or mnuPopup(1).Visible Or mnuPopup(3).Visible Or mnuPopup(4).Visible Then PopupMenu mnuPop
             
         End With
       End If
@@ -1503,17 +1507,17 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   frmShUp.discardMode = 2
                   frmShUp.Show 1
                   If frmShUp.CardID = 0 Then Exit Sub ' didn't happen
-                  PutMsg player.PlayName & " sent The Salesman off to buy a nice Ship Upgrade", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " sent The Salesman off to buy a nice Ship Upgrade", player.ID, Logic!GameCntr
 
                'Remove from Play at Harvest, Red Sun to take $500. This counts as Immoral.
                ElseIf getPerkAttributeCrew(player.ID, "Indentured", .CellItemData(x, 1)) > 0 And getPlayerSector(player.ID) = 16 Then
                   getMoney player.ID, 500
                   doDisgruntled player.ID, 1
-                  PutMsg player.PlayName & " indentured a Mudder to Higgins for $500" & IIf(hasCrewAttribute(player.ID, "Moral"), " and some of the Crew aren't impressed", ""), player.ID, Logic!Gamecntr, True, 0, 0, 0, 8
+                  PutMsg player.PlayName & " indentured a Mudder to Higgins for $500" & IIf(hasCrewAttribute(player.ID, "Moral"), " and some of the Crew aren't impressed", ""), player.ID, Logic!GameCntr, True, 0, 0, 0, 8
                   status = 0
                
                Else
-                  PutMsg player.PlayName & " decided to part company with " & getCrewName(sftTree.CellItemData(x, 1)), player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " decided to part company with " & getCrewName(sftTree.CellItemData(x, 1)), player.ID, Logic!GameCntr
                   
                End If
                
@@ -1527,10 +1531,10 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   If RollDice(6) > 4 Then '1:3 chance
                      getMoney player.ID, 1200
                      
-                     PutMsg player.PlayName & " gambled with Maque Tiles and won $1200", player.ID, Logic!Gamecntr, True, 0, 30
+                     PutMsg player.PlayName & " gambled with Maque Tiles and won $1200", player.ID, Logic!GameCntr, True, 0, 30
                      frmAction.lblMoney.Caption = "$" & getMoney(player.ID)
                   Else
-                     PutMsg player.PlayName & " gambled with Maque Tiles and had no luck", player.ID, Logic!Gamecntr, True, getLeader()
+                     PutMsg player.PlayName & " gambled with Maque Tiles and had no luck", player.ID, Logic!GameCntr, True, getLeader()
                   End If
                Case 24  'eating a fruity bar
                   If .CellItemData(x, 0) = 2 Then 'must be on a crew
@@ -1541,20 +1545,20 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   Set frmNavPeek = New frmNavPeeks
                   frmNavPeek.NavZone = "M"
                   frmNavPeek.Show 1
-                  PutMsg player.PlayName & " used the " & .CellText(x, 1) & " to fiddle with the Misbehave deck", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " used the " & .CellText(x, 1) & " to fiddle with the Misbehave deck", player.ID, Logic!GameCntr
                   
                Case 34 'Billiards Betting -  roll two dice. Take $100 times the total of the dice and discard this card.
                   y = RollDice(6) + RollDice(6)
                   getMoney player.ID, (y * 100)
                   
-                  PutMsg player.PlayName & " gambled with Billiards Betting, rolled " & y & " and won $" & CStr(y * 100), player.ID, Logic!Gamecntr, True, 0, 34
+                  PutMsg player.PlayName & " gambled with Billiards Betting, rolled " & y & " and won $" & CStr(y * 100), player.ID, Logic!GameCntr, True, 0, 34
                   frmAction.lblMoney.Caption = "$" & getMoney(player.ID)
                   
                Case 43 'Wash's Hawaiian Shirt
                   Set frmNavDeck = New frmNavDecks
                   frmNavDeck.Show 1
                   ShuffleDeck "Nav", True, False, frmNavDeck.navOpt
-                  PutMsg player.PlayName & " used Wash's Hawaiian Shirt to reshuffle the " & frmNavDeck.navOpt & " deck", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " used Wash's Hawaiian Shirt to reshuffle the " & frmNavDeck.navOpt & " deck", player.ID, Logic!GameCntr
                
                Case 44 'Discard to look at the top 5 cards of ANY Nav Deck
                   Set frmNavDeck = New frmNavDecks
@@ -1563,22 +1567,22 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   Set frmNavPeek = New frmNavPeeks
                   frmNavPeek.NavZone = frmNavDeck.navOpt
                   frmNavPeek.Show 1
-                  PutMsg player.PlayName & " used Wash's Nav Charts to fiddle with the " & frmNavPeek.NavZone & " deck", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " used Wash's Nav Charts to fiddle with the " & frmNavPeek.NavZone & " deck", player.ID, Logic!GameCntr
                   
                Case 50, 51, 52 'Nav Chart
                   Set frmNavPeek = New frmNavPeeks
                   frmNavPeek.NavZone = IIf(.CellItemData(x, 2) = 50, "A", IIf(.CellItemData(x, 2) = 51, "B", "R"))
                   frmNavPeek.Show 1
-                  PutMsg player.PlayName & " used the " & .CellText(x, 1) & " to fiddle with the " & frmNavPeek.NavZone & " deck", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " used the " & .CellText(x, 1) & " to fiddle with the " & frmNavPeek.NavZone & " deck", player.ID, Logic!GameCntr
                
                Case 53 'wormhole
                   Main.drawLine 2, 133, 104
                   wormHoleOpen = True
-                  PutMsg player.PlayName & " used the " & .CellText(x, 1), player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " used the " & .CellText(x, 1), player.ID, Logic!GameCntr
                
                Case 57 '"The Best in the House"
                   doDisgruntled player.ID, -1
-                  PutMsg player.PlayName & " shouted the crew " & .CellText(x, 1) & ". Everyone's happy again!", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " shouted the crew " & .CellText(x, 1) & ". Everyone's happy again!", player.ID, Logic!GameCntr
                End Select
                
                doDiscardGear player.ID, .CellItemData(x, 1)
@@ -1661,29 +1665,31 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                If frmCrewList.crewcnt = 1 Then
                   DB.Execute "UPDATE Players SET Pay = Pay - " & frmCrewList.payTotal & " WHERE PlayerID = " & player.ID
                   frmAction.buyIsDone
-                  PutMsg player.PlayName & " used a Labour Contract to hire " & getCrewName(0, frmCrewList.lastCrewID), player.ID, Logic!Gamecntr, True, frmCrewList.lastCrewID
+                  PutMsg player.PlayName & " used a Labour Contract to hire " & getCrewName(0, frmCrewList.lastCrewID), player.ID, Logic!GameCntr, True, frmCrewList.lastCrewID
                End If
             Else
                MessBox "No Crewspace available!", "No room", "Ooops", "", 0, 0, 2
             End If
          
          Case 3 'Trade
-            PutMsg player.PlayName & " requesting to Trade with " & PlayCode(.CellItemData(x, 4)).PlayName, player.ID, Logic!Gamecntr
-   
+            PutMsg player.PlayName & " requesting to Trade with " & PlayCode(.CellItemData(x, 4)).PlayName, player.ID, Logic!GameCntr
+            
+            DB.Execute "UPDATE GameSeq SET Seq = 'T',HostAccept = 0,ClientAccept = 0, Trader = " & CStr(.CellItemData(x, 4))
             Logic.Requery
-            Logic!Seq = "T"
-            Logic!HostAccept = 0
-            Logic!ClientAccept = 0
-            Logic!trader = .CellItemData(x, 4)
-            Logic.Update
+            'Logic!Seq = "T"
+            'Logic!HostAccept = 0
+            'Logic!ClientAccept = 0
+            'Logic!trader = .CellItemData(x, 4)
+            'Logic.Update
             Set frmTrade = New frmTrader
             frmTrade.isHost = True
             frmTrade.TraderID = .CellItemData(x, 4)
             frmTrade.lblTitle(1).Caption = PlayCode(.CellItemData(x, 4)).PlayName & "'s Trade Items"
             frmTrade.Show 1
+            DB.Execute "UPDATE GameSeq SET Seq = 'R'"
             Logic.Requery
-            Logic.Update "Seq", "R"
-            PutMsg player.PlayName & " ended Trading with " & PlayCode(.CellItemData(x, 4)).PlayName, player.ID, Logic!Gamecntr
+            'Logic.Update "Seq", "R"
+            PutMsg player.PlayName & " ended Trading with " & PlayCode(.CellItemData(x, 4)).PlayName, player.ID, Logic!GameCntr
             RefreshShips
             Main.showActions
          
@@ -1703,7 +1709,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             'remove Disgruntled
             DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & .CellItemData(x, 2)
             getMoney player.ID, .CellItemData(x, 8) * -1
-            PutMsg player.PlayName & " gave disgruntled " & getCrewName(.CellItemData(x, 1)) & " a BETTER OFFER and poached them", player.ID, Logic!Gamecntr, False, 0, 0, 0, 0, 1
+            PutMsg player.PlayName & " gave disgruntled " & getCrewName(.CellItemData(x, 1)) & " a BETTER OFFER and poached them", player.ID, Logic!GameCntr, False, 0, 0, 0, 0, 1
             
             RefreshShips
             Main.showActions

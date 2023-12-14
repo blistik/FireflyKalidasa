@@ -568,8 +568,8 @@ Dim x
       pic(x).Picture = LoadPicture(App.Path & "\Pictures\Sm" & Nz(varDLookup("Picture", "Contact", "ContactID=" & x)))
       pic(x).ToolTipText = "Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & x)
    Next x
-
-   Logic.Open "GameSeq", DB, adOpenDynamic, adLockPessimistic ', adLockOptimistic
+   
+   Logic.Open "GameSeq", DB, adOpenDynamic, adLockPessimistic  ', adLockOptimistic
    x = GetSeq
    Timing.Enabled = True
    
@@ -600,7 +600,7 @@ Private Sub Timing_Timer()
 Dim status As Variant, errh, thisPlayer As Integer
 Dim SectorID, ContactID As Integer, SupplyID As Integer, x
 Dim maxConsider
-On Error GoTo err_handler
+'On Error GoTo err_handler
 
    SectorID = getPlayerSector(player.ID)
    ContactID = Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0)
@@ -628,7 +628,7 @@ On Error GoTo err_handler
       For x = 5 To 6 + NumOfReavers
          MoveShip x, varDLookup("StartSectorID", "Players", "PlayerID=" & CStr(x))
       Next x
-      PutMsg player.PlayName & " selecting Start Sector", player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & " selecting Start Sector", player.ID, Logic!GameCntr
       
       If useHavens(Logic!StoryID) Then
          MessBox "Click on the Planet Sector to be your Haven", "Pick your Haven", "Will do", "", getLeader()
@@ -640,7 +640,7 @@ On Error GoTo err_handler
       
    ElseIf status = "S" And thisPlayer = player.ID And pickStartSector = 2 Then  'setup
          'MsgBox "Stage: " & Logic!Seq & " -  PlayerID: " & Logic!player & " - Counter: " & Logic!GameCntr, vbInformation, "Sector Picked"
-      PutMsg player.PlayName & "'s on the Map", player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & "'s on the Map", player.ID, Logic!GameCntr
       
       'deal start drive core, and Jobs
       dealDriveAndJobs player.ID
@@ -657,7 +657,7 @@ On Error GoTo err_handler
       setNextPlayerREV player.ID, "R"
       Logic.Requery
       If Logic!Seq = "R" Then
-         PutMsg PlayCode(Logic!player).PlayName & "'s Turn", Logic!player, Logic!Gamecntr
+         PutMsg PlayCode(Logic!player).PlayName & "'s Turn", Logic!player, Logic!GameCntr
       End If
    
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASidle Then   'MAIN Cycle - init your go
@@ -707,11 +707,11 @@ On Error GoTo err_handler
    ElseIf status = "W" And thisPlayer = player.ID And actionSeq = ASNavReavEnd Then    'fullburn Cycle
       actionSeq = ASidle
       'turn finished, push to next player (for SP thats you)
-      PutMsg player.PlayName & " 'baited' the Reaver Cutter", thisPlayer, Logic!Gamecntr
+      PutMsg player.PlayName & " 'baited' the Reaver Cutter", thisPlayer, Logic!GameCntr
       'change back
       thisPlayer = setPlayer(player.ID, "R", 0)
       If thisPlayer <> player.ID Then
-         PutMsg PlayCode(thisPlayer).PlayName & "'s Turn", thisPlayer, Logic!Gamecntr
+         PutMsg PlayCode(thisPlayer).PlayName & "'s Turn", thisPlayer, Logic!GameCntr
       End If
       
    ElseIf status = "X" And thisPlayer = player.ID And actionSeq = ASidle Then 'capture the Move Reaver Cycle from another Player's Nav move
@@ -721,11 +721,11 @@ On Error GoTo err_handler
       
    ElseIf status = "X" And thisPlayer = player.ID And actionSeq = ASNavReavEnd Then    'fullburn Cycle
        actionSeq = ASidle
-       PutMsg player.PlayName & " 'summonded' the Reaver Cutter", thisPlayer, Logic!Gamecntr
+       PutMsg player.PlayName & " 'summonded' the Reaver Cutter", thisPlayer, Logic!GameCntr
       'turn finished, push to next player (for SP thats you)
       thisPlayer = setPlayer(player.ID, "R", 0)
       If thisPlayer <> player.ID Then
-         PutMsg PlayCode(thisPlayer).PlayName & "'s Turn", thisPlayer, Logic!Gamecntr
+         PutMsg PlayCode(thisPlayer).PlayName & "'s Turn", thisPlayer, Logic!GameCntr
       End If
       
    ElseIf status = "Z" And thisPlayer = player.ID And actionSeq = ASidle Then 'capture the Move Cruiser Cycle from another Player's Nav move
@@ -749,14 +749,14 @@ On Error GoTo err_handler
        actionSeq = ASidle
       'turn finished, push to next player (for SP thats you)
       thisPlayer = setPlayer(player.ID, "R", 0)
-      PutMsg player.PlayName & " 'directed' the " & IIf(status = "U" Or status = "V", "Operative's Corvette", "Alliance Cruiser"), thisPlayer, Logic!Gamecntr
+      PutMsg player.PlayName & " 'directed' the " & IIf(status = "U" Or status = "V", "Operative's Corvette", "Alliance Cruiser"), thisPlayer, Logic!GameCntr
   
       If thisPlayer <> player.ID Then
-         PutMsg PlayCode(thisPlayer).PlayName & "'s Turn", thisPlayer, Logic!Gamecntr
+         PutMsg PlayCode(thisPlayer).PlayName & "'s Turn", thisPlayer, Logic!GameCntr
       End If
    
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASMoseyEnd Then   'Mosey Cycle - your go
-      PutMsg player.PlayName & " moseyed to sector " & SectorID, player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & " moseyed to sector " & SectorID, player.ID, Logic!GameCntr
       If resolveToken(SectorID) = 6 And isOutlaw(player.ID) Then 'no Nav card when Corvette arrives
          If actionSeq <> ASNavEvade Then
             actionSeq = ASselect 'in limbo awaiting user to select
@@ -775,7 +775,7 @@ On Error GoTo err_handler
 '      showActions   'throw it back to the action window to resolve end of mosey and offer other actions
    
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASFullburnEnd Then   'fullburn Cycle - your go
-      PutMsg player.PlayName & " fullburned to sector " & SectorID, player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & " fullburned to sector " & SectorID, player.ID, Logic!GameCntr
       x = resolveToken(SectorID)
       'check if Alliance is in the Sector
       If x = 0 Then x = getCruiserCorvette(SectorID)
@@ -802,7 +802,7 @@ On Error GoTo err_handler
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASnavEnd Then   'fullburn Cycle
       'deal with the Nav option chosen
       If frmNav.NavOption = 3 Then
-         PutMsg player.PlayName & " discards and redraws a NAV Card using the Surveyor's Shuttle", player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " discards and redraws a NAV Card using the Surveyor's Shuttle", player.ID, Logic!GameCntr
          SurvShuttlePerk = True
          actionSeq = ASNav 'pick next Nav card
          showNav
@@ -858,23 +858,23 @@ On Error GoTo err_handler
       'save selected (Seq=6 + selected) to players Jobs, unselected back to 5
       x = doDeal(player.ID)
       
-      PutMsg player.PlayName & " dealt and accepted " & IIf(x = 0, "no", CStr(x)) & " deals from " & varDLookup("ContactName", "Contact", "ContactID=" & IIf(HigginsDealPerk, 8, ContactID)), player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & " dealt and accepted " & IIf(x = 0, "no", CStr(x)) & " deals from " & varDLookup("ContactName", "Contact", "ContactID=" & IIf(HigginsDealPerk, 8, ContactID)), player.ID, Logic!GameCntr
       
       'do any Sell Cargo/Contra Dealing now----------------
       If ContactID = 6 Then  'lord Harrow
          If doBuyCargo(player.ID, Val(frmAction.txtCargo)) > 0 Then
-            PutMsg player.PlayName & " bought " & frmAction.txtCargo & " Cargo from " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " bought " & frmAction.txtCargo & " Cargo from " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
          End If
          frmAction.txtCargo = "0"
          
       ElseIf ContactID = 9 Then  'FANTY MINGO
          If doBuyContra(player.ID, Val(frmAction.txtContra)) Then
-            PutMsg player.PlayName & " bought " & frmAction.txtContra & " Contraband from " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " bought " & frmAction.txtContra & " Contraband from " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
          End If
          frmAction.txtContra = "0"
          
       ElseIf doSellCargoContra(player.ID, ContactID, Val(frmAction.txtCargo), Val(frmAction.txtContra)) > 0 Then
-         PutMsg player.PlayName & " sold " & frmAction.txtCargo & " Cargo and " & frmAction.txtContra & " Contraband to " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " sold " & frmAction.txtCargo & " Cargo and " & frmAction.txtContra & " Contraband to " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
          frmAction.txtCargo = "0"
          frmAction.txtContra = "0"
          
@@ -883,7 +883,7 @@ On Error GoTo err_handler
       'Bree sells parts to any Solids
       If hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) >= Val(frmAction.txtParts) And Val(frmAction.txtParts) > 0 And isSolid(player.ID, ContactID) Then
          DB.Execute "UPDATE Players SET Parts = Parts-" & frmAction.txtParts & ", Pay = Pay + " & Val(frmAction.txtParts) * 300 & " WHERE PlayerID=" & player.ID
-         PutMsg player.PlayName & " used Bree's Black Market Ties to sell " & frmAction.txtParts & " Parts to " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " used Bree's Black Market Ties to sell " & frmAction.txtParts & " Parts to " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
          frmAction.txtParts = "0"
       End If
       
@@ -891,7 +891,7 @@ On Error GoTo err_handler
       If frmAction.txtFuel.Enabled And doBuyFuelParts(player.ID, Val(frmAction.txtFuel), 0, True) <= getMoney(player.ID) And ContactID = 5 Then
          If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.txtFuel) / 2) Then
             If doBuyFuelParts(player.ID, Val(frmAction.txtFuel), 0) Then
-               PutMsg player.PlayName & " bought " & frmAction.txtFuel & " Fuel from Harken", player.ID, Logic!Gamecntr
+               PutMsg player.PlayName & " bought " & frmAction.txtFuel & " Fuel from Harken", player.ID, Logic!GameCntr
             End If
          Else
          MessBox "Not enough Cargo Space for the Fuel order", "Cargo Space", "Ooops", "", getLeader()
@@ -905,7 +905,7 @@ On Error GoTo err_handler
       If frmAction.chkWarrant.Value = 1 Then
          If varDLookup("Pay", "Players", "PlayerID=" & player.ID) >= 1000 Then
             DB.Execute "UPDATE Players SET Warrants = 0, Pay = Pay - 1000 WHERE PlayerID=" & player.ID
-            PutMsg player.PlayName & " had Badger clear all Warrants", player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " had Badger clear all Warrants", player.ID, Logic!GameCntr
             frmAction.chkWarrant.Value = 0
          Else
             MessBox "Not enough money left to pay Badger to clear all Warrants", "Warrants", "Ooops", "", getLeader()
@@ -916,7 +916,7 @@ On Error GoTo err_handler
       If frmAction.txtPass.Visible Then
          If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= Val(frmAction.txtPass) + Val(frmAction.txtFug) Then
             DB.Execute "UPDATE Players SET Passenger = Passenger + " & CStr(Val(frmAction.txtPass)) & ", Fugitive = Fugitive + " & CStr(Val(frmAction.txtFug)) & " WHERE PlayerID = " & player.ID
-            PutMsg player.PlayName & " loaded " & CStr(Val(frmAction.txtPass)) & " Passengers and " & CStr(Val(frmAction.txtFug)) & " Fugitives", player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " loaded " & CStr(Val(frmAction.txtPass)) & " Passengers and " & CStr(Val(frmAction.txtFug)) & " Fugitives", player.ID, Logic!GameCntr
          End If
          frmAction.txtPass = "0"
          frmAction.txtFug = "0"
@@ -954,11 +954,11 @@ On Error GoTo err_handler
       actionSeq = ASselect 'in limbo awaiting user to select
       
       If getPerkAttributeCrew(player.ID, "FreeShoreLeave") > 0 Then
-         PutMsg player.PlayName & " had the Barkeep shout the Crew some free Shore Leave", player.ID, Logic!Gamecntr, True, 71
+         PutMsg player.PlayName & " had the Barkeep shout the Crew some free Shore Leave", player.ID, Logic!GameCntr, True, 71
       ElseIf hasShipUpgrade(player.ID, 19) Then
-         PutMsg player.PlayName & " treated the Crew with a shiny Board Game for $" & CStr(x), player.ID, Logic!Gamecntr, True, 0, 0, 19
+         PutMsg player.PlayName & " treated the Crew with a shiny Board Game for $" & CStr(x), player.ID, Logic!GameCntr, True, 0, 0, 19
       Else
-         PutMsg player.PlayName & " went on Shore Leave at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID) & " for $" & CStr(Abs(x)), player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " went on Shore Leave at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID) & " for $" & CStr(Abs(x)), player.ID, Logic!GameCntr
       End If
             
       showActions
@@ -971,7 +971,7 @@ On Error GoTo err_handler
             If doBuyFuelParts(player.ID, Val(frmAction.txtFuel), 0, False, IIf(getHaven(SectorID) = player.ID, 4, 0)) = 0 Then
                
             End If
-            PutMsg player.PlayName & " loaded " & frmAction.txtFuel & " Fuel at the Haven" & IIf(getHaven(SectorID) = player.ID, ", up to 4 for free!", ""), player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " loaded " & frmAction.txtFuel & " Fuel at the Haven" & IIf(getHaven(SectorID) = player.ID, ", up to 4 for free!", ""), player.ID, Logic!GameCntr
          Else
             MessBox "Not enough Cargo Space for the Fuel/Parts order", "Fuel/Parts order", "Ooops", "", getLeader()
          End If
@@ -985,23 +985,23 @@ On Error GoTo err_handler
       
       actionSeq = ASselect 'in limbo awaiting user to select
       If x = -1 Then
-         PutMsg player.PlayName & " took some free Shore Leave at the Haven", player.ID, Logic!Gamecntr, True, getLeader()
+         PutMsg player.PlayName & " took some free Shore Leave at the Haven", player.ID, Logic!GameCntr, True, getLeader()
       ElseIf x > 0 Then
-         PutMsg player.PlayName & " went on Shore Leave at a Haven for $" & CStr(Abs(x)), player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " went on Shore Leave at a Haven for $" & CStr(Abs(x)), player.ID, Logic!GameCntr
       End If
       showActions
       
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASBuyEnd Then   'Buy Cycle - your go
       'save selected (Seq=6 + selected) to players Jobs, unselected back to 5
       x = doBuy(player.ID)
-      PutMsg player.PlayName & " accepted and bought " & IIf(x = 0, "no", CStr(x)) & " buys from " & varDLookup("SupplyName", "Supply", "SupplyID=" & SupplyID), player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & " accepted and bought " & IIf(x = 0, "no", CStr(x)) & " buys from " & varDLookup("SupplyName", "Supply", "SupplyID=" & SupplyID), player.ID, Logic!GameCntr
       
       'buy fuel & parts now
       If frmAction.txtFuel.Enabled Then
          If doBuyFuelParts(player.ID, Val(frmAction.txtFuel), Val(frmAction.txtParts), True) <= getMoney(player.ID) Then
             If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.txtFuel) + Val(frmAction.txtParts)) / 2 Then
                If doBuyFuelParts(player.ID, Val(frmAction.txtFuel), Val(frmAction.txtParts)) Then
-                  PutMsg player.PlayName & " bought " & frmAction.txtFuel & " Fuel and " & frmAction.txtParts & " Parts", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " bought " & frmAction.txtFuel & " Fuel and " & frmAction.txtParts & " Parts", player.ID, Logic!GameCntr
                End If
             Else
                MessBox "Not enough Cargo Space for the Fuel/Parts order", "Fuel/Parts order", "Ooops", "", getLeader()
@@ -1026,10 +1026,10 @@ On Error GoTo err_handler
       If GetCombo(frmAction.cbo) = 0 Then  'make work
          If hasCrew(player.ID, 73) Then  'Busker adds 100
             getMoney player.ID, 300
-            PutMsg player.PlayName & " made Extra Work with Busker at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID), player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " made Extra Work with Busker at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID), player.ID, Logic!GameCntr
          Else
             getMoney player.ID, 200
-            PutMsg player.PlayName & " made Work at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID), player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " made Work at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID), player.ID, Logic!GameCntr
          End If
          
          If hasCrew(player.ID, 78) And (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID)) >= 1 Then ' Holder- When you Make-Work, you may also take a Fugitive
@@ -1063,7 +1063,7 @@ On Error GoTo err_handler
       
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASRemoveDisgr Then
       removeSelDisgruntled player.ID
-      PutMsg player.PlayName & " removed Disgruntle from a Crew", thisPlayer, Logic!Gamecntr
+      PutMsg player.PlayName & " removed Disgruntle from a Crew", thisPlayer, Logic!GameCntr
       actionSeq = ASselect 'in limbo awaiting user to select
       showActions
    
@@ -1078,8 +1078,9 @@ On Error GoTo err_handler
       'Check if WON!
       If CheckWon(player.ID) Then
          If MessBox("Do you want to end the game for all players?", "End Game?", "Yes", "No", getLeader()) = 0 Then
-            PutMsg PlayCode(thisPlayer).PlayName & " has ENDED the Game", thisPlayer, Logic!Gamecntr
-            Logic.Update "Seq", "E"
+            PutMsg PlayCode(thisPlayer).PlayName & " has ENDED the Game", thisPlayer, Logic!GameCntr
+            DB.Execute "UPDATE GameSeq SET Seq = 'E'"
+            'Logic.Update "Seq", "E"
             EndGame
             Exit Sub
          End If
@@ -1088,7 +1089,7 @@ On Error GoTo err_handler
       'turn finished, push to next player (for SP thats you)
       thisPlayer = setNextPlayer(player.ID)
       If thisPlayer <> player.ID Then
-         PutMsg PlayCode(thisPlayer).PlayName & "'s Turn", thisPlayer, Logic!Gamecntr
+         PutMsg PlayCode(thisPlayer).PlayName & "'s Turn", thisPlayer, Logic!GameCntr
       End If
       actionSeq = ASidle
       If Not (frmShip Is Nothing) Then frmShip.RefreshShips
@@ -1114,6 +1115,7 @@ End Sub
 Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
 Dim ChatTxt As String, x
   playsnd 13
+  Logic.Requery
   Select Case Button.key
   Case "start"  'host
     
@@ -1123,8 +1125,10 @@ Dim ChatTxt As String, x
        player.ID = 0
        player.Color = ""
        player.PlayName = ""
-       Logic.Update "Seq", "H"
-       Logic.Update "GameCntr", 0
+       DB.Execute "UPDATE GameSeq SET Seq = 'H', GameCntr = 0"
+       'Logic!Seq = "H"
+       'Logic!GameCntr = 0
+       'Logic.Update
        ClearBoard
        refreshSolid
        'Starter.cbo.Enabled = True
@@ -1132,7 +1136,8 @@ Dim ChatTxt As String, x
        Starter.Show 1
               
        If player.ID = 0 Then 'no active player
-         Logic.Update "Seq", "E"
+         DB.Execute "UPDATE GameSeq SET Seq = 'E'"
+         'Logic.Update "Seq", "E"
          ClearBoard
        Else
          
@@ -1147,7 +1152,8 @@ Dim ChatTxt As String, x
        
      Case "H"
         If MsgBox("Game already being hosted, do you need to reset it?", vbYesNo + vbCritical, "Game in Host mode") = vbYes Then
-            Logic.Update "Seq", "E"
+            DB.Execute "UPDATE GameSeq SET Seq = 'E'"
+            'Logic.Update "Seq", "E"
         End If
 
      Case Else
@@ -1155,7 +1161,8 @@ Dim ChatTxt As String, x
         x = MsgBox("Game in progress. If you want to re-join, use JOIN button." & vbNewLine & "otherwise press OK to RESET the Game", vbExclamation + vbOKCancel, "Game in Progress")
         Select Case x
         Case vbOK
-            Logic.Update "Seq", "E"
+            DB.Execute "UPDATE GameSeq SET Seq = 'E'"
+            'Logic.Update "Seq", "E"
             MsgBox "Game has been reset, press Host again to start", vbInformation
         End Select
      End Select
@@ -1334,8 +1341,10 @@ Private Sub EndGame()
     If Logic!player = player.ID Then setNextPlayer player.ID
     DB.Execute "Update Players Set Name = NULL WHERE PlayerID = " & player.ID
     If Nz(varDLookup("PlayerID", "Players", "Name IS NOT NULL"), 0) = 0 Then
-       Logic.Update "Seq", "E"
-       Logic.Update "GameCntr", 0
+      DB.Execute "UPDATE GameSeq SET Seq = 'E', GameCntr = 0"
+       Logic.Requery
+       'Logic.Update "Seq", "E"
+       'Logic.Update "GameCntr", 0
     End If
 
     player.ID = 0
@@ -1366,8 +1375,8 @@ Dim coords, c() As String, x
          .imgHaven(x).TransparentColor = &HFFFFFF
          .imgHaven(x).TransparentColorMode = lvicUseTransparentColor
       Next x
-   
-      rst.Open "SELECT * FROM Board WHERE SectorID > 0 ORDER BY SectorID", DB, adOpenDynamic, adLockOptimistic
+      rst.CursorLocation = adUseClient
+      rst.Open "SELECT SectorID, Slot5,STop,SLeft,SHeight,SWidth, Token, AToken, Haven FROM Board WHERE SectorID > 0 ORDER BY SectorID", DB, adOpenStatic, adLockReadOnly
       While Not rst.EOF
          Load .HotSpot(rst!SectorID)
          Set .HotSpot(rst!SectorID).Container = .Picture1
@@ -1678,12 +1687,14 @@ Dim rst As New ADODB.Recordset
          SQL = SQL & "Where NavDeck.Zones = '" & Zone & "' And NavDeck.Seq > 6 "
          SQL = SQL & "ORDER BY NavDeck.Seq"
       End If
-      rst.Open SQL, DB, adOpenDynamic, adLockOptimistic
+      rst.CursorLocation = adUseClient
+      rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       If rst.EOF Then  ' this happens when the reshuffle card is in the discard pile at start of game setup
          ShuffleDeck "Nav", True, False, Zone
-         PutMsg player.PlayName & " Reshuffling NavDeck " & Zone & " due to end of deck", player.ID, Logic!Gamecntr, True, getLeader()
+         PutMsg player.PlayName & " Reshuffling NavDeck " & Zone & " due to end of deck", player.ID, Logic!GameCntr, True, getLeader()
          rst.Close
-         rst.Open SQL, DB, adOpenDynamic, adLockOptimistic
+         rst.CursorLocation = adUseClient
+         rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       End If
       If Not rst.EOF Then
          'a LOT of these tests are only applied to the 1st option only
@@ -1694,7 +1705,7 @@ Dim rst As New ADODB.Recordset
             actionSeq = ASnavEnd
             .NavCardID = 0
             .FDPane1.PaneVisible = False
-            PutMsg player.PlayName & " is Shielded from a Reaver Cutter attack by the Alliance Corvette", player.ID, Logic!Gamecntr, True, getLeader()
+            PutMsg player.PlayName & " is Shielded from a Reaver Cutter attack by the Alliance Corvette", player.ID, Logic!GameCntr, True, getLeader()
             
          'skip Customs Inspection if solid with Harken
          ElseIf (rst!CardName = "Customs Inspection") And isSolid(player.ID, 5) Then
@@ -1702,7 +1713,7 @@ Dim rst As New ADODB.Recordset
             actionSeq = ASnavEnd
             .NavCardID = 0
             .FDPane1.PaneVisible = False
-            PutMsg player.PlayName & " being Solid with Harken avoided a Customs Inspection", player.ID, Logic!Gamecntr, True, getLeader()
+            PutMsg player.PlayName & " being Solid with Harken avoided a Customs Inspection", player.ID, Logic!GameCntr, True, getLeader()
          Else
             .NavCardID = rst!CardID
             .lblName.Caption = rst!CardName
@@ -1747,8 +1758,9 @@ Dim rst As New ADODB.Recordset
          End If
          reshuffle = rst!reshuffle
          'pull the card out of the deck, assign it to the user for debugging
-         rst!Seq = player.ID
-         rst.Update
+         DB.Execute "UPDATE NavDeck SET Seq = " & CStr(player.ID) & " WHERE CardID = " & CStr(.NavCardID)
+         'rst!Seq = player.ID
+         'rst.Update
       Else
          MsgBox "Error in NavDeck"
          Exit Sub
@@ -1759,7 +1771,7 @@ Dim rst As New ADODB.Recordset
       SQL = "SELECT NavOption.* "
       SQL = SQL & "FROM NavOption INNER JOIN NavDeck ON NavOption.OptionID = NavDeck.Option2ID "
       SQL = SQL & "Where NavDeck.CardID = " & .NavCardID
-      
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       If Not rst.EOF Then
          .Picture = LoadPicture(App.Path & "\pictures\Nav2_" & Zone & ".jpg")
@@ -1795,7 +1807,7 @@ Dim rst As New ADODB.Recordset
       
       If reshuffle = 1 Then 'ready for next turn
          ShuffleDeck "Nav", True, False, Zone
-         PutMsg player.PlayName & " Reshuffling NavDeck " & Zone & " due to reshuffle card", player.ID, Logic!Gamecntr, True, getLeader()
+         PutMsg player.PlayName & " Reshuffling NavDeck " & Zone & " due to reshuffle card", player.ID, Logic!GameCntr, True, getLeader()
          If Zone = "A" And isBountyEnabled Then
             If pushBounties() Then
                If DrawDeck("Contact", 10, 3) Then PutMsg "New Bounties available"
@@ -1897,7 +1909,7 @@ Dim frmJoSel As frmJobSel
       .FDPane1.PinState = Pinned
       .FDPane1.SetLayoutReference Nothing
       
-      .lblGo.Caption = CStr(Logic!Gamecntr - 1)
+      .lblGo.Caption = CStr(Logic!GameCntr - 1)
       
       .lblMoney.Tag = varDLookup("Pay", "Players", "PlayerID=" & player.ID)
       .lblMoney = "$" & .lblMoney.Tag
@@ -2215,7 +2227,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
          Else
             finalstate = 1
          End If
-         PutMsg player.PlayName & " Started Job: " & rst!JobName, playerID, Logic!Gamecntr
+         PutMsg player.PlayName & " Started Job: " & rst!JobName, playerID, Logic!GameCntr
          
       ElseIf rst!JobStatus = 1 And ((rst!Sector3 = 1 And getCruiserSector() = SectorID) Or (rst!Sector3 = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!Sector3)) And Not IsNull(rst!Job3) Then ' we're doing Bonus Job
          JobID = rst!Job3
@@ -2245,7 +2257,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
    If rst!Immoral = 1 And hasCrew(playerID, 47) Then
       DB.Execute "UPDATE PlayerSupplies SET OffJob = 1 WHERE CardID = 93"
       If Not (frmShip Is Nothing) Then frmShip.RefreshShips  'update display
-      PutMsg player.PlayName & "'s Work log: Shepherd's having none of this Immoral Job citing '..a special place in Hell!'", playerID, Logic!Gamecntr, True, 47
+      PutMsg player.PlayName & "'s Work log: Shepherd's having none of this Immoral Job citing '..a special place in Hell!'", playerID, Logic!GameCntr, True, 47
    End If
    
    If rst!illegal = 1 Then
@@ -2264,7 +2276,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
          'if TwoFry has a Sniper Rifle, then one less misbv
          If hasGearKeyword(playerID, "SNIPERRIFLE", 56) And misbehaveNum > 1 Then
             misbehaveNum = misbehaveNum - 1
-            PutMsg player.PlayName & "'s Two-Fry used his DeadEye Sniper skills to good effect and eliminates 1 misbehave", playerID, Logic!Gamecntr, True, 56
+            PutMsg player.PlayName & "'s Two-Fry used his DeadEye Sniper skills to good effect and eliminates 1 misbehave", playerID, Logic!GameCntr, True, 56
          End If
          'go do the number of misbehaves
          result = doMisbehaves(playerID, misbehaveNum, SectorID)
@@ -2272,7 +2284,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
          Case 1, 4 'proceed
             result = 0 'reset as Win for below tests
          Case 2 'botched
-            PutMsg player.PlayName & "'s Work log: Job was Botched!", playerID, Logic!Gamecntr, True, getLeader()
+            PutMsg player.PlayName & "'s Work log: Job was Botched!", playerID, Logic!GameCntr, True, getLeader()
             clearPicMB
             Exit Function
             
@@ -2290,7 +2302,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
             If rst!DoubleDown > 0 Then
                DoubleDown = 2
                'payment = payment + rst!DoubleDown
-               PutMsg player.PlayName & " scored the Double-Down bonus", playerID, Logic!Gamecntr
+               PutMsg player.PlayName & " scored the Double-Down bonus", playerID, Logic!GameCntr
             End If
          
          End Select
@@ -2307,7 +2319,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
          If CargoCapacity(playerID) - CargoSpaceUsed(playerID) >= rst!cargo Then 'we have room
             DB.Execute "UPDATE Players SET Cargo = Cargo + " & rst!cargo & " WHERE PlayerID = " & playerID
          Else 'abort the Job
-            PutMsg player.PlayName & " doesn't have enough Cargo space, Job aborted.", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " doesn't have enough Cargo space, Job aborted.", playerID, Logic!GameCntr
             MessBox "Not enough cargo space in the hold, aborting the Job", "Job Requirements", "Ooops", "", getLeader()
             Exit Function
          End If
@@ -2337,7 +2349,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
          If CargoCapacity(playerID) - CargoSpaceUsed(playerID) >= cargofit Then 'we have room
             DB.Execute "UPDATE Players SET Contraband = Contraband + " & cargofit & " WHERE PlayerID = " & playerID
          Else 'abort the Job
-            PutMsg player.PlayName & " doesn't have enough Cargo space, Job botched.", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " doesn't have enough Cargo space, Job botched.", playerID, Logic!GameCntr
             MessBox "Not enough cargo space in the hold, aborting the Job", "Job Requirements", "Ooops", "", getLeader()
             Exit Function
          End If
@@ -2371,7 +2383,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
             SQL = SQL & " WHERE PlayerID = " & playerID
             DB.Execute SQL
          Else 'abort the Job
-            PutMsg player.PlayName & " doesn't have enough Cargo space, Job aborted.", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " doesn't have enough Cargo space, Job aborted.", playerID, Logic!GameCntr
             MessBox "Not enough cargo space in the hold, Job botched", "Job Requirements", "Ooops", "", getLeader()
             Exit Function
          End If
@@ -2409,7 +2421,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
             End If
             
          Else 'abort the Job
-            PutMsg player.PlayName & " doesn't have enough Cargo space, Job aborted.", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " doesn't have enough Cargo space, Job aborted.", playerID, Logic!GameCntr
             MessBox "Not enough cargo space in the hold, aborting the Job", "Job Requirements", "Ooops", "", getLeader()
             Exit Function
          End If
@@ -2424,7 +2436,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
          If CargoCapacity(playerID) - CargoSpaceUsed(playerID) >= (rst!fuel / 2) Then 'we have room
             DB.Execute "UPDATE Players SET Fuel = Fuel + " & rst!fuel & " WHERE PlayerID = " & playerID
          Else 'abort the Job
-            PutMsg player.PlayName & " doesn't have enough Cargo space, Job aborted.", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " doesn't have enough Cargo space, Job aborted.", playerID, Logic!GameCntr
             MessBox "Not enough cargo space in the hold, aborting the Job", "Job Requirements", "Ooops", "", getLeader()
             Exit Function
          End If
@@ -2439,7 +2451,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
          If CargoCapacity(playerID) - CargoSpaceUsed(playerID) >= (rst!parts / 2) Then 'we have room
             DB.Execute "UPDATE Players SET Parts = Parts + " & rst!parts & " WHERE PlayerID = " & playerID
          Else 'abort the Job
-            PutMsg player.PlayName & " doesn't have enough Cargo space, Job aborted.", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " doesn't have enough Cargo space, Job aborted.", playerID, Logic!GameCntr
             MessBox "Not enough cargo space in the hold, aborting the Job", "Job Requirements", "Ooops", "", getLeader()
             Exit Function
          End If
@@ -2449,7 +2461,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
       If rst!tagnbag > 0 Then  ' And CargoCapacity(playerID) > CargoSpaceUsed(playerID) Then 'load to your capacity
          If rst!tagnbag = 1 Then
             skillcnt = getSkill(playerID, cstrSkill(2), 0, False) + RollDice(6)
-            PutMsg player.PlayName & " Tech Test comes to " & skillcnt & " for the Tag and Bag", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " Tech Test comes to " & skillcnt & " for the Tag and Bag", playerID, Logic!GameCntr
             Select Case skillcnt
             Case 1 - 4
                x = 3
@@ -2460,7 +2472,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
             End Select
          ElseIf rst!tagnbag = 20 Then
             x = 20
-            PutMsg player.PlayName & " does a Tag and Bag to grab some goods", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " does a Tag and Bag to grab some goods", playerID, Logic!GameCntr
          Else
             x = rst!tagnbag
          End If
@@ -2480,13 +2492,13 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
    
    If finalstate = 1 Then
 
-      PutMsg player.PlayName & " has completed the first Work Part of " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)), playerID, Logic!Gamecntr, True, getLeader()
+      PutMsg player.PlayName & " has completed the first Work Part of " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)), playerID, Logic!GameCntr, True, getLeader()
       
    ElseIf finalstate = 2 Then 'Bonus Job done
       'Pay Bonus - todo
       bonus = bonus + cargopay
       getMoney playerID, bonus
-      PutMsg player.PlayName & " has completed the $" & bonus & " Bonus Work Part of " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)), playerID, Logic!Gamecntr, True, getLeader()
+      PutMsg player.PlayName & " has completed the $" & bonus & " Bonus Work Part of " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)), playerID, Logic!GameCntr, True, getLeader()
 
    ElseIf finalstate = JOB_SUCCESS Then 'job is ending, but do any remaining challenges Negotiate Pay or Cover your Tracks, Gamble
       'Open the Contact Deck to access end of Job info and flags
@@ -2551,16 +2563,16 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                If skillcnt >= getCrewCount(playerID, True) Then skillcnt = getCrewCount(playerID, True)
                If skillcnt <> 0 Then
                   DB.Execute "UPDATE Players Set Cargo = Cargo + " & skillcnt & " WHERE PlayerID = " & playerID
-                  PutMsg player.PlayName & IIf(skillcnt > 0, " scored ", " lost ") & skillcnt & " Cargo", playerID, Logic!Gamecntr
+                  PutMsg player.PlayName & IIf(skillcnt > 0, " scored ", " lost ") & skillcnt & " Cargo", playerID, Logic!GameCntr
                End If
                
             Case 4 'move Cruiser to sector and EVADE - work done
                MoveShip 5, SectorID
                If getHaven(SectorID) > 0 Then
-                  PutMsg player.PlayName & "'s Nav log: refuge found at this Haven, the Alliance Cruiser sails on by", playerID, Logic!Gamecntr, True, 0, 0, 1
+                  PutMsg player.PlayName & "'s Nav log: refuge found at this Haven, the Alliance Cruiser sails on by", playerID, Logic!GameCntr, True, 0, 0, 1
                   moveAutoAI 5
                Else
-                  PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!Gamecntr, True
+                  PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!GameCntr, True
                   actionSeq = ASNavEvade
                   doWork = 1 ' Evade
                End If
@@ -2572,7 +2584,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                If skillcnt >= getCrewCount(playerID, True) Then skillcnt = getCrewCount(playerID, True)
                If skillcnt <> 0 Then
                   DB.Execute "UPDATE Players Set Contraband = Contraband + " & skillcnt & " WHERE PlayerID = " & playerID
-                  PutMsg player.PlayName & IIf(skillcnt > 0, " scored ", " lost ") & skillcnt & " Contraband", playerID, Logic!Gamecntr
+                  PutMsg player.PlayName & IIf(skillcnt > 0, " scored ", " lost ") & skillcnt & " Contraband", playerID, Logic!GameCntr
                End If
                
             Case 6 'kill a merc
@@ -2584,13 +2596,13 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                Set frmKillCrw = Nothing
                
             Case 7 ' EVADE - work done
-               PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!Gamecntr, True
+               PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!GameCntr, True
                actionSeq = ASNavEvade
                doWork = 1 ' Evade
                
             Case 8 'move Corvette to sector and EVADE - work done
                MoveShip 6, SectorID
-               PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!Gamecntr, True
+               PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!GameCntr, True
                actionSeq = ASNavEvade
                doWork = 1 ' Evade
               
@@ -2603,7 +2615,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                If getMoney(playerID) >= Abs(rst!WinResult) Then
                   payment = payment + rst!WinResult
                Else
-                  PutMsg player.PlayName & " doesn't have enough Money to pay the $" & CStr(Abs(rst!WinResult)) & " fee, Job botched.", playerID, Logic!Gamecntr, True, getLeader()
+                  PutMsg player.PlayName & " doesn't have enough Money to pay the $" & CStr(Abs(rst!WinResult)) & " fee, Job botched.", playerID, Logic!GameCntr, True, getLeader()
                   Exit Function 'fail
                End If
 
@@ -2614,22 +2626,22 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
             'no change
             Select Case rst!IntermediateResult
             Case 4 'attempt botched
-               PutMsg player.PlayName & " botches the final part of the job", playerID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & " botches the final part of the job", playerID, Logic!GameCntr, True, getLeader()
                Exit Function
             
             Case 5 'move Cruiser to sector and EVADE - work done
                MoveShip 5, SectorID
                If getHaven(SectorID) > 0 Then
-                  PutMsg player.PlayName & "'s Nav log: refuge found at this Haven, the Alliance Cruiser sails on by", playerID, Logic!Gamecntr, True, 0, 0, 1
+                  PutMsg player.PlayName & "'s Nav log: refuge found at this Haven, the Alliance Cruiser sails on by", playerID, Logic!GameCntr, True, 0, 0, 1
                   moveAutoAI 5
                Else
-                  PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!Gamecntr, True
+                  PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!GameCntr, True
                   actionSeq = ASNavEvade
                   doWork = 1 ' Evade
                End If
             Case 6 'move Corvette to sector and EVADE - work done
                MoveShip 6, SectorID
-               PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!Gamecntr, True
+               PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!GameCntr, True
                actionSeq = ASNavEvade
                doWork = 1 ' Evade
                
@@ -2637,7 +2649,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                If getMoney(playerID) >= (rst!IntermediateResult * -1) Then
                   payment = payment + rst!IntermediateResult
                Else
-                  PutMsg player.PlayName & " doesn't have enough Money to pay the $" & CStr(Abs(rst!IntermediateResult)) & " fee, Job botched.", playerID, Logic!Gamecntr, True, getLeader()
+                  PutMsg player.PlayName & " doesn't have enough Money to pay the $" & CStr(Abs(rst!IntermediateResult)) & " fee, Job botched.", playerID, Logic!GameCntr, True, getLeader()
                   Exit Function 'fail
                End If
             End Select
@@ -2651,7 +2663,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                If rst!FailLoseRep > 0 Then
                   If Not discardRoberta(playerID) Then
                      DB.Execute "UPDATE Players SET Solid" & rst!FailLoseRep & "=0 WHERE PlayerID =" & playerID
-                     PutMsg player.PlayName & " loses any Rep with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!FailLoseRep), playerID, Logic!Gamecntr, True, 0, 0, 0, rst!FailLoseRep
+                     PutMsg player.PlayName & " loses any Rep with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!FailLoseRep), playerID, Logic!GameCntr, True, 0, 0, 0, rst!FailLoseRep
                   End If
                End If
                
@@ -2663,20 +2675,20 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
             Case 3 ' pay 1000 attempt botched
                If getMoney(playerID) >= 1000 Then
                   getMoney playerID, -1000
-                  PutMsg player.PlayName & " botches the final negotiation and the job, and loses $1000", playerID, Logic!Gamecntr, True, getLeader()
+                  PutMsg player.PlayName & " botches the final negotiation and the job, and loses $1000", playerID, Logic!GameCntr, True, getLeader()
                   Exit Function 'fail
                Else 'take it all
                   getMoney playerID, -1 * getMoney(playerID)
-                  PutMsg player.PlayName & " botches the final negotiation and the job, and loses all their money", playerID, Logic!Gamecntr, True, getLeader()
+                  PutMsg player.PlayName & " botches the final negotiation and the job, and loses all their money", playerID, Logic!GameCntr, True, getLeader()
                   Exit Function 'fail
                End If
                
             Case 4 'attempt botched
-               PutMsg player.PlayName & " botches the final negotiation and the job", playerID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & " botches the final negotiation and the job", playerID, Logic!GameCntr, True, getLeader()
                Exit Function
              
             Case 5, 6 'move Cruiser/Corvette to sector
-               PutMsg player.PlayName & " botches the job and has attracted some attention from the Alliance", playerID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & " botches the job and has attracted some attention from the Alliance", playerID, Logic!GameCntr, True, getLeader()
                MoveShip rst!FailResult, SectorID
                Exit Function
                
@@ -2699,7 +2711,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
          'if complete - finish up
          If rst!Immoral = 1 Then
             doDisgruntled playerID, 1
-            PutMsg player.PlayName & " does an immoral Job and any Moral Crew will be disgruntled", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " does an immoral Job and any Moral Crew will be disgruntled", playerID, Logic!GameCntr
          End If
    
          If ContactID = 0 Then  ' a Goal job
@@ -2741,19 +2753,19 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                frmSalvage.mode = 2
                frmSalvage.salvageCount = (6 - x)
                frmSalvage.Show 1
-               PutMsg player.PlayName & " uses the MF-813 Flying Mule to grab some goods (" & CStr(6 - x) & ")", playerID, Logic!Gamecntr, True, 0, 31
+               PutMsg player.PlayName & " uses the MF-813 Flying Mule to grab some goods (" & CStr(6 - x) & ")", playerID, Logic!GameCntr, True, 0, 31
             End If
          End If
          
          'do this last as Cargo may have changed.
          If hasShipUpgrade(playerID, 21) And (rst!JobTypeID = 1 Or rst!JobType2D = 1) Then
-            PutMsg player.PlayName & "'s Hydraulic Docking Clamps can grab Salvage for this Crime Job", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & "'s Hydraulic Docking Clamps can grab Salvage for this Crime Job", playerID, Logic!GameCntr
             doSalvage playerID
          ElseIf (rst!JobTypeID = 6 Or rst!JobType2D = 6) Then ' SalvageOps (+ Hydraulic Docking Clamps/Crime)
             doSalvage playerID
          End If
          
-         PutMsg player.PlayName & IIf(ContactID = 10, " cashed in the Bounty for the ", " completed the Job: ") & rst!JobName & " for $" & Abs(bonus) & IIf(bonus > 0, " profit", " loss") & IIf(parts > 0, ", picks up " & parts & " part" & IIf(parts > 1, "s,", ","), "") & IIf(ContactID < 1 Or ContactID >= 10, "", " and is solid with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!ContactID)), playerID, Logic!Gamecntr, True, 0, 0, 0, rst!ContactID
+         PutMsg player.PlayName & IIf(ContactID = 10, " cashed in the Bounty for the ", " completed the Job: ") & rst!JobName & " for $" & Abs(bonus) & IIf(bonus > 0, " profit", " loss") & IIf(parts > 0, ", picks up " & parts & " part" & IIf(parts > 1, "s,", ","), "") & IIf(ContactID < 1 Or ContactID >= 10, "", " and is solid with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!ContactID)), playerID, Logic!GameCntr, True, 0, 0, 0, rst!ContactID
          refreshSolid
                   
          'Gamble
@@ -2767,10 +2779,10 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble
                Wend
                If frmGamb.mySuit = x Then
                   DB.Execute "UPDATE Players Set Pay = Pay + 3000 WHERE PlayerID =" & playerID
-                  PutMsg player.PlayName & " gambles and Wins $3000", playerID, Logic!Gamecntr, True, getLeader()
+                  PutMsg player.PlayName & " gambles and Wins $3000", playerID, Logic!GameCntr, True, getLeader()
                Else
                   DB.Execute "UPDATE Players Set Pay = Pay - 500 WHERE PlayerID =" & playerID
-                  PutMsg player.PlayName & " gambles and loses $500.  It was a " & IIf(x = 1, "Spade", IIf(x = 2, "Club", IIf(x = 3, "Diamond", "Heart"))), playerID, Logic!Gamecntr, True, 0, 0, 0, rst!ContactID
+                  PutMsg player.PlayName & " gambles and loses $500.  It was a " & IIf(x = 1, "Spade", IIf(x = 2, "Club", IIf(x = 3, "Diamond", "Heart"))), playerID, Logic!GameCntr, True, 0, 0, 0, rst!ContactID
                End If
                
             End If
@@ -2813,19 +2825,20 @@ Dim frmMB As New frmMisbehave
       SQL = SQL & "FROM MisOption INNER JOIN MisbehaveDeck ON MisOption.OptionID = MisbehaveDeck.Option1ID "
       SQL = SQL & "Where MisbehaveDeck.Seq > 5 "
       SQL = SQL & "ORDER BY MisbehaveDeck.Seq"
-       
-      rst.Open SQL, DB, adOpenDynamic, adLockOptimistic
+      rst.CursorLocation = adUseClient
+      rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       If Not rst.EOF Then
          suit = rst!suit
          'throw the suit up on the toolbar
          picMB(cnt).Picture = LoadPicture(App.Path & "\pictures\smsuit" & suit & ".bmp")
          picMB(cnt).Visible = True
          'pull the card out of the deck
-         rst!Seq = 5
-         rst.Update
+         DB.Execute "UPDATE MisbehaveDeck SET Seq = 5 WHERE CardID = " & CStr(rst!CardID)
+         'rst!Seq = 5
+         'rst.Update
          reshuffle = rst!reshuffle
          If reshuffle = 1 Then 'ready for next turn
-            PutMsg player.PlayName & " Reshuffling MisbehaveDeck due to " & rst!CardName, player.ID, Logic!Gamecntr, True, getLeader()
+            PutMsg player.PlayName & " Reshuffling MisbehaveDeck due to " & rst!CardName, player.ID, Logic!GameCntr, True, getLeader()
             ShuffleDeck "Misbehave"
          End If
          
@@ -2839,13 +2852,13 @@ Dim frmMB As New frmMisbehave
                      discardGearKeyword player.ID, rst!KeyWords
                      getMisbehave = rst!CardID
                      opt = 3
-                     PutMsg player.PlayName & " misbhavin' with " & rst!CardName & " had an Ace in the Hole with " & rst!KeyWords, player.ID, Logic!Gamecntr, True, getLeader()
+                     PutMsg player.PlayName & " misbhavin' with " & rst!CardName & " had an Ace in the Hole with " & rst!KeyWords, player.ID, Logic!GameCntr, True, getLeader()
                      Exit Function
                   End If
                Else 'just your regular multi-use Keyword
                   getMisbehave = rst!CardID
                   opt = 3
-                   PutMsg player.PlayName & " misbhavin' with " & rst!CardName & " had an Ace in the Hole with " & rst!KeyWords, player.ID, Logic!Gamecntr, True, getLeader()
+                   PutMsg player.PlayName & " misbhavin' with " & rst!CardName & " had an Ace in the Hole with " & rst!KeyWords, player.ID, Logic!GameCntr, True, getLeader()
                   Exit Function
                End If
             End If
@@ -2854,7 +2867,7 @@ Dim frmMB As New frmMisbehave
             If hasCrew(player.ID, rst!CrewID) Then
                getMisbehave = rst!CardID
                opt = 3
-               PutMsg player.PlayName & " misbhavin' with " & rst!CardName & " had an Ace in the Hole with " & getCrewName(0, rst!CrewID), player.ID, Logic!Gamecntr, True, rst!CrewID
+               PutMsg player.PlayName & " misbhavin' with " & rst!CardName & " had an Ace in the Hole with " & getCrewName(0, rst!CrewID), player.ID, Logic!GameCntr, True, rst!CrewID
                Exit Function
             Else
                ace = getCrewName(0, rst!CrewID)
@@ -2864,7 +2877,7 @@ Dim frmMB As New frmMisbehave
              If hasGear(player.ID, rst!GearID) Then
                getMisbehave = rst!CardID
                opt = 3
-               PutMsg player.PlayName & " misbhavin' with " & rst!CardName & " had an Ace in the Hole with a " & getGearName(0, rst!GearID), player.ID, Logic!Gamecntr, True, 0, rst!GearID
+               PutMsg player.PlayName & " misbhavin' with " & rst!CardName & " had an Ace in the Hole with a " & getGearName(0, rst!GearID), player.ID, Logic!GameCntr, True, 0, rst!GearID
                Exit Function
             Else
                ace = getGearName(0, rst!GearID)
@@ -2874,7 +2887,7 @@ Dim frmMB As New frmMisbehave
              If hasCrewAttribute(player.ID, cstrProfession(rst!ProfessionID)) Then
                getMisbehave = rst!CardID
                opt = 3
-               PutMsg player.PlayName & " misbhavin' with " & rst!CardName & " had an Ace in the Hole with a " & cstrProfession(rst!ProfessionID), player.ID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & " misbhavin' with " & rst!CardName & " had an Ace in the Hole with a " & cstrProfession(rst!ProfessionID), player.ID, Logic!GameCntr, True, getLeader()
                Exit Function
             Else
                ace = cstrProfession(rst!ProfessionID)
@@ -2920,7 +2933,7 @@ Dim frmMB As New frmMisbehave
          End If
 
       Else
-         PutMsg player.PlayName & " Reshuffling MisbehaveDeck due to end of deck", player.ID, Logic!Gamecntr, True, getLeader()
+         PutMsg player.PlayName & " Reshuffling MisbehaveDeck due to end of deck", player.ID, Logic!GameCntr, True, getLeader()
          ShuffleDeck "Misbehave"
          Exit Function
       End If
@@ -2930,8 +2943,8 @@ Dim frmMB As New frmMisbehave
       SQL = "SELECT MisOption.* "
       SQL = SQL & "FROM MisOption INNER JOIN MisbehaveDeck ON MisOption.OptionID = MisbehaveDeck.Option2ID "
       SQL = SQL & "Where MisbehaveDeck.CardID = " & .MBCardID
-      
-      rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+      rst.CursorLocation = adUseClient
+      rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       If Not rst.EOF Then
          '.cmd(1).Visible = True
          '.cmd(1).Enabled = True
@@ -3035,12 +3048,12 @@ Dim x, CardID As Integer, opt, actualcnt As Integer, suit, c(1 To 4) As Integer
    'inform of the success
    If IsNull(varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)) Then
       If getCruiserSector() = SectorID Then
-         PutMsg player.PlayName & " Misbehaved successfully " & actualcnt & " times at the Alliance Cruiser", playerID, Logic!Gamecntr, True, getLeader()
+         PutMsg player.PlayName & " Misbehaved successfully " & actualcnt & " times at the Alliance Cruiser", playerID, Logic!GameCntr, True, getLeader()
       ElseIf getCorvetteSector() = SectorID Then
-         PutMsg player.PlayName & " Misbehaved successfully " & actualcnt & " times at the Operative's Corvette", playerID, Logic!Gamecntr, True, getLeader()
+         PutMsg player.PlayName & " Misbehaved successfully " & actualcnt & " times at the Operative's Corvette", playerID, Logic!GameCntr, True, getLeader()
       End If
    Else
-      PutMsg player.PlayName & " Misbehaved successfully " & actualcnt & " times at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID), playerID, Logic!Gamecntr, True, getLeader()
+      PutMsg player.PlayName & " Misbehaved successfully " & actualcnt & " times at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID), playerID, Logic!GameCntr, True, getLeader()
    End If
 
 End Function
@@ -3064,7 +3077,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
    
-      PutMsg player.PlayName & "'s Misbehavin': " & rst!Details, playerID, Logic!Gamecntr
+      PutMsg player.PlayName & "'s Misbehavin': " & rst!Details, playerID, Logic!GameCntr
       Events.getNewEvents
       WSkill = rst!skill
       'let the tests begin ... :O  WIN, INTER OR FAIL ?
@@ -3082,14 +3095,14 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
             If MessBox("Stitch wants to Fight instead of Negotiation.  Do you want to use those skills instead?", "Negotiate -> Fight", "Yes", "No", 27) = 0 Then
                WSkill = 1
                usedStitchSkill = True
-               PutMsg player.PlayName & " uses Stitch's one time Negotiation to Fight Skills", playerID, Logic!Gamecntr, True, 27
+               PutMsg player.PlayName & " uses Stitch's one time Negotiation to Fight Skills", playerID, Logic!GameCntr, True, 27
             End If
          End If
          If WSkill = 1 And getPerkAttributeCrew(playerID, "ChangeTestType") = 1 And Not usedStitchSkill Then
             If MessBox("Sheydra wants to Negotiate instead of Fight.  Do you want to use those skills instead?", "Fight -> Negotiate", "Yes", "No", 66) = 0 Then
                WSkill = 3
                usedStitchSkill = True
-               PutMsg player.PlayName & " uses Sheydra's one time Fight to Negotiation Skills", playerID, Logic!Gamecntr, True, 66
+               PutMsg player.PlayName & " uses Sheydra's one time Fight to Negotiation Skills", playerID, Logic!GameCntr, True, 66
             End If
          End If
       
@@ -3118,7 +3131,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
             Case 1, 2 'stay onboard
                DB.Execute "UPDATE PlayerSupplies SET OffJob = 1 WHERE CardID = 51"
                If Not (frmShip Is Nothing) Then frmShip.RefreshShips  'update display
-               PutMsg player.PlayName & "'s River Tam cowers onboard and won't be misbehavin' any further on this job", playerID, Logic!Gamecntr, True, 32
+               PutMsg player.PlayName & "'s River Tam cowers onboard and won't be misbehavin' any further on this job", playerID, Logic!GameCntr, True, 32
             Case 3 'fight
                If WSkill = 1 Then
                   riverskill = 2
@@ -3136,9 +3149,9 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
             End Select
             If riverskill = 2 Then
                'If hasCrew(playerID, 33) Then riverskill = 4
-               PutMsg player.PlayName & "'s River Tam" & IIf(hasCrew(playerID, 33), ", encouraged by Simon,", "") & " channels the " & cstrSkill(WSkill) & " skill + 2", playerID, Logic!Gamecntr, True, 32
+               PutMsg player.PlayName & "'s River Tam" & IIf(hasCrew(playerID, 33), ", encouraged by Simon,", "") & " channels the " & cstrSkill(WSkill) & " skill + 2", playerID, Logic!GameCntr, True, 32
             ElseIf Dice > 2 Then
-               PutMsg player.PlayName & "'s River Tam ain't misbehavin' this time", playerID, Logic!Gamecntr, True, 32
+               PutMsg player.PlayName & "'s River Tam ain't misbehavin' this time", playerID, Logic!GameCntr, True, 32
             End If
          End If
          
@@ -3155,7 +3168,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
          x = hasGearCrew(playerID, 28) 'Mal's Brown Coat
          If x > 0 And varDLookup("Disgruntled", "Crew", "CrewID=" & x) > 0 And varDLookup("Fight", "Crew", "CrewID=" & x) > 0 And WSkill = 3 Then
             extraSkill = extraSkill + varDLookup("Fight", "Crew", "CrewID=" & x)
-            PutMsg player.PlayName & "'s Disgruntled Crew wearing the Brown Coat adds their Fight skills to the Negotiation", playerID, Logic!Gamecntr, True, 0, 28
+            PutMsg player.PlayName & "'s Disgruntled Crew wearing the Brown Coat adds their Fight skills to the Negotiation", playerID, Logic!GameCntr, True, 0, 28
          End If
          
          If WSkill = 1 Then
@@ -3169,7 +3182,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
          If WSkill = 1 And hasGear(playerID, 47) Then ' Zoe's Mare's Leg Rifle -When making a Fight Test, roll two dice and use the highest.
             x = RollDice(6, True)
             If x > Dice Then
-               PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(x), playerID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, Dice
+               PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(x), playerID, Logic!GameCntr, True, 0, 47, 0, 0, 0, Dice
                Dice = x
             End If
          End If
@@ -3179,7 +3192,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
                Do While Dice = 1
                   Dice = RollDice(6, IIf(WSkill = 3 And hasCrew(playerID, 55), False, True))
                Loop
-               PutMsg player.PlayName & " uses Jaynes Cunning Hat to reRoll a 1 and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, 0, 6, 0, 0, 0, Dice
+               PutMsg player.PlayName & " uses Jaynes Cunning Hat to reRoll a 1 and got a " & CStr(Dice), playerID, Logic!GameCntr, True, 0, 6, 0, 0, 0, Dice
                
             ElseIf hasGear(playerID, 35) And WSkill = 1 Then 'Inara's Bow
                x = hasGearCrew(playerID, 35)
@@ -3188,7 +3201,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
                      Do While Dice = 1
                         Dice = RollDice(6, True)
                      Loop
-                     PutMsg player.PlayName & " uses Inara's Bow to reRoll a 1 and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, 0, 35, 0, 0, 0, Dice
+                     PutMsg player.PlayName & " uses Inara's Bow to reRoll a 1 and got a " & CStr(Dice), playerID, Logic!GameCntr, True, 0, 35, 0, 0, 0, Dice
                   End If
                End If
             End If
@@ -3200,7 +3213,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
             If x > 0 Then
                If MessBox("You rolled a " & Dice & vbNewLine & "Your Fight Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, True)
-                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), playerID, Logic!GameCntr, True, x, 0, 0, 0, 0, Dice
                End If
             End If
          End If
@@ -3211,7 +3224,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
             If x > 0 Then
                If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, True)
-                  PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                  PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), playerID, Logic!GameCntr, True, x, 0, 0, 0, 0, Dice
                End If
             End If
          End If
@@ -3222,7 +3235,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
             If x > 0 Then
                If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, IIf(WSkill = 3 And hasCrew(playerID, 55), False, True))
-                  PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                  PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), playerID, Logic!GameCntr, True, x, 0, 0, 0, 0, Dice
                End If
             End If
          End If
@@ -3231,7 +3244,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
             If MessBox("You rolled a " & Dice & vbNewLine & "Yolanda's pistol allows you a re-roll, do you want to Discard the Pistol to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", 0, 45, 0, Dice) = 0 Then
                doDiscardGear playerID, hasGearCard(playerID, 45)
                Dice = RollDice(6, True)
-               PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, 0, 45, 0, 0, 0, Dice
+               PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), playerID, Logic!GameCntr, True, 0, 45, 0, 0, 0, Dice
             End If
          End If
          
@@ -3239,7 +3252,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
             If MessBox("You rolled a " & Dice & vbNewLine & "Extra Ammo Clips allow you a re-roll, do you want to Discard the Clips to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", 0, 48, 0, Dice) = 0 Then
                doDiscardGear playerID, hasGearCard(playerID, 48)
                Dice = RollDice(6, True)
-               PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, Dice
+               PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), playerID, Logic!GameCntr, True, getLeader(), 0, 0, 0, 0, Dice
             End If
          End If
          
@@ -3291,7 +3304,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
             If MessBox("The Fights not going so well with a skill score of " & skillcnt & vbNewLine & "Simon's Sonic Stun Baton might turn things around, wanna try another Thrillin' Heroics Roll and Discard the Baton?", "Stun Baton to the Fight", "Yes", "No", 0, 32) = 0 Then
                skillcnt = RollDice(6) + 6
                doDiscardGear playerID, hasGearCard(playerID, 32)
-               PutMsg player.PlayName & " used Simon's Sonic Stun Baton to try and turn the Fight around ", playerID, Logic!Gamecntr
+               PutMsg player.PlayName & " used Simon's Sonic Stun Baton to try and turn the Fight around ", playerID, Logic!GameCntr
             End If
          End If
          '-----------------------------------------
@@ -3309,7 +3322,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
          Else 'you lose
             result = 2
          End If
-         PutMsg player.PlayName & "'s MB log: Rolls a " & Dice & " with added " & cstrSkill(WSkill) & " skill points of " & CStr(skillcnt - Dice) & " for a total of " & skillcnt & " to " & IIf(result = 0, "succeed :^)", IIf(result = 1, "partially succeed :^|", "lose :^(")), playerID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, Dice, WSkill
+         PutMsg player.PlayName & "'s MB log: Rolls a " & Dice & " with added " & cstrSkill(WSkill) & " skill points of " & CStr(skillcnt - Dice) & " for a total of " & skillcnt & " to " & IIf(result = 0, "succeed :^)", IIf(result = 1, "partially succeed :^|", "lose :^(")), playerID, Logic!GameCntr, True, getLeader(), 0, 0, 0, 0, Dice, WSkill
          
       End If  'end of the initial Tests
          
@@ -3323,7 +3336,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
             Dice = rst!WinCash
             If getMoney(playerID) <= Abs(Dice) Then
                Dice = getMoney(playerID) * -1
-               PutMsg player.PlayName & "'s MB log: Funds depleted!", playerID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & "'s MB log: Funds depleted!", playerID, Logic!GameCntr, True, getLeader()
             End If
             
             DB.Execute "UPDATE Players Set Pay = Pay + " & Dice & " WHERE PlayerID = " & playerID
@@ -3352,7 +3365,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
          
          If rst!Disgruntled = 4 Then 'discard all Mercs
             If doMercDiscard(playerID) Then
-               PutMsg player.PlayName & " had the Mercs mutiny and leave", playerID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & " had the Mercs mutiny and leave", playerID, Logic!GameCntr, True, getLeader()
             End If
          End If
             
@@ -3364,7 +3377,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
       If Nz(rst!Keyword, "") <> "" Then
          If discardGearKeyword(playerID, Nz(rst!Keyword), True) Then
             discardGearKeyword playerID, rst!Keyword
-            PutMsg player.PlayName & " used up the " & rst!Keyword, playerID, Logic!Gamecntr
+            PutMsg player.PlayName & " used up the " & rst!Keyword, playerID, Logic!GameCntr
          End If
       End If
       
@@ -3373,7 +3386,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
          If skillcnt > rst!cargo Then skillcnt = rst!cargo
          If skillcnt <> 0 Then
             DB.Execute "UPDATE Players Set Cargo = Cargo + " & skillcnt & " WHERE PlayerID = " & playerID
-            PutMsg player.PlayName & IIf(skillcnt > 0, " scored ", " lost ") & skillcnt & " Cargo", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & IIf(skillcnt > 0, " scored ", " lost ") & skillcnt & " Cargo", playerID, Logic!GameCntr
          End If
       End If
       
@@ -3387,7 +3400,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
          If skillcnt > x Then skillcnt = x
          If skillcnt <> 0 Then
             DB.Execute "UPDATE Players Set Contraband = Contraband + " & skillcnt & " WHERE PlayerID = " & playerID
-            PutMsg player.PlayName & IIf(skillcnt > 0, " scored ", " lost ") & skillcnt & " Contraband", playerID, Logic!Gamecntr
+            PutMsg player.PlayName & IIf(skillcnt > 0, " scored ", " lost ") & skillcnt & " Contraband", playerID, Logic!GameCntr
          End If
       End If
       
@@ -3402,7 +3415,7 @@ Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
       If rst!Disgruntled = 5 Then 'discard all Mercs if Merc Fight higher than others
          If getSkill(playerID, cstrSkill(1), 1) > getSkill(playerID, cstrSkill(1), 2) Then  'discard all Mercs
             If doMercDiscard(playerID) Then
-               PutMsg player.PlayName & " had the Mercs outgun the crew and leave", playerID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & " had the Mercs outgun the crew and leave", playerID, Logic!GameCntr, True, getLeader()
             End If
          End If
       End If
@@ -3431,13 +3444,13 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
 
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
-      PutMsg player.PlayName & "'s Nav log: " & rst!Details, player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & "'s Nav log: " & rst!Details, player.ID, Logic!GameCntr
       'let the tests begin ... :O  WIN, INTER OR FAIL ?
       
       'has breakdown insurance ?
       If rst!Breakdown = 1 And (hasShipUpgrade(player.ID, 3) Or hasShipUpgrade(player.ID, 7)) Then
          result = 0
-         PutMsg player.PlayName & "'s Ship is breakdown proof!", player.ID, Logic!Gamecntr, True, getLeader()
+         PutMsg player.PlayName & "'s Ship is breakdown proof!", player.ID, Logic!GameCntr, True, getLeader()
          Exit Function
          
       ElseIf rst!WinProfession > 0 And Not hasCrewAttribute(player.ID, cstrProfession(rst!WinProfession)) Then
@@ -3470,7 +3483,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          If rst!WinPassenger <> 0 Then ' could be -neg
             skillcnt = Int(CargoCapacity(player.ID) - CargoSpaceUsed(player.ID))
             If skillcnt < rst!WinPassenger And rst!WinPassenger = 2 Then 'cannot fit eryone
-               PutMsg player.PlayName & " couldn't fit all Passengers, Moral Crew are not going to be happy!", player.ID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & " couldn't fit all Passengers, Moral Crew are not going to be happy!", player.ID, Logic!GameCntr, True, getLeader()
                doDisgruntled player.ID, 1
             ElseIf skillcnt > rst!WinPassenger Then
                skillcnt = rst!WinPassenger
@@ -3482,7 +3495,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          If rst!WinFugitive <> 0 Then ' could be -neg
             skillcnt = Int(CargoCapacity(player.ID) - CargoSpaceUsed(player.ID))
             If skillcnt < rst!WinFugitive And rst!WinFugitive = 4 Then 'cannot fit eryone
-               PutMsg player.PlayName & " couldn't fit all Fugitives, Moral Crew are not going to be happy!", player.ID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & " couldn't fit all Fugitives, Moral Crew are not going to be happy!", player.ID, Logic!GameCntr, True, getLeader()
                doDisgruntled player.ID, 1
             ElseIf skillcnt > rst!WinFugitive Then
                skillcnt = rst!WinFugitive
@@ -3569,14 +3582,14 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          ElseIf rst!WinGoods = -99 Then
             Set frmStsh = New frmStash
             frmStsh.Show 1
-            PutMsg player.PlayName & " lost any Goods in hold overboard", player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " lost any Goods in hold overboard", player.ID, Logic!GameCntr
          End If
          
          If rst!WinKillCrew <> 0 Then
             x = doKillCrews(player.ID, rst!WinKillCrew)
             If rst!OptionName = "If we're very lucky" And hasShipUpgrade(player.ID, 18) > 0 And x > 0 Then
                doDiscardGear player.ID, hasShipUpgrade(player.ID, 18)
-               PutMsg player.PlayName & " lost the Reaver-Flage upgrade in the Reaver skuffle", player.ID, Logic!Gamecntr
+               PutMsg player.PlayName & " lost the Reaver-Flage upgrade in the Reaver skuffle", player.ID, Logic!GameCntr
             End If
 
          End If
@@ -3595,10 +3608,10 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
                      x = RollDice(6)
                      If x > 4 Then
                         getMoney player.ID, 2000
-                        PutMsg player.PlayName & " rolls a " & x & " and wins $2000", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, x
+                        PutMsg player.PlayName & " rolls a " & x & " and wins $2000", player.ID, Logic!GameCntr, True, getLeader(), 0, 0, 0, 0, x
                      Else
                         getMoney player.ID, -1000
-                        PutMsg player.PlayName & " rolls a " & x & " and loses $1000", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, x
+                        PutMsg player.PlayName & " rolls a " & x & " and loses $1000", player.ID, Logic!GameCntr, True, getLeader(), 0, 0, 0, 0, x
                      End If
                   End If
                
@@ -3620,9 +3633,9 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
                         y = y - x
                      End If
                      DB.Execute "UPDATE Players SET Passenger =" & z & ", Fugitive =" & y & " WHERE PlayerID=" & player.ID
-                     PutMsg player.PlayName & " rolls a " & skillcnt & " and is left with " & z & " Passengers and " & y & " Fugitives", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, skillcnt
+                     PutMsg player.PlayName & " rolls a " & skillcnt & " and is left with " & z & " Passengers and " & y & " Fugitives", player.ID, Logic!GameCntr, True, getLeader(), 0, 0, 0, 0, skillcnt
                   Else
-                     PutMsg player.PlayName & " rolls a " & skillcnt & " and retains any Passengers and Fugitives", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, skillcnt
+                     PutMsg player.PlayName & " rolls a " & skillcnt & " and retains any Passengers and Fugitives", player.ID, Logic!GameCntr, True, getLeader(), 0, 0, 0, 0, skillcnt
                   End If
                   
                Case 4   'She's Hemmorrhaging Fuel!
@@ -3679,7 +3692,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             x = doKillCrews(player.ID, rst!InterKillCrew)
             If rst!OptionName = "If we're very lucky" And hasShipUpgrade(player.ID, 18) > 0 And x > 0 Then
                doDiscardGear player.ID, hasShipUpgrade(player.ID, 18)
-               PutMsg player.PlayName & " lost the Reaver-Flage upgrade in the Reaver skuffle", player.ID, Logic!Gamecntr
+               PutMsg player.PlayName & " lost the Reaver-Flage upgrade in the Reaver skuffle", player.ID, Logic!GameCntr
             End If
 
          End If
@@ -3708,7 +3721,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          If rst!FailGoods = -99 Then 'goods seized not in Stash
             'allow for stash modifiers.  reduce by 4+mods
             If SeizeAllContraCargo(player.ID) Then   'this is a compromise - todo - rework for ALL Goods
-               PutMsg player.PlayName & "'s Nav log: lost some Contraband/Cargo not in Stash", player.ID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & "'s Nav log: lost some Contraband/Cargo not in Stash", player.ID, Logic!GameCntr, True, getLeader()
             End If
             
          ElseIf rst!FailGoods <> 0 Then ' could be -neg
@@ -3731,7 +3744,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             x = doKillCrews(player.ID, rst!FailKillCrew)
             If rst!OptionName = "If we're very lucky" And hasShipUpgrade(player.ID, 18) > 0 And x > 0 Then
                doDiscardGear player.ID, hasShipUpgrade(player.ID, 18)
-               PutMsg player.PlayName & " lost the Reaver-Flage upgrade in the Reaver skuffle", player.ID, Logic!Gamecntr
+               PutMsg player.PlayName & " lost the Reaver-Flage upgrade in the Reaver skuffle", player.ID, Logic!GameCntr
             End If
          End If
          
@@ -3858,7 +3871,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
                frmSeize.Show 1
             End If
             If SeizeAllFugi(player.ID) Then
-               PutMsg player.PlayName & " lost some Fugitives not in Stash", player.ID, Logic!Gamecntr, True, getLeader()
+               PutMsg player.PlayName & " lost some Fugitives not in Stash", player.ID, Logic!GameCntr, True, getLeader()
             End If
          
          Case 8 'discard 1 crew
@@ -3930,26 +3943,26 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
           DB.Execute "UPDATE Players SET Fugitive = 0, Passenger = 0 WHERE PlayerID = " & player.ID
           'remove active bounty jobs too
           DB.Execute "DELETE FROM PlayerJobs WHERE PlayerID = " & player.ID & " AND JobStatus = 0 AND CardID in (Select CardID From ContactDeck WHERE ContactID = 10)"
-          PutMsg player.PlayName & " has lost any fugutives and passengers they may have had.", player.ID, Logic!Gamecntr
+          PutMsg player.PlayName & " has lost any fugutives and passengers they may have had.", player.ID, Logic!GameCntr
       End If
       
       If rst!SeizeGoods = 1 Then 'Contraband and Fugitives not in your Stash are seized. Full Stop
          'allow for stash modifiers.  reduce by 4+mods
          If SeizeAllContraFugi(player.ID) Then
-            PutMsg player.PlayName & "'s Nav log: lost some Contraband/Fugitives not in Stash", player.ID, Logic!Gamecntr, True, getLeader()
+            PutMsg player.PlayName & "'s Nav log: lost some Contraband/Fugitives not in Stash", player.ID, Logic!GameCntr, True, getLeader()
          End If
       End If
       
       If rst!SeizeGoods = 2 Then 'Contraband and Cargo not in your Stash are seized. Full Stop
          'allow for stash modifiers.  reduce by 4+mods
          If SeizeAllContraCargo(player.ID) Then
-            PutMsg player.PlayName & "'s Nav log: lost some Contraband/Cargo not in Stash", player.ID, Logic!Gamecntr, True, getLeader()
+            PutMsg player.PlayName & "'s Nav log: lost some Contraband/Cargo not in Stash", player.ID, Logic!GameCntr, True, getLeader()
          End If
       End If
       
       If rst!Warrant = 1 Or (result = 2 And rst!Warrant = 2) Or (isOutlaw(player.ID) And rst!Warrant = 3) Then
          If Not warrantDodge(player.ID) Then
-            PutMsg player.PlayName & "'s Nav log: a Warrant has been issued" & IIf(isSolid(player.ID, 5), " and you are no longer Solid with Harken", "") & "!", player.ID, Logic!Gamecntr, True, getLeader()
+            PutMsg player.PlayName & "'s Nav log: a Warrant has been issued" & IIf(isSolid(player.ID, 5), " and you are no longer Solid with Harken", "") & "!", player.ID, Logic!GameCntr, True, getLeader()
             'add a Warrant and clear any Solid with Harken (5)
             DB.Execute "UPDATE Players SET Warrants = Warrants + 1" & IIf(discardRoberta(player.ID), "", ", Solid5 = 0") & " WHERE PlayerID = " & player.ID
          End If
@@ -3957,7 +3970,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
       If rst!Warrant = -1 Then
          'clear Warrants
          DB.Execute "UPDATE Players SET Warrants = 0 WHERE PlayerID = " & player.ID
-         PutMsg player.PlayName & "'s Nav log: any Warrants have been cleared!", player.ID, Logic!Gamecntr, True, getLeader()
+         PutMsg player.PlayName & "'s Nav log: any Warrants have been cleared!", player.ID, Logic!GameCntr, True, getLeader()
       End If
       
       If rst!Token = 1 Then
@@ -3969,7 +3982,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
       End If
       
       If rst!Evade = 1 Or (result = 0 And rst!Evade = 2) Then
-         PutMsg player.PlayName & "'s Nav log: EVADE!", player.ID, Logic!Gamecntr, True, getLeader()
+         PutMsg player.PlayName & "'s Nav log: EVADE!", player.ID, Logic!GameCntr, True, getLeader()
          actionSeq = ASNavEvade
       End If
                   
@@ -3984,7 +3997,7 @@ End Function
 'save selected (Seq=6 + selected) to players Jobs, unselected back to 5 DISCARDED
 Public Function doDeal(ByVal playerID As Integer) As Integer
 Dim Index As Integer
-   With frmDeal.SftTree
+   With frmDeal.sftTree
       
       For Index = 0 To .ListCount - 1
          Select Case .ItemDataString(Index)
@@ -4005,7 +4018,7 @@ End Function
 'save selected (Seq=6 + selected) to players Jobs, unselected back to 5 DISCARDED
 Public Function doBuy(ByVal playerID As Integer) As Integer
 Dim Index As Integer, cost As Integer, imposter As Integer
-   With frmBuy.SftTree
+   With frmBuy.sftTree
       cost = 0
       For Index = 0 To .ListCount - 1
          imposter = 0
@@ -4054,7 +4067,7 @@ Dim Index As Integer, cost As Integer, imposter As Integer
             DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & playerID & ", " & .ItemData(Index) & ")"
          
             If imposter > 0 Then
-               PutMsg getCrewName(0, imposter) & " has turned up as " & getCrewName(.ItemData(Index)) & " on " & player.PlayName & "'s Ship", playerID, Logic!Gamecntr, True, getCrewID(.ItemData(Index)), 0, 0, 0, 1
+               PutMsg getCrewName(0, imposter) & " has turned up as " & getCrewName(.ItemData(Index)) & " on " & player.PlayName & "'s Ship", playerID, Logic!GameCntr, True, getCrewID(.ItemData(Index)), 0, 0, 0, 1
             End If
          
          Case "UN" 'place back in discard (5)
@@ -4087,7 +4100,7 @@ Dim x, g
          If MessBox("Reaver within firing Range, do you want to use the single-use Flac Gun to fend it off?", "Reaver Cutter", "Yes", "No", 0, 0, 15) = 0 Then
             doDiscardGear player.ID, g
             moveAutoAI x
-            PutMsg player.PlayName & " depleted their Hull-Mounted Flak Gun to fend off a Reaver", player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " depleted their Hull-Mounted Flak Gun to fend off a Reaver", player.ID, Logic!GameCntr
          End If
       End If
    End If
@@ -4140,7 +4153,7 @@ Dim frmKillCrw As frmKillCrew
       doKillCrews = killed
       If killed > 0 Then
          'If Not (frmDeal Is Nothing) Then frmDeal.RefreshDeals
-         PutMsg player.PlayName & " gets " & CStr(killed) & " Crew killed", playerID, Logic!Gamecntr
+         PutMsg player.PlayName & " gets " & CStr(killed) & " Crew killed", playerID, Logic!GameCntr
       End If
 End Function
 
@@ -4391,26 +4404,27 @@ Dim SQL, reshuffle
 Dim rst As New ADODB.Recordset
 
       'Read in the next NAV card and display either 1 or 2 options
-      SQL = "SELECT Suit, Seq, CardName, reshuffle "
+      SQL = "SELECT CardID, Suit, Seq, CardName, reshuffle "
       SQL = SQL & "FROM MisbehaveDeck "
       SQL = SQL & "Where Seq > 5 "
       SQL = SQL & "ORDER BY Seq"
-       
-      rst.Open SQL, DB, adOpenDynamic, adLockOptimistic
+      rst.CursorLocation = adUseClient
+      rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       If Not rst.EOF Then
          doGamble = rst!suit
          
          'pull the card out of the deck
-         rst!Seq = 5
-         rst.Update
+         DB.Execute "UPDATE MisbehaveDeck SET Seq = 5 WHERE CardID = " & CStr(rst!CardID)
+         'rst!Seq = 5
+         'rst.Update
          reshuffle = rst!reshuffle
          If reshuffle = 1 Then 'ready for next turn
-            PutMsg player.PlayName & " Reshuffling MisbehaveDeck due to " & rst!CardName, player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " Reshuffling MisbehaveDeck due to " & rst!CardName, player.ID, Logic!GameCntr
             ShuffleDeck "Misbehave"
          End If
 
       Else
-         PutMsg player.PlayName & " Reshuffling MisbehaveDeck due to end of deck", player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " Reshuffling MisbehaveDeck due to end of deck", player.ID, Logic!GameCntr
          ShuffleDeck "Misbehave"
          Exit Function
       End If
@@ -4491,7 +4505,7 @@ Dim CrewID, SupplyID, CrewCardID, killCrew, ShipID, JumpShipID
       DB.Execute "DELETE FROM PlayerSupplies WHERE PlayerID =" & player.ID & " AND CardID = " & CrewCardID
 
       DB.Execute "UPDATE SupplyDeck SET Seq =0 WHERE CardID = " & CrewCardID
-      PutMsg player.PlayName & " betrays " & getCrewName(CrewCardID) & " to claim a Bounty" & IIf(getCrewCount(player.ID) > 1, " and the Crew are not impressed", ""), player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & " betrays " & getCrewName(CrewCardID) & " to claim a Bounty" & IIf(getCrewCount(player.ID) > 1, " and the Crew are not impressed", ""), player.ID, Logic!GameCntr
       
       assignDeal player.ID, CardID
       'pullBounties
@@ -4512,14 +4526,14 @@ Dim CrewID, SupplyID, CrewCardID, killCrew, ShipID, JumpShipID
       End If
       
    ElseIf ShipID > 0 Or JumpShipID > 0 Then 'attack Rival Ship or bounty jump
-      PutMsg player.PlayName & " is attempting to board a rival ship, " & PlayCode(ShipID).PlayName, player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & " is attempting to board a rival ship, " & PlayCode(ShipID).PlayName, player.ID, Logic!GameCntr
       'boarding test
       If doBoardingTest Then
-         PutMsg player.PlayName & " has boarded a rival ship, " & PlayCode(ShipID + JumpShipID).PlayName & " to attempt to " & IIf(ShipID > 0, "claim", "jump") & " a Bounty for " & getCrewName(CrewCardID) & ". This calls for a Showdown!", player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " has boarded a rival ship, " & PlayCode(ShipID + JumpShipID).PlayName & " to attempt to " & IIf(ShipID > 0, "claim", "jump") & " a Bounty for " & getCrewName(CrewCardID) & ". This calls for a Showdown!", player.ID, Logic!GameCntr
          'showdown with ShipID
          doShowDownRival ShipID + JumpShipID, CardID, CrewCardID, CrewID, IIf(JumpShipID > 0, True, False)
       Else
-         PutMsg player.PlayName & " failed to board the rival ship, " & PlayCode(ShipID).PlayName, player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " failed to board the rival ship, " & PlayCode(ShipID).PlayName, player.ID, Logic!GameCntr
       End If
   
    End If
@@ -4582,10 +4596,10 @@ Dim Cskillcnt As Integer, Cskill As Integer, CDice As Integer, x, cnt, msg, win 
    If hasCrew(player.ID, 91) And CDice > 1 Then 'showdown re-roll
       If MessBox(msg & vbNewLine & "Chari can force them to re-roll if you want", "Showdown", "Re-Roll", "Leave", 91, 0, 0, Dice) = 0 Then
          CDice = RollDice(6, True)
-         PutMsg player.PlayName & " uses Chari's Skills to force a reRoll and they got a " & CStr(CDice) & " for a total of " & CStr(Cskillcnt + CDice), player.ID, Logic!Gamecntr, True, 91, 0, 0, 0, 0, CDice
+         PutMsg player.PlayName & " uses Chari's Skills to force a reRoll and they got a " & CStr(CDice) & " for a total of " & CStr(Cskillcnt + CDice), player.ID, Logic!GameCntr, True, 91, 0, 0, 0, 0, CDice
       End If
    Else
-      PutMsg msg, player.ID, Logic!Gamecntr, True, CrewID, 0, 0, 0, 0, CDice, Cskill
+      PutMsg msg, player.ID, Logic!GameCntr, True, CrewID, 0, 0, 0, 0, CDice, Cskill
    End If
    
    skillcnt = doWorkSkillTest(Dice, skill, Cskillcnt + CDice + 1, 0, 1)  'result includes dice score
@@ -4593,7 +4607,7 @@ Dim Cskillcnt As Integer, Cskill As Integer, CDice As Integer, x, cnt, msg, win 
    win = (skillcnt = 0)
       
    msg = "Showdown: " & player.PlayName & IIf(win, " apprehends " & getCrewName(0, CrewID), " Botches the job!")
-   PutMsg msg, player.ID, Logic!Gamecntr, True, CrewID, 0, 0, 0, 0, Dice, skill
+   PutMsg msg, player.ID, Logic!GameCntr, True, CrewID, 0, 0, 0, 0, Dice, skill
    
    doShowDownSupply = win
    
@@ -4614,12 +4628,13 @@ Dim frmSS As New frmSkillSel, Skilltype As Integer, skill As Integer, Dice As In
    DB.Execute "Delete from ShowdownGear"
    
    'throw a hook for the Rival Ship to pickup the boarding alert and init the showdown
+   DB.Execute "UPDATE GameSeq SET Seq = 'F', HostAccept = 0, ClientAccept = 0, Trader = " & CStr(DefenderID)
    Logic.Requery
-   Logic!Seq = "F"
-   Logic!HostAccept = 0
-   Logic!ClientAccept = 0
-   Logic!trader = DefenderID
-   Logic.Update
+   'Logic!Seq = "F"
+   'Logic!HostAccept = 0
+   'Logic!ClientAccept = 0
+   'Logic!trader = DefenderID
+   'Logic.Update
    Set frmSD = New frmShowdown
    With frmSD
       .isHost = True
@@ -4643,7 +4658,7 @@ Dim frmSS As New frmSkillSel, Skilltype As Integer, skill As Integer, Dice As In
                DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & CrewCardID & ")"
                
             Else 'discard pile
-               PutMsg "No room for " & getCrewName(CrewCardID) & " onboard! Sent them home instead.", player.ID, Logic!Gamecntr, True, CrewID
+               PutMsg "No room for " & getCrewName(CrewCardID) & " onboard! Sent them home instead.", player.ID, Logic!GameCntr, True, CrewID
                DB.Execute "UPDATE SupplyDeck SET Seq =" & DISCARDED & " WHERE CardID = " & CrewCardID
                            
             End If
@@ -4679,10 +4694,11 @@ Dim frmSS As New frmSkillSel, Skilltype As Integer, skill As Integer, Dice As In
          'End If
       End If
    End If
+   DB.Execute "UPDATE GameSeq SET Seq = 'R', Trader = 0"
    Logic.Requery
-   Logic!Seq = "R"
-   Logic!trader = 0
-   Logic.Update
+   'Logic!Seq = "R"
+   'Logic!trader = 0
+   'Logic.Update
    
 End Function
 
@@ -4700,8 +4716,9 @@ Dim frmSD As frmShowdown, skill As Integer, Dice As Integer, winShowdown As Bool
       .Show vbModal
       winShowdown = .winShowdown
    End With
+   DB.Execute "UPDATE GameSeq SET Trader = 0"
    Logic.Requery
-   Logic.Update "Trader", 0
+   'Logic.Update "Trader", 0
    'reset OffJob status
    clearOffJob player.ID
    If Not winShowdown Then
@@ -4715,7 +4732,7 @@ End Sub
 Private Sub issueWarrant(ByVal takerID As Integer, ByVal giverID As Integer)
 
    DB.Execute "UPDATE Players set Warrants = Warrants + 1, Solid5 = 0 WHERE PlayerID = " & CStr(takerID)  'clear Harken Solid
-   PutMsg PlayCode(giverID).PlayName & "'s Agent McGinnis didn't take kindly to the Showdown result and has issued a Warrant to " & PlayCode(takerID).PlayName, giverID, Logic!Gamecntr, True, 92
+   PutMsg PlayCode(giverID).PlayName & "'s Agent McGinnis didn't take kindly to the Showdown result and has issued a Warrant to " & PlayCode(takerID).PlayName, giverID, Logic!GameCntr, True, 92
 End Sub
 
 ' use for Nav type Skill Tests (not Work)
@@ -4733,7 +4750,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
             Case 1, 2 'stay onboard
                DB.Execute "UPDATE PlayerSupplies SET OffJob = 1 WHERE CardID = 51"
                If Not (frmShip Is Nothing) Then frmShip.RefreshShips  'update display
-               PutMsg player.PlayName & "'s River Tam hides in her bunk and won't be helpin'", player.ID, Logic!Gamecntr, True, 32, 0, 0, 0, 0, Dice
+               PutMsg player.PlayName & "'s River Tam hides in her bunk and won't be helpin'", player.ID, Logic!GameCntr, True, 32, 0, 0, 0, 0, Dice
             Case 3 'fight
                If skill = 1 Then
                   riverskill = 2
@@ -4750,9 +4767,9 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
                   riverskill = 2
             End Select
             If riverskill = 2 Then
-               PutMsg player.PlayName & "'s River Tam" & IIf(hasCrew(player.ID, 33), ", encouraged by Simon,", "") & " channels the " & cstrSkill(skill) & " skill + 2", player.ID, Logic!Gamecntr, True, 32, 0, 0, 0, 0, Dice
+               PutMsg player.PlayName & "'s River Tam" & IIf(hasCrew(player.ID, 33), ", encouraged by Simon,", "") & " channels the " & cstrSkill(skill) & " skill + 2", player.ID, Logic!GameCntr, True, 32, 0, 0, 0, 0, Dice
             ElseIf Dice > 2 Then
-               PutMsg player.PlayName & "'s River Tam ain't gettin' involved this time", player.ID, Logic!Gamecntr, True, 32, 0, 0, 0, 0, Dice, skill
+               PutMsg player.PlayName & "'s River Tam ain't gettin' involved this time", player.ID, Logic!GameCntr, True, 32, 0, 0, 0, 0, Dice, skill
             End If
          End If
          
@@ -4769,7 +4786,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
          x = hasGearCrew(player.ID, 28) 'Mal's Brown Coat
          If x > 0 And varDLookup("Disgruntled", "Crew", "CrewID=" & x) > 0 And varDLookup("Fight", "Crew", "CrewID=" & x) > 0 And skill = 3 Then
             extraSkill = extraSkill + varDLookup("Fight", "Crew", "CrewID=" & x)
-            PutMsg player.PlayName & "'s Disgruntled Crew wearing the Brown Coat adds their Fight skills to the Negotiation", player.ID, Logic!Gamecntr, True, 0, 28
+            PutMsg player.PlayName & "'s Disgruntled Crew wearing the Brown Coat adds their Fight skills to the Negotiation", player.ID, Logic!GameCntr, True, 0, 28
          End If
             
          If skill = 1 Then
@@ -4796,7 +4813,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
          If skill = 1 And hasGear(player.ID, 47) Then ' Zoe's Mare's Leg Rifle -When making a Fight Test, roll two dice and use the highest.
             x = RollDice(6, IIf(skill = 3 And hasCrew(player.ID, 55), False, True))
             If x > Dice Then
-               PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(x), player.ID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, x, skill
+               PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(x), player.ID, Logic!GameCntr, True, 0, 47, 0, 0, 0, x, skill
                Dice = x
             End If
          End If
@@ -4807,7 +4824,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
                Do While Dice = 1
                   Dice = RollDice(6, True)
                Loop
-               PutMsg player.PlayName & " uses Wash's Lucky Dinosaurs to reRoll a 1 and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, 0, 56, 0, 0, 0, Dice, skill
+               PutMsg player.PlayName & " uses Wash's Lucky Dinosaurs to reRoll a 1 and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, 0, 56, 0, 0, 0, Dice, skill
                
             ElseIf hasGear(player.ID, 35) And skill = 1 Then 'Inara's Bow
                x = hasGearCrew(player.ID, 35)
@@ -4816,7 +4833,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
                      Do While Dice = 1
                         Dice = RollDice(6, True)
                      Loop
-                     PutMsg player.PlayName & " uses Inara's Bow to reRoll a 1 and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, 0, 35, 0, 0, 0, Dice, skill
+                     PutMsg player.PlayName & " uses Inara's Bow to reRoll a 1 and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, 0, 35, 0, 0, 0, Dice, skill
                   End If
                End If
             End If
@@ -4828,7 +4845,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
             If x > 0 Then
                If MessBox("You rolled a " & Dice & vbNewLine & "Your Fight Skills allow you a re-roll, do you want to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, True)
-                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice, skill
+                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, x, 0, 0, 0, 0, Dice, skill
                End If
             End If
          End If
@@ -4838,7 +4855,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
             If x > 0 Then
                If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, True)
-                  PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice, skill
+                  PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, x, 0, 0, 0, 0, Dice, skill
                End If
             End If
          End If
@@ -4848,7 +4865,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
             If x > 0 Then
                If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, IIf(hasCrew(player.ID, 55), False, True))
-                  PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice, skill
+                  PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, x, 0, 0, 0, 0, Dice, skill
                End If
             End If
          End If
@@ -4857,7 +4874,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
             If MessBox("You rolled a " & Dice & vbNewLine & "Yolanda's pistol allows you a re-roll, do you want to Discard the Pistol to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", 0, 45, 0, Dice) = 0 Then
                doDiscardGear player.ID, hasGearCard(player.ID, 45)
                Dice = RollDice(6, True)
-               PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, 0, 45, 0, 0, 0, Dice, skill
+               PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, 0, 45, 0, 0, 0, Dice, skill
             End If
          End If
          
@@ -4865,7 +4882,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
             If MessBox("You rolled a " & Dice & vbNewLine & "Extra Ammo Clips allow you a re-roll, do you want to Discard the Clips to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", 0, 48, 0, Dice) = 0 Then
                doDiscardGear player.ID, hasGearCard(player.ID, 48)
                Dice = RollDice(6, True)
-               PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, Dice, skill
+               PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, getLeader(), 0, 0, 0, 0, Dice, skill
             End If
          End If
          
@@ -4920,7 +4937,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
             doSkillTest = 2
          End If
          
-         PutMsg player.PlayName & "'s Nav log: Rolls a " & Dice & " with added " & cstrSkill(skill) & " skill points of " & CStr(skillcnt - Dice) & " for a total of " & skillcnt & " to " & IIf(doSkillTest = 0, "succeed :^)", IIf(doSkillTest = 1, "partially succeed :^|", "lose :^(")), player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, Dice, skill
+         PutMsg player.PlayName & "'s Nav log: Rolls a " & Dice & " with added " & cstrSkill(skill) & " skill points of " & CStr(skillcnt - Dice) & " for a total of " & skillcnt & " to " & IIf(doSkillTest = 0, "succeed :^)", IIf(doSkillTest = 1, "partially succeed :^|", "lose :^(")), player.ID, Logic!GameCntr, True, getLeader(), 0, 0, 0, 0, Dice, skill
 
 End Function
 
@@ -4935,14 +4952,14 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                If MessBox("Stitch wants to change this Negotiation to a Fight.  Do you want to use those one-time skills now?", "Negotiate -> Fight", "Bring it", "Not now", 27) = 0 Then
                   WSkill = 1
                   usedStitchSkill = True
-                  PutMsg player.PlayName & " uses Stitch's one time Negotiation to Fight Skills", player.ID, Logic!Gamecntr, True, 27
+                  PutMsg player.PlayName & " uses Stitch's one time Negotiation to Fight Skills", player.ID, Logic!GameCntr, True, 27
                End If
             End If
             If WSkill = 1 And getPerkAttributeCrew(player.ID, "ChangeTestType") > 0 And Not usedStitchSkill Then
                If MessBox("Sheydra wants to Negotiate instead of Fight.  Do you want to use those one-time skills now?", "Fight -> Negotiate", "Yes", "Not now", 66) = 0 Then
                   WSkill = 3
                   usedStitchSkill = True
-                  PutMsg player.PlayName & " uses Sheydra's one time Fight to Negotiation Skills", player.ID, Logic!Gamecntr, True, 66
+                  PutMsg player.PlayName & " uses Sheydra's one time Fight to Negotiation Skills", player.ID, Logic!GameCntr, True, 66
                End If
             End If
             
@@ -4956,7 +4973,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                Case 1, 2 'stay onboard
                   DB.Execute "UPDATE PlayerSupplies SET OffJob = 1 WHERE CardID = 51"
                   If Not (frmShip Is Nothing) Then frmShip.RefreshShips  'update display
-                  PutMsg player.PlayName & "'s River Tam cowers onboard and won't be workin' anymore today", player.ID, Logic!Gamecntr, True, 32, 0, 0, 0, 0, Dice
+                  PutMsg player.PlayName & "'s River Tam cowers onboard and won't be workin' anymore today", player.ID, Logic!GameCntr, True, 32, 0, 0, 0, 0, Dice
                Case 3 'fight
                   If WSkill = 1 Then
                      riverskill = 2
@@ -4973,9 +4990,9 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                      riverskill = 2
                End Select
                If riverskill = 2 Then
-                  PutMsg player.PlayName & "'s River Tam" & IIf(hasCrew(player.ID, 33), ", encouraged by Simon,", "") & " channels the " & cstrSkill(WSkill) & " skill + 2", player.ID, Logic!Gamecntr, True, 32, 0, 0, 0, 0, Dice
+                  PutMsg player.PlayName & "'s River Tam" & IIf(hasCrew(player.ID, 33), ", encouraged by Simon,", "") & " channels the " & cstrSkill(WSkill) & " skill + 2", player.ID, Logic!GameCntr, True, 32, 0, 0, 0, 0, Dice
                ElseIf Dice > 2 Then
-                  PutMsg player.PlayName & "'s River Tam ain't workin' this time", player.ID, Logic!Gamecntr, True, 32, 0, 0, 0, 0, Dice
+                  PutMsg player.PlayName & "'s River Tam ain't workin' this time", player.ID, Logic!GameCntr, True, 32, 0, 0, 0, 0, Dice
                End If
             End If
             
@@ -4992,7 +5009,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
              x = hasGearCrew(player.ID, 28) 'Mal's Brown Coat
             If x > 0 And varDLookup("Disgruntled", "Crew", "CrewID=" & x) > 0 And varDLookup("Fight", "Crew", "CrewID=" & x) > 0 And WSkill = 3 Then
                extraSkill = extraSkill + varDLookup("Fight", "Crew", "CrewID=" & x)
-               PutMsg player.PlayName & "'s Disgruntled Crew wearing the Brown Coat adds their Fight skills to the Negotiation", player.ID, Logic!Gamecntr, True, 0, 28
+               PutMsg player.PlayName & "'s Disgruntled Crew wearing the Brown Coat adds their Fight skills to the Negotiation", player.ID, Logic!GameCntr, True, 0, 28
             End If
             
             If mode = 1 And WSkill = 1 Then 'Showdown with Fight skill
@@ -5024,7 +5041,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
             If WSkill = 1 And hasGear(player.ID, 47) Then ' Zoe's Mare's Leg Rifle -When making a Fight Test, roll two dice and use the highest.
                x = RollDice(6, IIf(WSkill = 3 And hasCrew(player.ID, 55), False, True))
                If x > Dice Then
-                  PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(x), player.ID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, x
+                  PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(x), player.ID, Logic!GameCntr, True, 0, 47, 0, 0, 0, x
                   Dice = x
                End If
             End If
@@ -5037,7 +5054,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                         Do While Dice = 1
                            Dice = RollDice(6, True)
                         Loop
-                        PutMsg player.PlayName & "'s Companion uses Inara's Bow to reRoll a 1 and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, 0, 35, 0, 0, 0, Dice
+                        PutMsg player.PlayName & "'s Companion uses Inara's Bow to reRoll a 1 and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, 0, 35, 0, 0, 0, Dice
                      End If
                   End If
                End If
@@ -5049,7 +5066,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                If x > 0 Then
                   If MessBox("You rolled a " & Dice & vbNewLine & "Your Fight Skills allow you a re-roll, do you want to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
                      Dice = RollDice(6, True)
-                     PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                     PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, x, 0, 0, 0, 0, Dice
                   End If
                End If
             End If
@@ -5060,7 +5077,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                If x > 0 Then
                   If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
                      Dice = RollDice(6, True)
-                     PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                     PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, x, 0, 0, 0, 0, Dice
                   End If
                End If
             End If
@@ -5071,7 +5088,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                If x > 0 Then
                   If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
                      Dice = RollDice(6, IIf(WSkill = 3 And hasCrew(player.ID, 55), False, True))
-                     PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                     PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, x, 0, 0, 0, 0, Dice
                   End If
                End If
             End If
@@ -5080,7 +5097,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                If MessBox("You rolled a " & Dice & vbNewLine & "Yolanda's pistol allows you a re-roll, do you want to Discard the Pistol to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", 0, 45, 0, Dice) = 0 Then
                   doDiscardGear player.ID, hasGearCard(player.ID, 45)
                   Dice = RollDice(6, True)
-                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, 0, 45, 0, 0, 0, Dice
+                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, 0, 45, 0, 0, 0, Dice
                End If
             End If
             
@@ -5088,7 +5105,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                If MessBox("You rolled a " & Dice & vbNewLine & "Extra Ammo Clips allow you a re-roll, do you want to Discard the Clips to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", 0, 48, 0, Dice) = 0 Then
                   doDiscardGear player.ID, hasGearCard(player.ID, 48)
                   Dice = RollDice(6, True)
-                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, 0, 48, 0, 0, 0, Dice
+                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!GameCntr, True, 0, 48, 0, 0, 0, Dice
                End If
             End If
             
@@ -5149,7 +5166,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
             Else 'you lose :(
                doWorkSkillTest = 3
             End If
-            PutMsg player.PlayName & "'s Work log: Rolls a " & Dice & " with added " & cstrSkill(WSkill) & " skill points of " & CStr(skillcnt - Dice) & " for a total of " & skillcnt & " to " & IIf(doWorkSkillTest = 0, "succeed :^)", IIf(doWorkSkillTest = 1, "part win", "lose :^(")), player.ID, Logic!Gamecntr, True, getLeader(), getLeader(), 0, 0, 0, Dice, WSkill
+            PutMsg player.PlayName & "'s Work log: Rolls a " & Dice & " with added " & cstrSkill(WSkill) & " skill points of " & CStr(skillcnt - Dice) & " for a total of " & skillcnt & " to " & IIf(doWorkSkillTest = 0, "succeed :^)", IIf(doWorkSkillTest = 1, "part win", "lose :^(")), player.ID, Logic!GameCntr, True, getLeader(), getLeader(), 0, 0, 0, Dice, WSkill
             
 End Function
 
@@ -5164,7 +5181,7 @@ Dim SQL
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       getPerkCount = getPerkCount + 1
-      PutMsg player.PlayName & "'s " & rst!CrewName & " adds 1 more to the Showdown fight", player.ID, Logic!Gamecntr, True, rst!CrewID
+      PutMsg player.PlayName & "'s " & rst!CrewName & " adds 1 more to the Showdown fight", player.ID, Logic!GameCntr, True, rst!CrewID
       rst.MoveNext
    Wend
    rst.Close
@@ -5183,7 +5200,7 @@ Dim SQL, refrsh As Boolean
 
       DB.Execute "UPDATE PlayerSupplies SET OffJob = 1 WHERE CardID = " & rst!CardID
       
-      PutMsg player.PlayName & "'s Lawman " & rst!CrewName & " refuses to work this illegal Job and stays on the ship.", player.ID, Logic!Gamecntr, True, rst!CrewID
+      PutMsg player.PlayName & "'s Lawman " & rst!CrewName & " refuses to work this illegal Job and stays on the ship.", player.ID, Logic!GameCntr, True, rst!CrewID
       refrsh = True
       rst.MoveNext
    Wend

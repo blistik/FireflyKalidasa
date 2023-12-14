@@ -72,18 +72,28 @@ Public Const DEF_CREWCAPACITY As Integer = 6
 Public Const DEF_CARGOCAPACITY As Integer = 8
 Public Const DEF_STASHCAPACITY As Integer = 4
 Public Const NO_OF_CONTACTS As Integer = 9
-
+Public datab                        'database for game
 
 Public Function Logon() As Boolean
-Dim datab
+Dim ConStr As String
 On Error Resume Next
   If Command$ = "" Then
      datab = App.Path & "\FireflyKalidasa.mdb"
+     ConStr = "Provider=Microsoft.JET.OLEDB.4.0;Data Source=" & datab & ";Persist Security Info=False"
+  ElseIf Left(Command$, 16) = "Provider=MSDASQL" Then
+     'use commandline>> Provider=MSDASQL;Driver={MariaDB ODBC 3.1 Driver};Server=localhost;Port=3306;
+     ConStr = Command$ & "DATABASE=FireflyDB;UID=firefly;PWD=Firefly.2000"
+     datab = ConStr
   Else
      datab = Command$
+     ConStr = "Provider=Microsoft.JET.OLEDB.4.0;Data Source=" & datab & ";Persist Security Info=False"
   End If
+    
   Set DB = New ADODB.Connection
-  DB.Open "Provider=Microsoft.JET.OLEDB.4.0;Data Source=" & datab & ";Persist Security Info=False"
+  DB.ConnectionString = ConStr
+  
+  DB.Open
+  
   If Err Then
      Logon = False
      MsgBox "Unable to open game datasource at " & datab, vbCritical
@@ -94,13 +104,21 @@ On Error Resume Next
   
 End Function
 
+Public Function SQLNow() As String
+   If Left(datab, 16) = "Provider=MSDASQL" Then
+      SQLNow = "Now()"
+   Else
+      SQLNow = "#" & Format(Now(), "MM-DD-YY HH:nn") & "#"
+   End If
+End Function
+
 Public Sub PutMsg(msg, Optional playerID = 0, Optional turn = 0, Optional ByVal force As Boolean = False, Optional ByVal CrewID As Integer = 0, Optional ByVal GearID As Integer = 0, Optional ByVal ShipUpgradeID As Integer = 0, Optional ByVal ContactID As Integer = 0, Optional ByVal refreshShip As Integer = 0, Optional ByVal Dice As Integer = 0)
 Dim SQL
 On Error GoTo err_handler
 
    If Left(msg, 3) <> "Wai" Then 'waiting for game to start
       SQL = "INSERT INTO Events (Eventtime, Event, PlayerID, Turn, RefreshShip"
-      SQL = SQL & ") Values (#" & Format(Now, "MM-DD-YY HH:nn") & "#, '" & SQLFilter(msg) & "', " & playerID & ", " & turn & ", " & refreshShip
+      SQL = SQL & ") Values (" & SQLNow & ", '" & SQLFilter(msg, 255) & "', " & playerID & ", " & turn & ", " & refreshShip
       SQL = SQL & ")"
       DB.Execute SQL
    End If
@@ -120,8 +138,13 @@ err_handler:
    Resume normal_exit
    
 End Sub
-Public Function SQLFilter(ByVal Source)
+Public Function SQLFilter(ByVal Source As String, Optional ByVal size As Integer = 0) As String
 Dim x, y
+
+   If Source = "" Then Exit Function
+
+   If size > 0 Then Source = Left(Source, size)
+
 '  Looks for single quotes and doubles them ('') to create a literal
    x = 1
    Do
@@ -131,7 +154,14 @@ Dim x, y
         x = y + 2
       End If
    Loop While y
-
+      
+   Source = Replace(Source, "%", "-")
+   Source = Replace(Source, "#", "-")
+'   Source = Replace(Source, "*", "-")
+'   Source = Replace(Source, "^", "-")
+   Source = Replace(Source, "$", "-")
+   Source = Replace(Source, "!", "-")
+      
    SQLFilter = Source
 End Function
 
@@ -327,31 +357,39 @@ End Function
 
 Public Function setNextLeader(ByVal lastplayer, ByVal leader)
 Dim rst As New ADODB.Recordset
+    'set leader for outgoing player
+    DB.Execute "UPDATE Players SET Leader = " & leader & " WHERE PlayerID = " & lastplayer
+    rst.CursorLocation = adUseClient
     rst.Open "SELECT * FROM Players WHERE NAME IS NOT NULL ORDER BY PlayerID", DB, adOpenDynamic, adLockOptimistic
     rst.Find "PlayerID = " & lastplayer
 
     If Not rst.EOF Then
-       'set leader for outgoing player
-       rst!leader = leader
-       rst.Update
+       'rst!leader = leader
+       'rst.Update
        'mark the Card as selected
        DB.Execute "UPDATE SupplyDeck SET Seq =" & lastplayer & " WHERE CrewID =" & leader
        'drop this leaders Card into the Player's supplies
        'DB.Execute "INSERT INTO PlayerSupplies (PlayerID,CardID) VALUES (" & lastplayer & ", " & varDLookup("CardID", "SupplyDeck", "CrewID =" & leader) & ")"
+       'test if last record
        rst.MoveNext
        If rst.EOF Then   'end of this round
+         rst.Requery
          rst.MoveFirst
        End If
+      
        If rst!leader = 0 Then 'not set yet
           setNextLeader = rst!playerID
-          Logic.Update "Player", setNextLeader
+          DB.Execute "UPDATE GameSeq SET Player = " & CStr(setNextLeader)
+          'Logic.Update "Player", setNextLeader
        Else 'we done here as we're back to the first player
           setNextLeader = 0
-          Logic!Seq = "S"    'start game setup in main cycle
-          Logic!Gamecntr = 1 'start counter, players will be on 0
-          Logic!player = player.ID  'with this player as first
-          Logic.Update
+          DB.Execute "UPDATE GameSeq SET Seq = 'S', GameCntr = 1, Player = " & CStr(player.ID)
+          'Logic!Seq = "S"    'start game setup in main cycle
+          'Logic!GameCntr = 1 'start counter, players will be on 0
+          'Logic!player = player.ID  'with this player as first
+          'Logic.Update
        End If
+       Logic.Requery
    End If
 End Function
 
@@ -360,7 +398,8 @@ Public Sub SetupPlayer(ByVal playerID, ByVal StoryID)
 Dim rst As New ADODB.Recordset
 Dim SQL
    SQL = "SELECT * FROM Story WHERE StoryID =" & StoryID
-   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   rst.CursorLocation = adUseClient
+   rst.Open SQL, DB, adOpenStatic, adLockReadOnly
    If Not rst.EOF Then
       DB.Execute "UPDATE Players SET Pay = " & rst!StartingCash & ", Warrants=0, Fuel = " & rst!StartingFuel & ", Parts = " & rst!StartingParts & " WHERE PlayerID =" & playerID
    End If
@@ -421,22 +460,23 @@ Public Sub getRandomCrew(ByVal noOfCrew As Integer, ByVal leader)
 Dim rst As New ADODB.Recordset, SQL, CrewID, maxCrewID, crewcnt
 
    maxCrewID = varDLookup("max(CrewID) AS maxcrew", "Crew", "Leader=0", "maxcrew")
-   SQL = "SELECT SupplyDeck.CardID, SupplyDeck.Seq, Crew.* FROM Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID WHERE Crew.Leader=0 AND (Seq=0 or Seq > 4) AND Wanted = 0 AND Moral = 0 AND Crew.CrewID NOT IN (23,54)"
+   SQL = "SELECT SupplyDeck.CardID, SupplyDeck.Seq, Crew.* FROM Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID WHERE Crew.Leader=0 AND Seq > 4  AND Wanted = 0 AND Moral = 0  AND Crew.CrewID NOT IN (23,54)"
    If leader = 69 Then 'add Atherton check
       SQL = SQL & " AND Crew.Companion = 0"
    End If
    crewcnt = 0
+   rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
    While crewcnt < noOfCrew
       rst.Requery
-      Randomize Timer
       CrewID = Int((maxCrewID * Rnd)) + 1
       rst.filter = "CrewID =" & CrewID
       If Not rst.EOF Then
-          DB.Execute "UPDATE SupplyDeck SET Seq =" & player.ID & " WHERE CardID = " & rst!CardID
+         DB.Execute "UPDATE SupplyDeck SET Seq =" & player.ID & " WHERE CardID = " & rst!CardID
           'add the card to the players deck
-          DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & rst!CardID & ")"
-         rst.Update "Seq", player.ID
+         DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & player.ID & ", " & rst!CardID & ")"
+         DB.Execute "UPDATE SupplyDeck SET Seq = " & CStr(player.ID) & " WHERE CardID = " & CStr(rst!CardID)
+         'rst.Update "Seq", player.ID
          crewcnt = crewcnt + 1
       End If
    Wend
@@ -525,24 +565,29 @@ End Sub
 Public Function setNextPlayer(ByVal playerID)
 Dim rst As New ADODB.Recordset
     Logic.Requery
-    
+    rst.CursorLocation = adUseClient
     rst.Open "SELECT * FROM Players WHERE NAME IS NOT NULL ORDER BY PlayerID", DB, adOpenDynamic, adLockOptimistic
     rst.Find "PlayerID = " & playerID
 
     If Not rst.EOF Then
        'set my cntr to current Game Seq
-       rst!Seq = Logic!Gamecntr 'set my go as done
-       rst.Update
+       DB.Execute "UPDATE Players SET Seq = " & CStr(Logic!Gamecntr) & " WHERE PlayerID = " & playerID
+       'rst!Seq = Logic!GameCntr 'set my go as done
+       'rst.Update
        rst.MoveNext
        If rst.EOF Then   'end of this round
+         rst.Requery
          rst.MoveFirst
        End If
        setNextPlayer = rst!playerID
-       Logic.Update "Player", setNextPlayer
+       DB.Execute "UPDATE GameSeq SET Player=" & CStr(setNextPlayer)
+       'Logic.Requery
+       'Logic.Update "Player", setNextPlayer
        
        If rst!Seq = Logic!Gamecntr Then  'round over, increment GameCntr
-          Logic!Gamecntr = Logic!Gamecntr + 1
-          Logic.Update
+          DB.Execute "UPDATE GameSeq SET GameCntr = " & CStr(Logic!Gamecntr + 1)
+          'Logic!GameCntr = Logic!GameCntr + 1
+          'Logic.Update
        End If
        
        
@@ -552,31 +597,36 @@ End Function
 Public Function setNextPlayerREV(ByVal playerID, Optional ByVal nextStatus As String = "")
 Dim rst As New ADODB.Recordset
     Logic.Requery
-    
+    rst.CursorLocation = adUseClient
     rst.Open "SELECT * FROM Players WHERE NAME IS NOT NULL ORDER BY PlayerID DESC", DB, adOpenDynamic, adLockOptimistic
     rst.Find "PlayerID = " & playerID
 
     If Not rst.EOF Then
        'set my cntr to current Game Seq
-       rst!Seq = Logic!Gamecntr 'set my go as done
-       rst.Update
+       DB.Execute "UPDATE Players SET Seq = " & CStr(Logic!Gamecntr) & " WHERE PlayerID = " & playerID
+       'rst!Seq = Logic!GameCntr 'set my go as done
+       'rst.Update
        rst.MoveNext
        If rst.EOF Then   'end of this round
+         rst.Requery
          rst.MoveFirst
        End If
-
        
        If rst!Seq = Logic!Gamecntr Then  'round over, increment GameCntr
           setNextPlayerREV = player.ID
           If nextStatus <> "" Then
-             Logic!Seq = nextStatus
+             DB.Execute "UPDATE GameSeq SET Seq = '" & nextStatus & "'"
           End If
-          Logic!player = player.ID
-          Logic!Gamecntr = Logic!Gamecntr + 1
-          Logic.Update
+          DB.Execute "UPDATE GameSeq SET Player=" & CStr(player.ID) & ", GameCntr = " & CStr(Logic!Gamecntr + 1)
+          'Logic!player = player.ID
+          'Logic!GameCntr = Logic!GameCntr + 1
+          'Logic.Update
+          'Logic.Requery
        Else
           setNextPlayerREV = rst!playerID
-          Logic.Update "Player", setNextPlayerREV
+          DB.Execute "UPDATE GameSeq SET Player = " & CStr(setNextPlayerREV)
+          'Logic.Requery
+          'Logic.Update "Player", setNextPlayerREV
        End If
        
        
@@ -736,7 +786,7 @@ Dim SQL
       PutMsg player.PlayName & " picks up a new Job " & getJob, player.ID, Logic!Gamecntr
    End If
    rst.Close
-   SQL = "SELECT * FROM ContactDeck WHERE Seq > 5 AND ContactID = " & ContactID & " Order by Seq"
+   SQL = "SELECT Seq FROM ContactDeck WHERE Seq > 5 AND ContactID = " & ContactID & " Order by Seq"
    rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
    x = 0
    Do While Not rst.EOF
@@ -1529,6 +1579,7 @@ Dim rst As New ADODB.Recordset, x, alliance As Boolean
 Dim SQL
   
    SQL = "SELECT * FROM Board WHERE SectorID= " & SectorID
+   rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenStatic, adLockReadOnly
    If Not rst.EOF Then
       'do alliance tokens first
@@ -1930,7 +1981,8 @@ Dim SQL
    SQL = "SELECT * "
    SQL = SQL & "FROM Players "
    SQL = SQL & "WHERE PlayerID < 5 and AI = 1"
-   rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
+   rst.CursorLocation = adUseClient
+   rst.Open SQL, DB, adOpenStatic, adLockReadOnly
    While Not rst.EOF
       cnt = cnt + 1
       c(cnt) = rst!playerID

@@ -447,7 +447,7 @@ Dim rst As New ADODB.Recordset, SQL, x, y
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
       lbl(0) = rst!CrewDescr
-      lbl(1) = Nz(rst!PerkDescription)
+      lbl(1) = rst!PerkDescription
       lbl(2) = Trim(IIf(rst!Mechanic = 1, "Mechanic  ", "") & IIf(rst!Pilot = 1, "Pilot  ", "") & IIf(rst!Companion = 1, "Companion  ", "") & _
                IIf(rst!Merc = 1, "Merc  ", "") & IIf(rst!Soldier = 1, "Soldier  ", "") & IIf(rst!HillFolk = 1, "HillFolk  ", "") & _
                IIf(rst!Grifter = 1, "Grifter ", "") & IIf(rst!Medic = 1, "Medic ", "") & IIf(rst!Mudder = 1, "Mudder ", "") & IIf(rst!Lawman = 1, "Lawman", ""))
@@ -517,7 +517,7 @@ Dim rst As New ADODB.Recordset, SQL, x, y
          cboCrew.BackColor = &H133C4A
       End If
       
-      lbl(7) = Nz(rst!SupplyName)
+      lbl(7) = rst!SupplyName
       lbl(7).BackColor = Nz(rst!Colour, &HC0C0&)
       lbl(7).Tag = "SupplyDeck.SupplyID=" & Nz(rst!SupplyID, 0)
       
@@ -535,11 +535,11 @@ Dim rst As New ADODB.Recordset, SQL, x, y
       AlphaImg.TransparentColor = 0
       AlphaImg.TransparentColorMode = lvicUseTransparentColor
 
-      If Not IsNull(rst!Picture) Then
+      'If IsNull(rst!Picture) Then
+      '   Set pic.Picture = Nothing
+      'Else
          Set pic.Picture = LoadPictureGDIplus(App.Path & "\pictures\" & rst!Picture)
-      Else
-         Set pic.Picture = Nothing
-      End If
+      'End If
    End If
 
 

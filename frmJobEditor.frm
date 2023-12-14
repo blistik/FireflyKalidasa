@@ -1262,19 +1262,22 @@ Dim x
 End Sub
 
 Private Function newJob() As Integer
-Dim rst As New ADODB.Recordset
-Dim SQL
+'Dim rst As New ADODB.Recordset
+Dim SQL, CardID As Integer
 On Error GoTo err_handler
-   SQL = "ContactDeck"
-   rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
-   rst.AddNew
-   rst!JobName = "New Job at " & Now()
-   rst!ContactID = 0
-   rst!Job1ID = 1
-   rst.Update
-   newJob = rst!CardID
-   rst.Close
-   Set rst = Nothing
+   CardID = varDLookup("max(CardID)", "ContactDeck", "") + 1
+   SQL = "INSET INTO ContactDeck (CardID, JobName, ContactID, Job1ID) VALUES (" & CardID & ", 'New Job at " & Now() & "', 0,1)"
+   DB.Execute SQL
+   newJob = varDLookup("max(CardID)", "ContactDeck", "")
+'   rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
+'   rst.AddNew
+'   rst!JobName = "New Job at " & Now()
+'   rst!ContactID = 0
+'   rst!Job1ID = 1
+'   rst.Update
+'   newJob = rst!CardID
+'   rst.Close
+'   Set rst = Nothing
 normal_exit:
    Exit Function
    

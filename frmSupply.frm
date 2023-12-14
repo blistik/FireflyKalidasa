@@ -313,9 +313,10 @@ With sftTree
       Else
          SQL = SQL & "WHERE (SupplyDeck.Seq = " & CStr(DISCARDED) & " or SupplyDeck.Seq = " & CStr(CONSIDERED) & " ) " 'either discarded (5) or for consideration (6)
       End If
-      SQL = SQL & "AND SupplyDeck.CardType=1 AND SupplyDeck.SupplyID = " & rst3!SupplyID
+      SQL = SQL & " AND SupplyDeck.CardType=1 AND SupplyDeck.SupplyID = " & rst3!SupplyID
       SQL = SQL & " ORDER BY Crew.CrewID"
       first = True
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
          If first Then
@@ -396,9 +397,10 @@ With sftTree
       Else
          SQL = SQL & "WHERE (SupplyDeck.Seq = " & CStr(DISCARDED) & " or SupplyDeck.Seq = " & CStr(CONSIDERED) & " ) " 'either discarded (5) or for consideration (6)
       End If
-      SQL = SQL & "AND SupplyDeck.CardType=2 AND SupplyDeck.SupplyID = " & rst3!SupplyID
+      SQL = SQL & " AND SupplyDeck.CardType=2 AND SupplyDeck.SupplyID = " & rst3!SupplyID
 
       first = True
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
          If first Then
@@ -490,9 +492,10 @@ With sftTree
       Else
          SQL = SQL & "WHERE (SupplyDeck.Seq = " & CStr(DISCARDED) & " or SupplyDeck.Seq = " & CStr(CONSIDERED) & " ) " 'either discarded (5) or for consideration (6)
       End If
-      SQL = SQL & "AND SupplyDeck.CardType=3 AND SupplyDeck.SupplyID = " & rst3!SupplyID
+      SQL = SQL & " AND SupplyDeck.CardType=3 AND SupplyDeck.SupplyID = " & rst3!SupplyID
 
       first = True
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
          If first Then

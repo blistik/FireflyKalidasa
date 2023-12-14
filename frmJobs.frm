@@ -282,7 +282,7 @@ With sftTree
          SQL = SQL & " AND (PlayerJobs.JobStatus IN (1,2) or ContactDeck.ContactID = 10)"
       End If
       SQL = SQL & " ORDER BY Contact.ContactName,PlayerJobs.CardID"
-      
+      rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
          Index = .AddItem(CStr(rst!CardID))
