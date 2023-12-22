@@ -540,6 +540,9 @@ With sftTree
             .CellForeColor(Index, 8) = 255
          End If
          
+         'Keywords
+         .CellText(Index, 9) = Nz(rst!Keyword, "")
+         .CellForeColor(Index, 9) = 65280
          
          rst.MoveNext
       Wend

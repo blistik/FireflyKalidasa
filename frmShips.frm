@@ -155,7 +155,7 @@ Begin VB.Form frmShips
       MaskColor       =   16777215
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   26
+         NumListImages   =   27
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "frmShips.frx":0652
             Key             =   "UN"
@@ -260,12 +260,16 @@ Begin VB.Form frmShips
             Picture         =   "frmShips.frx":9EC4
             Key             =   "serenity"
          EndProperty
+         BeginProperty ListImage27 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmShips.frx":A216
+            Key             =   "dino"
+         EndProperty
       EndProperty
    End
    Begin VB.Image DragIcon 
       Height          =   480
       Left            =   1560
-      Picture         =   "frmShips.frx":A216
+      Picture         =   "frmShips.frx":A568
       Top             =   2490
       Visible         =   0   'False
       Width           =   480
@@ -431,15 +435,16 @@ With sftTree
       totalpay = 0
       Index = .AddItem(CStr(rst!playerID) & IIf(isOutlaw(rst!playerID), " - outlaw", ""))
       lastplayer = Index
+      Set .ItemPicture(Index) = AssetImages.Overlay("L", "serenity")
       .CellBackColor(Index, 0) = getPlayerColor(rst!playerID)
       .CellForeColor(Index, 0) = 0
       .ItemLevel(Index) = 0
       .CellText(Index, 1) = rst!ship & " - " & PlayCode(rst!playerID).PlayName ' & IIf(rst!playerID = player.ID, " [me]", "")
       .CellForeColor(Index, 1) = 0
       .CellBackColor(Index, 1) = getPlayerColor(rst!playerID)
-      Set .ItemPicture(Index) = AssetImages.ListImages("serenity").Picture
       If Logic!player = rst!playerID Then
          .CellText(Index, 2) = " << IN PLAY >>"
+         Set .CellPicture(Index, 2) = AssetImages.ListImages("dino").Picture
       Else
          .CellText(Index, 2) = "Cash in Hand: $" & rst!pay
       End If
@@ -615,7 +620,7 @@ With sftTree
             .CellFont(Index, 8).Strikethrough = True
          End If
          'IIf(rst2!Disgruntled > 0, "Disgruntled ", "") &
-         .CellText(Index, 9) = Nz(rst2!KeyWords) & IIf(rst2!Pilot = 1 And hasShipUpgrade(rst!playerID, 10), "TRANSPORT", "")
+         .CellText(Index, 9) = Nz(rst2!KeyWords)  ' & IIf(rst2!Pilot = 1 And hasShipUpgrade(rst!playerID, 10), "TRANSPORT", "")
          .CellForeColor(Index, 9) = 0
          If rst2!Disgruntled > 0 Then
             .CellBackColor(Index, 9) = 8898502 ' 11468799

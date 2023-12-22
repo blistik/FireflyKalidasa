@@ -271,9 +271,18 @@ With sftTree
             ContactID = 8
             HigginsDealPerk = True
          End If
+      ElseIf HarkenDeal And dealFilter = "localdeal" Then
+            ContactID = 5
       Else
          If ContactID = 0 Then Exit Function 'no Deals in this Sector
       End If
+      If getCruiserSector = 29 And SectorID = 29 And dealFilter = "locals" And Not HigginsDealPerk And Not HarkenDeal Then   'option to deal with Harken
+         If MessBox("Do you want Deal with Harken instead?", "Cruiser Deals", "Deal", "Not now", 0, 0, 0, 0, 5) = 0 Then
+            ContactID = 5
+            HarkenDeal = True
+         End If
+      End If
+      
       
    Else
       Me.Caption = "All Deals"

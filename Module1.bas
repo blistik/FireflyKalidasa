@@ -64,7 +64,8 @@ Public CruiserCutter As Integer     'record the Sector of a Cruiser/Cutter.Corve
 Public CorvetteSeq As Integer       'extra Corvette detection flag due to 2 moves possible
 Public ignoreToken As Integer       'ignore the Token in the current Sector
 Public TheBigBlack As Integer       'count TheBigBlack Nav cards for Emissions Recycler
-Public HigginsDealPerk As Boolean
+Public HigginsDealPerk As Boolean   'use with Fess
+Public HarkenDeal As Boolean        'use when Cruiser is at Persephone
 Public SurvShuttlePerk As Boolean
 Public pickStartSector As Integer
 Public wormHoleOpen As Boolean      '133 - 104
@@ -481,6 +482,12 @@ Dim currentSectorID, adjacent, a() As String, x
          Exit For
       End If
    Next x
+
+End Function
+
+Public Function hasWarrant(ByVal playerID) As Boolean
+
+   hasWarrant = (Nz(varDLookup("Warrants", "Players", "PlayerID=" & playerID), 0) > 0)
 
 End Function
 
@@ -993,7 +1000,8 @@ End Function
 Private Function doGoalCheck(ByVal playerID, ByVal StoryID, ByVal Goal, ByVal Seq, ByRef goaldone As Boolean) As Boolean
 Dim rst As New ADODB.Recordset, a() As String
 Dim SQL, x, cnt As Integer, SectorID As Integer
-   If Goal = -1 Then Exit Function
+   goaldone = False
+   If Goal = -1 Then Exit Function 'never acheive goal now
    goaldone = True 'until proven otherwise
    SQL = "SELECT * FROM StoryGoals WHERE StoryID=" & StoryID & " AND Goal = " & CStr(Goal + 1)
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
@@ -1091,7 +1099,7 @@ Dim SQL, x, cnt As Integer, SectorID As Integer
             
       'Negative tests ---- TurnLimit
       If rst!TurnLimit > 0 And Not doGoalCheck Then
-         If Seq > rst!TurnLimit Then
+         If Seq >= rst!TurnLimit Then
             addGoal playerID, -1
             MessBox "You have Failed to meet the Story Goals :( " & vbNewLine & "You may continue on, your call..", "GAME OVER", "Hmmm", "", getLeader()
             goaldone = False
@@ -1566,7 +1574,7 @@ Dim x, y
    Source = Replace(Source, "#", "-")
 '   Source = Replace(Source, "*", "-")
 '   Source = Replace(Source, "^", "-")
-   Source = Replace(Source, "$", "-")
+   'Source = Replace(Source, "$", "-")
    Source = Replace(Source, "!", "-")
       
    SQLFilter = Source
@@ -3080,8 +3088,8 @@ Dim SQL
 
 End Function
 
-'mercs = 1 count then, mercs=2 count e'ryone else
-Public Function getSkill(ByVal playerID, ByVal skill As String, Optional ByVal mercs As Integer = 0, Optional ByVal noDiscards As Boolean = False, Optional ByVal kosher As Boolean = False) As Integer
+'mercs=1 count them, mercs=2 count e'ryone else
+Public Function getSkill(ByVal playerID, ByVal skill As String, Optional ByVal mercs As Integer = 0, Optional ByVal noDiscards As Boolean = False, Optional ByVal kosher As Boolean = False, Optional ByVal CrewID As Integer = 0) As Integer
 Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
 Dim SQL
    getSkill = 0
@@ -3091,11 +3099,13 @@ Dim SQL
    SQL = SQL & "ON Crew.CrewID = SupplyDeck.CrewID) ON PlayerSupplies.CardID = SupplyDeck.CardID "
    SQL = SQL & "WHERE PlayerSupplies.OffJob = 0 AND Players.PlayerID=" & playerID
    
-   If mercs = 1 Then
+   If mercs = 1 Then 'mercs only
       SQL = SQL & " AND Crew.Merc = 1"
-   ElseIf mercs = 2 Then
+   ElseIf mercs = 2 Then 'e'ryone else
       SQL = SQL & " AND Crew.Merc = 0"
    End If
+   'limit to one crew?
+   If CrewID > 0 Then SQL = SQL & " AND Crew.CrewID = " & CStr(CrewID)
 
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
@@ -3146,9 +3156,6 @@ Dim SQL
          If hasGear(playerID, 37, rst!CrewID) And LCase(skill) = "fight" Then  'Jayne's Holdout Pistol
             getSkill = getSkill + 1
          End If
-'         If hasGear(playerID, 59, rst!CrewID) And LCase(skill) = "fight" Then  'Inara's Knife
-'            getSkill = getSkill + 1
-'         End If
       End If
       
       
@@ -3554,32 +3561,35 @@ Dim result As Integer, x As Integer, CrewID, Dice As Integer, mess As String
    result = 0 'assume death(0) is the result unless otherwise modified (5-discarded)
    CrewID = varDLookup("CrewID", "SupplyDeck", "CardID=" & CardID)
    
-   mess = " our Medic"
+   mess = "" 'assume no medic exists
+   If hasCrewAttribute(playerID, "Medic") Then 'we have a medic
+      mess = " our Medic"
+   End If
    'Simon Tam adds 2 to Dice Roll for Medic Check
    If hasCrew(playerID, 33) Then
       x = 2
       mess = " Simon Tam"
    End If
    'Simon Tam's bag adds 1 to Dice Roll for Medic Check
-   If hasGear(playerID, 19) Then
+   If hasGear(playerID, 19) And mess <> "" Then
       x = x + 1
       mess = mess & " with Simon's bag"
    End If
    'Doctor's Shuttle adds 2 to Medic Check
-   If hasShipUpgrade(playerID, 23) Then
+   If hasShipUpgrade(playerID, 23) And mess <> "" Then
       x = x + 2
       mess = mess & " and the Doctor's Shuttle"
    End If
    
    'Medic check to save Crew
    Dice = (RollDice(6) + x)
-   If hasCrewAttribute(playerID, "Medic") And Dice > 4 Then
+   If mess <> "" And Dice > 4 Then
       PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " was saved by" & mess, playerID, Logic!GameCntr, True, CrewID, 0, 0, 0, 0, Dice
       Exit Function
    End If
    
    'reroll for Fully Equipped Med Bay
-   If hasCrewAttribute(playerID, "Medic") And hasShipUpgrade(playerID, 8) > 0 Then
+   If mess <> "" And hasShipUpgrade(playerID, 8) > 0 Then
       Dice = (RollDice(6) + x)
       If Dice > 4 Then
          PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " was saved in our Fully Equipped Med Bay and" & mess, playerID, Logic!GameCntr, True, CrewID, 0, 0, 0, 0, Dice
@@ -3587,18 +3597,19 @@ Dim result As Integer, x As Integer, CrewID, Dice As Integer, mess As String
       End If
    End If
    
-   If hasGear(playerID, 49, CrewID) Then
+   If hasGear(playerID, 49, CrewID) Then 'crew carrying Med Foam
       doDiscardGear player.ID, hasGearCard(player.ID, 49, CrewID)
       PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " was saved by Med Foam, which once used, had to be discarded", playerID, Logic!GameCntr, True, CrewID
       Exit Function
    End If
    
-   If hasGear(playerID, 46, CrewID) Then
+   If hasGear(playerID, 46, CrewID) Then 'crew wearing Zoe's Flak Jacket
       doDiscardGear player.ID, hasGearCard(player.ID, 46, CrewID)
       PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " was saved by Zoe's Flak Jacket, which then had to be discarded", playerID, Logic!GameCntr, True, CrewID
       Exit Function
    End If
-   
+     
+  
    '-----==== DEAD =====------ R.I.P.
    'leader to be disgruntled
    If CrewID = varDLookup("Leader", "Players", "PlayerID=" & playerID) Then
@@ -3607,11 +3618,14 @@ Dim result As Integer, x As Integer, CrewID, Dice As Integer, mess As String
       doKillCrew = 0
       Exit Function
    End If
+   If mess <> "" Then 'we had a Medic but they failed to save them (for non Leaders)
+      PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " was unable to be saved by" & mess, playerID, Logic!GameCntr
+   End If
    'some crew go back to discard pile, "KillDiscard" Perk
    'eg.When Killed, Discard instead of removing from Play
    If getPerkAttributeCrew(playerID, "KillDiscard", CardID) > 0 Then
       result = 5
-      PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " left your employment", playerID, Logic!GameCntr, True, CrewID, 0, 0, 0, 0, Dice
+      PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " was not keen on being killed and left your employment", playerID, Logic!GameCntr, True, CrewID, 0, 0, 0, 0, Dice
    Else
       PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " was Killed.  RIP.", playerID, Logic!GameCntr, True, CrewID, 0, 0, 0, 0, Dice
       If removeBounty(CrewID) Then
@@ -3627,9 +3641,9 @@ Dim result As Integer, x As Integer, CrewID, Dice As Integer, mess As String
    DB.Execute "DELETE FROM PlayerSupplies WHERE PlayerID =" & playerID & " AND CardID = " & CardID
    'clear disgruntled
    DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & CrewID
-
-   doKillCrew = 1
    
+   doKillCrew = 1
+      
 End Function
 
 Public Function doSeizeCrew(ByVal playerID, ByVal CardID, ByVal wanted) As Integer
@@ -4055,16 +4069,16 @@ End Function
 
 'discard Job and clear solid, with Contact
 Public Function doJobWarrant(ByVal playerID, ByVal ContactID, ByVal CardID)
-Dim frmKillCrw As frmKillCrew, SQL
+Dim frmKillCrw As frmKillCrew, SQL, loseSolid As String
 
    If warrantDodge(playerID) Then Exit Function
    'and if Niska - Kill 1 Crew
    'add a Warrant and clear any Solid with the Contact & Harken (5)
    If ContactID = 0 Then 'Goal
-      SQL = "UPDATE Players SET Warrants = Warrants + 1"
-      If Not discardRoberta(playerID) Then
-         SQL = SQL & ", Solid5 = 0"
-      End If
+      SQL = "UPDATE Players SET Warrants = Warrants + 1, Solid5 = 0"
+'      If Not discardRoberta(playerID) Then
+'         SQL = SQL & ""
+'      End If
       SQL = SQL & " WHERE PlayerID = " & playerID
       DB.Execute SQL
       PutMsg player.PlayName & "'s Goal log: a Warrant has been issued, you're an Outlaw Ship!", playerID, Logic!GameCntr, True, getLeader()
@@ -4079,9 +4093,13 @@ Dim frmKillCrw As frmKillCrew, SQL
       
       SQL = "UPDATE Players SET Warrants = Warrants + 1, Solid5 = 0"
       If Not discardRoberta(playerID) Then
-         If ContactID <> 5 Then
+         If ContactID = 5 Then
+            loseSolid = ", you've lost any Rep with Harken"
+         Else
             SQL = SQL & ", Solid" & ContactID & "=0"
+            loseSolid = ", you've lost any Rep with this Contact (& Harken)"
          End If
+         
       End If
       SQL = SQL & " WHERE PlayerID = " & playerID
       DB.Execute SQL
@@ -4090,7 +4108,7 @@ Dim frmKillCrw As frmKillCrew, SQL
       'discard the Job
       DB.Execute "DELETE FROM PlayerJobs WHERE PlayerID = " & playerID & " AND CardID = " & CardID
       DB.Execute "UPDATE ContactDeck SET Seq = 5 WHERE CardID =" & CardID
-      PutMsg player.PlayName & "'s Work log: a Warrant has been issued, the Job is forfeited, you've lost any Rep with this Contact. You're an Outlaw Ship!", playerID, Logic!GameCntr, True, getLeader()
+      PutMsg player.PlayName & "'s Work log: a Warrant has been issued, the Job is forfeited" & loseSolid & ". You're an Outlaw Ship!", playerID, Logic!GameCntr, True, getLeader()
    End If
 
 End Function
@@ -4862,10 +4880,12 @@ Dim ContactID
 End Function
 
 'SoloGame
-Public Function isSoloGame() As Boolean
+Public Function isSoloGame(Optional ByVal withAI As Boolean = False) As Boolean
 Dim rst As New ADODB.Recordset
 Dim SQL
-   SQL = "SELECT Count(playerID) as cnt FROM Players WHERE Name is Not Null AND AI = 0"
+
+   SQL = "SELECT Count(playerID) as cnt FROM Players WHERE Name is Not Null"
+   If Not withAI Then SQL = SQL & " AND AI = 0"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
       isSoloGame = (rst!cnt < 2)

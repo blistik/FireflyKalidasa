@@ -761,7 +761,7 @@ Dim x, SectorID
          
       Case 8 'Cruiser call
          cmd(8).Enabled = False
-         PutMsg player.PlayName & "'s Lawman Dobson calls the Alliance Cruiser to his location", player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & "'s Lawman Dobson calls the Alliance Cruiser to his location", player.ID, Logic!GameCntr
          moseydone = True
          fullburndone = True
          doMoveAlliance player.ID, SectorID
@@ -804,6 +804,7 @@ Public Sub endAction()
    turnExtraRange = 0
    TheBigBlack = 0
    HigginsDealPerk = False
+   HarkenDeal = False
    actionSeq = ASend
 End Sub
 

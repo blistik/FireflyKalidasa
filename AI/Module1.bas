@@ -159,7 +159,7 @@ Dim x, y
    Source = Replace(Source, "#", "-")
 '   Source = Replace(Source, "*", "-")
 '   Source = Replace(Source, "^", "-")
-   Source = Replace(Source, "$", "-")
+'   Source = Replace(Source, "$", "-")
    Source = Replace(Source, "!", "-")
       
    SQLFilter = Source
@@ -631,6 +631,35 @@ Dim rst As New ADODB.Recordset
        
        
    End If
+End Function
+
+'direction 0=forward,1 = reverse
+Public Function setPlayer(ByVal playerID, ByVal nextStatus As String, ByVal direction As Integer, Optional ByVal check As Boolean = False) As Integer
+Dim rst As New ADODB.Recordset, SQL
+   Logic.Requery
+   
+   SQL = "SELECT * FROM Players WHERE NAME IS NOT NULL ORDER BY PlayerID "
+   If direction = 1 Then
+      SQL = SQL & "DESC"
+   End If
+   rst.Open SQL, DB, adOpenDynamic, adLockOptimistic
+   rst.Find "PlayerID = " & playerID
+   
+   If Not rst.EOF Then
+      rst.MoveNext
+      If rst.EOF Then   'end of this round
+        rst.MoveFirst
+      End If
+   End If
+   
+   setPlayer = rst!playerID
+   
+   rst.Close
+   
+   If Not check Then  'update it
+      DB.Execute "UPDATE GameSeq SET Seq = '" & nextStatus & "', Player = " & CStr(setPlayer)
+   End If
+   
 End Function
 
 Public Sub assignDeal(ByVal playerID, ByVal CardID)
@@ -2393,6 +2422,7 @@ End Function
 Private Function doGoalCheck(ByVal playerID, ByVal StoryID, ByVal Goal, ByVal Seq, ByRef goaldone As Boolean) As Boolean
 Dim rst As New ADODB.Recordset, a() As String
 Dim SQL, x, cnt As Integer
+   goaldone = False
    If Goal = -1 Then Exit Function
    goaldone = True 'until proven otherwise
    SQL = "SELECT * FROM StoryGoals WHERE StoryID=" & StoryID & " AND Goal = " & CStr(Goal + 1)
@@ -2444,7 +2474,7 @@ Dim SQL, x, cnt As Integer
             
             'Negative tests ---- TurnLimit
       If rst!TurnLimit > 0 And Not doGoalCheck Then
-         If Seq > rst!TurnLimit Then
+         If Seq >= rst!TurnLimit Then
             addGoal playerID, -1
             PutMsg player.PlayName & " has Failed to meet the Story Goal Turn limit of " & rst!TurnLimit & ". GAME OVER!", player.ID, Seq
             goaldone = False

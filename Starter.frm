@@ -273,7 +273,7 @@ Dim rst As New ADODB.Recordset, col, cnt, x
 Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer, randCrew As Integer
 Dim frmCrewList As frmCrewLst
          
-   'On Error GoTo err_handler
+   On Error GoTo err_handler
    playsnd 8
    UpdateLst
    

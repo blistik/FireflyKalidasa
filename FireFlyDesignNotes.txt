@@ -5,6 +5,15 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
+v 1.9.4 ~ 22 Dec 2023
+fix: freeze after failed goal (i.e. max turn count exceeded) 
+fix: completing a Job for Harken with an outstanding Warrant does not achieve "Solid"
+fix: Old Vendetta reworked "One on One" for single Crew to fight
+add: extra event entry when Medic fails to save a crew for clarity
+add: the ability to Deal with either Badger, Higgins or Harken if at Persephone with Fess &/or Cruiser
+cfg: allow fly actions after Reaver Contact & EVADE at start of move
+bot: v1.1.2 - handle manual NPC move mode
+
 v 1.9.3 ~ 14 Dec 2023
 cfg: increase of exclude crew field for a story
 new: added support for MariaDB Server using Provider=MSDASQL;Driver={MariaDB ODBC 3.1 Driver}
