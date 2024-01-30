@@ -15,6 +15,86 @@ Begin VB.Form frmStash
    ScaleWidth      =   5175
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.CommandButton cmdminus 
+      Caption         =   "-"
+      Height          =   225
+      Index           =   3
+      Left            =   2640
+      TabIndex        =   26
+      ToolTipText     =   "minus"
+      Top             =   3930
+      Width           =   285
+   End
+   Begin VB.CommandButton cmdminus 
+      Caption         =   "-"
+      Height          =   225
+      Index           =   2
+      Left            =   2640
+      TabIndex        =   25
+      ToolTipText     =   "minus"
+      Top             =   3600
+      Width           =   285
+   End
+   Begin VB.CommandButton cmdminus 
+      Caption         =   "-"
+      Height          =   225
+      Index           =   1
+      Left            =   2640
+      TabIndex        =   24
+      ToolTipText     =   "minus"
+      Top             =   3240
+      Width           =   285
+   End
+   Begin VB.CommandButton cmdminus 
+      Caption         =   "-"
+      Height          =   225
+      Index           =   0
+      Left            =   2640
+      TabIndex        =   23
+      ToolTipText     =   "minus"
+      Top             =   2880
+      Width           =   285
+   End
+   Begin VB.CommandButton cmdplus 
+      Caption         =   "+"
+      Height          =   225
+      Index           =   3
+      Left            =   1560
+      TabIndex        =   22
+      ToolTipText     =   "plus"
+      Top             =   3930
+      Width           =   285
+   End
+   Begin VB.CommandButton cmdplus 
+      Caption         =   "+"
+      Height          =   225
+      Index           =   2
+      Left            =   1560
+      TabIndex        =   21
+      ToolTipText     =   "plus"
+      Top             =   3600
+      Width           =   285
+   End
+   Begin VB.CommandButton cmdplus 
+      Caption         =   "+"
+      Height          =   225
+      Index           =   1
+      Left            =   1560
+      TabIndex        =   20
+      ToolTipText     =   "plus"
+      Top             =   3240
+      Width           =   285
+   End
+   Begin VB.CommandButton cmdplus 
+      Caption         =   "+"
+      Height          =   225
+      Index           =   0
+      Left            =   1560
+      TabIndex        =   19
+      ToolTipText     =   "plus"
+      Top             =   2880
+      Width           =   285
+   End
    Begin VB.TextBox txtStash 
       Alignment       =   2  'Center
       BackColor       =   &H00CBE1ED&
@@ -26,7 +106,7 @@ Begin VB.Form frmStash
       TabStop         =   0   'False
       Text            =   "0"
       Top             =   3180
-      Width           =   345
+      Width           =   440
    End
    Begin VB.TextBox txtStash 
       Alignment       =   2  'Center
@@ -39,7 +119,7 @@ Begin VB.Form frmStash
       TabStop         =   0   'False
       Text            =   "0"
       Top             =   2820
-      Width           =   345
+      Width           =   440
    End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
@@ -54,50 +134,50 @@ Begin VB.Form frmStash
          Strikethrough   =   0   'False
       EndProperty
       Height          =   315
-      Left            =   3570
+      Left            =   3660
       Style           =   1  'Graphical
       TabIndex        =   14
-      Top             =   3810
+      Top             =   3840
       Width           =   1125
    End
    Begin VB.TextBox txtDeal 
       Alignment       =   2  'Center
       Height          =   285
       Index           =   2
-      Left            =   1560
+      Left            =   1860
       TabIndex        =   8
       Text            =   "0"
-      Top             =   3540
+      Top             =   3570
       Width           =   345
    End
    Begin VB.TextBox txtDeal 
       Alignment       =   2  'Center
       Height          =   285
       Index           =   1
-      Left            =   1560
+      Left            =   1860
       TabIndex        =   7
       Text            =   "0"
-      Top             =   3180
+      Top             =   3210
       Width           =   345
    End
    Begin VB.TextBox txtDeal 
       Alignment       =   2  'Center
       Height          =   285
       Index           =   0
-      Left            =   1560
+      Left            =   1860
       TabIndex        =   6
       Text            =   "0"
-      Top             =   2820
+      Top             =   2850
       Width           =   345
    End
    Begin VB.TextBox txtDeal 
       Alignment       =   2  'Center
       Height          =   285
       Index           =   3
-      Left            =   1560
+      Left            =   1860
       TabIndex        =   5
       Text            =   "0"
-      Top             =   3870
+      Top             =   3900
       Width           =   345
    End
    Begin VB.TextBox txtDeal 
@@ -105,12 +185,12 @@ Begin VB.Form frmStash
       BackColor       =   &H00CBE1ED&
       Height          =   285
       Index           =   7
-      Left            =   1980
+      Left            =   2280
       Locked          =   -1  'True
       TabIndex        =   4
       TabStop         =   0   'False
       Text            =   "0"
-      Top             =   3870
+      Top             =   3900
       Width           =   345
    End
    Begin VB.TextBox txtDeal 
@@ -118,12 +198,12 @@ Begin VB.Form frmStash
       BackColor       =   &H00CBE1ED&
       Height          =   285
       Index           =   4
-      Left            =   1980
+      Left            =   2280
       Locked          =   -1  'True
       TabIndex        =   3
       TabStop         =   0   'False
       Text            =   "0"
-      Top             =   2820
+      Top             =   2850
       Width           =   345
    End
    Begin VB.TextBox txtDeal 
@@ -131,12 +211,12 @@ Begin VB.Form frmStash
       BackColor       =   &H00CBE1ED&
       Height          =   285
       Index           =   5
-      Left            =   1980
+      Left            =   2280
       Locked          =   -1  'True
       TabIndex        =   2
       TabStop         =   0   'False
       Text            =   "0"
-      Top             =   3180
+      Top             =   3210
       Width           =   345
    End
    Begin VB.TextBox txtDeal 
@@ -144,12 +224,12 @@ Begin VB.Form frmStash
       BackColor       =   &H00CBE1ED&
       Height          =   285
       Index           =   6
-      Left            =   1980
+      Left            =   2280
       Locked          =   -1  'True
       TabIndex        =   1
       TabStop         =   0   'False
       Text            =   "0"
-      Top             =   3540
+      Top             =   3570
       Width           =   345
    End
    Begin VB.PictureBox Picture1 
@@ -186,9 +266,9 @@ Begin VB.Form frmStash
       BackStyle       =   0  'Transparent
       Caption         =   "Stash/Total"
       Height          =   315
-      Left            =   1560
+      Left            =   1860
       TabIndex        =   13
-      Top             =   2580
+      Top             =   2610
       Width           =   1125
    End
    Begin VB.Label lbl 
@@ -315,6 +395,19 @@ Dim SQL As String
    
 End Sub
 
+Private Sub cmdminus_Click(Index As Integer)
+   If Val(txtDeal(Index)) > 0 Then
+      txtDeal(Index) = CStr(Val(txtDeal(Index)) - 1)
+   End If
+End Sub
+
+Private Sub cmdplus_Click(Index As Integer)
+   If Val(txtDeal(Index)) < Val(txtDeal(Index + 4)) Then
+      txtDeal(Index) = CStr(Val(txtDeal(Index)) + 1)
+   End If
+
+End Sub
+
 Private Sub Form_Load()
    initHeld
 
@@ -356,6 +449,13 @@ End Sub
 
 Private Sub refreshStashLeft()
     txtStash(1) = CStr(StashCapacity(player.ID) - (Val(txtDeal(0)) / 2 + Val(txtDeal(1)) / 2 + Val(txtDeal(2)) + Val(txtDeal(3))))
+    If Val(txtStash(1)) > 0 Then
+      txtStash(1).BackColor = QBColor(14)
+    ElseIf Val(txtStash(1)) = 0 Then
+      txtStash(1).BackColor = QBColor(10)
+    Else
+      txtStash(1).BackColor = QBColor(12)
+    End If
 End Sub
 
 Private Sub txtDeal_Change(Index As Integer)

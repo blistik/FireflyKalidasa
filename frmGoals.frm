@@ -7,6 +7,7 @@ Begin VB.Form frmGoals
    ClientTop       =   390
    ClientWidth     =   9330
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmGoals.frx":0000
@@ -123,7 +124,6 @@ Begin VB.Form frmGoals
       TabIndex        =   17
       ToolTipText     =   "limit job lists to only those specifically made for goals"
       Top             =   2490
-      Value           =   1  'Checked
       Width           =   1305
    End
    Begin VB.CommandButton cmd 
@@ -574,6 +574,7 @@ Dim x, filter As String
       Next x
       cbo(1).Enabled = True
       lstContacts.Enabled = False
+      lstCrew.Enabled = False
       chkWin.Enabled = False
    End If
    

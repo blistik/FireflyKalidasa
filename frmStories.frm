@@ -8,6 +8,7 @@ Begin VB.Form frmStories
    ClientTop       =   390
    ClientWidth     =   12015
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmStories.frx":0000
@@ -637,6 +638,7 @@ Dim frmScores As frmScore
       Set frmGoal = New frmGoals
       frmGoal.StoryID = StoryID
       frmGoal.Goal = sftTree.ListCount
+      frmGoal.chkGoal.Value = 1
       frmGoal.Show 1, Me
       RefreshGoals
    

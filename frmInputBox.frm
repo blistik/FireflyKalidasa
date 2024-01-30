@@ -7,7 +7,6 @@ Begin VB.Form frmInputBox
    ClientTop       =   390
    ClientWidth     =   6615
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmInputBox.frx":0000
@@ -15,6 +14,30 @@ Begin VB.Form frmInputBox
    ScaleWidth      =   6615
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.CommandButton cmdp 
+      BackColor       =   &H00FF8080&
+      Caption         =   "-"
+      Height          =   255
+      Index           =   1
+      Left            =   3930
+      Style           =   1  'Graphical
+      TabIndex        =   5
+      ToolTipText     =   "minus"
+      Top             =   1230
+      Width           =   315
+   End
+   Begin VB.CommandButton cmdp 
+      BackColor       =   &H00FF8080&
+      Caption         =   "+"
+      Height          =   255
+      Index           =   0
+      Left            =   2400
+      Style           =   1  'Graphical
+      TabIndex        =   4
+      ToolTipText     =   "plus"
+      Top             =   1230
+      Width           =   315
+   End
    Begin VB.PictureBox pic 
       AutoSize        =   -1  'True
       BackColor       =   &H00800000&
@@ -103,8 +126,22 @@ Private Sub cmd_Click(Index As Integer)
    Me.Hide
 End Sub
 
+Private Sub cmdp_Click(Index As Integer)
+   If Index = 0 Then
+      txtVal.Text = CStr(Val(txtVal.Text) + 1)
+   Else
+      If Val(txtVal.Text) > 0 Then
+         txtVal.Text = CStr(Val(txtVal.Text) - 1)
+      End If
+   End If
+End Sub
+
 Private Sub Form_Unload(Cancel As Integer)
    If Me.Visible Then
       Cancel = True
    End If
+End Sub
+
+Private Sub txtVal_DblClick()
+   txtVal.Text = CStr(Val(txtVal.Text) + 1)
 End Sub

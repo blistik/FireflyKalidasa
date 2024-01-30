@@ -663,7 +663,7 @@ On Error GoTo err_handler
    
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASidle Then   'MAIN Cycle - init your go
       playsnd 6
-      If (getCutterSector(SectorID) > 0 Or getCruiserCorvette(SectorID) > 0) And CruiserCutter <> SectorID Then
+      If ((getCutterSector(SectorID) > 0 Or getCruiserCorvette(SectorID) = 5) And CruiserCutter <> SectorID) Or (getCruiserCorvette(SectorID) = 6 And CorvetteSeq <> getCorvetteSeq) Then
          If checkWhisperX1(SectorID) Then
             actionSeq = ASNavEvade ' and get away
             Exit Sub
@@ -790,9 +790,11 @@ On Error GoTo err_handler
       Else
          If actionSeq <> ASNavEvade Then
             If isMoveCutterEnabled Then moveAutoAI 6 + RollDice(NumOfReavers)
-            checkFlacGun SectorID
-            actionSeq = ASNav 'pick a Nav card
-            showNav
+               If actionSeq <> ASNavEvade Then 'may be set in above line
+                  checkFlacGun SectorID
+                  actionSeq = ASNav 'pick a Nav card
+                  showNav
+               End If
          End If
       End If
       
@@ -823,10 +825,11 @@ On Error GoTo err_handler
       End If
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASNavEvadeEnd Then   'fullburn Cycle
       resolveToken SectorID
-      checkFlacGun SectorID
-      actionSeq = ASselect 'in limbo awaiting user to select
-      showActions   'throw it back to the action window
-      
+      If actionSeq <> ASNavEvade Then
+         checkFlacGun SectorID
+         actionSeq = ASselect 'in limbo awaiting user to select
+         showActions   'throw it back to the action window
+      End If
    ElseIf status = "R" And thisPlayer = player.ID And (actionSeq = ASNavReavEnd Or actionSeq = ASNavCrusEnd) Then   'fullburn Cycle
       actionSeq = ASselect 'in limbo awaiting user to select
       showActions   'throw it back to the action window
@@ -1663,7 +1666,7 @@ Public Sub showBuys(Optional ByVal toggle As Boolean = False, Optional ByVal fil
 End Sub
 
 Private Sub showNav(Optional ByVal CardID As Integer = 0)
-Dim SQL, SectorID, reshuffle, Zone
+Dim SQL, SectorID, reshuffle, Zone, x
 Dim rst As New ADODB.Recordset
 
    With frmNav
@@ -1674,6 +1677,8 @@ Dim rst As New ADODB.Recordset
       
       .NavCardID = 0
       .NavOption = 0
+      
+      .FDPane1.PaneVisible = False
       
       SectorID = Nz(varDLookup("SectorID", "Players", "PlayerID=" & player.ID), 0)
       Zone = varDLookup("Zones", "Board", "SectorID=" & SectorID)
@@ -1699,22 +1704,29 @@ Dim rst As New ADODB.Recordset
          rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       End If
       If Not rst.EOF Then
+         
          'a LOT of these tests are only applied to the 1st option only
          .cmd(0).Enabled = hasNavReqs(player.ID, rst!CardID, 1)
                   
-         If (rst!CardName = "Reaver Cutter!") And getCruiserCorvette(SectorID) = 6 Then 'corvette shoos the Reavers away
-            frmNav.NavOption = 0
+         If (rst!CardName = "Reaver Cutter!") Then ' move cutter here and deal with it after
+            PutMsg player.PlayName & " has a gorram Reaver Cutter closing in!", player.ID, Logic!GameCntr, True, getLeader()
+            If getCutterSector(SectorID) = 0 Then MoveShip 6 + RollDice(NumOfReavers), SectorID
+         End If
+         
+         If actionSeq = ASNavEvade Then 'we are evading already
+            'evade
+         ElseIf (rst!CardName = "Reaver Cutter!") And getCruiserCorvette(SectorID) = 6 Then 'corvette shoos the Reavers away
+            x = getCutterSector(SectorID)
+            moveAutoAI x
             actionSeq = ASnavEnd
-            .NavCardID = 0
-            .FDPane1.PaneVisible = False
             PutMsg player.PlayName & " is Shielded from a Reaver Cutter attack by the Alliance Corvette", player.ID, Logic!GameCntr, True, getLeader()
+         ElseIf checkFlacGun(SectorID, Not (rst!CardName = "Reaver Cutter!")) Then
+            actionSeq = ASnavEnd
             
          'skip Customs Inspection if solid with Harken
          ElseIf (rst!CardName = "Customs Inspection") And isSolid(player.ID, 5) Then
-            frmNav.NavOption = 0
+            DB.Execute "UPDATE NavDeck SET Seq = " & CStr(player.ID) & " WHERE CardID = " & CStr(rst!CardID)
             actionSeq = ASnavEnd
-            .NavCardID = 0
-            .FDPane1.PaneVisible = False
             PutMsg player.PlayName & " being Solid with Harken avoided a Customs Inspection", player.ID, Logic!GameCntr, True, getLeader()
          Else
             .NavCardID = rst!CardID
@@ -1842,7 +1854,7 @@ Dim frmJoSel As frmJobSel
    
    'check that the REAVER is or is not here
    If getCutterSector(SectorID) > 0 Then
-      checkFlacGun SectorID 'possibly chase it away
+      checkFlacGun SectorID, Not (frmAction.checkNoOfActions = 0 And FullburnMovesDone = 0 And MoseyMovesDone = 0 And CruiserCutter <> SectorID) 'possibly chase it away
    End If
    If getCutterSector(SectorID) > 0 And frmAction.checkNoOfActions = 0 And FullburnMovesDone = 0 And MoseyMovesDone = 0 And CruiserCutter <> SectorID Then
       reaverActive = True
@@ -4116,14 +4128,17 @@ Dim frmplayer As New frmSelPlayer
 
 End Function
 
-Private Sub checkFlacGun(ByVal SectorID)
+Private Function checkFlacGun(ByVal SectorID, Optional ByVal ignore As Boolean = False) As Boolean
 Dim x, g
 
+   If ignore Then Exit Function 'use when other conditions already fail so as to not trigger the test
+
    x = getCutterSector(SectorID)
-   If x > 0 Then 'we got company!
+   If x > 0 Then  'we got company!
       g = hasShipUpgrade(player.ID, 15)
       If g > 0 Then 'Flac Gun
          If MessBox("Reaver within firing Range, do you want to use the single-use Flac Gun to fend it off?", "Reaver Cutter", "Yes", "No", 0, 0, 15) = 0 Then
+            checkFlacGun = True
             doDiscardGear player.ID, g
             moveAutoAI x
             PutMsg player.PlayName & " depleted their Hull-Mounted Flak Gun to fend off a Reaver", player.ID, Logic!GameCntr
@@ -4132,7 +4147,7 @@ Dim x, g
    End If
    
 
-End Sub
+End Function
 
 Private Sub checkBigBlack(ByVal CardID)
 
@@ -4240,7 +4255,7 @@ Dim Havens As Boolean
    End If
    
    If actionSeq = ASNavEvade Then
-      If validMove(player.ID, Index) Then
+      If validMove(player.ID, Index, hasShipUpgrade(player.ID, 18)) Then
          'if evading a reaver at the beginning of turn, then don't stop fullburn
          If FullburnMovesDone > 0 Then frmAction.fullburndone = True
          If MoseyMovesDone > 0 Then frmAction.moseydone = True

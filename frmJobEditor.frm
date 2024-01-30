@@ -1265,10 +1265,10 @@ Private Function newJob() As Integer
 'Dim rst As New ADODB.Recordset
 Dim SQL, CardID As Integer
 On Error GoTo err_handler
-   CardID = varDLookup("max(CardID)", "ContactDeck", "") + 1
-   SQL = "INSET INTO ContactDeck (CardID, JobName, ContactID, Job1ID) VALUES (" & CardID & ", 'New Job at " & Now() & "', 0,1)"
+   CardID = varDLookup("max(CardID) AS maxcard", "ContactDeck", "", "maxcard") + 1
+   SQL = "INSERT INTO ContactDeck (CardID, JobName, ContactID, Job1ID) VALUES (" & CardID & ", 'New Job at " & Now() & "', 0,1)"
    DB.Execute SQL
-   newJob = varDLookup("max(CardID)", "ContactDeck", "")
+   newJob = varDLookup("max(CardID) AS maxcard", "ContactDeck", "", "maxcard")
 '   rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
 '   rst.AddNew
 '   rst!JobName = "New Job at " & Now()
@@ -1289,6 +1289,10 @@ End Function
 Private Function saveJob() As Boolean
 Dim CardID As Integer, SQL
 On Error GoTo err_handler
+   If cbo(2).ListIndex = -1 Then
+      MsgBox "you must select New Job first"
+      Exit Function
+   End If
    CardID = cbo(2).ItemData(cbo(2).ListIndex)
    If CardID = 0 Then Exit Function
    SQL = "UPDATE ContactDeck Set "

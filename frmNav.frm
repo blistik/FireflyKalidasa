@@ -228,6 +228,7 @@ Dim x
 End Sub
 
 Private Sub FDPane1_OnHidden()
+   If NavCardID = 0 Then Exit Sub
    Select Case actionSeq
    Case ASNav, ASselect
       playsnd 9

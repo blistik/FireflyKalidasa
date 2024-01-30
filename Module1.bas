@@ -477,7 +477,7 @@ Dim currentSectorID, adjacent, a() As String, x
    adjacent = varDLookup("AdjacentRows", "Board", "SectorID=" & currentSectorID)
    a = Split(adjacent, ",")
    For x = LBound(a) To UBound(a)
-      If getCutterSector(Val(a(x))) = 0 Then
+      If getCutterSector(Val(a(x))) = 0 Or hasShipUpgrade(playerID, 18) Then
          hasValidFBMove = True
          Exit For
       End If
@@ -1399,6 +1399,8 @@ On Error GoTo err_handler
          .lblMsg.Height = 1600
          .cmd(0).top = 1900
          .txtVal.top = 1900
+         .cmdp(0).top = 2020
+         .cmdp(1).top = 2020
          .pic.Visible = True
       End If
       If CrewID > 0 Then
@@ -4097,7 +4099,7 @@ Dim frmKillCrw As frmKillCrew, SQL, loseSolid As String
             loseSolid = ", you've lost any Rep with Harken"
          Else
             SQL = SQL & ", Solid" & ContactID & "=0"
-            loseSolid = ", you've lost any Rep with this Contact (& Harken)"
+            loseSolid = ", you've lost any Rep with this Contact (+ Harken)"
          End If
          
       End If

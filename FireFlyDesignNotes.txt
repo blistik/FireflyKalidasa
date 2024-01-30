@@ -5,6 +5,20 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
+v 1.9.5 ~ 30 Jan 2024
+new: Story "The Hero of Canton"
+fix: Job editor
+fix: reworked "Reaver Cutter!" (reshuffle) card incl. Xunsu Whisper X1 & Flak Gun priority
+fix: Xunsu Whisper X1 not to refire at start of turn if Corvette already encountered last turn
+fix: allow EVADE into a Cutter's Sector if Xunsu Whisper X1 equipped
+fix: if surrounded by Cutters, but have a Reaver-Flage, enable Fullburn action
+fix: Customs Inspection card wasn't being discarded when encountered
+add: + & - buttons to stash dialog & inputbox for convenience
+cfg: Jayne updated as WANTED
+cfg: Story Alliance Operative fix to rendezvous with Cruiser to receive next goal mission
+cfg: Job 285 needs EXPLOSIVES. updated
+
+
 v 1.9.4 ~ 22 Dec 2023
 fix: freeze after failed goal (i.e. max turn count exceeded) 
 fix: completing a Job for Harken with an outstanding Warrant does not achieve "Solid"
