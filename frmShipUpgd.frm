@@ -76,7 +76,7 @@ Dim ShipUpgradeID, cost, pay
    CardID = GetCombo(cbo)
    If CardID = -1 Then
       If cbo.ListCount = 0 Then 'nothing to pick
-         Me.Hide
+         Me.hide
          Exit Sub
       Else
          MessBox "you have to Pick something", "Pick something", "Ooops", "", getLeader()
@@ -92,7 +92,7 @@ Dim ShipUpgradeID, cost, pay
    ElseIf cost > pay And discardMode = 2 Then
       If MessBox("You cannot afford that!" & vbNewLine & "Do you want to pass?", "No Dough", "Yes", "No", getLeader()) = 0 Then
          CardID = 0
-         Me.Hide
+         Me.hide
       Else
          Exit Sub
       End If
@@ -119,11 +119,9 @@ Dim ShipUpgradeID, cost, pay
                Main.frmBuy.RefreshBuys
             End If
             frmAction.buyIsDone
-            frmAction.cmd(2).Enabled = False
-            frmAction.lblMoney = CStr(pay - cost)
          End If
       End If
-      Me.Hide
+      Me.hide
    End If
 End Sub
 

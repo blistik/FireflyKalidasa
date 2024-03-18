@@ -167,7 +167,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Public NavZone, minSeq As Integer
+Public NavZone, minSeq As Integer  'NavZones are A,B or R, with special case M or E for misbehaves
 
 Private Sub cmd_Click()
 Dim Index, cnt
@@ -197,9 +197,13 @@ Private Sub Form_Load()
       .LeftButtonOnly = False
       .AutoRespond = True
       .ButtonStyle = buttonsSftTreeAll
-      If NavZone = "M" Then
+      If NavZone = "M" Or NavZone = "E" Then
          Me.Caption = "Re-Order the top 3 Misbehave Cards as you wish.   (click, then click-drag and drop)"
-         chkDiscard.Visible = True
+         If NavZone = "E" Then 'reset to M for Universal Encyclopedia
+            NavZone = "M"
+         Else 'add option to discard all
+            chkDiscard.Visible = True
+         End If
          RefreshMB
       Else
          RefreshNav

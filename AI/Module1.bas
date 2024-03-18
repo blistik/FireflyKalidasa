@@ -460,13 +460,21 @@ Public Sub getRandomCrew(ByVal noOfCrew As Integer, ByVal leader)
 Dim rst As New ADODB.Recordset, SQL, CrewID, maxCrewID, crewcnt
 
    maxCrewID = varDLookup("max(CrewID) AS maxcrew", "Crew", "Leader=0", "maxcrew")
-   SQL = "SELECT SupplyDeck.CardID, SupplyDeck.Seq, Crew.* FROM Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID WHERE Crew.Leader=0 AND Seq > 4  AND Wanted = 0 AND Moral = 0  AND Crew.CrewID NOT IN (23,54)"
+   SQL = "SELECT SupplyDeck.CardID, SupplyDeck.Seq, Crew.* FROM Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID WHERE Crew.Leader=0 AND Seq > 4 AND Wanted = 0 AND Moral = 0  AND Crew.CrewID NOT IN (23,54)"
    If leader = 69 Then 'add Atherton check
       SQL = SQL & " AND Crew.Companion = 0"
    End If
    crewcnt = 0
    rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
+   If rst.EOF Then  'all have Seq = 0
+      rst.Close
+      SQL = "SELECT SupplyDeck.CardID, SupplyDeck.Seq, Crew.* FROM Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID WHERE Crew.Leader=0 AND (Seq = 0 or Seq > 4)  AND Wanted = 0 AND Moral = 0  AND Crew.CrewID NOT IN (23,54)"
+      If leader = 69 Then 'add Atherton check
+         SQL = SQL & " AND Crew.Companion = 0"
+      End If
+      rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
+   End If
    While crewcnt < noOfCrew
       rst.Requery
       CrewID = Int((maxCrewID * Rnd)) + 1

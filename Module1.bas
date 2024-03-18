@@ -853,7 +853,7 @@ Dim coords, c() As String
       End If
 
       If rst!Haven > 0 Then
-         coords = rst.Fields("Slot5").Value
+         coords = rst.Fields("Slot" & rst!Haven).Value
          c = Split(coords, ",")
          .imgHaven(rst!Haven).Left = c(0)
          .imgHaven(rst!Haven).top = c(1)
@@ -1008,14 +1008,14 @@ Dim SQL, x, cnt As Integer, SectorID As Integer
    If Not rst.EOF Then
       'Bounties
       If goaldone And rst!Bounties > 0 Then
-         frmAction.lblBounty.Visible = True
+         'formAction.lblBounty.Visible = True
          If countBounties(playerID) < rst!Bounties Then
             goaldone = False
          End If
       End If
       'Misbehaves
       If goaldone And rst!Misbehaves > 0 Then
-         frmAction.lblMis.Visible = True
+         'formAction.lblMis.Visible = True
          If countMisbehaves(playerID) < rst!Misbehaves Then
             goaldone = False
          End If
@@ -1174,6 +1174,19 @@ Dim SQL
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
       countMisbehaves = rst!cnt
+   End If
+   rst.Close
+   Set rst = Nothing
+End Function
+
+Public Function totalMisbehaves(ByVal playerID, ByRef totalbounties) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+   SQL = "SELECT StoryGoals.Bounties, StoryGoals.Misbehaves FROM StoryGoals INNER JOIN Players ON StoryGoals.Goal = Players.Goals + 1 WHERE Players.PlayerID=" & playerID & " AND StoryGoals.StoryID=" & Logic!StoryID
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      totalMisbehaves = rst!Misbehaves
+      totalbounties = rst!Bounties
    End If
    rst.Close
    Set rst = Nothing
@@ -1673,7 +1686,7 @@ On Error GoTo err_handler
       Wend
       
    Case "planet"
-      SQL = "SELECT * FROM planet WHERE planetID > 0 " & filter
+      SQL = "SELECT * FROM Planet WHERE PlanetID > 0 " & filter
       rst.Open SQL, DB, 0, 1
       While Not rst.EOF
          cbo.AddItem rst!PlanetName
@@ -1702,7 +1715,7 @@ On Error GoTo err_handler
       
       
    Case "profession"
-      SQL = "SELECT * FROM profession " & filter
+      SQL = "SELECT * FROM Profession " & filter
       rst.Open SQL, DB, 0, 1
       While Not rst.EOF
          cbo.AddItem rst!ProfessionName
@@ -1717,7 +1730,7 @@ On Error GoTo err_handler
       Next last
       
    Case "jobtype"
-      SQL = "SELECT * FROM jobtype " & filter
+      SQL = "SELECT * FROM JobType " & filter
       rst.Open SQL, DB, 0, 1
       While Not rst.EOF
          cbo.AddItem rst!JobTypeDescr
@@ -1726,7 +1739,7 @@ On Error GoTo err_handler
       Wend
       
    Case "task"
-      SQL = "SELECT * FROM job " & filter
+      SQL = "SELECT * FROM Job " & filter
       SQL = SQL & " ORDER BY SectorID, jobdesc"
       rst.Open SQL, DB, 0, 1
       While Not rst.EOF
@@ -2230,7 +2243,7 @@ End Function
 
 Public Sub burnFuel(ByVal playerID, Optional ByVal qty As Integer = 1)
    DB.Execute "UPDATE Players SET Fuel = Fuel-" & qty & " WHERE PlayerID = " & playerID
-   frmAction.lblFuelOn.Caption = CStr(Val(frmAction.lblFuelOn.Caption) - qty)
+   frmAction.lblFuel.Caption = CStr(Val(frmAction.lblFuel.Caption) - qty)
 End Sub
 
 ' returns True if Crew (eg.Nandi) can hire Crew for Free
@@ -2342,6 +2355,22 @@ Dim SQL
       End If
       rst.MoveNext
    Loop
+   rst.Close
+   Set rst = Nothing
+End Function
+
+
+Public Function cntDisgruntled(ByVal playerID) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+   SQL = "SELECT count(Crew.CrewID) as cnt "
+   SQL = SQL & "FROM Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck "
+   SQL = SQL & "ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID "
+   SQL = SQL & "WHERE disgruntled > 0 AND PlayerSupplies.PlayerID=" & playerID
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      cntDisgruntled = rst!cnt
+   End If
    rst.Close
    Set rst = Nothing
 End Function
@@ -4989,13 +5018,25 @@ Dim rst As New ADODB.Recordset
 
 End Function
 
-Public Sub setBackColour(cntrl As Control)
-      If cntrl.Enabled Then
-         cntrl.BackColor = &H80000005
-      Else
-         cntrl.BackColor = &HCBE1ED
-      End If
-End Sub
+'Public Sub setBackColour(cntrl As Control)
+'      If cntrl.Enabled Then
+'         cntrl.BackColor = &H80000005
+'      Else
+'         cntrl.BackColor = &HCBE1ED
+'      End If
+'End Sub
+
+Public Function getTurnLimit(ByVal playerID) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+   SQL = "SELECT StoryGoals.TurnLimit FROM Players INNER JOIN StoryGoals ON Players.Goals+1 = StoryGoals.Goal WHERE StoryGoals.StoryID=" & Logic!StoryID & " AND Players.PlayerID=" & playerID
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      getTurnLimit = rst!TurnLimit
+   End If
+   rst.Close
+   Set rst = Nothing
+End Function
 
 'Public Function getsumtin(ByVal playerID) As Integer
 'Dim rst As New ADODB.Recordset

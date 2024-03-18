@@ -570,12 +570,10 @@ With sftTree
                Case ASBuySelDiscard
                   .ItemDataString(Index) = "O"
                   Set .ItemPicture(Index) = AssetImages.Overlay("L", "O")
-                  If getSelected("UN") = MAXJOBCARDDRAW Then
-                     frmAction.cmd(2).Caption = "Consider"
-                     frmAction.cmd(2).Enabled = True
+                  If getSelected("UN") = MAXJOBCARDDRAW Or (getUnseenDeck("Supply", Val(frmAction.imgSupply.Tag)) = 0) Then
+                     frmAction.setMultiStateButton "imgShop", "2a"
                   Else
-                     frmAction.cmd(2).Caption = "Draw Cards"
-                     frmAction.cmd(2).Enabled = (getUnseenDeck("Supply", Val(frmAction.lblSupply.Tag)) > 0)
+                     frmAction.setMultiStateButton "imgShop", "2"
                   End If
                   
                Case ASBuySelect
@@ -612,12 +610,10 @@ With sftTree
             If actionSeq = ASBuySelDiscard And getSelected("UN") < MAXJOBCARDDRAW Then 'can consider up to 3 cards
                   .ItemDataString(Index) = "UN"
                   Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
-                  If getSelected("UN") = MAXJOBCARDDRAW Then
-                     frmAction.cmd(2).Caption = "Consider"
-                     frmAction.cmd(2).Enabled = True
+                  If getSelected("UN") = MAXJOBCARDDRAW Or (getUnseenDeck("Supply", Val(frmAction.imgSupply.Tag)) = 0) Then
+                     frmAction.setMultiStateButton "imgShop", "2a"
                   Else
-                     frmAction.cmd(2).Caption = "Draw Cards"
-                     frmAction.cmd(2).Enabled = (getUnseenDeck("Supply", Val(frmAction.lblSupply.Tag)) > 0)
+                     frmAction.setMultiStateButton "imgShop", "2"
                   End If
                   
             End If

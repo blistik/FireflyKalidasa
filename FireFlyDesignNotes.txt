@@ -1,10 +1,26 @@
 Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 Mar 2021
 
 Dev Ideas:
+When buying, if you've chosen too many fuel/parts to purchase with your other shopping items, 
+it pops up with an error message that you didn't have enough money, but purchases your gear/crew/upgrades and ends the action without any fuel/parts. 
+Could that error message be altered to pause the buy action instead of completing it so you can change your buy before completing it?
 
 Test Issues pending: 
 
+
 Version updates:
+v 1.9.6 ~ 18 Mar 2024
+add: Gear - Universal Encyclopedia
+gui: new Action panel featuring graphics by Bill Saunders
+gui: Action panel remains visible between turns
+gui: new Solid display on toolbar
+gui: Havens placed on each players slot coordinates with the sector.
+gui: Deal Job guide trace now follows your ship if moved
+fix: Cancelling a Mosey or Full Burn while in same sector as Cruiser/Corvette/Cutter will not trigger a new encounter
+cfg: repositioned Triumph & Athens slots to improve the layout
+cfg: Freighter Convoy & A Rogue Trader Nav Cards - changed from Fight to Tech skill
+bot: v1.1.3 - AI Bot freeze on stories with Wanted Only Crew
+
 v 1.9.5 ~ 30 Jan 2024
 new: Story "The Hero of Canton"
 fix: Job editor
@@ -176,7 +192,6 @@ fix: prevent shore leave being selected during a supplies buy
 fix: handling of Wanted Rolls when no Concealed Storage Compartments exist
 
 v 1.8.3 ~ 09 Jan 2023 -  12 Jan 2023
-fix: AI Bot on stories with Wanted Only Crew
 fix: rework handling of Concealed Storage Compartments
 cfg: Simon Tam Tech skill now 2
 add: Bree's Part selling skill

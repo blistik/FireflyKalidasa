@@ -266,11 +266,11 @@ With sftTree
       If HigginsDealPerk Or (hasCrew(player.ID, 75) And ContactID = 0) And dealFilter = "locals" And Not hasCrew(player.ID, 22) Then
          ContactID = 8
          HigginsDealPerk = True
-      ElseIf hasCrew(player.ID, 75) And dealFilter = "locals" And Not hasCrew(player.ID, 22) And SectorID <> 16 Then
-         If MessBox("Do you want Deal with Higgins instead?", "Fess - Phone Home Deals", "Deal", "Not now", 75) = 0 Then
-            ContactID = 8
-            HigginsDealPerk = True
-         End If
+'      ElseIf hasCrew(player.ID, 75) And dealFilter = "locals" And Not hasCrew(player.ID, 22) And SectorID <> 16 Then
+'         If MessBox("Do you want Deal with Higgins instead?", "Fess - Phone Home Deals", "Deal", "Not now", 75) = 0 Then
+'            ContactID = 8
+'            HigginsDealPerk = True
+'         End If
       ElseIf HarkenDeal And dealFilter = "localdeal" Then
             ContactID = 5
       Else
@@ -510,12 +510,10 @@ With sftTree
                Case ASDealSelDiscard
                   .ItemDataString(Index) = "O"
                   Set .ItemPicture(Index) = AssetImages.Overlay("L", "O")
-                  If getSelected("UN") = maxConsider Then
-                     frmAction.cmd(3).Caption = "Consider"
-                     frmAction.cmd(3).Enabled = True
+                  If getSelected("UN") = maxConsider Or (getUnseenDeck("Contact", Val(sftTree.CellText(0, 0))) = 0) Then
+                     frmAction.setMultiStateButton "imgDealer", "2a"
                   Else
-                     frmAction.cmd(3).Caption = "Draw Cards"
-                     frmAction.cmd(3).Enabled = (getUnseenDeck("Contact", Val(sftTree.CellText(0, 0))) > 0)
+                     frmAction.setMultiStateButton "imgDealer", "2"
                   End If
                Case ASDealSelect
                   'determine how many cards can be accepted
@@ -540,11 +538,9 @@ With sftTree
                   .ItemDataString(Index) = "UN"
                   Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
                   If getSelected("UN") = maxConsider Or getUnseenDeck("Contact", Val(sftTree.CellText(0, 0))) = 0 Then
-                     frmAction.cmd(3).Caption = "Consider"
-                     frmAction.cmd(3).Enabled = True
+                     frmAction.setMultiStateButton "imgDealer", "2a"
                   Else
-                     frmAction.cmd(3).Caption = "Draw Cards"
-                     frmAction.cmd(3).Enabled = (getUnseenDeck("Contact", Val(sftTree.CellText(0, 0))) > 0)
+                     frmAction.setMultiStateButton "imgDealer", "2"
                   End If
                   
             End If

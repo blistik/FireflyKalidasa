@@ -698,10 +698,10 @@ Dim SQL, Index
 
       SQL = "SELECT * FROM Story WHERE StoryID =" & StoryID
 
-      rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+      rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       If Not rst.EOF Then
          txt(5) = Nz(rst!StoryTitle)
-         txt(6) = Nz(rst!StoryDesc)
+         txt(6) = Nz(rst!StoryDesc & "")
          txt(0) = Nz(rst!StartingCash)
          txt(1) = Nz(rst!StartingFuel)
          txt(2) = Nz(rst!StartingParts)

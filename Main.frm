@@ -318,7 +318,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   285
          Index           =   4
-         Left            =   14295
+         Left            =   14335
          Picture         =   "Main.frx":45CF8
          ScaleHeight     =   285
          ScaleWidth      =   240
@@ -335,7 +335,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   285
          Index           =   3
-         Left            =   13875
+         Left            =   13930
          Picture         =   "Main.frx":460CA
          ScaleHeight     =   285
          ScaleWidth      =   240
@@ -352,7 +352,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   285
          Index           =   2
-         Left            =   13455
+         Left            =   13525
          Picture         =   "Main.frx":4649C
          ScaleHeight     =   285
          ScaleWidth      =   240
@@ -369,7 +369,7 @@ Begin VB.MDIForm Main
          ForeColor       =   &H80000008&
          Height          =   285
          Index           =   1
-         Left            =   13050
+         Left            =   13120
          Picture         =   "Main.frx":4686E
          ScaleHeight     =   285
          ScaleWidth      =   240
@@ -384,15 +384,15 @@ Begin VB.MDIForm Main
          BackColor       =   &H80000005&
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
-         Height          =   240
+         Height          =   360
          Index           =   8
-         Left            =   12140
+         Left            =   12340
          Picture         =   "Main.frx":46C40
-         ScaleHeight     =   240
-         ScaleWidth      =   240
+         ScaleHeight     =   360
+         ScaleWidth      =   360
          TabIndex        =   10
-         Top             =   200
-         Width           =   240
+         Top             =   90
+         Width           =   360
       End
       Begin VB.PictureBox pic 
          Appearance      =   0  'Flat
@@ -400,15 +400,15 @@ Begin VB.MDIForm Main
          BackColor       =   &H80000005&
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
-         Height          =   240
+         Height          =   360
          Index           =   7
-         Left            =   11840
-         Picture         =   "Main.frx":46F49
-         ScaleHeight     =   240
-         ScaleWidth      =   240
+         Left            =   11960
+         Picture         =   "Main.frx":4721B
+         ScaleHeight     =   360
+         ScaleWidth      =   360
          TabIndex        =   9
-         Top             =   200
-         Width           =   240
+         Top             =   90
+         Width           =   360
       End
       Begin VB.PictureBox pic 
          Appearance      =   0  'Flat
@@ -416,15 +416,15 @@ Begin VB.MDIForm Main
          BackColor       =   &H80000005&
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
-         Height          =   240
+         Height          =   360
          Index           =   6
-         Left            =   11540
-         Picture         =   "Main.frx":47252
-         ScaleHeight     =   240
-         ScaleWidth      =   240
+         Left            =   11580
+         Picture         =   "Main.frx":477AF
+         ScaleHeight     =   360
+         ScaleWidth      =   360
          TabIndex        =   8
-         Top             =   200
-         Width           =   240
+         Top             =   90
+         Width           =   360
       End
       Begin VB.PictureBox pic 
          Appearance      =   0  'Flat
@@ -432,15 +432,15 @@ Begin VB.MDIForm Main
          BackColor       =   &H80000005&
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
-         Height          =   240
+         Height          =   360
          Index           =   5
-         Left            =   11240
-         Picture         =   "Main.frx":4755B
-         ScaleHeight     =   240
-         ScaleWidth      =   240
+         Left            =   11200
+         Picture         =   "Main.frx":47DB7
+         ScaleHeight     =   360
+         ScaleWidth      =   360
          TabIndex        =   7
-         Top             =   200
-         Width           =   240
+         Top             =   90
+         Width           =   360
       End
       Begin VB.PictureBox pic 
          Appearance      =   0  'Flat
@@ -448,15 +448,15 @@ Begin VB.MDIForm Main
          BackColor       =   &H80000005&
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
-         Height          =   240
+         Height          =   360
          Index           =   4
-         Left            =   10940
-         Picture         =   "Main.frx":47864
-         ScaleHeight     =   240
-         ScaleWidth      =   240
+         Left            =   10820
+         Picture         =   "Main.frx":47FCB
+         ScaleHeight     =   360
+         ScaleWidth      =   360
          TabIndex        =   6
-         Top             =   200
-         Width           =   240
+         Top             =   90
+         Width           =   360
       End
       Begin VB.PictureBox pic 
          Appearance      =   0  'Flat
@@ -464,15 +464,15 @@ Begin VB.MDIForm Main
          BackColor       =   &H80000005&
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
-         Height          =   240
+         Height          =   360
          Index           =   3
-         Left            =   10640
-         Picture         =   "Main.frx":47B6D
-         ScaleHeight     =   240
-         ScaleWidth      =   240
+         Left            =   10440
+         Picture         =   "Main.frx":4852C
+         ScaleHeight     =   360
+         ScaleWidth      =   360
          TabIndex        =   5
-         Top             =   200
-         Width           =   240
+         Top             =   90
+         Width           =   360
       End
       Begin VB.PictureBox pic 
          Appearance      =   0  'Flat
@@ -480,15 +480,15 @@ Begin VB.MDIForm Main
          BackColor       =   &H80000005&
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
-         Height          =   240
+         Height          =   360
          Index           =   2
-         Left            =   10340
-         Picture         =   "Main.frx":47E76
-         ScaleHeight     =   240
-         ScaleWidth      =   240
+         Left            =   10060
+         Picture         =   "Main.frx":48ADC
+         ScaleHeight     =   360
+         ScaleWidth      =   360
          TabIndex        =   4
-         Top             =   200
-         Width           =   240
+         Top             =   90
+         Width           =   360
       End
       Begin VB.PictureBox pic 
          Appearance      =   0  'Flat
@@ -496,15 +496,15 @@ Begin VB.MDIForm Main
          BackColor       =   &H80000005&
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
-         Height          =   240
+         Height          =   360
          Index           =   1
-         Left            =   10040
-         Picture         =   "Main.frx":4817F
-         ScaleHeight     =   240
-         ScaleWidth      =   240
+         Left            =   9680
+         Picture         =   "Main.frx":490B0
+         ScaleHeight     =   360
+         ScaleWidth      =   360
          TabIndex        =   3
-         Top             =   200
-         Width           =   240
+         Top             =   90
+         Width           =   360
       End
       Begin VB.PictureBox pic 
          Appearance      =   0  'Flat
@@ -512,15 +512,15 @@ Begin VB.MDIForm Main
          BackColor       =   &H80000005&
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
-         Height          =   240
+         Height          =   360
          Index           =   9
-         Left            =   12440
-         Picture         =   "Main.frx":48488
-         ScaleHeight     =   240
-         ScaleWidth      =   240
+         Left            =   12720
+         Picture         =   "Main.frx":4969E
+         ScaleHeight     =   360
+         ScaleWidth      =   360
          TabIndex        =   2
-         Top             =   200
-         Width           =   240
+         Top             =   90
+         Width           =   360
       End
    End
    Begin XDOCKFLOATLibCtl.DockFrame DockFrame1 
@@ -565,8 +565,8 @@ Dim x
    
    For x = 1 To NO_OF_CONTACTS
       pic(x).Visible = False
-      pic(x).Picture = LoadPicture(App.Path & "\Pictures\Sm" & Nz(varDLookup("Picture", "Contact", "ContactID=" & x)))
-      pic(x).ToolTipText = "Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & x)
+      'pic(x).Picture = LoadPicture(App.Path & "\Pictures\Sm" & Nz(varDLookup("Picture", "Contact", "ContactID=" & x)))
+      'pic(x).ToolTipText = "Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & x) & " - " & varDLookup("DealDescr", "Contact", "ContactID=" & x)
    Next x
    
    Logic.Open "GameSeq", DB, adOpenDynamic, adLockPessimistic  ', adLockOptimistic
@@ -867,64 +867,64 @@ On Error GoTo err_handler
       
       'do any Sell Cargo/Contra Dealing now----------------
       If ContactID = 6 Then  'lord Harrow
-         If doBuyCargo(player.ID, Val(frmAction.txtCargo)) > 0 Then
-            PutMsg player.PlayName & " bought " & frmAction.txtCargo & " Cargo from " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
+         If doBuyCargo(player.ID, Val(frmAction.lblDealCargoBuy)) > 0 Then
+            PutMsg player.PlayName & " bought " & frmAction.lblDealCargoBuy & " Cargo from " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
          End If
-         frmAction.txtCargo = "0"
+         frmAction.lblDealCargoBuy = "0"
          
       ElseIf ContactID = 9 Then  'FANTY MINGO
-         If doBuyContra(player.ID, Val(frmAction.txtContra)) Then
-            PutMsg player.PlayName & " bought " & frmAction.txtContra & " Contraband from " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
+         If doBuyContra(player.ID, Val(frmAction.lblDealContraBuy)) Then
+            PutMsg player.PlayName & " bought " & frmAction.lblDealContraBuy & " Contraband from " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
          End If
-         frmAction.txtContra = "0"
+         frmAction.lblDealContraBuy = "0"
          
-      ElseIf doSellCargoContra(player.ID, ContactID, Val(frmAction.txtCargo), Val(frmAction.txtContra)) > 0 Then
-         PutMsg player.PlayName & " sold " & frmAction.txtCargo & " Cargo and " & frmAction.txtContra & " Contraband to " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
-         frmAction.txtCargo = "0"
-         frmAction.txtContra = "0"
+      ElseIf doSellCargoContra(player.ID, ContactID, Val(frmAction.lblDealCargoSell), Val(frmAction.lblDealContraSell)) > 0 Then
+         PutMsg player.PlayName & " sold " & frmAction.lblDealCargoSell & " Cargo and " & frmAction.lblDealContraSell & " Contraband to " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
+         frmAction.lblDealCargoSell = "0"
+         frmAction.lblDealContraSell = "0"
          
       End If
       
       'Bree sells parts to any Solids
-      If hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) >= Val(frmAction.txtParts) And Val(frmAction.txtParts) > 0 And isSolid(player.ID, ContactID) Then
-         DB.Execute "UPDATE Players SET Parts = Parts-" & frmAction.txtParts & ", Pay = Pay + " & Val(frmAction.txtParts) * 300 & " WHERE PlayerID=" & player.ID
-         PutMsg player.PlayName & " used Bree's Black Market Ties to sell " & frmAction.txtParts & " Parts to " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
-         frmAction.txtParts = "0"
+      If hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) >= Val(frmAction.lblDealPartsSell) And Val(frmAction.lblDealPartsSell) > 0 And isSolid(player.ID, ContactID) Then
+         DB.Execute "UPDATE Players SET Parts = Parts-" & frmAction.lblDealPartsSell & ", Pay = Pay + " & Val(frmAction.lblDealPartsSell) * 300 & " WHERE PlayerID=" & player.ID
+         PutMsg player.PlayName & " used Bree's Black Market Ties to sell " & frmAction.lblDealPartsSell & " Parts to " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!GameCntr
+         frmAction.lblDealPartsSell = "0"
       End If
       
       'Deal with Harken to source Fuel (not a Buy action
-      If frmAction.txtFuel.Enabled And doBuyFuelParts(player.ID, Val(frmAction.txtFuel), 0, True) <= getMoney(player.ID) And ContactID = 5 Then
-         If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.txtFuel) / 2) Then
-            If doBuyFuelParts(player.ID, Val(frmAction.txtFuel), 0) Then
-               PutMsg player.PlayName & " bought " & frmAction.txtFuel & " Fuel from Harken", player.ID, Logic!GameCntr
+      If frmAction.imgFuelBuy.Tag = "Y" And doBuyFuelParts(player.ID, Val(frmAction.lblBuyFuel), 0, True) <= getMoney(player.ID) And ContactID = 5 Then
+         If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.lblBuyFuel) / 2) Then
+            If doBuyFuelParts(player.ID, Val(frmAction.lblBuyFuel), 0) Then
+               PutMsg player.PlayName & " bought " & frmAction.lblBuyFuel & " Fuel from Harken", player.ID, Logic!GameCntr
             End If
          Else
          MessBox "Not enough Cargo Space for the Fuel order", "Cargo Space", "Ooops", "", getLeader()
          End If
-         frmAction.txtFuel = "0"
-         frmAction.txtParts = "0"
+         frmAction.lblBuyFuel = "0"
+         frmAction.lblBuyParts = "0"
       End If
 
       
       'clear all Warrants?
-      If frmAction.chkWarrant.Value = 1 Then
+      If frmAction.imgClearWarrantsOpt.Tag = "Y" Then
          If varDLookup("Pay", "Players", "PlayerID=" & player.ID) >= 1000 Then
             DB.Execute "UPDATE Players SET Warrants = 0, Pay = Pay - 1000 WHERE PlayerID=" & player.ID
             PutMsg player.PlayName & " had Badger clear all Warrants", player.ID, Logic!GameCntr
-            frmAction.chkWarrant.Value = 0
+            frmAction.clearWarrant
          Else
             MessBox "Not enough money left to pay Badger to clear all Warrants", "Warrants", "Ooops", "", getLeader()
          End If
       End If
       
       'load pasengers & Fugitives at Amnons
-      If frmAction.txtPass.Visible Then
-         If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= Val(frmAction.txtPass) + Val(frmAction.txtFug) Then
-            DB.Execute "UPDATE Players SET Passenger = Passenger + " & CStr(Val(frmAction.txtPass)) & ", Fugitive = Fugitive + " & CStr(Val(frmAction.txtFug)) & " WHERE PlayerID = " & player.ID
-            PutMsg player.PlayName & " loaded " & CStr(Val(frmAction.txtPass)) & " Passengers and " & CStr(Val(frmAction.txtFug)) & " Fugitives", player.ID, Logic!GameCntr
+      If frmAction.imgLoadPassngr.Tag = "Y" Then
+         If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= Val(frmAction.lblDealPassngrLoad) + Val(frmAction.lblDealFugiLoad) Then
+            DB.Execute "UPDATE Players SET Passenger = Passenger + " & CStr(Val(frmAction.lblDealPassngrLoad)) & ", Fugitive = Fugitive + " & CStr(Val(frmAction.lblDealFugiLoad)) & " WHERE PlayerID = " & player.ID
+            PutMsg player.PlayName & " loaded " & CStr(Val(frmAction.lblDealPassngrLoad)) & " Passengers and " & CStr(Val(frmAction.lblDealFugiLoad)) & " Fugitives", player.ID, Logic!GameCntr
          End If
-         frmAction.txtPass = "0"
-         frmAction.txtFug = "0"
+         frmAction.lblDealPassngrLoad = "0"
+         frmAction.lblDealFugiLoad = "0"
       End If
             
       
@@ -971,21 +971,24 @@ On Error GoTo err_handler
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASBuyHaven Then   'Buy Cycle - your go
     
       'buy fuel & parts now
-      If frmAction.txtFuel.Enabled Then
-         If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.txtFuel)) / 2 Then
-            If doBuyFuelParts(player.ID, Val(frmAction.txtFuel), 0, False, IIf(getHaven(SectorID) = player.ID, 4, 0)) = 0 Then
+      If frmAction.imgFuelBuy.Tag = "Y" Then
+         If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.lblBuyFuel)) / 2 Then
+            If doBuyFuelParts(player.ID, Val(frmAction.lblBuyFuel), 0, False, IIf(getHaven(SectorID) = player.ID, 4, 0)) = 0 Then
                
             End If
-            PutMsg player.PlayName & " loaded " & frmAction.txtFuel & " Fuel at the Haven" & IIf(getHaven(SectorID) = player.ID, ", up to 4 for free!", ""), player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " loaded " & frmAction.lblBuyFuel & " Fuel at the Haven" & IIf(getHaven(SectorID) = player.ID, ", up to 4 for free!", ""), player.ID, Logic!GameCntr
          Else
             MessBox "Not enough Cargo Space for the Fuel/Parts order", "Fuel/Parts order", "Ooops", "", getLeader()
          End If
-         frmAction.txtFuel = "0"
-         frmAction.txtParts = "0"
+         frmAction.lblBuyFuel = "0"
+         frmAction.lblBuyParts = "0"
       End If
       x = 0
-      If frmAction.chkShore.Value = 1 Then
-         x = doShoreLeave(player.ID, False, (getHaven(SectorID) = player.ID))
+      'Haven Shore Leave
+      If hasDisgruntled(player.ID) Then
+         If MessBox("Do you want to buy Shore Leave at your Haven?", "Haven Leave", "Yes", "No", getLeader()) = 0 Then
+            x = doShoreLeave(player.ID, False, (getHaven(SectorID) = player.ID))
+         End If
       End If
       
       actionSeq = ASselect 'in limbo awaiting user to select
@@ -1002,11 +1005,11 @@ On Error GoTo err_handler
       PutMsg player.PlayName & " accepted and bought " & IIf(x = 0, "no", CStr(x)) & " buys from " & varDLookup("SupplyName", "Supply", "SupplyID=" & SupplyID), player.ID, Logic!GameCntr
       
       'buy fuel & parts now
-      If frmAction.txtFuel.Enabled Then
-         If doBuyFuelParts(player.ID, Val(frmAction.txtFuel), Val(frmAction.txtParts), True) <= getMoney(player.ID) Then
-            If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.txtFuel) + Val(frmAction.txtParts)) / 2 Then
-               If doBuyFuelParts(player.ID, Val(frmAction.txtFuel), Val(frmAction.txtParts)) Then
-                  PutMsg player.PlayName & " bought " & frmAction.txtFuel & " Fuel and " & frmAction.txtParts & " Parts", player.ID, Logic!GameCntr
+      If frmAction.imgFuelBuy.Tag = "Y" Then
+         If doBuyFuelParts(player.ID, Val(frmAction.lblBuyFuel), Val(frmAction.lblBuyParts), True) <= getMoney(player.ID) Then
+            If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.lblBuyFuel) + Val(frmAction.lblBuyParts)) / 2 Then
+               If doBuyFuelParts(player.ID, Val(frmAction.lblBuyFuel), Val(frmAction.lblBuyParts)) Then
+                  PutMsg player.PlayName & " bought " & frmAction.lblBuyFuel & " Fuel and " & frmAction.lblBuyParts & " Parts", player.ID, Logic!GameCntr
                End If
             Else
                MessBox "Not enough Cargo Space for the Fuel/Parts order", "Fuel/Parts order", "Ooops", "", getLeader()
@@ -1014,8 +1017,8 @@ On Error GoTo err_handler
          Else
             MessBox "Not enough money left to pay for the Fuel or Parts", "Fuel/Parts order", "Ooops", "", getLeader()
          End If
-         frmAction.txtFuel = "0"
-         frmAction.txtParts = "0"
+         frmAction.lblBuyFuel = "0"
+         frmAction.lblBuyParts = "0"
       End If
       
       actionSeq = ASselect 'in limbo awaiting user to select
@@ -1028,7 +1031,7 @@ On Error GoTo err_handler
       
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASWork Then   'Work Cycle - your go
       
-      If GetCombo(frmAction.cbo) = 0 Then  'make work
+      If frmAction.lblJobName.Tag = "" Then  'make work
          If hasCrew(player.ID, 73) Then  'Busker adds 100
             getMoney player.ID, 300
             PutMsg player.PlayName & " made Extra Work with Busker at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID), player.ID, Logic!GameCntr
@@ -1045,18 +1048,18 @@ On Error GoTo err_handler
          
          actionSeq = ASselect 'in limbo awaiting user to select
          
-      ElseIf GetCombo(frmAction.cbo) = -1 Then 'Haven Supplies
+      ElseIf Val(frmAction.lblJobName.Tag) = -1 Then 'Haven Supplies
          doHavenSupplies
          actionSeq = ASselect 'in limbo awaiting user to select
          
-      ElseIf GetCombo(frmAction.cbo) < -1 Then 'grab a Bounty
-         doBountyHunt Abs(GetCombo(frmAction.cbo))
+      ElseIf Val(frmAction.lblJobName.Tag) < -1 Then 'grab a Bounty
+         doBountyHunt Abs(Val(frmAction.lblJobName.Tag))
          actionSeq = ASselect 'in limbo awaiting user to select
          'reset OffJob status
          clearOffJob player.ID
       
       Else  'do a Job
-         If doWork(player.ID, GetCombo(frmAction.cbo)) = 0 Then ' normal exit
+         If doWork(player.ID, Val(frmAction.lblJobName.Tag)) = 0 Then ' normal exit
             actionSeq = ASselect 'this one is conditional based on the job outcome <<<< !
          End If
          'reset OffJob status
@@ -1077,7 +1080,7 @@ On Error GoTo err_handler
       showActions
    
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASend Then 'Finish up your turn
-      frmAction.FDPane1.PaneVisible = False
+      'formAction.FDPane1.PaneVisible = False
       wormHoleOpen = False
       drawLine 2, -1
       'Check if WON!
@@ -1458,7 +1461,7 @@ Private Sub killAllForms()
 Dim x
 
    If Verse.Visible Then
-      Verse.Hide
+      Verse.hide
       Unload Verse
       Set Verse = Nothing
    End If
@@ -1841,9 +1844,9 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Public Sub showActions()
-Dim SQL, SectorID, onlyFullburn As Boolean, x As Integer
+Dim SQL, SectorID, onlyFullburn As Boolean, x As Integer, y As Integer
 Dim rst As New ADODB.Recordset, reaverActive As Boolean, moseyrng As Integer
-Dim frmJoSel As frmJobSel
+Dim frmJoSel As frmJobSel, hide As Boolean
 
    SectorID = getPlayerSector(player.ID)
    SoloGame = isSoloGame() 'as a player may drop out
@@ -1923,29 +1926,88 @@ Dim frmJoSel As frmJobSel
       .FDPane1.PinState = Pinned
       .FDPane1.SetLayoutReference Nothing
       
-      .lblGo.Caption = CStr(Logic!GameCntr - 1)
+      'Header Info ===============================
+      .setVisState .imgOutlaw, isOutlaw(player.ID)
       
-      .lblMoney.Tag = varDLookup("Pay", "Players", "PlayerID=" & player.ID)
-      .lblMoney = "$" & .lblMoney.Tag
-      If Val(.lblMoney.Tag) < 200 Then
-         .lblMoney.ForeColor = 0
-         .lblMoney.BackColor = 11468799
+      x = getTurnLimit(player.ID)
+      .lblTurn.Caption = CStr(Logic!GameCntr - 1) & IIf(x > 0, "/" & x, "")
+      
+      .lblMisbehaves = countMisbehaves(player.ID) & "/" & totalMisbehaves(player.ID, x)
+      .lblBounties = countBounties(player.ID) & "/" & x
+      
+      x = getPlayerJobs(player.ID, "0")
+      .lblInactiveJobs = x & "/" & MAXINACTIVEJOBS
+      If x >= MAXINACTIVEJOBS Then
+         .lblInactiveJobs.ForeColor = &HFF&
       Else
-         .lblMoney.ForeColor = 16777215
-         .lblMoney.BackColor = 8388736
+         .lblInactiveJobs.ForeColor = &H3DCBFF
+      End If
+      x = getPlayerJobs(player.ID, "1,2")
+      y = (MAXACTIVEJOBS + IIf(isSolid(player.ID, 8), 1, 0))
+      .lblActiveJobs = x & "/" & y
+      If x >= y Then
+         .lblActiveJobs.ForeColor = &HFF&
+      Else
+         .lblActiveJobs.ForeColor = &H3DCBFF
       End If
       
+      .setVisState .imgBDProof, (hasShipUpgrade(player.ID, 3) Or hasShipUpgrade(player.ID, 7))
+                  
+      SQL = "SELECT * FROM Players WHERE PlayerID = " & player.ID
+      rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+      If Not rst.EOF Then
+         If rst!Goals = -1 Then 'fail
+            .lblGoals.Caption = "fail"
+         Else
+            .lblGoals.Caption = rst!Goals & "/" & varDLookup("max(Goal) AS maxgoal", "StoryGoals", "StoryID=" & Logic!StoryID, "maxgoal")
+         End If
+         .setVisState .imgWarrants, (rst!Warrants > 0)
+         .lblWarrants = rst!Warrants
+         .lblWarrants.Visible = (rst!Warrants > 0)
+         .lblCash.Tag = rst!pay
+         .lblCash = "$" & .lblCash.Tag
+         If Val(.lblCash.Tag) < 200 Then
+            .lblCash.ForeColor = &HFF&
+         Else
+            .lblCash.ForeColor = &H3DCBFF
+         End If
+         
+         
+         'load Fuel stats,
+         .lblFuel.Caption = rst!fuel
+         Select Case Val(.lblFuel.Caption)
+         Case 0
+            .lblFuel.ForeColor = &HFF&
+         Case Else
+            .lblFuel.ForeColor = &H3DCBFF
+         End Select
+         .lblParts.Caption = rst!parts
+         .lblCargo.Caption = rst!cargo
+         .lblContra.Caption = rst!Contraband
+         .lblPassngr.Caption = rst!Passenger
+         .lblFugitives.Caption = rst!Fugitive
+      End If
+      rst.Close
+      x = CargoSpaceUsed(player.ID)
+      y = CargoCapacity(player.ID)
+      .lblHoldSpace = x & "/" & y
       
-      'load Fuel stats,
-      .lblFuelOn.Caption = varDLookup("Fuel", "Players", "PlayerID=" & player.ID)
-      Select Case Val(.lblFuelOn.Caption)
-      Case 0
-         .lblFuelOn.BackColor = 5987327
-      Case 1, 2
-         .lblFuelOn.BackColor = 9109503
-      Case Else
-         .lblFuelOn.BackColor = &HCBE1ED
-      End Select
+      x = CrewCapacity(player.ID)
+      y = getCrewCount(player.ID)
+      .lblCrewSpace = y & "/" & x
+      If y >= x Then
+         .lblCrewSpace.ForeColor = &HFF&
+      Else
+         .lblCrewSpace.ForeColor = &H3DCBFF
+      End If
+      x = getShipUpgrades(player.ID)
+      .lblUpgrades = x & "/3"
+      If x >= 3 Then
+         .lblUpgrades.ForeColor = &HFF&
+      Else
+         .lblUpgrades.ForeColor = &H3DCBFF
+      End If
+      
       SQL = "SELECT SUM(ShipUpgrade.BurnRange) AS BurnRange, MAX(ShipUpgrade.BurnFuel) AS BurnFuel, MAX(ShipUpgrade.MoseyRange) AS MoseyRange"
       SQL = SQL & " FROM ShipUpgrade INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON ShipUpgrade.ShipUpgradeID = SupplyDeck.ShipUpgradeID"
       SQL = SQL & " WHERE PlayerSupplies.PlayerID=" & player.ID   'ShipUpgrade.DriveCore=1 AND
@@ -1954,259 +2016,321 @@ Dim frmJoSel As frmJobSel
       If Not rst.EOF Then
          
          '>>>>>  CMD  FULLBURN  <<<<
-         .cmd(1).Caption = "Full Burn"
-         .lblRange.Caption = 5 + rst!BurnRange + getRangeMod(player.ID, 1) + IIf(.chkRange2.Value = 1, 2, 0) + turnExtraRange - FullburnMovesDone 'ADD WASH's extra Range
-         If Val(.lblRange.Caption) = 0 Then .fullburndone = True
+         '.cmd(1).Caption = "Full Burn"
+         .lblFBRange.Caption = 5 + rst!BurnRange + getRangeMod(player.ID, 1) + .rangeBoost + turnExtraRange - FullburnMovesDone  'ADD WASH's extra Range
+         If Val(.lblFBRange.Caption) = 0 Then .fullburndone = True
          If Not SoloGame And .checkNoOfActions > 1 Then
             .endAction
             Exit Sub
          End If
-         .cmd(1).Enabled = (((rst!burnFuel + getExtraBurn(player.ID) + .chkRange2.Value) <= Val(.lblFuelOn.Caption)) Or FullburnMovesDone > 0) And (Not .fullburndone) And (actionSeq = ASselect) And Not reaverActive And hasValidFBMove(player.ID) And Not (HemmorrhagingFuel And FullburnMovesDone > 0 And Val(.lblFuelOn.Caption) = 0)
          
+         'is Full Burn available?
+         x = getExtraBurn(player.ID)  ' Heavy Load??
+         .setVisState .imgFlyHL, (x > 0)
+         .actionButtonEnable "imgFullBurn", (((rst!burnFuel + x + IIf(.rangeBoost > 0, 1, 0)) <= Val(.lblFuel.Caption)) Or FullburnMovesDone > 0) And (Not .fullburndone) And (actionSeq = ASselect) And Not reaverActive And hasValidFBMove(player.ID) And Not (HemmorrhagingFuel And FullburnMovesDone > 0 And Val(.lblFuel.Caption) = 0)
          'single use extended Range
-         .chkRange2.Visible = (hasShipUpgrade(player.ID, 17) > 0)
-         .chkRange2.Enabled = (hasShipUpgrade(player.ID, 17) > 0 And FullburnMovesDone = 0 And .cmd(1).Enabled And Val(.lblFuelOn.Caption) >= rst!burnFuel + getExtraBurn(player.ID))
-         .lblRange2.Visible = (hasShipUpgrade(player.ID, 17) > 0)
-         
-         x = getExtraBurn(player.ID)
-         .lblFuelRq.Caption = rst!burnFuel + x + .chkRange2.Value
+         .imgFlyBoost.Visible = (hasShipUpgrade(player.ID, 17) > 0)
+         .actionButtonEnable "imgFlyBoost", (hasShipUpgrade(player.ID, 17) > 0 And FullburnMovesDone = 0 And .imgFullBurn.Tag = "Y" And Val(.lblFuel.Caption) >= rst!burnFuel + x + 1)  ', .rangeBoost > 0
+         '.lblRange2.Visible = (hasShipUpgrade(player.ID, 17) > 0)
+         .lblFBFuel.Caption = rst!burnFuel + x + IIf(.rangeBoost > 0, 1, 0)
          If x > 0 Then
-            .lblFuelRq.BackColor = 9109503
+            .lblFBFuel.ForeColor = &HFF&
          Else
-            .lblFuelRq.BackColor = &HCBE1ED
+            .lblFBFuel.ForeColor = &H45A8D4
          End If
+         
          '>>>>>  CMD  MOSEY  <<<<
-         .cmd(0).Caption = "Mosey"
+         '.cmd(0).Caption = "Mosey"
          If hasShipUpgrade(player.ID, 7) Then
             moseyrng = 2 + getRangeMod(player.ID, 2)
          Else
             moseyrng = rst!MoseyRange + getRangeMod(player.ID, 2)
          End If
          If moseyrng > 2 Then moseyrng = 2 'set maximum possible
-         .lblMosey.Caption = moseyrng - MoseyMovesDone
+         .lblMRange.Caption = moseyrng - MoseyMovesDone
          If moseyrng = MoseyMovesDone Then .moseydone = True
          If Not SoloGame And .checkNoOfActions > 1 Then
             .endAction
             Exit Sub
          End If
-         .cmd(0).Enabled = (moseyrng > MoseyMovesDone) And (actionSeq = ASselect) And (Not .moseydone) And Not reaverActive
+         .actionButtonEnable "imgMosey", (moseyrng > MoseyMovesDone) And (actionSeq = ASselect) And (Not .moseydone) And Not reaverActive
          
       End If
 
       rst.Close
       
-      'load Supply in this sector
-      .lblSupply.Caption = varDLookup("SupplyName", "Supply", "SectorID=" & SectorID) & ""
-      .lblSupply.Tag = varDLookup("SupplyID", "Supply", "SectorID=" & SectorID) & ""
-      If .lblSupply.Tag = "" Then
-         .lblSupply.BackColor = &HCBE1ED
-      Else
-         .lblSupply.BackColor = varDLookup("Colour", "Supply", "SectorID=" & SectorID)
-      End If
+      'load Supply Graphic for this sector
+      .setSupply SectorID
       
       '>>>>>  CMD  BUY  <<<<
       Select Case actionSeq
          Case ASBuy
             'Beep
          Case ASBuySelDiscard
-            .cmd(2).FontSize = 7
-            .cmd(2).Caption = "Draw Cards"
+            .setMultiStateButton "imgShop", "2"
+            '.cmd(2).Caption = "Draw Cards"
          Case ASBuyDrew
             'should never happen, moves straight to ASBuySelect
          Case ASBuySelect
-            .cmd(2).FontSize = 7
-            .cmd(2).Caption = "Close Buy"
+            .setMultiStateButton "imgShop", "3"
+            '.cmd(2).Caption = "Close Buy"
          Case Else
-            .cmd(2).FontSize = 8
-            .cmd(2).Caption = "Buy"
+            .setMultiStateButton "imgShop", "1"
+            '.cmd(2).Caption = "Buy"
       End Select
       
+      'flag to disable certain buttons
+      hide = (actionSeq = ASDealSelDiscard Or actionSeq = ASDealSelect Or actionSeq = ASBuySelDiscard Or actionSeq = ASBuySelect)
+      
       'SHORE LEAVE
-      .chkShore.Value = 0
-      .cmd(2).Enabled = False
+      '.chkShore.Value = 0
+      '.cmd(2).Enabled = False
       If (Not .buydone) And (Not onlyFullburn) And Not reaverActive Then  ' Buy and Shore leave *may* be active
          
-         .chkShore.Enabled = (actionSeq <> ASBuySelDiscard) And (actionSeq <> ASBuySelect) And (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19) Or getHaven(SectorID) > 0) And hasDisgruntled(player.ID) And (Abs(doShoreLeave(player.ID, True)) <= getMoney(player.ID) Or getHaven(SectorID) = player.ID)
-         If (.lblSupply.Caption <> "") And (actionSeq = ASselect Or (actionSeq = ASBuySelDiscard And getUnseenDeck("Supply", Val(.lblSupply.Tag)) > 0) Or actionSeq = ASBuySelect) Then 'we can BUY
-            .cmd(2).Enabled = True
+         .actionButtonEnable "imgShore", Not hide And (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19) Or getHaven(SectorID) > 0) And hasDisgruntled(player.ID) And (Abs(doShoreLeave(player.ID, True)) <= getMoney(player.ID) Or getHaven(SectorID) = player.ID)
+         '.actionButtonEnable "imgShore", (actionSeq <> ASBuySelDiscard) And (actionSeq <> ASBuySelect) And (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19) Or getHaven(SectorID) > 0) And hasDisgruntled(player.ID) And (Abs(doShoreLeave(player.ID, True)) <= getMoney(player.ID) Or getHaven(SectorID) = player.ID)
+         If (.imgSupply.Tag <> "") And (actionSeq = ASselect Or (actionSeq = ASBuySelDiscard And getUnseenDeck("Supply", Val(.imgSupply.Tag)) > 0) Or actionSeq = ASBuySelect) Then 'we can BUY
+            '.cmd(2).Enabled = True
          ElseIf getHaven(SectorID) > 0 And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 Then
-            .cmd(2).Enabled = True
-         ElseIf .chkShore.Enabled And actionSeq = ASselect Then 'shore leave ONLY
-            .cmd(2).Enabled = True
-            .cmd(2).FontSize = 7
-            .cmd(2).Caption = "Shore Leave"
-            .chkShore.Value = 1
+            '.cmd(2).Enabled = True
+'         ElseIf .imgShore.Tag = "Y" And actionSeq = ASselect Then 'shore leave ONLY
+'            .cmd(2).Enabled = True
+'            .cmd(2).FontSize = 7
+'            .cmd(2).Caption = "Shore Leave"
+'            .chkShore.Value = 1
+         Else
+            .setMultiStateButton "imgShop", "N"
          End If
       
       Else 'nothing is enabled
-         .chkShore.Enabled = False
-         .cmd(2).Enabled = False
+         '.chkShore.Enabled = False
+         .actionButtonEnable "imgShore", False
+         '.cmd(2).Enabled = False
+         .setMultiStateButton "imgShop", "N"
       End If
-      .chkShore.Visible = .chkShore.Enabled
-      .Label4.Visible = .chkShore.Enabled
-      .Label7.Visible = .chkShore.Enabled
+      .lblDisCnt = cntDisgruntled(player.ID)
+      '.chkShore.Visible = .chkShore.Enabled
+      '.Label4.Visible = .chkShore.Enabled
+      '.Label7.Visible = .chkShore.Enabled
       
       'FUEL & PARTS
-      .txtFuel.Enabled = CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 And (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone)) Or (Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0) = 5 And isSolid(player.ID, 5)) Or getHaven(SectorID) > 0)
-      .txtParts.Enabled = (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone) And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0)) Or (hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) > 0 And isSolid(player.ID, varDLookup("ContactID", "Contact", "SectorID=" & SectorID))) 'Bree sells parts to Solids
-      If hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) > 0 Then
-         If .cmd(2).Enabled = False Then
-            .txtParts.ToolTipText = "Sell(Deal) Parts for $300ea"
-         Else
-            .txtParts.ToolTipText = "Buy or Sell(Deal) Parts for $300ea"
-         End If
-      Else
-         .txtParts.ToolTipText = "Buy Parts qty $300ea"
-      End If
+      .setVisState .imgFuelBuy, (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 And (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone)) Or (Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0) = 5 And isSolid(player.ID, 5)) Or getHaven(SectorID) > 0))
+      .setVisState .imgPartsBuy, (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone) And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0))
+            
+      'check Bree DEAL
+      .setVisState .imgDealParts, (hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) > 0 And isSolid(player.ID, varDLookup("ContactID", "Contact", "SectorID=" & SectorID)))   'Bree sells parts to Solids
       
-      setBackColour .txtFuel
-      setBackColour .txtParts
+'      setBackColour .txtFuel
+'      setBackColour .txtParts
       
       'load Dealer in this sector
-      .lblContact.Tag = varDLookup("ContactID", "Contact", "SectorID=" & SectorID) & ""
-      .lblContact.Caption = varDLookup("ContactName", "Contact", "SectorID=" & SectorID) & ""
+      .setContact SectorID
       
-      If (.lblContact.Caption = "" And hasCrew(player.ID, 75)) Or HigginsDealPerk Then
-         .lblContact.Caption = "Mag. Higgins"
-         .lblContact.Tag = "8"
+      .imgPhone.Visible = hasCrew(player.ID, 75) And Not hasCrew(player.ID, 22)
+      If (.imgContact.Tag = "" And hasCrew(player.ID, 75) And Not hasCrew(player.ID, 22)) Or HigginsDealPerk Then
+         .setContact 16  'sector for "Mag. Higgins" Tag = "8"
+      Else
+         .actionButtonEnable "imgPhone", Not Not hasCrew(player.ID, 75) And Not hasCrew(player.ID, 22) And Not hide And Not .dealdone
       End If
       
       If HarkenDeal Then
-         .lblContact.Caption = "Harken"
-         .lblContact.Tag = "8"
+         .setContact -1 'code for "Harken"
       End If
       
-      If Val(.lblContact.Tag) > 0 Then
-         .lblContact.Caption = .lblContact.Caption  ' & IIf(isSolid(player.ID, Val(.lblContact.Tag)), " (S)", "")
-      End If
-      
-      If .lblContact.Tag = "" Then  'nothing doing here
-         .lblContact.BackColor = &HCBE1ED
-         .txtCargo.Enabled = False
-         .txtContra.Enabled = False
+      If .imgContact.Tag = "" Then  'nothing doing here
+         '.lblContact.BackColor = &HCBE1ED
+         '.txtCargo.Enabled = False
+         .setVisState .imgDealCargo, False
+         '.txtContra.Enabled = False
+         .setVisState .imgDealContra, False
          
-      ElseIf .lblContact.Tag = "6" Then 'harrow
-         .lblContact.BackColor = varDLookup("Colour", "Contact", "ContactID=" & .lblContact.Tag)
-         .txtCargo.Enabled = (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= 1) And isSolid(player.ID, 6) And getMoney(player.ID) >= 300
-         .txtCargo.ToolTipText = "buy Cargo for $300ea"
-         .txtContra.Enabled = False
+      ElseIf .imgContact.Tag = "6" Then 'harrow
+         '.lblContact.BackColor = varDLookup("Colour", "Contact", "ContactID=" & .imgContact.Tag)
+         '.txtCargo.Enabled =
+         .setVisState .imgDealCargo, (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= 1) And isSolid(player.ID, 6) And getMoney(player.ID) >= 300
+         .imgDealCargo.ToolTipText = "buy Cargo for $300ea"
+         '.txtContra.Enabled = False
+         .setVisState .imgDealContra, False
 
-      ElseIf .lblContact.Tag = "9" Then 'fanty mingo
-         .lblContact.BackColor = varDLookup("Colour", "Contact", "ContactID=" & .lblContact.Tag)
-         .txtContra.Enabled = (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= 1) And isSolid(player.ID, 9) And getMoney(player.ID) >= 400
-         .txtCargo.Enabled = False
-         .txtContra.ToolTipText = "buy Contraband @ $400ea"
+      ElseIf .imgContact.Tag = "9" Then 'fanty mingo
+         '.lblContact.BackColor = varDLookup("Colour", "Contact", "ContactID=" & .imgContact.Tag)
+         '.txtContra.Enabled =
+         .setVisState .imgDealContra, (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= 1) And isSolid(player.ID, 9) And getMoney(player.ID) >= 400
+         '.txtCargo.Enabled = False
+         .setVisState .imgDealCargo, False
+         .imgDealContra.ToolTipText = "buy Contraband @ $400ea"
 
       Else  'regular Contact
-         .lblContact.BackColor = varDLookup("Colour", "Contact", "ContactID=" & .lblContact.Tag)
-         .txtCargo.Enabled = (doSellCargoContra(player.ID, .lblContact.Tag, 1, 0, True) > 0)
-         .txtContra.Enabled = (doSellCargoContra(player.ID, .lblContact.Tag, 0, 1, True) > 0)
-         .txtCargo.ToolTipText = "sell Cargo to Contact"
-         .txtContra.ToolTipText = "sell Contraband to Contact"
+         '.lblContact.BackColor = varDLookup("Colour", "Contact", "ContactID=" & .imgContact.Tag)
+         '.txtCargo.Enabled =
+         .setVisState .imgDealCargo, (doSellCargoContra(player.ID, .imgContact.Tag, 1, 0, True) > 0)
+         '.txtContra.Enabled =
+         .setVisState .imgDealContra, (doSellCargoContra(player.ID, .imgContact.Tag, 0, 1, True) > 0)
+         .imgDealCargo.ToolTipText = "sell Cargo to Contact"
+         .imgDealContra.ToolTipText = "sell Contraband to Contact"
       End If
-      setBackColour .txtCargo
-      setBackColour .txtContra
+'      setBackColour .txtCargo
+'      setBackColour .txtContra
          
       '>>>>>  CMD  DEAL  <<<<
       Select Case actionSeq
          Case ASDeal
             Beep
          Case ASDealSelDiscard
-            .cmd(3).FontSize = 7
-            .cmd(3).Caption = "Draw Cards"
+            .setMultiStateButton "imgDealer", "2"
+'            .cmd(3).FontSize = 7
+'            .cmd(3).Caption = "Draw Cards"
          Case ASDealDrew
             'should never happen, moves straight to ASDealSelect
          Case ASDealSelect
-            .cmd(3).FontSize = 7
-            .cmd(3).Caption = "Close Deal"
+            .setMultiStateButton "imgDealer", "3"
+'            .cmd(3).FontSize = 7
+'            .cmd(3).Caption = "Close Deal"
          Case Else
-            .cmd(3).FontSize = 8
-            .cmd(3).Caption = "Deal"
+            .setMultiStateButton "imgDealer", "1"
+'            .cmd(3).FontSize = 8
+'            .cmd(3).Caption = "Deal"
       End Select
       
-      .cmd(3).Enabled = .lblContact.Caption <> "" And (actionSeq = ASselect Or (actionSeq = ASDealSelDiscard And getUnseenDeck("Contact", Val(.lblContact.Tag)) > 0) Or actionSeq = ASDealSelect) And (Not .dealdone) And (Not onlyFullburn) And Not reaverActive And Not (Val(.lblContact.Tag) = 5 And varDLookup("Warrants", "Players", "PlayerID=" & player.ID) > 0)
+      If Not (.imgContact.Tag <> "" And (actionSeq = ASselect Or (actionSeq = ASDealSelDiscard And getUnseenDeck("Contact", Val(.imgContact.Tag)) > 0) Or actionSeq = ASDealSelect) And (Not .dealdone) And (Not onlyFullburn) And Not reaverActive And Not (Val(.imgContact.Tag) = 5 And varDLookup("Warrants", "Players", "PlayerID=" & player.ID) > 0)) Then
+         .setMultiStateButton "imgDealer", "N"
+      End If
+      
+      'Universal Encyclopedia
+      .actionButtonEnable "imgRead", Not .dealdone And .imgDealer.Tag = "1"
+      .imgRead.Visible = hasGear(player.ID, 60)
       
       'Remove Warrants with Badger
-      .chkWarrant.Visible = (varDLookup("Warrants", "Players", "PlayerID=" & player.ID) > 0) And (Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0) = 2) And isSolid(player.ID, 2) And (Val(.lblMoney.Tag) > 1000)
-      .Label10.Visible = .chkWarrant.Visible
-      .Label11.Visible = .chkWarrant.Visible
-      .cbo.Clear
+      .setVisState .imgClearWarrants, ((varDLookup("Warrants", "Players", "PlayerID=" & player.ID) > 0) And (Val(.imgContact.Tag) = 2) And isSolid(player.ID, 2) And (Val(.lblCash.Tag) > 1000))
       
+
       'Load WORK Combo with Make Work & Jobs in this Sector
       SQL = "SELECT ContactDeck.CardID, Job.JobID AS JOB1, Job.JobDesc AS JOBDES1, Job.SectorID AS SECTOR1, Job_1.JobID AS JOB2, Job_1.JobDesc AS JOBDES2, Job_1.SectorID AS SECTOR2, "
       SQL = SQL & "PlayerJobs.JobStatus, ContactDeck.Immoral, ContactDeck.JobName, Job_2.JobID AS JOB3, Job_2.JobDesc AS JOBDES3, Job_2.SectorID AS SECTOR3 "
       SQL = SQL & "FROM (Job INNER JOIN ((PlayerJobs INNER JOIN ContactDeck ON PlayerJobs.CardID = ContactDeck.CardID) LEFT JOIN "
       SQL = SQL & "Job AS Job_1 ON ContactDeck.Job2ID = Job_1.JobID) ON Job.JobID = ContactDeck.Job1ID) LEFT JOIN Job AS Job_2 ON ContactDeck.Job3ID = Job_2.JobID "
-      
+
       SQL = SQL & "Where PlayerJobs.PlayerID = " & player.ID & " And (Job.SectorID IN (1,2," & SectorID & ") Or Job_1.SectorID IN (1,2," & SectorID & ") Or Job_2.SectorID IN (1,2," & SectorID & "))"
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
-      .cbo.Clear
+      '.cbo.Clear
+      
+      For x = 1 To .mnuWorkPop.Count - 1
+         Unload .mnuWorkPop(x)
+      Next x
+      x = -1
       While Not rst.EOF
          If ((rst!sector1 = 1 And getCruiserSector() = SectorID) Or (rst!sector1 = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!sector1)) And rst!JobStatus = 0 And getPlayerJobs(player.ID, "1,2") < MAXACTIVEJOBS + IIf(isSolid(player.ID, 8), 1, 0) Then ' check requirements met for job
             If hasJobReqs(player.ID, rst!CardID, rst!Job1) Then
-               .cbo.AddItem rst!Jobdes1 & " (" & CStr(rst!CardID) & ")"
-               .cbo.ItemData(.cbo.NewIndex) = rst!CardID
+               x = x + 1
+               If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
+               .mnuWorkPop(x).Caption = rst!Jobdes1 & " (" & CStr(rst!CardID) & ")"
+               .mnuWorkPop(x).Tag = CStr(rst!CardID)
+'               .cbo.AddItem rst!Jobdes1 & " (" & CStr(rst!CardID) & ")"
+'               .cbo.ItemData(.cbo.NewIndex) = rst!CardID
             End If
-            
+
          ElseIf ((rst!Sector3 = 1 And getCruiserSector() = SectorID) Or (rst!Sector3 = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!Sector3)) And rst!JobStatus = 1 Then 'Job3 must be in the sector
             If hasJobReqs(player.ID, rst!CardID, rst!Job3) Then
-               .cbo.AddItem rst!Jobdes3 & " (" & CStr(rst!CardID) & ")"
-               .cbo.ItemData(.cbo.NewIndex) = rst!CardID
+               x = x + 1
+               If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
+               .mnuWorkPop(x).Caption = rst!Jobdes3 & " (" & CStr(rst!CardID) & ")"
+               .mnuWorkPop(x).Tag = CStr(rst!CardID)
+'               .cbo.AddItem rst!Jobdes3 & " (" & CStr(rst!CardID) & ")"
+'               .cbo.ItemData(.cbo.NewIndex) = rst!CardID
             End If
-            
+
          ElseIf ((rst!sector2 = 1 And getCruiserSector() = SectorID) Or (rst!sector2 = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!sector2)) And (rst!JobStatus = 1 Or rst!JobStatus = 2) Then 'Job2 must be in the sector
             If hasJobReqs(player.ID, rst!CardID, rst!Job2) Then
-               .cbo.AddItem rst!Jobdes2 & " (" & CStr(rst!CardID) & ")"
-               .cbo.ItemData(.cbo.NewIndex) = rst!CardID
+               x = x + 1
+               If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
+               .mnuWorkPop(x).Caption = rst!Jobdes2 & " (" & CStr(rst!CardID) & ")"
+               .mnuWorkPop(x).Tag = CStr(rst!CardID)
+'               .cbo.AddItem rst!Jobdes2 & " (" & CStr(rst!CardID) & ")"
+'               .cbo.ItemData(.cbo.NewIndex) = rst!CardID
             End If
-            
+
          End If
          rst.MoveNext
       Wend
       rst.Close
-      
+
       'do supply transfer at Haven
       If getHaven(SectorID) = player.ID And useHavenStorage(Logic!StoryID) Then
-         .cbo.AddItem "Supplies Transfer at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
-         .cbo.ItemData(.cbo.NewIndex) = -1
+         x = x + 1
+         If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
+         .mnuWorkPop(x).Caption = "Supplies Transfer at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
+         .mnuWorkPop(x).Tag = "-1"
+'         .cbo.AddItem "Supplies Transfer at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
+'         .cbo.ItemData(.cbo.NewIndex) = -1
       End If
-      
+
       'look for Possible Bounty
-      loadBounties .cbo, Val(.lblSupply.Tag), SectorID
+      loadBounties .mnuWorkPop, Val(.imgSupply.Tag), SectorID, x
+      
+      'load onto the display
+      If x > -1 Then
+         .lblJobName = .mnuWorkPop(0).Caption
+         .lblJobName.ToolTipText = .mnuWorkPop(0).Caption
+         .lblJobName.Tag = .mnuWorkPop(0).Tag
+      Else
+         .lblJobName = ""
+         .lblJobName.ToolTipText = "no jobs available"
+         .lblJobName.Tag = ""
+      End If
+      .setVisState .imgWorkDrop, (.mnuWorkPop.Count > 1)
       
       'Make Work if at a Planet
-      If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & SectorID), 63) <> 63 And Nz(varDLookup("PlanetID", "Planet", "SectorID=" & SectorID), 64) <> 64 Then 'but not Cruiser/Corvette dummy planetID 63,64
-         .cbo.AddItem "Make Work at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
-         .cbo.ItemData(.cbo.NewIndex) = 0
+      
+      If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & SectorID), 63) <> 63 And Nz(varDLookup("PlanetID", "Planet", "SectorID=" & SectorID), 64) <> 64 And (actionSeq = ASselect) And (Not .workdone) And (Not onlyFullburn) And Not reaverActive Then  'but not Cruiser/Corvette dummy planetID 63,64
+         .actionButtonEnable "imgMakeWork", True
+         .lblMakeWorkVal.Visible = True
+         .lblMakeWorkVal.Caption = "$" & (200 + IIf(hasCrew(player.ID, 73), 100, 0))
+         '.cbo.AddItem "Make Work at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
+         '.cbo.ItemData(.cbo.NewIndex) = 0
+      Else
+         .actionButtonEnable "imgMakeWork", False
+         .lblMakeWorkVal.Visible = False
       End If
 
          
       '>>>>>  CMD  WORK  <<<<
-      .cmd(4).Enabled = (.cbo.ListCount > 0) And (actionSeq = ASselect) And (Not .workdone) And (Not onlyFullburn) And Not reaverActive
-      'may as well show the first one
-      If .cbo.ListCount > 0 Then .cbo.ListIndex = 0
+      '.cmd(4).Enabled =
+      .actionButtonEnable "imgWorkLocal", (.lblJobName.Tag <> "") And (actionSeq = ASselect) And (Not .workdone) And (Not onlyFullburn) And Not reaverActive
          
-      
+         
       '>>>>>  CMD  END TURN  <<<<
-      .cmd(5).Enabled = Not (actionSeq = ASDealSelDiscard Or actionSeq = ASDealSelect Or actionSeq = ASBuySelDiscard Or actionSeq = ASBuySelect) And Not reaverActive
+      '.cmd(5).Enabled =
+      .actionButtonEnable "imgEndTurn", Not hide And Not reaverActive
       
       '>>>>>> remove Disgruntled <<<<<
-      .cmd(6).Enabled = (getPerkAttributeCrew(player.ID, "RemoveDisgruntled") > 0 Or hasGear(player.ID, 27)) And hasDisgruntled(player.ID, True) And (Not .disgruntledone) And Not reaverActive
-      .cmd(6).Visible = .cmd(6).Enabled
+      '.cmd(6).Enabled =
+      .actionButtonEnable "imgMorale", Not hide And (getPerkAttributeCrew(player.ID, "RemoveDisgruntled") > 0 Or hasGear(player.ID, 27)) And hasDisgruntled(player.ID, True) And (Not .disgruntledone) And Not reaverActive
+      .imgMorale.Visible = .imgMorale.Tag = "Y"
       
       '>>>>Resolve Alerts <<<<<<<<<<
-      .cmd(7).Enabled = (hasAdjacentAlert(player.ID) And hasShipUpgrade(player.ID, 16) > 0 And (Not .fullburndone Or Not .moseydone))
-      .cmd(7).Visible = .cmd(7).Enabled
+      '.cmd(7).Enabled =
+      .actionButtonEnable "imgResolve", Not hide And (hasAdjacentAlert(player.ID) And hasShipUpgrade(player.ID, 16) > 0 And (Not .fullburndone Or Not .moseydone))
+      .imgResolve.Visible = .imgResolve.Tag = "Y"
       
       'Cruiser Call by Dobson
-      .cmd(8).Enabled = (hasCrew(player.ID, 93) And getZone(SectorID) = "A" And FullburnMovesDone = 0 And MoseyMovesDone = 0 And (Not .fullburndone Or Not .moseydone) And isShipHere(5, SectorID) <> 5)
-      .cmd(8).Visible = .cmd(8).Enabled
+      '.cmd(8).Enabled =
+      .actionButtonEnable "imgFlyMole", Not hide And (hasCrew(player.ID, 93) And getZone(SectorID) = "A" And FullburnMovesDone = 0 And MoseyMovesDone = 0 And (Not .fullburndone Or Not .moseydone) And isShipHere(5, SectorID) <> 5)
+      .imgFlyMole.Visible = hasCrew(player.ID, 93)
       
       '>>>>>> load Passengers & Fugitives at Amnon's <<<<<
-      .lblPassFugi.Visible = (SectorID = 23) And isSolid(player.ID, 1) And .cmd(3).Enabled And (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0.6)
-      .txtPass.Visible = .lblPassFugi.Visible
-      .txtFug.Visible = .lblPassFugi.Visible
+      '.lblPassFugi.Visible =
+      .setVisState .imgLoadPassngr, (SectorID = 23) And isSolid(player.ID, 1) And .imgDealer.Tag <> "N" And (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0.6)
+      .setVisState .imgLoadFugi, .imgLoadPassngr.Tag = "Y"
+'      .txtPass.Visible = .lblPassFugi.Visible
+'      .txtFug.Visible = .lblPassFugi.Visible
+
+      .setVisState .imgFly, Not (.fullburndone And .moseydone)
+      .setVisState .imgBuy, Not .buydone
+      .setVisState .imgDeal, Not .dealdone
+      .setVisState .imgWork, Not .workdone
+      .setVisState .imgBonus, (.imgMorale.Tag = "Y" Or .imgResolve.Tag = "Y")
       
+      .Visible = True
       .FDPane1.PaneVisible = True
    End With
    If Not (frmShip Is Nothing) Then frmShip.RefreshShips
@@ -2514,7 +2638,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
       PutMsg player.PlayName & " has completed the first Work Part of " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)), playerID, Logic!GameCntr, True, getLeader()
       
    ElseIf finalstate = 2 Then 'Bonus Job done
-      'Pay Bonus - todo
+      'Pay Bonus
       bonus = bonus + cargopay
       getMoney playerID, bonus
       PutMsg player.PlayName & " has completed the $" & bonus & " Bonus Work Part of " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)), playerID, Logic!GameCntr, True, getLeader()
@@ -2822,7 +2946,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
 
    'update the status of the job
    DB.Execute "UPDATE PlayerJobs SET JobStatus =" & finalstate & " WHERE PlayerID = " & playerID & " AND CardID = " & CardID
-   If ContactID = 10 Then frmAction.lblBounty = CStr(countBounties(playerID))
+   If ContactID = 10 Then frmAction.lblBounties = CStr(countBounties(playerID))
    If Not (frmJob Is Nothing) Then
       frmJob.RefreshJobs
    End If
@@ -3041,7 +3165,7 @@ Dim x, CardID As Integer, opt, actualcnt As Integer, suit, c(1 To 4) As Integer
          actualcnt = actualcnt + 1
          'skip - ace in the hole
          DB.Execute "UPDATE MisbehaveDeck SET Seq =" & playerID & " WHERE CardID =" & CardID
-         frmAction.lblMis = CStr(countMisbehaves(playerID))
+         frmAction.lblMisbehaves = CStr(countMisbehaves(playerID))
       Else
          doMisbehaves = doMisbehave(playerID, CardID, opt)
          Select Case doMisbehaves
@@ -3049,7 +3173,7 @@ Dim x, CardID As Integer, opt, actualcnt As Integer, suit, c(1 To 4) As Integer
             actualcnt = actualcnt + 1
             'stamp the card so it can be counted for goals
             DB.Execute "UPDATE MisbehaveDeck SET Seq =" & playerID & " WHERE CardID =" & CardID
-            frmAction.lblMis = CStr(countMisbehaves(playerID))
+            frmAction.lblMisbehaves = CStr(countMisbehaves(playerID))
          Case 2 'botched
 
             Exit Function
@@ -3637,7 +3761,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             Select Case rst!WinFunction
                Case 1 ' Add 1 to the Range of this Fly Action for each Moral Crew on board
                   turnExtraRange = countCrewAttribute(player.ID, "Moral")
-                  frmAction.lblRange.Caption = CStr(Val(frmAction.lblRange.Caption) + turnExtraRange)
+                  frmAction.lblFBRange.Caption = CStr(Val(frmAction.lblFBRange.Caption) + turnExtraRange)
                
                Case 2 'Gambling
                   If getMoney(player.ID) < 1000 Then
@@ -3682,7 +3806,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
                Case 5   'Slingshot Roundhouse
                   If getCrewAttribute(player.ID, cstrProfession(2)) > 0 And getPlanetID(player.ID) > 0 Then
                      turnExtraRange = 3
-                     frmAction.lblRange.Caption = CStr(Val(frmAction.lblRange.Caption) + turnExtraRange)
+                     frmAction.lblFBRange.Caption = CStr(Val(frmAction.lblFBRange.Caption) + turnExtraRange)
                   End If
                   
                Case 6
@@ -3962,6 +4086,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          For x = 1 To rst!MovePlayer
             moveAutoAI player.ID, 1, True
             drawLine 0, -2, getPlayerSector(player.ID)
+            drawLine 1, -2, getPlayerSector(player.ID)
          Next x
       End If
       
@@ -4221,34 +4346,45 @@ Dim Havens As Boolean
    End If
    
    If actionSeq = ASmosey Then
-      If validMove(player.ID, Index, True) And frmAction.cmd(0).Enabled Then
-         frmAction.cmd(0).Enabled = False
+      If validMove(player.ID, Index, True) And frmAction.imgMosey.Tag = "1" Then
+         frmAction.actionButtonEnable "imgCancel", False
+         frmAction.actionButtonEnable "imgMosey", False
          'get players current posn and check route
          MoveShip player.ID, Index, 7
          MoseyMovesDone = MoseyMovesDone + 1
          drawLine 0, -2, Index
+         drawLine 1, -2, Index
          wormHoleOpen = False
          drawLine 2, -1
          actionSeq = ASMoseyEnd 'throw to main loop
+         CruiserCutter = 0
+         CorvetteSeq = 0
+         ignoreToken = 0
        Else
          playsnd 9
       End If
    End If
    
    If actionSeq = ASfullburn Then
-      If validMove(player.ID, Index, hasShipUpgrade(player.ID, 18)) And frmAction.cmd(1).Enabled Then
-         frmAction.cmd(1).Enabled = False
+      If validMove(player.ID, Index, hasShipUpgrade(player.ID, 18)) And frmAction.imgFullBurn.Tag = "1" Then
+         frmAction.actionButtonEnable "imgCancel", False
+         frmAction.actionButtonEnable "imgFullBurn", False
          MoveShip player.ID, Index
          FullburnMovesDone = FullburnMovesDone + 1
-         If FullburnMovesDone = 1 And Val(frmAction.lblFuelRq.Caption) > 0 Then burnFuel player.ID, Val(frmAction.lblFuelRq.Caption)
+         If FullburnMovesDone = 1 And Val(frmAction.lblFBFuel.Caption) > 0 Then burnFuel player.ID, Val(frmAction.lblFBFuel.Caption)
          If HemmorrhagingFuel Then burnFuel player.ID, 1
          If Not frmShip Is Nothing Then
             frmShip.refreshFuel player.ID
          End If
          drawLine 0, -2, Index
+         drawLine 1, -2, Index
          wormHoleOpen = False
          drawLine 2, -1
          actionSeq = ASFullburnEnd 'throw to main loop
+         CruiserCutter = 0
+         CorvetteSeq = 0
+         ignoreToken = 0
+
        Else
          playsnd 9
       End If
@@ -4261,6 +4397,7 @@ Dim Havens As Boolean
          If MoseyMovesDone > 0 Then frmAction.moseydone = True
          MoveShip player.ID, Index
          drawLine 0, -2, Index
+         drawLine 1, -2, Index
          actionSeq = ASNavEvadeEnd
          CruiserCutter = 0
          CorvetteSeq = 0
@@ -4427,9 +4564,15 @@ Dim x
 End Sub
 
 Private Sub refreshSolid()
-Dim x
+Dim x, s As Boolean
       For x = 1 To NO_OF_CONTACTS
-         pic(x).Visible = isSolid(player.ID, x)
+         pic(x).Visible = True
+         s = isSolid(player.ID, x)
+         If Not (pic(x).Tag = "s" And s) Or (pic(x).Tag = "" And Not s) Then  'prevent reloading the same image
+            pic(x).Picture = LoadPicture(App.Path & "\pictures\Solid" & IIf(s, "2", "1") & varDLookup("Picture", "Contact", "ContactID=" & x))
+            pic(x).ToolTipText = IIf(s, "Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & x) & " - ", "") & varDLookup("DealDescr", "Contact", "ContactID=" & x)
+            pic(x).Tag = IIf(s, "s", "")
+         End If
       Next x
 
 End Sub
@@ -4486,7 +4629,7 @@ Dim frmHavn As New frmHaven
 
 End Function
 
-Private Function loadBounties(cbo As Control, ByVal SupplyID As Integer, ByVal SectorID)
+Private Function loadBounties(mnuWorkPop As Object, ByVal SupplyID As Integer, ByVal SectorID, ByRef x)
 Dim SQL As String
 Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
 
@@ -4497,19 +4640,34 @@ Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
    While Not rst.EOF
       'see if the bounty is on board
       If hasCrew(player.ID, rst!FugitiveID) Then
-         cbo.AddItem "Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
-         cbo.ItemData(cbo.NewIndex) = rst!CardID * -1
+         x = x + 1
+         If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
+         mnuWorkPop(x).Caption = "Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+         mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
+      
+         'cbo.AddItem "Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+         'cbo.ItemData(cbo.NewIndex) = rst!CardID * -1
          
       ElseIf Nz(varDLookup("SupplyID", "SupplyDeck", "CrewID = " & rst!FugitiveID & " AND Seq = " & DISCARDED), 0) = SupplyID And SupplyID > 0 Then 'see if the bounty is at the current supply planet
-         cbo.AddItem "Supply Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
-         cbo.ItemData(cbo.NewIndex) = rst!CardID * -1
+         x = x + 1
+         If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
+         mnuWorkPop(x).Caption = "Supply Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+         mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
+         
+         'cbo.AddItem "Supply Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+         'cbo.ItemData(cbo.NewIndex) = rst!CardID * -1
             
       Else 'or Rival crew
          SQL = "SELECT Players.PlayerID FROM Players INNER JOIN PlayerSupplies ON Players.PlayerID = PlayerSupplies.PlayerID WHERE Players.SectorID=" & SectorID & " AND PlayerSupplies.CardID = " & getCrewCardID(rst!FugitiveID)
          rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
          If Not rst2.EOF Then
-            cbo.AddItem "Rival Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
-            cbo.ItemData(cbo.NewIndex) = rst!CardID * -1
+            x = x + 1
+            If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
+            mnuWorkPop(x).Caption = "Rival Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+            mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
+            
+'            cbo.AddItem "Rival Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+'            cbo.ItemData(cbo.NewIndex) = rst!CardID * -1
          End If
          rst2.Close
       End If
@@ -4523,8 +4681,12 @@ Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
    SQL = SQL & "Where ContactDeck.ContactID = 10 And PlayerJobs.JobStatus =0 And Players.SectorID = " & SectorID & " And PlayerJobs.PlayerID <> " & player.ID & " And PlayerJobs.PlayerID > 0 And PlayerJobs.PlayerID <" & DISCARDED
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      cbo.AddItem "Bounty Jump " & rst!JobName & " (" & CStr(rst!CardID) & ")"
-      cbo.ItemData(cbo.NewIndex) = rst!CardID * -1
+      x = x + 1
+      If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
+      mnuWorkPop(x).Caption = "Bounty Jump " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+      mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
+      'cbo.AddItem "Bounty Jump " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+      'cbo.ItemData(cbo.NewIndex) = rst!CardID * -1
       rst.MoveNext
    Wend
    rst.Close

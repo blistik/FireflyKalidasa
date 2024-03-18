@@ -712,6 +712,8 @@ With sftTree
             .CellForeColor(Index, 9) = 65280
             If rst2!OffJob = 1 Then
                .CellFont(Index, 9).Strikethrough = True
+            ElseIf rst3!discard = 1 Then
+               .CellFont(Index, 9).Italic = True
             End If
             rst3.MoveNext
          Wend
@@ -1133,7 +1135,6 @@ With sftTree
       .CellForeColor(lastplayer, 8) = 16777215
       
 
-
        'Unlinked GEAR-----------------------------------
       Index = .AddItem("Gear")
        .CellItemData(Index, 0) = 4 'gear title
@@ -1537,7 +1538,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                      getMoney player.ID, 1200
                      
                      PutMsg player.PlayName & " gambled with Maque Tiles and won $1200", player.ID, Logic!GameCntr, True, 0, 30
-                     frmAction.lblMoney.Caption = "$" & getMoney(player.ID)
+                     frmAction.lblCash.Caption = "$" & getMoney(player.ID)
                   Else
                      PutMsg player.PlayName & " gambled with Maque Tiles and had no luck", player.ID, Logic!GameCntr, True, getLeader()
                   End If
@@ -1557,7 +1558,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   getMoney player.ID, (y * 100)
                   
                   PutMsg player.PlayName & " gambled with Billiards Betting, rolled " & y & " and won $" & CStr(y * 100), player.ID, Logic!GameCntr, True, 0, 34
-                  frmAction.lblMoney.Caption = "$" & getMoney(player.ID)
+                  frmAction.lblCash.Caption = "$" & getMoney(player.ID)
                   
                Case 43 'Wash's Hawaiian Shirt
                   Set frmNavDeck = New frmNavDecks
