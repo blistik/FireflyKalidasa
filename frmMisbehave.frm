@@ -9,33 +9,35 @@ Begin VB.Form frmMisbehave
    ClientTop       =   390
    ClientWidth     =   5985
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
+   Picture         =   "frmMisbehave.frx":0000
    ScaleHeight     =   8115
    ScaleWidth      =   5985
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
-      Caption         =   "use Ace"
+      Caption         =   ": Proceed"
       BeginProperty Font 
-         Name            =   "MS Sans Serif"
-         Size            =   9.75
+         Name            =   "FORQUE"
+         Size            =   21.75
          Charset         =   0
-         Weight          =   700
+         Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   285
+      Height          =   480
       Index           =   2
-      Left            =   4200
+      Left            =   1200
       Style           =   1  'Graphical
       TabIndex        =   5
-      ToolTipText     =   "The Operative's Sword"
-      Top             =   7620
+      ToolTipText     =   "Ace in the hole"
+      Top             =   6990
       Visible         =   0   'False
-      Width           =   1065
+      Width           =   4425
    End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
@@ -86,7 +88,7 @@ Begin VB.Form frmMisbehave
       _ExtentX        =   1138
       _ExtentY        =   688
       Trans           =   100663295
-      Effects         =   "frmMisbehave.frx":0000
+      Effects         =   "frmMisbehave.frx":9FFA2
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl SkillImg 
       Height          =   390
@@ -97,7 +99,7 @@ Begin VB.Form frmMisbehave
       _ExtentX        =   1138
       _ExtentY        =   688
       Trans           =   100663295
-      Effects         =   "frmMisbehave.frx":0018
+      Effects         =   "frmMisbehave.frx":9FFBA
    End
    Begin VB.Label lblKey 
       Alignment       =   2  'Center
@@ -164,7 +166,7 @@ Begin VB.Form frmMisbehave
       Height          =   555
       Left            =   1320
       TabIndex        =   7
-      Top             =   6960
+      Top             =   6990
       Visible         =   0   'False
       Width           =   4395
       WordWrap        =   -1  'True
@@ -176,7 +178,7 @@ Begin VB.Form frmMisbehave
       Width           =   615
       _ExtentX        =   1085
       _ExtentY        =   1138
-      Effects         =   "frmMisbehave.frx":0030
+      Effects         =   "frmMisbehave.frx":9FFD2
    End
    Begin VB.Label lblName 
       BackStyle       =   0  'Transparent
@@ -259,7 +261,7 @@ Begin VB.Form frmMisbehave
       Width           =   615
       _ExtentX        =   1085
       _ExtentY        =   1138
-      Effects         =   "frmMisbehave.frx":0048
+      Effects         =   "frmMisbehave.frx":9FFEA
    End
 End
 Attribute VB_Name = "frmMisbehave"
@@ -268,7 +270,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Public MBCardID, MBOption
+Public MBCardID, MBOption, hasAce As Boolean
 
 Private Sub cmd_Click(Index As Integer)
 Dim x
@@ -281,24 +283,27 @@ Dim x
          MBOption = 2
          actionSeq = ASnavEnd
       Case 2
-         doDiscardGear player.ID, hasGearCard(player.ID, 33)
-         PutMsg player.PlayName & " uses the Operative's Sword as an Ace in the Hole", player.ID, Logic!Gamecntr, True, 0, 33
          MBOption = 3
+         If cmd(2).Tag = "discardsword" Then
+            doDiscardGear player.ID, hasGearCard(player.ID, 33)
+            PutMsg player.PlayName & " uses the Operative's Sword as an Ace in the Hole", player.ID, Logic!GameCntr
+         ElseIf cmd(2).Tag <> "" Then
+            discardGearKeyword player.ID, cmd(2).Tag
+            PutMsg player.PlayName & " misbhavin' with " & lblName & " had an Ace in the Hole with " & cmd(2).Caption, player.ID, Logic!GameCntr
+         Else
+            PutMsg player.PlayName & " misbhavin' with " & lblName & " had an Ace in the Hole with " & cmd(2).Caption, player.ID, Logic!GameCntr
+         End If
          actionSeq = ASnavEnd
    End Select
    
    For x = 0 To 2
       cmd(x).Enabled = False
    Next x
-   Me.Hide
+   Me.hide
 End Sub
 
-
 Private Sub Form_Load()
-   If hasGear(player.ID, 33) Then
-      cmd(2).Visible = True
-   End If
-
+   hasAce = False
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
@@ -307,3 +312,22 @@ Private Sub Form_Unload(Cancel As Integer)
    End If
 
 End Sub
+
+Public Sub setAce(ByVal title As String, Optional ByVal discardgear As String = "", Optional ByVal discardsword As Boolean = False)
+   cmd(2).Caption = title & ": Proceed"
+   cmd(2).Visible = True
+   If discardsword Then
+      cmd(2).Tag = "discardsword"
+   ElseIf discardgear <> "" Then
+      cmd(2).Tag = discardgear
+   End If
+   hasAce = True
+End Sub
+
+Public Sub setAcelbl(ByVal title As String)
+
+   lblAce.Caption = title & ": Proceed"
+   lblAce.Visible = True
+
+End Sub
+

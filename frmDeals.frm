@@ -298,9 +298,12 @@ With sftTree
    rst3.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst3.EOF
       Index = .AddItem(CStr(rst3!ContactID) & IIf(isSolid(player.ID, rst3!ContactID), " - Solid", ""))
+      .CellFont(Index, 0).Name = "BankGothic Md BT"
       .ItemLevel(Index) = 0
       .CellText(Index, 1) = rst3!ContactName  '& IIf(isSolid(player.ID, rst3!ContactID), " - Solid", "")
+      .CellFont(Index, 1).Name = "BankGothic Md BT"
       .CellText(Index, 2) = CStr(getUnseenDeck("Contact", rst3!ContactID)) & " unseen"
+      .CellFont(Index, 2).Name = "BankGothic Md BT"
       For x = 0 To 8
          .CellForeColor(Index, x) = 0
          .CellBackColor(Index, x) = rst3!Colour

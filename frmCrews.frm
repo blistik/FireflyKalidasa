@@ -218,12 +218,12 @@ Begin VB.Form frmCrewSel
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H0000FF00&
-      Height          =   405
+      Height          =   675
       Index           =   5
-      Left            =   2310
+      Left            =   2670
       TabIndex        =   7
       Top             =   6870
-      Width           =   2715
+      Width           =   1635
    End
    Begin VB.Label lbl 
       Appearance      =   0  'Flat
@@ -412,7 +412,7 @@ Private Sub cmd_Click()
 '      PutMsg player.PlayName & " has chosen " & cboCrew.Text, player.ID
 '   End If
    
-   Me.Hide
+   Me.hide
 End Sub
 
 Private Sub Form_Load()
@@ -447,7 +447,7 @@ Dim rst As New ADODB.Recordset, SQL, x, y
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
       lbl(0) = rst!CrewDescr
-      lbl(1) = rst!PerkDescription
+      lbl(1) = Nz(rst!PerkDescription)
       lbl(2) = Trim(IIf(rst!Mechanic = 1, "Mechanic  ", "") & IIf(rst!Pilot = 1, "Pilot  ", "") & IIf(rst!Companion = 1, "Companion  ", "") & _
                IIf(rst!Merc = 1, "Merc  ", "") & IIf(rst!Soldier = 1, "Soldier  ", "") & IIf(rst!HillFolk = 1, "HillFolk  ", "") & _
                IIf(rst!Grifter = 1, "Grifter ", "") & IIf(rst!Medic = 1, "Medic ", "") & IIf(rst!Mudder = 1, "Mudder ", "") & IIf(rst!Lawman = 1, "Lawman", ""))

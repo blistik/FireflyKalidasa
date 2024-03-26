@@ -248,11 +248,11 @@ Private Sub cmd_Click()
    If nbrSelected >= nbrSelect Then
       'discard selected gear
       discardGear
-      Me.Hide
+      Me.hide
    Else
       If MessBox("Not enough Skill Points selected, did you change your mind?", "Single Use Gear", "Yes", "No", getLeader()) = 0 Then
       'If MsgBox("Not enough Skill Points selected, did you change your mind?", vbYesNo + vbQuestion, "Single Use Gear") = vbYes Then
-         Me.Hide
+         Me.hide
       End If
    End If
 

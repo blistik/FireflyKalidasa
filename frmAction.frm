@@ -11,14 +11,8 @@ Begin VB.Form frmAction
    Icon            =   "frmAction.frx":0000
    LinkTopic       =   "Form2"
    LockControls    =   -1  'True
-   Picture         =   "frmAction.frx":030A
    ScaleHeight     =   8325
    ScaleWidth      =   4485
-   Begin VB.Timer Timer1 
-      Interval        =   4000
-      Left            =   4380
-      Top             =   7470
-   End
    Begin XDOCKFLOATLibCtl.FDPane FDPane1 
       Height          =   420
       Left            =   4380
@@ -49,9 +43,8 @@ Begin VB.Form frmAction
       Width           =   1770
       _ExtentX        =   3122
       _ExtentY        =   900
-      Image           =   "frmAction.frx":2ECE5
       Attr            =   640
-      Effects         =   "frmAction.frx":30BFC
+      Effects         =   "frmAction.frx":030A
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgEndTurn 
       Height          =   510
@@ -60,14 +53,12 @@ Begin VB.Form frmAction
       Width           =   1770
       _ExtentX        =   3122
       _ExtentY        =   900
-      Image           =   "frmAction.frx":30C14
       Attr            =   640
-      Effects         =   "frmAction.frx":327B8
+      Effects         =   "frmAction.frx":0322
    End
    Begin VB.Image imgBonus 
       Height          =   405
       Left            =   0
-      Picture         =   "frmAction.frx":327D0
       Top             =   7410
       Width           =   900
    End
@@ -78,9 +69,8 @@ Begin VB.Form frmAction
       Width           =   1695
       _ExtentX        =   2990
       _ExtentY        =   714
-      Image           =   "frmAction.frx":3370A
       Attr            =   640
-      Effects         =   "frmAction.frx":351D3
+      Effects         =   "frmAction.frx":033A
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgMorale 
       Height          =   405
@@ -89,9 +79,8 @@ Begin VB.Form frmAction
       Width           =   1695
       _ExtentX        =   2990
       _ExtentY        =   714
-      Image           =   "frmAction.frx":351EB
       Attr            =   640
-      Effects         =   "frmAction.frx":36C8B
+      Effects         =   "frmAction.frx":0352
    End
    Begin VB.Label lblMakeWorkVal 
       Alignment       =   2  'Center
@@ -117,7 +106,6 @@ Begin VB.Form frmAction
    Begin VB.Image imgWorkDrop 
       Height          =   255
       Left            =   2780
-      Picture         =   "frmAction.frx":36CA3
       Top             =   6390
       Width           =   210
    End
@@ -148,9 +136,8 @@ Begin VB.Form frmAction
       Width           =   1140
       _ExtentX        =   2011
       _ExtentY        =   661
-      Image           =   "frmAction.frx":374C3
       Attr            =   640
-      Effects         =   "frmAction.frx":388A3
+      Effects         =   "frmAction.frx":036A
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgWorkLocal 
       Height          =   375
@@ -159,9 +146,8 @@ Begin VB.Form frmAction
       Width           =   2250
       _ExtentX        =   3969
       _ExtentY        =   661
-      Image           =   "frmAction.frx":388BB
       Attr            =   640
-      Effects         =   "frmAction.frx":3A946
+      Effects         =   "frmAction.frx":0382
    End
    Begin VB.Label lblActiveJobs 
       BackStyle       =   0  'Transparent
@@ -209,9 +195,8 @@ Begin VB.Form frmAction
       Width           =   435
       _ExtentX        =   767
       _ExtentY        =   265
-      Image           =   "frmAction.frx":3A95E
       Attr            =   640
-      Effects         =   "frmAction.frx":3ACA6
+      Effects         =   "frmAction.frx":039A
    End
    Begin VB.Label lblDealLoadFugi 
       Alignment       =   2  'Center
@@ -552,7 +537,6 @@ Begin VB.Form frmAction
    Begin VB.Image imgClearWarrants 
       Height          =   150
       Left            =   2970
-      Picture         =   "frmAction.frx":3ACBE
       ToolTipText     =   "Clear All Warrants"
       Top             =   5505
       Width           =   870
@@ -560,35 +544,30 @@ Begin VB.Form frmAction
    Begin VB.Image imgLoadFugi 
       Height          =   165
       Left            =   3080
-      Picture         =   "frmAction.frx":3B0C4
       Top             =   5280
       Width           =   780
    End
    Begin VB.Image imgLoadPassngr 
       Height          =   150
       Left            =   2880
-      Picture         =   "frmAction.frx":3BA7B
       Top             =   5130
       Width           =   975
    End
    Begin VB.Image imgDealCargo 
       Height          =   150
       Left            =   1580
-      Picture         =   "frmAction.frx":3C456
       Top             =   5130
       Width           =   750
    End
    Begin VB.Image imgDealContra 
       Height          =   165
       Left            =   1320
-      Picture         =   "frmAction.frx":3CCE4
       Top             =   5280
       Width           =   1065
    End
    Begin VB.Image imgDealParts 
       Height          =   195
       Left            =   1740
-      Picture         =   "frmAction.frx":3D766
       ToolTipText     =   "Sell Parts for $300ea"
       Top             =   5455
       Width           =   645
@@ -596,7 +575,6 @@ Begin VB.Form frmAction
    Begin VB.Image imgDealFuel 
       Height          =   195
       Left            =   1320
-      Picture         =   "frmAction.frx":3DFEA
       Top             =   5455
       Width           =   420
    End
@@ -615,10 +593,10 @@ Begin VB.Form frmAction
       EndProperty
       ForeColor       =   &H003DCBFF&
       Height          =   195
-      Left            =   150
+      Left            =   30
       TabIndex        =   28
       Top             =   7110
-      Width           =   735
+      Width           =   900
    End
    Begin VB.Label lblFugitives 
       Alignment       =   2  'Center
@@ -675,7 +653,7 @@ Begin VB.Form frmAction
       EndProperty
       ForeColor       =   &H00FA54B3&
       Height          =   195
-      Left            =   3360
+      Left            =   3340
       TabIndex        =   25
       Top             =   6940
       Width           =   465
@@ -826,14 +804,12 @@ Begin VB.Form frmAction
    Begin VB.Image imgPartsBuy 
       Height          =   165
       Left            =   1900
-      Picture         =   "frmAction.frx":3E7AE
       Top             =   3810
       Width           =   630
    End
    Begin VB.Image imgFuelBuy 
       Height          =   165
       Left            =   880
-      Picture         =   "frmAction.frx":3EF01
       Top             =   3810
       Width           =   645
    End
@@ -904,9 +880,8 @@ Begin VB.Form frmAction
       Width           =   1350
       _ExtentX        =   2381
       _ExtentY        =   979
-      Image           =   "frmAction.frx":3F679
       Attr            =   640
-      Effects         =   "frmAction.frx":4102D
+      Effects         =   "frmAction.frx":03B2
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgRead 
       Height          =   555
@@ -916,9 +891,8 @@ Begin VB.Form frmAction
       Width           =   795
       _ExtentX        =   1402
       _ExtentY        =   979
-      Image           =   "frmAction.frx":41045
       Attr            =   640
-      Effects         =   "frmAction.frx":420BA
+      Effects         =   "frmAction.frx":03CA
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgPhone 
       Height          =   555
@@ -928,14 +902,12 @@ Begin VB.Form frmAction
       Width           =   555
       _ExtentX        =   979
       _ExtentY        =   979
-      Image           =   "frmAction.frx":420D2
       Attr            =   640
-      Effects         =   "frmAction.frx":42D8C
+      Effects         =   "frmAction.frx":03E2
    End
    Begin VB.Image imgContact 
       Height          =   555
       Left            =   1740
-      Picture         =   "frmAction.frx":42DA4
       Top             =   4350
       Width           =   1410
    End
@@ -946,28 +918,24 @@ Begin VB.Form frmAction
       Width           =   840
       _ExtentX        =   1482
       _ExtentY        =   979
-      Image           =   "frmAction.frx":4491D
       Attr            =   640
-      Effects         =   "frmAction.frx":45B66
+      Effects         =   "frmAction.frx":03FA
    End
    Begin VB.Image imgWork 
       Height          =   630
       Left            =   0
-      Picture         =   "frmAction.frx":45B7E
       Top             =   6030
       Width           =   900
    End
    Begin VB.Image imgDeal 
       Height          =   1170
       Left            =   0
-      Picture         =   "frmAction.frx":46DE4
       Top             =   4350
       Width           =   900
    End
    Begin VB.Image imgOutlaw 
       Height          =   1065
       Left            =   3680
-      Picture         =   "frmAction.frx":488CE
       Top             =   0
       Width           =   825
    End
@@ -994,28 +962,24 @@ Begin VB.Form frmAction
    Begin VB.Image imgWarrants 
       Height          =   1065
       Left            =   2990
-      Picture         =   "frmAction.frx":4A3EA
       Top             =   0
       Width           =   705
    End
    Begin VB.Image imgBuy 
       Height          =   930
       Left            =   0
-      Picture         =   "frmAction.frx":4BB75
       Top             =   3030
       Width           =   900
    End
    Begin VB.Image imgSupply 
       Height          =   390
       Left            =   900
-      Picture         =   "frmAction.frx":4CFE4
       Top             =   3390
       Width           =   2250
    End
    Begin VB.Image imgBDProof 
       Height          =   300
       Left            =   1920
-      Picture         =   "frmAction.frx":4ECF4
       Top             =   2730
       Width           =   2595
    End
@@ -1088,21 +1052,18 @@ Begin VB.Form frmAction
       Width           =   2250
       _ExtentX        =   3969
       _ExtentY        =   661
-      Image           =   "frmAction.frx":50A30
       Attr            =   640
-      Effects         =   "frmAction.frx":523CA
+      Effects         =   "frmAction.frx":0412
    End
    Begin VB.Image imgFly 
       Height          =   1050
       Left            =   0
-      Picture         =   "frmAction.frx":523E2
       Top             =   1380
       Width           =   900
    End
    Begin VB.Image imgFlyHL 
       Height          =   300
       Left            =   0
-      Picture         =   "frmAction.frx":53A9A
       Top             =   2740
       Width           =   1905
    End
@@ -1113,9 +1074,8 @@ Begin VB.Form frmAction
       Width           =   1350
       _ExtentX        =   2381
       _ExtentY        =   1217
-      Image           =   "frmAction.frx":5508F
       Attr            =   640
-      Effects         =   "frmAction.frx":56E64
+      Effects         =   "frmAction.frx":042A
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgFlyBoost 
       Height          =   675
@@ -1124,9 +1084,8 @@ Begin VB.Form frmAction
       Width           =   1350
       _ExtentX        =   2381
       _ExtentY        =   1191
-      Image           =   "frmAction.frx":56E7C
       Attr            =   640
-      Effects         =   "frmAction.frx":58AFA
+      Effects         =   "frmAction.frx":0442
    End
    Begin VB.Label lblMRange 
       Alignment       =   2  'Center
@@ -1195,9 +1154,8 @@ Begin VB.Form frmAction
       Width           =   2250
       _ExtentX        =   3969
       _ExtentY        =   661
-      Image           =   "frmAction.frx":58B12
       Attr            =   640
-      Effects         =   "frmAction.frx":59E63
+      Effects         =   "frmAction.frx":045A
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgFullBurn 
       Height          =   375
@@ -1206,12 +1164,10 @@ Begin VB.Form frmAction
       Width           =   2250
       _ExtentX        =   3969
       _ExtentY        =   661
-      Image           =   "frmAction.frx":59E7B
       Attr            =   640
-      Effects         =   "frmAction.frx":5B425
+      Effects         =   "frmAction.frx":0472
    End
    Begin VB.Label lblBounties 
-      Alignment       =   2  'Center
       BackStyle       =   0  'Transparent
       Caption         =   "0/0"
       BeginProperty Font 
@@ -1225,7 +1181,7 @@ Begin VB.Form frmAction
       EndProperty
       ForeColor       =   &H003DCBFF&
       Height          =   195
-      Left            =   3840
+      Left            =   3970
       TabIndex        =   6
       Top             =   1080
       Width           =   615
@@ -1244,10 +1200,10 @@ Begin VB.Form frmAction
       EndProperty
       ForeColor       =   &H003DCBFF&
       Height          =   195
-      Left            =   2440
+      Left            =   2380
       TabIndex        =   5
       Top             =   1080
-      Width           =   615
+      Width           =   640
    End
    Begin VB.Label lblTurn 
       BackStyle       =   0  'Transparent
@@ -1263,10 +1219,10 @@ Begin VB.Form frmAction
       EndProperty
       ForeColor       =   &H003DCBFF&
       Height          =   195
-      Left            =   690
+      Left            =   630
       TabIndex        =   4
       Top             =   1080
-      Width           =   615
+      Width           =   640
    End
    Begin VB.Label lblGoals 
       Alignment       =   2  'Center
@@ -1350,14 +1306,12 @@ Begin VB.Form frmAction
    Begin VB.Image imgHeader 
       Height          =   1065
       Left            =   0
-      Picture         =   "frmAction.frx":5B43D
       Top             =   0
       Width           =   2295
    End
    Begin VB.Image imgGoals 
       Height          =   1065
       Left            =   2300
-      Picture         =   "frmAction.frx":5FB5F
       Top             =   0
       Width           =   675
    End
@@ -1590,7 +1544,7 @@ Private Sub Form_Load()
    setVisState imgDeal, False
    setVisState imgWork, False
    setVisState imgBonus, False
-   
+   setVisState imgGoals, False
    setVisState imgWarrants, False
    setVisState imgOutlaw, False
    setVisState imgFuelBuy, False
@@ -2027,8 +1981,17 @@ Private Sub imgShop_Click()
          Case ASBuyHaven
             buydone = True
          Case ASBuySelect
-            buydone = True
-            actionSeq = ASBuyEnd
+            'validate the fuel/parts purchase
+            If Main.getBuyCost + doBuyFuelParts(player.ID, Val(lblBuyFuel), Val(lblBuyParts), True) > getMoney(player.ID) Then
+               MessBox "Not enough money left to pay for the Fuel/Parts order", "Fuel/Parts order", "Ooops", "", getLeader()
+               setMultiStateButton "imgShop", "3"
+            ElseIf CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) < (Val(lblBuyFuel) + Val(lblBuyParts)) / 2 Then
+               MessBox "Not enough Cargo Space for the Fuel/Parts order", "Fuel/Parts order", "Ooops", "", getLeader()
+               setMultiStateButton "imgShop", "3"
+            Else
+               buydone = True
+               actionSeq = ASBuyEnd
+            End If
             
          Case ASBuySelDiscard
       '            'save selected card as Seq = 6 and draw cards up to 3
@@ -2229,21 +2192,21 @@ End Sub
 Private Sub lblDealSellCargo_Click(Index As Integer)
    If imgDealCargo.Tag = "N" Then Exit Sub
    If Val(lblDealCargoSell.Caption) = 0 And Index = 0 Then Exit Sub
-   If Val(lblDealCargoSell.Caption) = Val(lblCargo.Caption) And Index = 1 Then Exit Sub
+   If Val(lblDealCargoSell.Caption) >= Val(lblCargo.Caption) And Index = 2 Then Exit Sub
    lblDealCargoSell.Caption = Val(lblDealCargoSell.Caption) + (Index - 1)
 End Sub
 
 Private Sub lblDealSellContra_Click(Index As Integer)
   If imgDealContra.Tag = "N" Then Exit Sub
   If Val(lblDealContraSell.Caption) = 0 And Index = 0 Then Exit Sub
-  If Val(lblDealContraSell.Caption) = Val(lblContra.Caption) And Index = 1 Then Exit Sub
+  If Val(lblDealContraSell.Caption) >= Val(lblContra.Caption) And Index = 2 Then Exit Sub
    lblDealContraSell.Caption = Val(lblDealContraSell.Caption) + (Index - 1)
 End Sub
 
 Private Sub lblDealSellParts_Click(Index As Integer)
    If imgDealParts.Tag = "N" Then Exit Sub
    If Val(lblDealPartsSell.Caption) = 0 And Index = 0 Then Exit Sub
-   If Val(lblDealPartsSell.Caption) = Val(lblParts.Caption) And Index = 1 Then Exit Sub
+   If Val(lblDealPartsSell.Caption) >= Val(lblParts.Caption) And Index = 2 Then Exit Sub
    lblDealPartsSell.Caption = Val(lblDealPartsSell.Caption) + (Index - 1)
 End Sub
 
@@ -2426,13 +2389,13 @@ Public Sub actionButtonEnable(ByVal cntrl As String, ByVal enable As Boolean, Op
       ElseIf enable Then
          imgShore.Picture = LoadPictureGDIplus(App.Path & "\gui\Buy2ShoreLeaveActive.jpg")
          imgShore.Tag = "Y"
-         lblDisCost.Visible = True
-         lblDisCost = "$" & Abs(doShoreLeave(player.ID, True))
+         'lblDisCost.Visible = True
+         'lblDisCost = "$" & Abs(doShoreLeave(player.ID, True))
       Else
          imgShore.Picture = LoadPictureGDIplus(App.Path & "\gui\Buy2ShoreLeaveInactive.jpg")
          imgShore.Tag = "N"
-         lblDisCost.Visible = False
-         lblDisCost = ""
+         'lblDisCost.Visible = False
+         'lblDisCost = ""
       End If
       
    Case "imgClearWarrantsOpt"
@@ -2592,3 +2555,4 @@ Public Sub buyIsDone()
    lblCash = "$" & getMoney(player.ID)
    buydone = True
 End Sub
+

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.9.6"
+#define MyAppVersion "1.9.7"
 #define MyAppPublisher "VeeBee-er"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -46,6 +46,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\bin\LaVolpeAlphaImg2.ocx"; DestDir: "{s
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\XDockFloat.dll"; DestDir: "{sys}"; Flags: 32bit regserver sharedfile
 ; FONTS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\SHOWG.TTF";  DestDir: "{autofonts}"; FontInstall: "Showcard Gothic"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "D:\Progs\GitHub\FireflyKalidasa\bin\bankgthd.ttf";  DestDir: "{autofonts}"; FontInstall: "BankGothic Md BT"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\BRITANIC.TTF";  DestDir: "{autofonts}"; FontInstall: "Britannic Bold"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\CIND.otf";  DestDir: "{autofonts}"; FontInstall: "Cyberpunk Is Not Dead"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\Forque.ttf";  DestDir: "{autofonts}"; FontInstall: "FORQUE"; Flags: onlyifdoesntexist uninsneveruninstall
@@ -360,7 +361,12 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\shades.jpg"; DestDir: "{app}\p
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\InarasKnife.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Enforcer.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Encyclopedia.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\fixer.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\mediczen.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\mediczil.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\mediczee.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\interrogator.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+ 
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Solid1harken.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Solid1harrow.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Solid1MrUniverse.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion

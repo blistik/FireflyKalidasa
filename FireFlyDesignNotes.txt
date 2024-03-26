@@ -1,14 +1,26 @@
 Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 Mar 2021
 
 Dev Ideas:
-When buying, if you've chosen too many fuel/parts to purchase with your other shopping items, 
-it pops up with an error message that you didn't have enough money, but purchases your gear/crew/upgrades and ends the action without any fuel/parts. 
-Could that error message be altered to pause the buy action instead of completing it so you can change your buy before completing it?
+show Ace on Misbehave re-order
+
 
 Test Issues pending: 
 
 
 Version updates:
+v 1.9.7 ~  26 Mar 2024
+new: Story "Outlaws Forever - Bustin' Bounties"
+add: The Fixer & The Specialist, with matching Bounties
+fix: exceeding Fuel/Parts limits during a buy now allows you to re-adjust the values
+fix: Misbehave Ace that is a Profession
+gui: morale booster button remains visible if have a morale booster Crew or Love Bot
+gui: shore leave cost now visible even if you cannot afford it
+gui: reworked "Ace in the hole" on Misbehaves
+gui: add Ace to Misbehave re-order form
+cfg: Stitch updated as WANTED
+cfg: Head Goon moved to Silverhold
+cfg: Bounty - swapped Fendris for Holder
+
 v 1.9.6 ~ 18 Mar 2024
 add: Gear - Universal Encyclopedia
 gui: new Action panel featuring graphics by Bill Saunders
@@ -16,6 +28,7 @@ gui: Action panel remains visible between turns
 gui: new Solid display on toolbar
 gui: Havens placed on each players slot coordinates with the sector.
 gui: Deal Job guide trace now follows your ship if moved
+gui: all Crew pics reworked by Bill Saunders
 fix: Cancelling a Mosey or Full Burn while in same sector as Cruiser/Corvette/Cutter will not trigger a new encounter
 cfg: repositioned Triumph & Athens slots to improve the layout
 cfg: Freighter Convoy & A Rogue Trader Nav Cards - changed from Fight to Tech skill

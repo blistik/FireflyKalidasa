@@ -3025,7 +3025,7 @@ Dim SQL
    Set rst = Nothing
 End Function
 
-'return true if a gear was discarded with needed keyword
+'return true if a gear was discarded with needed keyword.  return false if a solid keyword exists or no discard avail
 Public Function discardGearKeyword(ByVal playerID, ByVal Keyword As String, Optional ByVal checkonly As Boolean = False) As Boolean
 Dim rst As New ADODB.Recordset, CardID As Integer, found As Boolean
 Dim SQL

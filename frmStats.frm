@@ -42,7 +42,16 @@ Begin VB.Form frmStats
    Begin VB.Label lblTitle 
       BackColor       =   &H00CBE1ED&
       BorderStyle     =   1  'Fixed Single
-      Caption         =   "Label2"
+      Caption         =   "Folks are better than gorram Robots!"
+      BeginProperty Font 
+         Name            =   "Britannic Bold"
+         Size            =   9.75
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       Height          =   315
       Left            =   60
       TabIndex        =   13

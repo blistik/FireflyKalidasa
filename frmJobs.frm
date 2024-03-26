@@ -264,9 +264,11 @@ With sftTree
    'add the Player details
    rst3.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst3.EOF
-      Index = .AddItem(CStr(rst3!playerID) & IIf(isOutlaw(rst3!playerID), " - outlaw", ""))
+      Index = .AddItem(CStr(rst3!playerID) & IIf(isOutlaw(rst3!playerID) And rst3!playerID <> player.ID, " - outlaw", ""))
+      .CellFont(Index, 0).Name = "BankGothic Md BT"
       .ItemLevel(Index) = 0
       .CellText(Index, 1) = rst3!ship & " - " & PlayCode(rst3!playerID).PlayName ' & IIf(rst3!playerID = player.ID, " [me]", "")
+      .CellFont(Index, 1).Name = "BankGothic Md BT"
       For x = 0 To 8
          .CellForeColor(Index, x) = 0
          .CellBackColor(Index, x) = getPlayerColor(rst3!playerID)

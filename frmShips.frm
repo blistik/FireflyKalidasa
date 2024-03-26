@@ -65,6 +65,7 @@ Begin VB.Form frmShips
       ButtonStyle     =   2
       TreeLineColor   =   -2147483632
       Columns         =   10
+      ColWidth0       =   1
       ColTitle0       =   "ID"
       ColBmp0         =   "frmShips.frx":03CE
       ColWidth1       =   167
@@ -433,13 +434,15 @@ With sftTree
       totaltech = 0
       totalnego = 0
       totalpay = 0
-      Index = .AddItem(CStr(rst!playerID) & IIf(isOutlaw(rst!playerID), " - outlaw", ""))
+      Index = .AddItem(CStr(rst!playerID) & IIf(isOutlaw(rst!playerID) And rst!playerID <> player.ID, " - outlaw", ""))
+      .CellFont(Index, 0).Name = "BankGothic Md BT"
       lastplayer = Index
       Set .ItemPicture(Index) = AssetImages.Overlay("L", "serenity")
       .CellBackColor(Index, 0) = getPlayerColor(rst!playerID)
       .CellForeColor(Index, 0) = 0
       .ItemLevel(Index) = 0
       .CellText(Index, 1) = rst!ship & " - " & PlayCode(rst!playerID).PlayName ' & IIf(rst!playerID = player.ID, " [me]", "")
+      .CellFont(Index, 1).Name = "BankGothic Md BT"
       .CellForeColor(Index, 1) = 0
       .CellBackColor(Index, 1) = getPlayerColor(rst!playerID)
       If Logic!player = rst!playerID Then
@@ -448,13 +451,17 @@ With sftTree
       Else
          .CellText(Index, 2) = "Cash in Hand: $" & rst!pay
       End If
-         
+      .CellFont(Index, 2).Name = "BankGothic Md BT"
       .CellForeColor(Index, 2) = 0
       .CellBackColor(Index, 2) = getPlayerColor(rst!playerID)
-      
-      .CellText(Index, 3) = "Warrants: " & CStr(rst!Warrants)
-      If rst!Warrants > 0 Then
-         .CellBackColor(Index, 3) = 3355647
+      If rst!playerID <> player.ID Then
+         .CellText(Index, 3) = "Warrants: " & CStr(rst!Warrants)
+         If rst!Warrants > 0 Then
+            .CellBackColor(Index, 3) = 3355647
+         End If
+         .CellFont(Index, 3).Name = "Britannic Bold" ' "BankGothic Md BT"
+         .CellText(Index, 9) = "Goals: " & CStr(rst!Goals) & " Turns: " & CStr(Logic!GameCntr - 1) & IIf(isBountyEnabled, " Bounties: " & CStr(countBounties(player.ID)), "")
+         .CellFont(Index, 9).Name = "BankGothic Md BT"
       End If
       If Nz(rst!PlanetName, "Cruiser") = "Cruiser" Or Nz(rst!PlanetName, "Corvette") = "Corvette" Then
          .CellText(Index, 4) = "Sector " & CStr(rst!SectorID)
@@ -471,15 +478,15 @@ With sftTree
       Else
          .CellBackColor(Index, 4) = 16711680
       End If
-      .CellText(Index, 9) = "Goals: " & CStr(rst!Goals) & " Turns: " & CStr(Logic!GameCntr - 1) & IIf(isBountyEnabled, " Bounties: " & CStr(countBounties(player.ID)), "")
       
       'CREW---------------------------------------------
       Index = .AddItem("Crew")
-
+      .CellFont(Index, 0).Name = "BankGothic Md BT"
       'Display actual Crew Number and Capacity (6) with modifiers
       x = CrewCapacity(rst!playerID)
       y = getCrewCount(rst!playerID)
       .CellText(Index, 2) = "Crew Cap: " & CStr(x) & " Crew: " & CStr(y) & "  Spare: " & CStr(x - y)
+      .CellFont(Index, 2).Name = "BankGothic Md BT"
       If getCrewCount(rst!playerID) >= CrewCapacity(rst!playerID) Then
          .CellForeColor(Index, 2) = QBColor(12)
       End If
@@ -754,8 +761,9 @@ With sftTree
 
        'Unlinked GEAR-----------------------------------
       Index = .AddItem("Gear")
-       .CellItemData(Index, 0) = 4 'gear title
-       .CellItemData(Index, 4) = rst!playerID
+      .CellFont(Index, 0).Name = "BankGothic Md BT"
+      .CellItemData(Index, 0) = 4 'gear title
+      .CellItemData(Index, 4) = rst!playerID
       .ItemLevel(Index) = 1
       SQL = "SELECT SupplyDeck.CardID, Gear.* "
       SQL = SQL & "FROM Gear INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Gear.GearID = SupplyDeck.GearID "
@@ -804,6 +812,7 @@ With sftTree
        
       'CARGO-----------------------------------
       y = .AddItem("Cargo Hold / Stash")
+      .CellFont(y, 0).Name = "BankGothic Md BT"
       .ItemLevel(y) = 1
       
       SQL = "SELECT * FROM Players WHERE PlayerID=" & rst!playerID
@@ -878,12 +887,14 @@ With sftTree
       w = CargoCapacity(rst!playerID)
       x = CargoSpaceUsed(rst!playerID)
       .CellText(y, 2) = "Hold Capacity: " & CStr(w - v) & ",  Stash Capacity: " & CStr(v) & ",  Carrying: " & CStr(x) & "  Spare: " & CStr((w - x))
+      .CellFont(y, 2).Name = "BankGothic Md BT"
       If (w - CargoSpaceUsed(rst!playerID)) < 1 Then .CellForeColor(y, 2) = QBColor(12)
       
       If z = y Then .Collapse y, True
       rst2.Close
       'SHIP UPDGRADES-----------------------------------
       y = .AddItem("Drive Core & Ship Upgrades")
+      .CellFont(y, 0).Name = "BankGothic Md BT"
       .ItemLevel(y) = 1
       SQL = "SELECT PlayerSupplies.CardID, ShipUpgrade.* "
       SQL = SQL & "FROM ShipUpgrade INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON ShipUpgrade.ShipUpgradeID = SupplyDeck.ShipUpgradeID "
@@ -910,7 +921,8 @@ With sftTree
       If z = y Then .Collapse y, True
       rst2.Close
       w = getShipUpgrades(rst!playerID)
-      .CellText(y, 2) = "Upgrade Slots Spare: " & (3 - w)
+      .CellText(y, 2) = "Spare Slots: " & (3 - w)
+      .CellFont(y, 2).Name = "BankGothic Md BT"
       If w > 2 Then .CellForeColor(y, 2) = QBColor(12)
       '--------------------------------------------------
       rst.MoveNext

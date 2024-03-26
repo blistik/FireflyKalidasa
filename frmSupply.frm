@@ -295,9 +295,12 @@ With sftTree
    rst3.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst3.EOF
       Index = .AddItem(CStr(rst3!SupplyID))
+      .CellFont(Index, 0).Name = "BankGothic Md BT"
       .ItemLevel(Index) = 0
       .CellText(Index, 1) = rst3!SupplyName
+      .CellFont(Index, 1).Name = "BankGothic Md BT"
       .CellText(Index, 2) = CStr(getUnseenDeck("Supply", rst3!SupplyID)) & " unseen"
+      .CellFont(Index, 2).Name = "BankGothic Md BT"
       For x = 0 To 8
          .CellForeColor(Index, x) = 0
          .CellBackColor(Index, x) = rst3!Colour
@@ -321,6 +324,7 @@ With sftTree
       While Not rst.EOF
          If first Then
             Index = .AddItem("Crew")
+            .CellFont(Index, 0).Name = "BankGothic Md BT"
             .ItemLevel(Index) = 1
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "P")
             first = False
@@ -405,6 +409,7 @@ With sftTree
       While Not rst.EOF
          If first Then
             Index = .AddItem("Gear")
+            .CellFont(Index, 0).Name = "BankGothic Md BT"
             .ItemLevel(Index) = 1
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "GR")
             first = False
@@ -482,7 +487,6 @@ With sftTree
       Wend
       rst.Close
       
-      
       'ShipUpgrades for Purchase ____________________________________
       
       SQL = "SELECT SupplyDeck.CardID, SupplyDeck.Seq, ShipUpgrade.* "
@@ -499,7 +503,8 @@ With sftTree
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
          If first Then
-            Index = .AddItem("Upgrades")
+            Index = .AddItem("Upgrd")
+            .CellFont(Index, 0).Name = "BankGothic Md BT"
             .ItemLevel(Index) = 1
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "UP")
             first = False
@@ -626,7 +631,7 @@ End With
 
 End Sub
 
-Private Function getCost(ByVal status As String) As Integer
+Public Function getCost(ByVal status As String) As Integer
 Dim Index As Integer, pay As Integer
    With sftTree
       For Index = 0 To .ListCount - 1

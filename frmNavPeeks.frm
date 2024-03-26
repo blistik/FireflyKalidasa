@@ -9,6 +9,7 @@ Begin VB.Form frmNavPeeks
    ClientTop       =   390
    ClientWidth     =   12720
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   4605
@@ -67,7 +68,7 @@ Begin VB.Form frmNavPeeks
       ButtonStyle     =   2
       TreeLineColor   =   -2147483632
       Columns         =   2
-      ColWidth0       =   167
+      ColWidth0       =   213
       ColTitle0       =   "Card Name and Options"
       ColBmp0         =   "frmNavPeeks.frx":03CE
       ColWidth1       =   187
@@ -185,7 +186,7 @@ Dim Index, cnt
       Next Index
    End With
    playsnd 8
-   Me.Hide
+   Me.hide
 End Sub
 
 Private Sub Form_Load()
@@ -272,7 +273,7 @@ With sftTree
    .Clear
    
    SQL = "SELECT MisbehaveDeck.CardID, MisbehaveDeck.CardName, MisOption.OptionID, MisOption.OptionName, MisOption.Details, MisOption_1.OptionID AS Option2, "
-   SQL = SQL & "MisOption_1.OptionName AS Option2Name, MisOption_1.Details AS Details2, MisbehaveDeck.Seq "
+   SQL = SQL & "MisOption_1.OptionName AS Option2Name, MisOption_1.Details AS Details2, MisbehaveDeck.Seq, MisbehaveDeck.Keyword, MisbehaveDeck.CrewID, MisbehaveDeck.GearID, MisbehaveDeck.ProfessionID "
    SQL = SQL & "FROM (MisOption INNER JOIN MisbehaveDeck ON MisOption.OptionID = MisbehaveDeck.Option1ID) LEFT JOIN MisOption AS MisOption_1 ON MisbehaveDeck.Option2ID = MisOption_1.OptionID "
    SQL = SQL & "WHERE MisbehaveDeck.Seq > 6 ORDER BY  MisbehaveDeck.Seq"
 
@@ -283,12 +284,16 @@ With sftTree
    Do While Not rst.EOF
       cnt = cnt + 1
       Index = .AddItem(rst!CardName)
+      .CellFont(Index, 0).Name = "BankGothic Md BT"
       .ItemData(Index) = rst!CardID
-       .CellItemData(Index, 0) = 1
-       .CellItemData(Index, 1) = rst!Seq
+      SQL = rst!Keyword & getCrewName(0, rst!CrewID) & getGearName(0, rst!GearID) & cstrProfession(rst!ProfessionID)
+      .CellText(Index, 1) = IIf(SQL = "", "", "Ace: " & SQL)
+      .CellItemData(Index, 0) = 1
+      .CellItemData(Index, 1) = rst!Seq
       .ItemLevel(Index) = 0
       .CellForeColor(Index, 0) = 0
       .CellBackColor(Index, 0) = 13236739
+      .CellForeColor(Index, 1) = &H3DCBFF
       
       Index = .AddItem(rst!OptionName)
       .ItemData(Index) = rst!OptionID
@@ -333,6 +338,7 @@ With sftTree
    Do While Not rst.EOF
       cnt = cnt + 1
       Index = .AddItem(rst!CardName)
+      .CellFont(Index, 0).Name = "BankGothic Md BT"
       .ItemData(Index) = rst!CardID
        .CellItemData(Index, 0) = 1
        .CellItemData(Index, 1) = rst!Seq
