@@ -7,6 +7,7 @@ Begin VB.Form frmJobTasks
    ClientTop       =   390
    ClientWidth     =   8040
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmJobTasks.frx":0000
@@ -94,7 +95,7 @@ Begin VB.Form frmJobTasks
       Left            =   6930
       TabIndex        =   16
       Text            =   "0"
-      ToolTipText     =   "20=all you can load"
+      ToolTipText     =   "1-Tag & Bag. Tech: 1-4 Load 3 Goods.  5-7 Load 6 Goods. 8+ No Limit.   20-Goods no limit.  2+ actual value"
       Top             =   1470
       Width           =   885
    End
@@ -338,7 +339,7 @@ Private Sub cmd_Click(Index As Integer)
          
    Case 1 'close
       JobID = GetCombo(cbo(0))
-      Me.Hide
+      Me.hide
    End Select
    
    
@@ -368,14 +369,14 @@ Dim SQL
 
       SetCombo cbo(1), "", rst!SectorID
       txt(0) = Nz(rst!JobDesc)
-      txt(1) = Nz(rst!fugitive)
-      txt(2) = Nz(rst!passenger)
+      txt(1) = Nz(rst!Fugitive)
+      txt(2) = Nz(rst!Passenger)
       txt(3) = Nz(rst!parts)
       txt(4) = Nz(rst!fuel)
       txt(5) = Nz(rst!tagnbag)
       txt(6) = Nz(rst!misbehave)
       txt(7) = Nz(rst!cargo)
-      txt(8) = Nz(rst!contraband)
+      txt(8) = Nz(rst!Contraband)
       Check1.Value = rst!DoubleDown
       
    End If

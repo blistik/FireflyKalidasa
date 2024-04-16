@@ -168,7 +168,7 @@ Option Explicit
 
 Private Sub cmd_Click()
    playsnd 8
-   Me.Hide
+   Me.hide
    
 End Sub
 
@@ -190,8 +190,14 @@ With Grid
       cmdClear.Visible = False
    Else
       .Clear
-      SQL = "SELECT PlayerName, Turns, PlayDate,DateDiff('n', StartDate, PlayDate) AS Mins FROM Scores WHERE StoryID=" & Logic!StoryID
-      SQL = SQL & " ORDER BY Turns, DateDiff('n', StartDate, PlayDate)"
+      If Left(Command$, 16) = "Provider=MSDASQL" Then
+         SQL = "SELECT PlayerName, Turns, PlayDate,TIMESTAMPDIFF(MINUTE,StartDate, PlayDate) AS Mins FROM Scores WHERE StoryID=" & Logic!StoryID
+         SQL = SQL & " ORDER BY Turns,TIMESTAMPDIFF(MINUTE,StartDate, PlayDate)"
+      Else
+         SQL = "SELECT PlayerName, Turns, PlayDate,DateDiff('n', StartDate, PlayDate) AS Mins FROM Scores WHERE StoryID=" & Logic!StoryID
+         SQL = SQL & " ORDER BY Turns"
+         SQL = SQL & ", DateDiff('n', StartDate, PlayDate)"
+      End If
       rst.CursorLocation = adUseClient
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF

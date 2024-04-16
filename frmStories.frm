@@ -3,29 +3,28 @@ Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SFTTREEX.OCX"
 Begin VB.Form frmStories 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "View/Edit Story"
-   ClientHeight    =   4980
+   ClientHeight    =   5625
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   12015
+   ClientWidth     =   12000
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmStories.frx":0000
-   ScaleHeight     =   4980
-   ScaleWidth      =   12015
+   ScaleHeight     =   5625
+   ScaleWidth      =   12000
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
    Begin SftTree.SftTree sftTree 
-      Height          =   1755
+      Height          =   2055
       Left            =   60
       TabIndex        =   18
       TabStop         =   0   'False
-      Top             =   2880
+      Top             =   3150
       Width           =   11895
       _Version        =   262144
       _ExtentX        =   20981
-      _ExtentY        =   3096
+      _ExtentY        =   3625
       _StockProps     =   237
       ForeColor       =   8833235
       BackColor       =   3353720
@@ -251,11 +250,21 @@ Begin VB.Form frmStories
    Begin VB.Frame Frame1 
       BackColor       =   &H00CBE1ED&
       Caption         =   "Priming the Pump"
-      Height          =   2775
-      Left            =   30
+      Height          =   3015
+      Left            =   60
       TabIndex        =   12
       Top             =   60
       Width           =   10605
+      Begin VB.CheckBox chkFugitives 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "force Fugitives available"
+         Height          =   195
+         Left            =   1320
+         TabIndex        =   36
+         ToolTipText     =   "force starting Fugitives to be available at Supply discards"
+         Top             =   2670
+         Width           =   2430
+      End
       Begin VB.CheckBox chkMoveCutter 
          BackColor       =   &H00CBE1ED&
          Caption         =   "move a Reaver Cutter after Fullburns"
@@ -270,11 +279,11 @@ Begin VB.Form frmStories
          BackColor       =   &H00CBE1ED&
          Caption         =   "Bounties"
          Height          =   195
-         Left            =   5250
+         Left            =   180
          TabIndex        =   34
          ToolTipText     =   "enable Bounty Hunts"
-         Top             =   2160
-         Width           =   1080
+         Top             =   2670
+         Width           =   990
       End
       Begin VB.CheckBox chkHavenStorage 
          BackColor       =   &H00CBE1ED&
@@ -570,7 +579,7 @@ Begin VB.Form frmStories
       Index           =   5
       Left            =   60
       TabIndex        =   30
-      Top             =   4680
+      Top             =   5280
       Width           =   11895
    End
    Begin VB.Menu mnuPopup 
@@ -628,11 +637,12 @@ Dim frmScores As frmScore
       SQL = SQL & " UpgradeDrive = " & chkUpgrade.Value & ","
       SQL = SQL & " RandomCrew = " & chkRandomCrew.Value & ","
       SQL = SQL & " Bounty = " & chkBounty.Value & ","
+      SQL = SQL & " Fugitives = " & chkFugitives.Value & ","
       SQL = SQL & " MoveCutter = " & chkMoveCutter.Value
       SQL = SQL & " WHERE StoryID = " & StoryID
       DB.Execute SQL
       
-      Me.Hide
+      Me.hide
    
    Case 1 ' add Goal
       Set frmGoal = New frmGoals
@@ -647,7 +657,7 @@ Dim frmScores As frmScore
       DB.Execute "Delete from StoryGoals WHERE StoryID = " & StoryID
       DB.Execute "Delete from Story WHERE StoryID = " & StoryID
       StoryID = 0
-      Me.Hide
+      Me.hide
    
    Case 3 ' outlaws
       SetCrewSel "Wanted"
@@ -662,7 +672,7 @@ Dim frmScores As frmScore
       SetCrewSel "", False, True
       
    Case 7 'close
-      Me.Hide
+      Me.hide
    
    Case 8 'scores
       Set frmScores = New frmScore
@@ -716,6 +726,7 @@ Dim SQL, Index
          chkHavenStorage.Value = rst!HavenStorage
          chkRandomCrew.Value = rst!RandomCrew
          chkBounty.Value = rst!Bounty
+         chkFugitives.Value = rst!Fugitives
          chkMoveCutter.Value = rst!MoveCutter
          chkUpgrade.Value = rst!UpgradeDrive
       Else 'new

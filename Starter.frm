@@ -270,7 +270,8 @@ End Sub
 
 Private Sub cmd_Click(Index As Integer)
 Dim rst As New ADODB.Recordset, col, cnt, x
-Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer, randCrew As Integer
+Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer
+Dim randCrew As Integer, forceFugi As Integer
 Dim frmCrewList As frmCrewLst
          
    On Error GoTo err_handler
@@ -298,6 +299,7 @@ Dim frmCrewList As frmCrewLst
          noOfCrew = varDLookup("StartingCrew", "Story", "StoryID=" & Logic!StoryID)
          costLimit = varDLookup("CrewCostLimit", "Story", "StoryID=" & Logic!StoryID)
          randCrew = varDLookup("RandomCrew", "Story", "StoryID=" & Logic!StoryID)
+         forceFugi = varDLookup("Fugitives", "Story", "StoryID=" & Logic!StoryID)
          
          If noOfCrew > 0 And randCrew = 1 Then
             getRandomCrew noOfCrew, leader
@@ -311,7 +313,11 @@ Dim frmCrewList As frmCrewLst
             frmCrewList.Caption = "Select up to " & noOfCrew & " Crew up to $" & costLimit
             frmCrewList.Show 1
          End If
-
+         
+         If forceFugi > 0 Then
+            doForceFugitives
+         End If
+         
          'cycle players, and set "S" to start when done all
          setNextLeader player.ID, leader
          

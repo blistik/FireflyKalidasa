@@ -15,6 +15,15 @@ Begin VB.Form frmGoals
    ScaleWidth      =   9330
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.CheckBox chkUnfinished 
+      BackColor       =   &H00CBE1ED&
+      Caption         =   "no un- finished jobs"
+      Height          =   435
+      Left            =   4860
+      TabIndex        =   37
+      Top             =   1480
+      Width           =   1215
+   End
    Begin VB.TextBox txt 
       Alignment       =   2  'Center
       Height          =   285
@@ -485,7 +494,7 @@ Dim SQL
    Select Case Index
    Case 0 ' delete
       DB.Execute "DELETE FROM StoryGoals WHERE StoryID = " & StoryID & " AND Goal = " & Goal
-      Me.Hide
+      Me.hide
    Case 1 ' Save
       If Nz(varDLookup("StoryID", "StoryGoals", "StoryID=" & StoryID & " AND Goal=" & Goal), 0) = StoryID Then
          SQL = "UPDATE StoryGoals SET Instructions = " & "'" & SQLFilter(txt(8)) & "',"
@@ -501,6 +510,8 @@ Dim SQL
          SQL = SQL & "Tech = " & CStr(Val(txt(4))) & ","
          SQL = SQL & "Negotiate = " & CStr(Val(txt(5))) & ","
          SQL = SQL & "SectorID = " & IIf(GetCombo(cbo(2)) = -1, "0", GetCombo(cbo(2))) & ","
+         SQL = SQL & "Win = " & CStr(chkWin.Value) & ","
+         SQL = SQL & "NoUnfinished = " & CStr(chkUnfinished.Value) & ","
          SQL = SQL & "Passenger = " & CStr(Val(txt(7))) & ","
          SQL = SQL & "Bounties = " & CStr(Val(txt(9)))
          SQL = SQL & " WHERE StoryID = " & StoryID & " AND Goal = " & Goal
@@ -508,7 +519,7 @@ Dim SQL
          
       Else
          SQL = "INSERT INTO StoryGoals (StoryID, Goal, Instructions, Solid, AddCrew, SolidCount, IssueJobID, CompleteJobID, Cash, TurnLimit, Misbehaves, Fight, "
-         SQL = SQL & "Tech, Negotiate, SectorID, Win, Passenger, Bounties) VALUES ("
+         SQL = SQL & "Tech, Negotiate, SectorID, Win, NoUnfinished, Passenger, Bounties) VALUES ("
          SQL = SQL & CStr(StoryID) & ","
          SQL = SQL & CStr(Goal) & ","
          SQL = SQL & "'" & SQLFilter(txt(8)) & "',"
@@ -525,16 +536,17 @@ Dim SQL
          SQL = SQL & CStr(Val(txt(5))) & ","
          SQL = SQL & IIf(GetCombo(cbo(2)) = -1, "0", GetCombo(cbo(2))) & ","
          SQL = SQL & CStr(chkWin.Value) & ","
+         SQL = SQL & CStr(chkUnfinished.Value) & ","
          SQL = SQL & CStr(Val(txt(7))) & ","
          SQL = SQL & CStr(Val(txt(9))) & ")"
       End If
       
       DB.Execute SQL
       
-      Me.Hide
+      Me.hide
    
    Case 2 ' cancel
-       Me.Hide
+       Me.hide
    Case 3
       If GetCombo(cbo(0)) < 1 Then Exit Sub
       Set frmJobEdit = New frmJobEditor
@@ -576,6 +588,7 @@ Dim x, filter As String
       lstContacts.Enabled = False
       lstCrew.Enabled = False
       chkWin.Enabled = False
+      chkUnfinished.Enabled = False
    End If
    
    
@@ -684,6 +697,7 @@ Dim SQL
       txt(9) = CStr(rst!Bounties)
       If rst!SectorID > 0 Then SetCombo cbo(2), "", rst!SectorID
       chkWin.Value = rst!win
+      chkUnfinished.Value = rst!NoUnfinished
    End If
    rst.Close
    Set rst = Nothing

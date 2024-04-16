@@ -7,12 +7,29 @@ Begin VB.Form frmAction
    ClientHeight    =   8325
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   4485
+   ClientWidth     =   4515
    Icon            =   "frmAction.frx":0000
    LinkTopic       =   "Form2"
    LockControls    =   -1  'True
    ScaleHeight     =   8325
-   ScaleWidth      =   4485
+   ScaleWidth      =   4515
+   Begin VB.Timer timScroll 
+      Enabled         =   0   'False
+      Interval        =   400
+      Left            =   4380
+      Top             =   7440
+   End
+   Begin LaVolpeAlphaImg.AlphaImgCtl imgWorkDrop 
+      Height          =   255
+      Left            =   2780
+      ToolTipText     =   "click here for more jobs"
+      Top             =   6390
+      Width           =   210
+      _ExtentX        =   370
+      _ExtentY        =   450
+      Attr            =   640
+      Effects         =   "frmAction.frx":030A
+   End
    Begin XDOCKFLOATLibCtl.FDPane FDPane1 
       Height          =   420
       Left            =   4380
@@ -44,7 +61,7 @@ Begin VB.Form frmAction
       _ExtentX        =   3122
       _ExtentY        =   900
       Attr            =   640
-      Effects         =   "frmAction.frx":030A
+      Effects         =   "frmAction.frx":0322
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgEndTurn 
       Height          =   510
@@ -54,7 +71,7 @@ Begin VB.Form frmAction
       _ExtentX        =   3122
       _ExtentY        =   900
       Attr            =   640
-      Effects         =   "frmAction.frx":0322
+      Effects         =   "frmAction.frx":033A
    End
    Begin VB.Image imgBonus 
       Height          =   405
@@ -70,7 +87,7 @@ Begin VB.Form frmAction
       _ExtentX        =   2990
       _ExtentY        =   714
       Attr            =   640
-      Effects         =   "frmAction.frx":033A
+      Effects         =   "frmAction.frx":0352
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgMorale 
       Height          =   405
@@ -80,7 +97,7 @@ Begin VB.Form frmAction
       _ExtentX        =   2990
       _ExtentY        =   714
       Attr            =   640
-      Effects         =   "frmAction.frx":0352
+      Effects         =   "frmAction.frx":036A
    End
    Begin VB.Label lblMakeWorkVal 
       Alignment       =   2  'Center
@@ -102,12 +119,6 @@ Begin VB.Form frmAction
       Top             =   6390
       UseMnemonic     =   0   'False
       Width           =   705
-   End
-   Begin VB.Image imgWorkDrop 
-      Height          =   255
-      Left            =   2780
-      Top             =   6390
-      Width           =   210
    End
    Begin VB.Label lblJobName 
       BackStyle       =   0  'Transparent
@@ -137,7 +148,7 @@ Begin VB.Form frmAction
       _ExtentX        =   2011
       _ExtentY        =   661
       Attr            =   640
-      Effects         =   "frmAction.frx":036A
+      Effects         =   "frmAction.frx":0382
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgWorkLocal 
       Height          =   375
@@ -147,7 +158,7 @@ Begin VB.Form frmAction
       _ExtentX        =   3969
       _ExtentY        =   661
       Attr            =   640
-      Effects         =   "frmAction.frx":0382
+      Effects         =   "frmAction.frx":039A
    End
    Begin VB.Label lblActiveJobs 
       BackStyle       =   0  'Transparent
@@ -196,7 +207,7 @@ Begin VB.Form frmAction
       _ExtentX        =   767
       _ExtentY        =   265
       Attr            =   640
-      Effects         =   "frmAction.frx":039A
+      Effects         =   "frmAction.frx":03B2
    End
    Begin VB.Label lblDealLoadFugi 
       Alignment       =   2  'Center
@@ -881,7 +892,7 @@ Begin VB.Form frmAction
       _ExtentX        =   2381
       _ExtentY        =   979
       Attr            =   640
-      Effects         =   "frmAction.frx":03B2
+      Effects         =   "frmAction.frx":03CA
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgRead 
       Height          =   555
@@ -892,7 +903,7 @@ Begin VB.Form frmAction
       _ExtentX        =   1402
       _ExtentY        =   979
       Attr            =   640
-      Effects         =   "frmAction.frx":03CA
+      Effects         =   "frmAction.frx":03E2
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgPhone 
       Height          =   555
@@ -903,7 +914,7 @@ Begin VB.Form frmAction
       _ExtentX        =   979
       _ExtentY        =   979
       Attr            =   640
-      Effects         =   "frmAction.frx":03E2
+      Effects         =   "frmAction.frx":03FA
    End
    Begin VB.Image imgContact 
       Height          =   555
@@ -919,7 +930,7 @@ Begin VB.Form frmAction
       _ExtentX        =   1482
       _ExtentY        =   979
       Attr            =   640
-      Effects         =   "frmAction.frx":03FA
+      Effects         =   "frmAction.frx":0412
    End
    Begin VB.Image imgWork 
       Height          =   630
@@ -1053,7 +1064,7 @@ Begin VB.Form frmAction
       _ExtentX        =   3969
       _ExtentY        =   661
       Attr            =   640
-      Effects         =   "frmAction.frx":0412
+      Effects         =   "frmAction.frx":042A
    End
    Begin VB.Image imgFly 
       Height          =   1050
@@ -1075,7 +1086,7 @@ Begin VB.Form frmAction
       _ExtentX        =   2381
       _ExtentY        =   1217
       Attr            =   640
-      Effects         =   "frmAction.frx":042A
+      Effects         =   "frmAction.frx":0442
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgFlyBoost 
       Height          =   675
@@ -1085,7 +1096,7 @@ Begin VB.Form frmAction
       _ExtentX        =   2381
       _ExtentY        =   1191
       Attr            =   640
-      Effects         =   "frmAction.frx":0442
+      Effects         =   "frmAction.frx":045A
    End
    Begin VB.Label lblMRange 
       Alignment       =   2  'Center
@@ -1155,7 +1166,7 @@ Begin VB.Form frmAction
       _ExtentX        =   3969
       _ExtentY        =   661
       Attr            =   640
-      Effects         =   "frmAction.frx":045A
+      Effects         =   "frmAction.frx":0472
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgFullBurn 
       Height          =   375
@@ -1165,7 +1176,7 @@ Begin VB.Form frmAction
       _ExtentX        =   3969
       _ExtentY        =   661
       Attr            =   640
-      Effects         =   "frmAction.frx":0472
+      Effects         =   "frmAction.frx":048A
    End
    Begin VB.Label lblBounties 
       BackStyle       =   0  'Transparent
@@ -1183,7 +1194,7 @@ Begin VB.Form frmAction
       Height          =   195
       Left            =   3970
       TabIndex        =   6
-      Top             =   1080
+      Top             =   1070
       Width           =   615
    End
    Begin VB.Label lblMisbehaves 
@@ -1202,7 +1213,7 @@ Begin VB.Form frmAction
       Height          =   195
       Left            =   2380
       TabIndex        =   5
-      Top             =   1080
+      Top             =   1070
       Width           =   640
    End
    Begin VB.Label lblTurn 
@@ -1219,9 +1230,9 @@ Begin VB.Form frmAction
       EndProperty
       ForeColor       =   &H003DCBFF&
       Height          =   195
-      Left            =   630
+      Left            =   640
       TabIndex        =   4
-      Top             =   1080
+      Top             =   1070
       Width           =   640
    End
    Begin VB.Label lblGoals 
@@ -1535,7 +1546,7 @@ Private Sub Form_Load()
    imgLoadPassngr.Picture = LoadPicture(App.Path & "\gui\Deal5PassActive.jpg")
    imgLoadFugi.Picture = LoadPicture(App.Path & "\gui\Deal5FugiActive.jpg")
    imgClearWarrants.Picture = LoadPicture(App.Path & "\gui\Deal5WarrantsActive.jpg")
-   imgWorkDrop.Picture = LoadPicture(App.Path & "\gui\Work1LocalArrow.jpg")
+   imgWorkDrop.Picture = LoadPictureGDIplus(App.Path & "\gui\Work1LocalArrow.gif")
    imgBonus.Picture = LoadPicture(App.Path & "\gui\Action5BonusActive.jpg")
    
    setVisState imgFlyHL, False
@@ -1562,9 +1573,7 @@ Private Sub Form_Load()
       
    'alpha imgs
    disableAllButtons
-   
-   'lblJobName.ToolTipText = mnuWorkPop(0).Caption
-   
+ 
 End Sub
 
 Public Sub disableAllButtons(Optional ByVal except As String = vbNullString)
@@ -1588,6 +1597,14 @@ Public Sub disableAllButtons(Optional ByVal except As String = vbNullString)
    actionButtonEnable "imgEndTurn", False  '.Picture = LoadPictureGDIplus(App.Path & "\gui\End1EndInactive.jpg")
    actionButtonEnable "imgCancel", False
 
+End Sub
+
+Public Sub disableAllActions()
+   setVisState imgFly, False
+   setVisState imgBuy, False
+   setVisState imgDeal, False
+   setVisState imgWork, False
+   setVisState imgBonus, False
 End Sub
 
 Public Function checkNoOfActions() As Integer
@@ -1650,6 +1667,7 @@ Private Sub imgCancel_MouseExit()
 If imgCancel.Tag = "Y" Then imgCancel.Picture = LoadPictureGDIplus(App.Path & "\gui\End2CancelActive.jpg")
 End Sub
 
+
 Private Sub imgEndTurn_Click()
    With imgEndTurn
        If .Tag = "Y" Then
@@ -1665,7 +1683,7 @@ Private Sub imgEndTurn_Click()
          endAction
           
          .Tag = "N"
-         .Picture = LoadPictureGDIplus(App.Path & "\gui\End1EndInactive.jpg")
+         '.Picture = LoadPictureGDIplus(App.Path & "\gui\End1EndInactive.jpg")
          
           
       End If
@@ -1798,7 +1816,7 @@ Dim frmNavPeek As frmNavPeeks
          Set frmNavPeek = New frmNavPeeks
          frmNavPeek.NavZone = "E"
          frmNavPeek.Show 1
-         PutMsg player.PlayName & " used the Universal Encyclopedia to fiddle with the Misbehave deck", player.ID, Logic!GameCntr
+         PutMsg player.PlayName & " used the Universal Encyclopedia to fiddle with the Misbehave deck", player.ID, Logic!Gamecntr
          actionSeq = ASidle
        
           
@@ -1878,7 +1896,7 @@ Private Sub imgFlyMole_Click()
          disableAllButtons
          actionButtonEnable "imgFlyMole", True, True
 
-         PutMsg player.PlayName & "'s Lawman Dobson calls the Alliance Cruiser to his location", player.ID, Logic!GameCntr
+         PutMsg player.PlayName & "'s Lawman Dobson calls the Alliance Cruiser to his location", player.ID, Logic!Gamecntr
          moseydone = True
          fullburndone = True
          doMoveAlliance player.ID, getPlayerSector(player.ID)
@@ -1972,7 +1990,7 @@ Private Sub imgShop_Click()
           .Picture = LoadPictureGDIplus(App.Path & "\gui\Buy1FinishClick.jpg")
           
          .Tag = "4"
-       
+         setVisState imgBuy, False
        End Select
 
       If .Tag <> "N" Then
@@ -2055,16 +2073,27 @@ Private Sub imgDealer_Click()
       Case "3" 'close buy
          .Picture = LoadPictureGDIplus(App.Path & "\gui\Deal1FinishClick.jpg")
          .Tag = "4"
-         
-         
+         setVisState imgDeal, False
       End Select
       If .Tag <> "N" Then
          
          Select Case actionSeq
          Case ASDealSelect
+         
+            'validate the fuel/parts purchase
+            If doBuyFuelParts(player.ID, Val(lblDealFuelBuy), 0, True) > getMoney(player.ID) Then
+               MessBox "Not enough money to pay for the Fuel order", "Fuel order", "Ooops", "", getLeader()
+               setMultiStateButton "imgDealer", "3"
+            ElseIf CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) < (Val(lblDealFuelBuy)) / 2 Then
+               MessBox "Not enough Cargo Space for the Fuel order", "Fuel order", "Ooops", "", getLeader()
+               setMultiStateButton "imgDealer", "3"
+            Else
+               dealdone = True
+               actionSeq = ASDealEnd
+            End If
+         
             'save selected (Seq=6 + selected) to players Jobs, unselected back to 5
-            dealdone = True
-            actionSeq = ASDealEnd
+
          Case ASDealSelDiscard
             'save selected card as Seq = 6 and draw cards up to 3
             actionSeq = ASDealDrew 'bounce back and refresh formAction via timer
@@ -2234,6 +2263,7 @@ Private Sub mnuWorkPop_Click(Index As Integer)
    lblJobName = mnuWorkPop(Index).Caption
    lblJobName.Tag = mnuWorkPop(Index).Tag
    lblJobName.ToolTipText = mnuWorkPop(Index).Caption
+   timScroll.Enabled = True
 End Sub
 
 Public Sub setVisState(ByRef cntl As Control, ByVal enable As Boolean)
@@ -2275,20 +2305,19 @@ End Sub
 Public Sub setContact(ByVal SectorID)
 Dim s
    If SectorID = -1 Then 'deal with Harken
-         imgContact.Picture = LoadPicture(App.Path & "\gui\Contact" & s & ".jpg")
-         imgContact.Tag = "5"
-         imgContact.Visible = True
+      s = 5 'harken's contactID
    Else
       s = varDLookup("ContactID", "Contact", "SectorID=" & SectorID)
-      If s > 0 Then
-         imgContact.Picture = LoadPicture(App.Path & "\gui\Contact" & s & ".jpg")
-         imgContact.Tag = s
-         imgContact.Visible = True
-      Else
-         imgContact.Tag = ""
-         imgContact.Visible = False
-      End If
    End If
+   If s > 0 Then
+      imgContact.Picture = LoadPicture(App.Path & "\gui\Contact" & s & ".jpg")
+      imgContact.Tag = s
+      imgContact.Visible = True
+   Else
+      imgContact.Tag = ""
+      imgContact.Visible = False
+   End If
+
 End Sub
 
 Public Sub actionButtonEnable(ByVal cntrl As String, ByVal enable As Boolean, Optional ByVal clicked As Boolean = False)
@@ -2520,6 +2549,8 @@ Public Sub setMultiStateButton(ByVal cntrl As String, ByVal State As String)
 End Sub
 
 Public Sub endAction()
+   disableAllButtons
+   disableAllActions
    lblBuyFuel = "0"
    lblBuyParts = "0"
    lblDealCargoBuy = "0"
@@ -2556,3 +2587,33 @@ Public Sub buyIsDone()
    buydone = True
 End Sub
 
+Private Sub timScroll_Timer()
+Static csr As Integer
+   If lblJobName.Tag = "" Then
+      csr = 0 'reset
+      timScroll.Enabled = False
+   ElseIf Len(lblJobName.ToolTipText) < 29 Then
+      lblJobName.Caption = lblJobName.ToolTipText
+      csr = 0 'reset
+      timScroll.Enabled = False
+   Else
+      csr = csr + 1
+      If csr > Len(lblJobName.ToolTipText) Then csr = 1
+      If Len(Mid(lblJobName.ToolTipText, csr)) < 20 Then
+         lblJobName.Caption = Mid(lblJobName.ToolTipText, csr) & " - " & lblJobName.ToolTipText
+      Else
+         lblJobName.Caption = Mid(lblJobName.ToolTipText, csr)
+      End If
+   End If
+End Sub
+
+Public Sub setPay(ByVal pay)
+   lblCash.Tag = pay
+   lblCash = "$" & lblCash.Tag
+   If Val(lblCash.Tag) < 200 Then
+      lblCash.ForeColor = &HFF&
+   Else
+      lblCash.ForeColor = &H3DCBFF
+   End If
+
+End Sub

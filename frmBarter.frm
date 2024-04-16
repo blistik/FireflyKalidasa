@@ -7,6 +7,7 @@ Begin VB.Form frmBarter
    ClientTop       =   390
    ClientWidth     =   5070
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmBarter.frx":0000
@@ -240,7 +241,7 @@ Begin VB.Form frmBarter
       Index           =   1
       Left            =   540
       TabIndex        =   4
-      Top             =   3165
+      Top             =   3180
       Width           =   1485
    End
    Begin VB.Label lbl 
@@ -293,13 +294,13 @@ Dim total As Long
          Exit Sub
       Else
          DB.Execute "UPDATE Players SET Fuel = Fuel + " & CStr(Val(txtDeal(0))) & ", Parts = Parts + " & CStr(Val(txtDeal(1))) & ", Contraband = Contraband + " & CStr(Val(txtDeal(2))) & ", Pay = Pay - " & CStr(total) & " WHERE PlayerID = " & player.ID
-         PutMsg player.PlayName & " bought " & CStr(Val(txtDeal(0))) & " Fuel, " & CStr(Val(txtDeal(1))) & " Parts and " & CStr(Val(txtDeal(2))) & " Contraband from a Trader for $" & CStr(total), player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " bought " & CStr(Val(txtDeal(0))) & " Fuel, " & CStr(Val(txtDeal(1))) & " Parts and " & CStr(Val(txtDeal(2))) & " Contraband from a Trader for $" & CStr(total), player.ID, Logic!GameCntr
       End If
    Case 1 'nope
    
    End Select
    
-   Me.Hide
+   Me.hide
 
 End Sub
 

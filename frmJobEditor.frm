@@ -1102,7 +1102,7 @@ Dim x
          End If
       End If
    Case 3 'cancel
-      Me.Hide
+      Me.hide
       
    Case 4, 5, 6
       editTask Index + 2
@@ -1403,8 +1403,6 @@ Dim x
    
 End Function
 
-
-
 Private Function getList(cbo As Control) As String
 Dim x
    With cbo
@@ -1417,18 +1415,6 @@ Dim x
    
 End Function
 
-
-Private Function getSelected(cbo As Control) As Integer
-Dim x
-   With cbo
-      For x = 0 To .ListCount - 1
-         If .selected(x) Then
-            getSelected = getSelected + 1
-         End If
-      Next x
-   End With
-   
-End Function
 
 Private Function SetChklist(cbo As Control, ByVal solids As String) As Integer
 Dim x, y, a() As String

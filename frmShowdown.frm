@@ -3,16 +3,15 @@ Object = "{49801673-2EC8-456E-98B2-037B9B02A1C5}#1.0#0"; "LaVolpeAlphaImg2.ocx"
 Begin VB.Form frmShowdown 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Showdown"
-   ClientHeight    =   3600
+   ClientHeight    =   3615
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   11970
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmShowdown.frx":0000
-   ScaleHeight     =   3600
+   ScaleHeight     =   3615
    ScaleWidth      =   11970
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
@@ -123,6 +122,13 @@ Begin VB.Form frmShowdown
       TabIndex        =   0
       Top             =   1530
       Width           =   5655
+   End
+   Begin VB.Image imgCrew 
+      Height          =   615
+      Left            =   5680
+      Stretch         =   -1  'True
+      Top             =   30
+      Width           =   615
    End
    Begin VB.Label Label1 
       BackStyle       =   0  'Transparent
@@ -354,9 +360,9 @@ Begin VB.Form frmShowdown
    End
    Begin VB.Shape Shape1 
       BorderColor     =   &H00FFFFFF&
-      Height          =   3465
-      Left            =   5930
-      Top             =   60
+      Height          =   2895
+      Left            =   5925
+      Top             =   630
       Width           =   135
    End
 End
@@ -390,7 +396,7 @@ Private Sub cmd_Click(Index As Integer)
       rerollused = True
       DB.Execute "Update ShowdownScores set Dice = " & Dice & " WHERE PlayerID = " & player.ID
       cmd(1).Enabled = False
-      PutMsg player.PlayName & " uses The Guardian's skill to re-roll and gets a " & Dice, player.ID, Logic!GameCntr
+      PutMsg player.PlayName & " uses The Guardian's skill to re-roll and gets a " & Dice, player.ID, Logic!Gamecntr
       refreshPage
    Case 2 'force re-roll
       DB.Execute "Update ShowdownScores set forcereroll = 1 WHERE PlayerID = " & player.ID
@@ -466,9 +472,9 @@ Dim msg As String
             msg = " has lost"
          End If
       End If
-      PutMsg player.PlayName & msg & " the Showdown", player.ID, Logic!GameCntr, True, getLeader()
+      PutMsg player.PlayName & msg & " the Showdown", player.ID, Logic!Gamecntr, True, getLeader()
       
-      Me.Hide
+      Me.hide
    End If
 End Sub
 
@@ -510,7 +516,7 @@ Dim rst As New ADODB.Recordset
       End If
       If rst!forcereroll = 1 Then
          Dice = RollDice(6, True)
-         PutMsg PlayCode(OpponentID).PlayName & " uses Chari to force you into a re-roll, and you got a " & Dice, player.ID, Logic!GameCntr, True, 91, 0, 0, 0, 0, Dice
+         PutMsg PlayCode(OpponentID).PlayName & " uses Chari to force you into a re-roll, and you got a " & Dice, player.ID, Logic!Gamecntr, True, 91, 0, 0, 0, 0, Dice
          cmd(0).Enabled = True
          cmd(1).Enabled = cmd(1).Visible And Not rerollused
          cmd(2).Enabled = cmd(2).Visible And Not forcererollused
@@ -538,13 +544,13 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Private Sub listGear(ByVal playerID As Integer, ByVal Skilltype As Integer)
-Dim SQL As String, x
+Dim SQL As String, X
 Dim rst As New ADODB.Recordset
 
    If Skilltype = 0 Then Exit Sub
 
-   x = IIf(playerID = player.ID, 0, 1)
-   lstGear(x).Clear
+   X = IIf(playerID = player.ID, 0, 1)
+   lstGear(X).Clear
 
    SQL = "SELECT SupplyDeck.CardID, ShowdownGear.PlayerID, Gear.* "
    SQL = SQL & "FROM ShowdownGear RIGHT JOIN (PlayerSupplies INNER JOIN (Gear INNER JOIN SupplyDeck ON Gear.GearID = SupplyDeck.GearID) ON PlayerSupplies.CardID = SupplyDeck.CardID) ON ShowdownGear.CardID = SupplyDeck.CardID "
@@ -552,10 +558,10 @@ Dim rst As New ADODB.Recordset
 
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      lstGear(x).AddItem Nz(rst!GearName) & " " & Nz(rst!GearDescr)
-      lstGear(x).ItemData(lstGear(x).NewIndex) = rst!CardID
+      lstGear(X).AddItem Nz(rst!GearName) & " " & Nz(rst!GearDescr)
+      lstGear(X).ItemData(lstGear(X).NewIndex) = rst!CardID
       If Nz(rst!playerID) = playerID Then
-         lstGear(x).selected(lstGear(x).NewIndex) = True
+         lstGear(X).selected(lstGear(X).NewIndex) = True
       End If
       rst.MoveNext
    Wend
@@ -564,30 +570,30 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Private Sub doPics(ByVal playerID As Integer, ByVal Skilltype, ByVal skill, ByVal Dice)
-Dim x, y, z
+Dim X, Y, z
    If playerID = player.ID Then
-      x = 0: y = 1: z = 2
+      X = 0: Y = 1: z = 2
    Else
-      x = 3: y = 4: z = 5
+      X = 3: Y = 4: z = 5
    End If
 
    If Dice > 0 And Dice < 7 Then
-      picDice(x).Visible = True
-      picDice(x).Picture = LoadPictureGDIplus(App.Path & "\pictures\D" & Dice & ".bmp") ' LoadPicture(App.Path & "\pictures\D" & dice & ".bmp")
+      picDice(X).Visible = True
+      picDice(X).Picture = LoadPictureGDIplus(App.Path & "\pictures\D" & Dice & ".bmp") ' LoadPicture(App.Path & "\pictures\D" & dice & ".bmp")
 
-      picDice(x).TransparentColor = 0
-      picDice(x).TransparentColorMode = lvicUseTransparentColor
-      picDice(y).Visible = False
+      picDice(X).TransparentColor = 0
+      picDice(X).TransparentColorMode = lvicUseTransparentColor
+      picDice(Y).Visible = False
 
    ElseIf Dice > 6 Then
-      picDice(x).Visible = True
-      picDice(x).Picture = LoadPictureGDIplus(App.Path & "\pictures\D6.bmp") 'LoadPicture(App.Path & "\pictures\D6.jpg")
-      picDice(x).TransparentColor = 0
-      picDice(x).TransparentColorMode = lvicUseTransparentColor
-      picDice(y).Visible = True
-      picDice(y).Picture = LoadPictureGDIplus(App.Path & "\pictures\D" & (Dice - 6) & ".bmp")  'LoadPicture(App.Path & "\pictures\D" & (dice - 6) & ".bmp")
-      picDice(y).TransparentColor = 0
-      picDice(y).TransparentColorMode = lvicUseTransparentColor
+      picDice(X).Visible = True
+      picDice(X).Picture = LoadPictureGDIplus(App.Path & "\pictures\D6.bmp") 'LoadPicture(App.Path & "\pictures\D6.jpg")
+      picDice(X).TransparentColor = 0
+      picDice(X).TransparentColorMode = lvicUseTransparentColor
+      picDice(Y).Visible = True
+      picDice(Y).Picture = LoadPictureGDIplus(App.Path & "\pictures\D" & (Dice - 6) & ".bmp")  'LoadPicture(App.Path & "\pictures\D" & (dice - 6) & ".bmp")
+      picDice(Y).TransparentColor = 0
+      picDice(Y).TransparentColorMode = lvicUseTransparentColor
    End If
    If Skilltype > 0 Then
       picDice(z).Visible = True
@@ -597,13 +603,13 @@ Dim x, y, z
 End Sub
 
 Private Sub discardGearUsed()
-Dim x
+Dim X
    With lstGear(0)
-      For x = 0 To .ListCount - 1
-         If .selected(x) Then 'discard it
-            doDiscardGear player.ID, .ItemData(x)
-            PutMsg player.PlayName & " discards " & getGearAttrib(.ItemData(x), "GearName"), player.ID, Logic!GameCntr
+      For X = 0 To .ListCount - 1
+         If .selected(X) Then 'discard it
+            doDiscardGear player.ID, .ItemData(X)
+            PutMsg player.PlayName & " discards " & getGearAttrib(.ItemData(X), "GearName"), player.ID, Logic!Gamecntr
          End If
-      Next x
+      Next X
    End With
 End Sub

@@ -132,20 +132,24 @@ End Sub
 
 Public Function getNewEvents() As Boolean
 Dim rst As New ADODB.Recordset
-Dim x, ship As Boolean
+Dim x, ship As Boolean, evtDesc As String
    rst.CursorLocation = adUseClient
    rst.Open "SELECT * FROM Events WHERE EventID > " & LastEventNumber & " ORDER BY EventID", DB, adOpenStatic, adLockReadOnly
    While Not rst.EOF
-     x = Grid.InsertItem(0, Replace(rst!event, "^", " "))
-     If Not IsNull(rst!playerID) Then
-        Grid.CellBackColor(x, 0) = getPlayerColor(rst!playerID)
-     End If
-     LastEventNumber = rst!EventID
-     If Not ship And rst!refreshShip > 0 And actionSeq = ASidle Then
-        ship = True
-        If Not (Main.frmShip Is Nothing) Then Main.frmShip.RefreshShips
-     End If
-     rst.MoveNext
+      evtDesc = rst!event
+      If Logic!player <> player.ID And Left(evtDesc, 9) = "New Bount" Then
+         Main.refreshDeals
+      End If
+      x = Grid.InsertItem(0, Replace(evtDesc, "^", " "))
+      If Not IsNull(rst!playerID) Then
+         Grid.CellBackColor(x, 0) = getPlayerColor(rst!playerID)
+      End If
+      LastEventNumber = rst!EventID
+      If Not ship And rst!refreshShip > 0 And actionSeq = ASidle Then
+         ship = True
+         If Not (Main.frmShip Is Nothing) Then Main.frmShip.RefreshShips
+      End If
+      rst.MoveNext
    Wend
 
 End Function

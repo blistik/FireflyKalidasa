@@ -375,24 +375,24 @@ Dim total, x
             Exit Sub
          Else
             DB.Execute "UPDATE Players SET Fuel = Fuel + " & CStr(Val(txtDeal(0))) & ", Parts = Parts + " & CStr(Val(txtDeal(1))) & ", Contraband = Contraband + " & CStr(Val(txtDeal(3))) & ", Cargo = Cargo + " & CStr(Val(txtDeal(2))) & " WHERE PlayerID = " & player.ID
-            PutMsg player.PlayName & " salvaged " & CStr(Val(txtDeal(0))) & " Fuel, " & CStr(Val(txtDeal(1))) & " Parts, " & CStr(Val(txtDeal(3))) & " Contraband and " & CStr(Val(txtDeal(2))) & " Cargo", player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " salvaged " & CStr(Val(txtDeal(0))) & " Fuel, " & CStr(Val(txtDeal(1))) & " Parts, " & CStr(Val(txtDeal(3))) & " Contraband and " & CStr(Val(txtDeal(2))) & " Cargo", player.ID, Logic!GameCntr
          End If
       ElseIf mode = 3 Then 'dump
          If (Val(txtDeal(0)) + Val(txtDeal(1))) / 2 + Val(txtDeal(2)) + Val(txtDeal(3)) >= salvageCount Then
             DB.Execute "UPDATE Players SET Fuel = Fuel - " & CStr(Val(txtDeal(0))) & ", Parts = Parts - " & CStr(Val(txtDeal(1))) & ", Contraband = Contraband - " & CStr(Val(txtDeal(3))) & ", Cargo = Cargo - " & CStr(Val(txtDeal(2))) & " WHERE PlayerID = " & player.ID
-            PutMsg player.PlayName & " dumped " & CStr(Val(txtDeal(0))) & " Fuel, " & CStr(Val(txtDeal(1))) & " Parts, " & CStr(Val(txtDeal(3))) & " Contraband and " & CStr(Val(txtDeal(2))) & " Cargo overboard", player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " dumped " & CStr(Val(txtDeal(0))) & " Fuel, " & CStr(Val(txtDeal(1))) & " Parts, " & CStr(Val(txtDeal(3))) & " Contraband and " & CStr(Val(txtDeal(2))) & " Cargo overboard", player.ID, Logic!GameCntr
          Else
             MessBox "That's only " & CStr((Val(txtDeal(0)) + Val(txtDeal(1))) / 2 + Val(txtDeal(2)) + Val(txtDeal(3))) & " space, need " & CStr(salvageCount), "Discard goods", "Ooops", "", 0, 0, 6
             Exit Sub
          End If
       ElseIf mode = 4 Then
          DB.Execute "UPDATE Players SET Fuel = Fuel - " & CStr(Val(txtDeal(0))) & ", Parts = Parts - " & CStr(Val(txtDeal(1))) & ", Contraband = Contraband - " & CStr(Val(txtDeal(3))) & ", Cargo = Cargo - " & CStr(Val(txtDeal(2))) & " WHERE PlayerID = " & player.ID
-         PutMsg player.PlayName & " discarded " & CStr(Val(txtDeal(0))) & " Fuel, " & CStr(Val(txtDeal(1))) & " Parts, " & CStr(Val(txtDeal(3))) & " Contraband and " & CStr(Val(txtDeal(2))) & " Cargo", player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " discarded " & CStr(Val(txtDeal(0))) & " Fuel, " & CStr(Val(txtDeal(1))) & " Parts, " & CStr(Val(txtDeal(3))) & " Contraband and " & CStr(Val(txtDeal(2))) & " Cargo", player.ID, Logic!GameCntr
       End If
    Case 1 'nope
    
    End Select
-   Me.Hide
+   Me.hide
 
 
 End Sub
@@ -481,3 +481,6 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 
+Private Sub txtDeal_DblClick(Index As Integer)
+   txtDeal(Index).Text = CStr(Val(txtDeal(Index).Text) + 1)
+End Sub

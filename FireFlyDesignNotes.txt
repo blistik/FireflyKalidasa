@@ -1,13 +1,30 @@
 Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 Mar 2021
 
 Dev Ideas:
-show Ace on Misbehave re-order
 
 
 Test Issues pending: 
 
 
 Version updates:
+v 1.9.8 ~ 16 Apr 2024
+new: Story - Blood out of a Stone
+new: goal check option - no unfinished Jobs
+new: Crew - Kamal (custom. To replace custom Jubal as Wanted Pilot) with matching Bounty
+new: Crew - Dalin
+new: Crew - Helmsman x 2
+new: story option - Force starting Bounty Fugitives to be available at their Supply planets for faster game
+fix: Issue when At Persephone with Cruiser and Dealing with Harken
+fix: Buy Fuel from Harken now in Deal section
+gui: new "Being Boarded" alert popup feat. opposing Crew pics
+gui: Refresh Ship, Job, Deal & Buy lists directly after Sector selection
+gui: add tickertape view to Work action's Job display and animated dropdown button when more than 1 job
+gui: tweaked Action Panel's display logic on End Turn
+gui: further Crew picture updates by Bill
+gui: steamline re-join game steps for solo play
+cfg: Jubal Early promoted to Leader & Bounty Hunter
+bot: v1.1.4 - tweaks to improve compatibility with MariaDB
+
 v 1.9.7 ~  26 Mar 2024
 new: Story "Outlaws Forever - Bustin' Bounties"
 add: The Fixer & The Specialist, with matching Bounties

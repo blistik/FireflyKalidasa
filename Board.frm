@@ -468,12 +468,6 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-'For use with USER32 Function SetWindowPos
-Private Const HWND_TOPMOST = -&H1
-Private Const HWND_NOTOPMOST = -&H2
-Private Const SWP_NOSIZE = &H1
-Private Const SWP_NOMOVE = &H2
-'For use with USER32 Function SendMessage
 Private Const HTCAPTION = 2
 Private Const WM_NCLBUTTONDOWN = &HA1
 Private Declare Function ReleaseCapture Lib "user32" () As Long
@@ -499,12 +493,12 @@ Private Sub HotSpot_Click(Index As Integer)
      
 End Sub
 
-Private Sub Imag_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Imag_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
 'allow title drag
-Private Sub HotSpot_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub HotSpot_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
    If pickStartSector <> 1 Then
       Select Case actionSeq
          Case ASmosey, ASfullburn, ASNavEvade, ASNavReav, ASNavReavBorder, ASNavCrus, ASNavCrusBorder, ASNavCrusOutlaw, ASNavCrusAdjacent, ASNavCorvAdjacent, ASNavCorvPlanetary, ASResolveAlert
@@ -515,13 +509,13 @@ Private Sub HotSpot_MouseDown(Index As Integer, Button As Integer, Shift As Inte
    End If
 End Sub
 
-Private Sub Picture1_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Picture1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
 
 Private Sub initImages()
-Dim x
+Dim X
    Imag(1).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyOrange.gif")
    
    Imag(2).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyBlue.gif")
@@ -530,11 +524,11 @@ Dim x
    Imag(5).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cruiser.gif")
    'Imag(5).AutoSize = lvicMultiAngle
    Imag(6).Picture = LoadPictureGDIplus(App.Path & "\Pictures\corvette.gif")
-   For x = 7 To 6 + NumOfReavers
-      Imag(x).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.gif")
-   Next x
-   For x = 1 To 6 + NumOfReavers
-      Imag(x).TransparentColor = 0
-      Imag(x).TransparentColorMode = lvicUseTransparentColor
-   Next x
+   For X = 7 To 6 + NumOfReavers
+      Imag(X).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.gif")
+   Next X
+   For X = 1 To 6 + NumOfReavers
+      Imag(X).TransparentColor = 0
+      Imag(X).TransparentColorMode = lvicUseTransparentColor
+   Next X
 End Sub

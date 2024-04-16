@@ -3,6 +3,7 @@ Object = "{714D09E3-B193-11D3-A192-00A0CC26207F}#1.0#0"; "XDockFloat.dll"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.2#0"; "MSCOMCTL.OCX"
 Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SFTTREEX.OCX"
 Begin VB.Form frmJobs 
+   BackColor       =   &H000D0E42&
    Caption         =   "Jobs"
    ClientHeight    =   3705
    ClientLeft      =   120
@@ -25,7 +26,6 @@ Begin VB.Form frmJobs
       _ExtentY        =   4101
       _StockProps     =   237
       ForeColor       =   8833235
-      BackColor       =   855618
       BorderStyle     =   1
       ItemPictureExpanded=   "frmJobs.frx":030A
       ItemPictureExpandable=   "frmJobs.frx":0326
@@ -64,6 +64,7 @@ Begin VB.Form frmJobs
       ColHeaderAppearance=   2
       ButtonStyle     =   2
       Columns         =   9
+      ColWidth0       =   16
       ColTitle0       =   "Card ID"
       ColBmp0         =   "frmJobs.frx":03CE
       ColWidth1       =   200
@@ -443,7 +444,7 @@ With sftTree
 End Sub
 
 Private Sub Form_Resize()
-   sftTree.Move sftTree.Left, sftTree.top, Abs(Me.Width - 100), Abs(Me.Height - sftTree.top)
+   sftTree.Move sftTree.Left, sftTree.top, Me.Width, Abs(Me.Height - sftTree.top)
   'Timer1.Enabled = True
 
 End Sub
