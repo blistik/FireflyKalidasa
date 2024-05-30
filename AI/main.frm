@@ -703,6 +703,9 @@ On Error GoTo err_handler
       SetupPlayer player.ID, Logic!StoryID
       leader = getRandomLeader
       DB.Execute "INSERT INTO PlayerSupplies (PlayerID,CardID) VALUES (" & player.ID & ", " & varDLookup("CardID", "SupplyDeck", "CrewID =" & leader) & ")"
+      player.PlayName = varDLookup("CrewName", "Crew", "CrewID=" & leader)
+      DB.Execute "Update Players SET Name ='" & player.PlayName & "' WHERE PlayerID = " & player.ID
+
       getRandomCrew 5, leader
       setNextLeader player.ID, leader   'leader
       pickStartSector = 0
@@ -734,7 +737,7 @@ On Error GoTo err_handler
       setNextPlayerREV player.ID, "R"
       Logic.Requery
       If Logic!Seq = "R" Then
-         PutMsg "Next Players Turn", Logic!player, Logic!GameCntr
+         PutMsg "Next Player's Turn", Logic!player, Logic!GameCntr
       End If
    
    ElseIf status = "F" And thisPlayer <> player.ID And actionSeq = ASidle And Logic!Trader = player.ID And Logic!ClientAccept = 0 Then  'showdown - defend!
@@ -1064,7 +1067,7 @@ On Error GoTo err_handler
       'turn finished, push to next player (for SP thats you)
       thisPlayer = setNextPlayer(player.ID)
       If thisPlayer <> player.ID Then
-         PutMsg "Next Players Turn", thisPlayer, Logic!GameCntr
+         PutMsg "Next Player's Turn", thisPlayer, Logic!GameCntr
       End If
 
       actionSeq = ASidle
@@ -1641,7 +1644,7 @@ With sftTree
       .CellBackColor(Index, 0) = getPlayerColor(rst!playerID)
       .CellForeColor(Index, 0) = 0
       .ItemLevel(Index) = 0
-      .CellText(Index, 1) = PlayCode(rst!playerID).PlayName & IIf(rst!playerID = player.ID, " [AI]", "")
+      .CellText(Index, 1) = rst!ship & " [AI]"  ' PlayCode(rst!playerID).PlayName & IIf(rst!playerID = player.ID, " [AI]", "")
       .CellFont(Index, 1).Name = "BankGothic Md BT"
       .CellForeColor(Index, 1) = 0
       .CellBackColor(Index, 1) = getPlayerColor(rst!playerID)
@@ -2147,7 +2150,7 @@ With sftTree2
    While Not rst3.EOF
       Index = .AddItem(CStr(rst3!playerID) & IIf(isOutlaw(rst3!playerID), " - outlaw", ""))
       .ItemLevel(Index) = 0
-      .CellText(Index, 1) = PlayCode(rst3!playerID).PlayName & IIf(rst3!playerID = player.ID, " [AI]", "")
+      .CellText(Index, 1) = rst3!ship & " [AI]" ' PlayCode(rst3!playerID).PlayName & IIf(rst3!playerID = player.ID, " [AI]", "")
       .CellFont(Index, 1).Name = "BankGothic Md BT"
       For x = 0 To 8
          .CellForeColor(Index, x) = 0

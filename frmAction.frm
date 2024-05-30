@@ -1782,6 +1782,8 @@ Private Sub imgShore_Click()
    With imgShore
        If .Tag = "Y" Then
           playsnd 8
+          If MoseyMovesDone > 0 Then moseydone = True 'already moseyed
+          If FullburnMovesDone > 0 Then fullburndone = True
           disableAllButtons
           setVisState imgFuelBuy, False
           setVisState imgPartsBuy, False

@@ -49,18 +49,18 @@ Begin VB.MDIForm Main
       MaskColor       =   12632256
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   19
+         NumListImages   =   33
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":4093C
             Key             =   "ship"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":40D90
-            Key             =   "start"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":411E4
-            Key             =   "exit"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":41638
@@ -68,7 +68,7 @@ Begin VB.MDIForm Main
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":41CB2
-            Key             =   "chat"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":42104
@@ -80,23 +80,23 @@ Begin VB.MDIForm Main
          EndProperty
          BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":431A8
-            Key             =   "job"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":435FA
-            Key             =   "deal"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":43A4C
-            Key             =   "join"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":43E9E
-            Key             =   "cash"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":441B8
-            Key             =   "help"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":444D2
@@ -104,27 +104,83 @@ Begin VB.MDIForm Main
          EndProperty
          BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":447EC
-            Key             =   "hat"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":44B06
-            Key             =   "crewz"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage16 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":44E20
-            Key             =   "serenity"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":4513A
-            Key             =   "upgrd"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":4558C
-            Key             =   "log"
+            Key             =   ""
          EndProperty
          BeginProperty ListImage19 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Main.frx":459DE
+            Key             =   ""
+         EndProperty
+         BeginProperty ListImage20 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":45CF8
+            Key             =   "start"
+         EndProperty
+         BeginProperty ListImage21 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":46DD2
+            Key             =   "join"
+         EndProperty
+         BeginProperty ListImage22 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":47EAC
+            Key             =   "exit"
+         EndProperty
+         BeginProperty ListImage23 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":48F86
+            Key             =   "chat"
+         EndProperty
+         BeginProperty ListImage24 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":4A060
             Key             =   "graph"
+         EndProperty
+         BeginProperty ListImage25 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":4B13A
+            Key             =   "log"
+         EndProperty
+         BeginProperty ListImage26 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":4C214
+            Key             =   "crewz"
+         EndProperty
+         BeginProperty ListImage27 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":4D2EE
+            Key             =   "hat"
+         EndProperty
+         BeginProperty ListImage28 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":4E3C8
+            Key             =   "upgrd"
+         EndProperty
+         BeginProperty ListImage29 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":4F4A2
+            Key             =   "serenity"
+         EndProperty
+         BeginProperty ListImage30 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":5057C
+            Key             =   "job"
+         EndProperty
+         BeginProperty ListImage31 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":51656
+            Key             =   "deal"
+         EndProperty
+         BeginProperty ListImage32 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":52730
+            Key             =   "cash"
+         EndProperty
+         BeginProperty ListImage33 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Main.frx":5380A
+            Key             =   "help"
          EndProperty
       EndProperty
    End
@@ -236,7 +292,7 @@ Begin VB.MDIForm Main
                NumButtonMenus  =   2
                BeginProperty ButtonMenu1 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "alldeals"
-                  Text            =   "All"
+                  Text            =   "All Deals"
                EndProperty
                BeginProperty ButtonMenu2 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "localdeals"
@@ -253,7 +309,7 @@ Begin VB.MDIForm Main
                NumButtonMenus  =   2
                BeginProperty ButtonMenu1 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "allbuys"
-                  Text            =   "All"
+                  Text            =   "All Buys"
                EndProperty
                BeginProperty ButtonMenu2 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "localbuys"
@@ -270,7 +326,7 @@ Begin VB.MDIForm Main
             ImageKey        =   "help"
             Style           =   5
             BeginProperty ButtonMenus {66833FEC-8583-11D1-B16A-00C0F0283628} 
-               NumButtonMenus  =   9
+               NumButtonMenus  =   10
                BeginProperty ButtonMenu1 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "firefly"
                   Text            =   "Firefly Rulebook"
@@ -300,10 +356,14 @@ Begin VB.MDIForm Main
                   Text            =   "start an AI Player Bot"
                EndProperty
                BeginProperty ButtonMenu8 {66833FEE-8583-11D1-B16A-00C0F0283628} 
+                  Key             =   "map"
+                  Text            =   "toggle Map Style"
+               EndProperty
+               BeginProperty ButtonMenu9 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "check"
                   Text            =   "Check latest Release"
                EndProperty
-               BeginProperty ButtonMenu9 {66833FEE-8583-11D1-B16A-00C0F0283628} 
+               BeginProperty ButtonMenu10 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "about"
                   Text            =   "About"
                EndProperty
@@ -319,7 +379,7 @@ Begin VB.MDIForm Main
          Height          =   285
          Index           =   4
          Left            =   14335
-         Picture         =   "Main.frx":45CF8
+         Picture         =   "Main.frx":548E4
          ScaleHeight     =   285
          ScaleWidth      =   240
          TabIndex        =   14
@@ -336,7 +396,7 @@ Begin VB.MDIForm Main
          Height          =   285
          Index           =   3
          Left            =   13930
-         Picture         =   "Main.frx":460CA
+         Picture         =   "Main.frx":54CB6
          ScaleHeight     =   285
          ScaleWidth      =   240
          TabIndex        =   13
@@ -353,7 +413,7 @@ Begin VB.MDIForm Main
          Height          =   285
          Index           =   2
          Left            =   13525
-         Picture         =   "Main.frx":4649C
+         Picture         =   "Main.frx":55088
          ScaleHeight     =   285
          ScaleWidth      =   240
          TabIndex        =   12
@@ -370,7 +430,7 @@ Begin VB.MDIForm Main
          Height          =   285
          Index           =   1
          Left            =   13120
-         Picture         =   "Main.frx":4686E
+         Picture         =   "Main.frx":5545A
          ScaleHeight     =   285
          ScaleWidth      =   240
          TabIndex        =   11
@@ -387,7 +447,7 @@ Begin VB.MDIForm Main
          Height          =   360
          Index           =   8
          Left            =   12340
-         Picture         =   "Main.frx":46C40
+         Picture         =   "Main.frx":5582C
          ScaleHeight     =   360
          ScaleWidth      =   360
          TabIndex        =   10
@@ -403,7 +463,7 @@ Begin VB.MDIForm Main
          Height          =   360
          Index           =   7
          Left            =   11960
-         Picture         =   "Main.frx":4721B
+         Picture         =   "Main.frx":55E07
          ScaleHeight     =   360
          ScaleWidth      =   360
          TabIndex        =   9
@@ -419,7 +479,7 @@ Begin VB.MDIForm Main
          Height          =   360
          Index           =   6
          Left            =   11580
-         Picture         =   "Main.frx":477AF
+         Picture         =   "Main.frx":5639B
          ScaleHeight     =   360
          ScaleWidth      =   360
          TabIndex        =   8
@@ -435,7 +495,7 @@ Begin VB.MDIForm Main
          Height          =   360
          Index           =   5
          Left            =   11200
-         Picture         =   "Main.frx":47DB7
+         Picture         =   "Main.frx":569A3
          ScaleHeight     =   360
          ScaleWidth      =   360
          TabIndex        =   7
@@ -451,7 +511,7 @@ Begin VB.MDIForm Main
          Height          =   360
          Index           =   4
          Left            =   10820
-         Picture         =   "Main.frx":47FCB
+         Picture         =   "Main.frx":56BB7
          ScaleHeight     =   360
          ScaleWidth      =   360
          TabIndex        =   6
@@ -467,7 +527,7 @@ Begin VB.MDIForm Main
          Height          =   360
          Index           =   3
          Left            =   10440
-         Picture         =   "Main.frx":4852C
+         Picture         =   "Main.frx":57118
          ScaleHeight     =   360
          ScaleWidth      =   360
          TabIndex        =   5
@@ -483,7 +543,7 @@ Begin VB.MDIForm Main
          Height          =   360
          Index           =   2
          Left            =   10060
-         Picture         =   "Main.frx":48ADC
+         Picture         =   "Main.frx":576C8
          ScaleHeight     =   360
          ScaleWidth      =   360
          TabIndex        =   4
@@ -499,7 +559,7 @@ Begin VB.MDIForm Main
          Height          =   360
          Index           =   1
          Left            =   9680
-         Picture         =   "Main.frx":490B0
+         Picture         =   "Main.frx":57C9C
          ScaleHeight     =   360
          ScaleWidth      =   360
          TabIndex        =   3
@@ -515,7 +575,7 @@ Begin VB.MDIForm Main
          Height          =   360
          Index           =   9
          Left            =   12720
-         Picture         =   "Main.frx":4969E
+         Picture         =   "Main.frx":5828A
          ScaleHeight     =   360
          ScaleWidth      =   360
          TabIndex        =   2
@@ -681,12 +741,17 @@ On Error GoTo err_handler
       'initiate the skill selection
       actionSeq = ASBountySkill
       'MessBox "You have been Boarded by " & PlayCode(thisplayer).PlayName & "!!" & vbNewLine & "Prepare your Crew for a Showdown, then select a Skill once you're ready.", "SHOWDOWN", "OK", "", getLeader()
-      showBoarded thisplayer, "You have been Boarded by " & PlayCode(thisplayer).PlayName & "!!" & vbNewLine & "Prepare your Crew for a Showdown, then select a Skill once you're ready."
+      X = showBoarded(thisplayer)
       Set frmSkill = New frmSkillSel
-      frmSkill.setMode 2
-      frmSkill.AlwaysOnTop = True
-      frmSkill.Show 0, Me
-   
+      If X > 0 Then
+         frmSkill.skill = X
+         actionSeq = ASBountySkillSel
+         playsnd 8
+      Else
+         frmSkill.setMode 2
+         frmSkill.AlwaysOnTop = True
+         frmSkill.Show 0, Me
+      End If
    ElseIf status = "F" And thisplayer <> player.ID And actionSeq = ASBountySkillSel And Logic!trader = player.ID Then 'showdown - defend!
       'MessBox "You have selected Skill " & frmSkill.Skill, "Skill", "OK"
       X = frmSkill.skill
@@ -966,7 +1031,7 @@ On Error GoTo err_handler
       If getPerkAttributeCrew(player.ID, "FreeShoreLeave") > 0 Then
          PutMsg player.PlayName & " had the Barkeep shout the Crew some free Shore Leave", player.ID, Logic!Gamecntr, True, 71
       ElseIf hasShipUpgrade(player.ID, 19) Then
-         PutMsg player.PlayName & " treated the Crew with a shiny Board Game for $" & CStr(X), player.ID, Logic!Gamecntr, True, 0, 0, 19
+         PutMsg player.PlayName & " treated the Crew with a shiny Board Game for $" & CStr(Abs(X)), player.ID, Logic!Gamecntr, True, 0, 0, 19
       Else
          PutMsg player.PlayName & " went on Shore Leave at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID) & " for $" & CStr(Abs(X)), player.ID, Logic!Gamecntr
       End If
@@ -1405,9 +1470,11 @@ Dim coords, c() As String, X
          .imgAToken(rst!SectorID).Left = c(0)
          .imgAToken(rst!SectorID).top = c(1)
          Set .imgAToken(rst!SectorID).Container = .Picture1
+         .imgAToken(rst!SectorID).Tag = CStr(rst!AToken)
          If rst!AToken > 0 Then
-            .imgAToken(rst!SectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\AToken" & IIf(rst!AToken > 6, 6, rst!AToken) & ".bmp")
+            .imgAToken(rst!SectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\AToken" & IIf(rst!AToken > 6, 6, rst!AToken) & ".gif")
             .imgAToken(rst!SectorID).Visible = True
+            .imgAToken(rst!SectorID).Animate2.StartAnimation
          End If
          .imgAToken(rst!SectorID).TransparentColor = &HFFFFFF
          .imgAToken(rst!SectorID).TransparentColorMode = lvicUseTransparentColor
@@ -1416,9 +1483,11 @@ Dim coords, c() As String, X
          .imgToken(rst!SectorID).Left = c(0) + 100
          .imgToken(rst!SectorID).top = c(1) + 100
          Set .imgToken(rst!SectorID).Container = .Picture1
+         .imgToken(rst!SectorID).Tag = CStr(rst!Token)
          If rst!Token > 0 Then
-            .imgToken(rst!SectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\RToken" & IIf(rst!Token > 6, 6, rst!Token) & ".bmp")
+            .imgToken(rst!SectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\RToken" & IIf(rst!Token > 6, 6, rst!Token) & ".gif")
             .imgToken(rst!SectorID).Visible = True
+            .imgToken(rst!SectorID).Animate2.StartAnimation
          End If
          .imgToken(rst!SectorID).TransparentColor = &HFFFFFF
          .imgToken(rst!SectorID).TransparentColorMode = lvicUseTransparentColor
@@ -1593,16 +1662,22 @@ Dim frmJobEdit As frmJobEditor, X
     frmJobEdit.Show 1
    Case "bot"
       X = ShellExecute(X, "OPEN", App.Path & "\FireflyAIBot.exe ", datab, vbNullString, 1)               '1=normal, 2=min, 3=max, 4=behind
-      
+   Case "map"
+      Logic.Requery
+      If Logic!BoardPicture = "KalidasaBoard.jpg" Then
+         Logic!BoardPicture = "KalidasaBoard1.jpg"
+      Else
+         Logic!BoardPicture = "KalidasaBoard.jpg"
+      End If
+      Logic.Update
+      Verse.Picture1.Picture = LoadPicture(App.Path & "\Pictures\" & Logic!BoardPicture)
+   
    Case "check"
       X = ShellExecute(X, "OPEN", "https://github.com/blistik/FireflyKalidasa/releases", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
    
    Case "about"
-      'showBoarded 1, "You have been Boarded by Bill!!" & vbNewLine & "Prepare your Crew for a Showdown, then select a Skill once you're ready."
-   
-      MessBox "Firefly + Blue Sun/Kalidasa  V" & App.Major & "." & App.Minor & "." & App.Revision & vbNewLine & "*Freeware* - use at your own risk" & vbNewLine & "Made by: Vee Bee-er (c)2021-24 BLiSoftware" & _
-      vbNewLine & "All rights reserved - GF9 & Fox", "About", "Shiny"
-      
+      MessBox "Firefly + Blue Sun/Kalidasa  V" & App.Major & "." & App.Minor & "." & App.Revision & vbNewLine & "*Open Freeware* - use at your own risk" & vbNewLine & "Coded by: Vee Bee-er " & Chr(169) & " 2021-24 BLiSoftware" & _
+      vbNewLine & "All rights reserved - GF9 & Fox", "About", "Shiny", "", 0, 2
    End Select
 
 End Sub
@@ -1857,6 +1932,10 @@ Dim rst As New ADODB.Recordset, reaverActive As Boolean, moseyrng As Integer
 Dim frmJoSel As frmJobSel, hide As Boolean
 
    SectorID = getPlayerSector(player.ID)
+   If SectorID = 0 Then
+      MsgBox "The Starting Sector was not set, please reset and start a new game", vbExclamation, "Setup Issue"
+      Exit Sub
+   End If
    SoloGame = isSoloGame() 'as a player may drop out
    
    If ignoreToken <> SectorID And Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) Then 'must be moving into the sector to resolve token
@@ -1979,7 +2058,7 @@ Dim frmJoSel As frmJobSel, hide As Boolean
          .lblActiveJobs.ForeColor = &H3DCBFF
       End If
       
-      .setVisState .imgBDProof, (hasShipUpgrade(player.ID, 3) Or hasShipUpgrade(player.ID, 7))
+      .setVisState .imgBDProof, (hasShipUpgradeAttribute(player.ID, "IgnoreBreakdowns") > 0)
                   
       SQL = "SELECT * FROM Players WHERE PlayerID = " & player.ID
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
@@ -3241,14 +3320,14 @@ Dim frmCrew As frmCrewSel, oneOnOne As Integer
       ElseIf WSkill > 0 Then 'we have a skill test
          '-----------------------------------------
          'Stitch & Sheydra can change a Fight to a Nego once per Job
-         If WSkill = 3 And hasCrew(playerID, 27) And Not usedStitchSkill Then
+         If WSkill = 3 And hasCrew(playerID, 27) And Not usedStitchSkill Then 'Stitch
             If MessBox("Stitch wants to Fight instead of Negotiation.  Do you want to use those skills instead?", "Negotiate -> Fight", "Yes", "No", 27) = 0 Then
                WSkill = 1
                usedStitchSkill = True
                PutMsg player.PlayName & " uses Stitch's one time Negotiation to Fight Skills", playerID, Logic!Gamecntr, True, 27
             End If
          End If
-         If WSkill = 1 And getPerkAttributeCrew(playerID, "ChangeTestType") = 1 And Not usedStitchSkill Then
+         If WSkill = 1 And hasCrew(playerID, 66) And Not usedStitchSkill Then  'Sheydra
             If MessBox("Sheydra wants to Negotiate instead of Fight.  Do you want to use those skills instead?", "Fight -> Negotiate", "Yes", "No", 66) = 0 Then
                WSkill = 3
                usedStitchSkill = True
@@ -3334,7 +3413,7 @@ Dim frmCrew As frmCrewSel, oneOnOne As Integer
          End If
          
          '<<<<<<<<<< ROLL THE DICE >>>>>>>>>>>>>>>>>
-         Dice = RollDice(6, IIf(WSkill = 3 And hasCrew(playerID, 55), False, True)) 'Bester -On negotiate test, +6 "Thillin' Heroics" bonus dice does not apply
+         Dice = RollDice(6, IIf(WSkill = 2 And hasCrew(playerID, 55), False, True)) 'Bester -On tech test, +6 "Thillin' Heroics" bonus dice does not apply
          
          
          If WSkill = 1 And hasGear(playerID, 47) Then ' Zoe's Mare's Leg Rifle -When making a Fight Test, roll two dice and use the highest.
@@ -3348,7 +3427,7 @@ Dim frmCrew As frmCrewSel, oneOnOne As Integer
          If Dice = 1 Then  'reroll ones?
             If hasGear(playerID, 6) Then ' has Jaynes Cunning Hat
                Do While Dice = 1
-                  Dice = RollDice(6, IIf(WSkill = 3 And hasCrew(playerID, 55), False, True))
+                  Dice = RollDice(6, IIf(WSkill = 2 And hasCrew(playerID, 55), False, True))
                Loop
                PutMsg player.PlayName & " uses Jaynes Cunning Hat to reRoll a 1 and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, 0, 6, 0, 0, 0, Dice
                
@@ -3381,7 +3460,7 @@ Dim frmCrew As frmCrewSel, oneOnOne As Integer
             X = getPerkAttributeCrew(playerID, "RerollTech")
             If X > 0 Then
                If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
-                  Dice = RollDice(6, True)
+                  Dice = RollDice(6, IIf(WSkill = 2 And hasCrew(playerID, 55), False, True))
                   PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice
                End If
             End If
@@ -3392,7 +3471,7 @@ Dim frmCrew As frmCrewSel, oneOnOne As Integer
             X = getPerkAttributeCrew(playerID, "RerollNegotiate")
             If X > 0 Then
                If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
-                  Dice = RollDice(6, IIf(WSkill = 3 And hasCrew(playerID, 55), False, True))
+                  Dice = RollDice(6, True)
                   PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice
                End If
             End If
@@ -3606,11 +3685,12 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
    If Not rst.EOF Then
       PutMsg player.PlayName & "'s Nav log: " & rst!Details, player.ID, Logic!Gamecntr
       'let the tests begin ... :O  WIN, INTER OR FAIL ?
-      
+      X = 0
+      If rst!Breakdown = 1 Then X = hasShipUpgradeAttribute(player.ID, "IgnoreBreakdowns")
       'has breakdown insurance ?
-      If rst!Breakdown = 1 And (hasShipUpgrade(player.ID, 3) Or hasShipUpgrade(player.ID, 7)) Then
+      If rst!Breakdown = 1 And X > 0 Then
          result = 0
-         PutMsg player.PlayName & "'s Ship is breakdown proof!", player.ID, Logic!Gamecntr, True, getLeader()
+         PutMsg player.PlayName & "'s Ship is Breakdown Proof!", player.ID, Logic!Gamecntr, True, 0, 0, X
          Exit Function
          
       ElseIf rst!WinProfession > 0 And Not hasCrewAttribute(player.ID, cstrProfession(rst!WinProfession)) Then
@@ -4157,7 +4237,7 @@ End Function
 'save selected (Seq=6 + selected) to players Jobs, unselected back to 5 DISCARDED
 Public Function doDeal(ByVal playerID As Integer) As Integer
 Dim Index As Integer
-   With frmDeal.sftTree
+   With frmDeal.SftTree
       
       For Index = 0 To .ListCount - 1
          Select Case .ItemDataString(Index)
@@ -4178,7 +4258,7 @@ End Function
 'save selected (Seq=6 + selected) to players Jobs, unselected back to 5 DISCARDED
 Public Function doBuy(ByVal playerID As Integer) As Integer
 Dim Index As Integer, cost As Integer, imposter As Integer
-   With frmBuy.sftTree
+   With frmBuy.SftTree
       cost = 0
       For Index = 0 To .ListCount - 1
          imposter = 0
@@ -4943,13 +5023,13 @@ Dim frmSD As frmShowdown, skill As Integer, Dice As Integer, winShowdown As Bool
       
 End Sub
 
-Public Sub showBoarded(ByVal AttackerID As Integer, ByVal msg As String)
+Public Function showBoarded(ByVal AttackerID As Integer) As Integer
 Dim frmB As New frmBoarded
    frmB.thisplayer = AttackerID
-   frmB.lblMsg.Caption = msg
    frmB.Show vbModal
+   showBoarded = frmB.result
    Set frmB = Nothing
-End Sub
+End Function
 
 
 Private Sub issueWarrant(ByVal takerID As Integer, ByVal giverID As Integer)
@@ -5031,10 +5111,10 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
          End If
             
          'Roll the flippin Dice already!!!
-         Dice = RollDice(6, IIf(skill = 3 And hasCrew(player.ID, 55), False, True))
+         Dice = RollDice(6, IIf(skill = 2 And hasCrew(player.ID, 55), False, True))
          
          If skill = 1 And hasGear(player.ID, 47) Then ' Zoe's Mare's Leg Rifle -When making a Fight Test, roll two dice and use the highest.
-            X = RollDice(6, IIf(skill = 3 And hasCrew(player.ID, 55), False, True))
+            X = RollDice(6, True)
             If X > Dice Then
                PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(X), player.ID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, X, skill
                Dice = X
@@ -5077,7 +5157,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
             X = getPerkAttributeCrew(player.ID, "RerollTech")
             If X > 0 Then
                If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
-                  Dice = RollDice(6, True)
+                  Dice = RollDice(6, IIf(hasCrew(player.ID, 55), False, True))
                   PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice, skill
                End If
             End If
@@ -5087,7 +5167,7 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
             X = getPerkAttributeCrew(player.ID, "RerollNegotiate")
             If X > 0 Then
                If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
-                  Dice = RollDice(6, IIf(hasCrew(player.ID, 55), False, True))
+                  Dice = RollDice(6, True)
                   PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice, skill
                End If
             End If
@@ -5259,10 +5339,10 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
             End If
             
             '<<<<<<<<<<<<<< ROLL THE DICE >>>>>>>>>>>>>>>>>>>>>>>>>
-            Dice = RollDice(6, IIf(WSkill = 3 And hasCrew(player.ID, 55), False, True))
+            Dice = RollDice(6, IIf(WSkill = 2 And hasCrew(player.ID, 55), False, True))
             
             If WSkill = 1 And hasGear(player.ID, 47) Then ' Zoe's Mare's Leg Rifle -When making a Fight Test, roll two dice and use the highest.
-               X = RollDice(6, IIf(WSkill = 3 And hasCrew(player.ID, 55), False, True))
+               X = RollDice(6, True)
                If X > Dice Then
                   PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(X), player.ID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, X
                   Dice = X
@@ -5299,7 +5379,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                X = getPerkAttributeCrew(player.ID, "RerollTech")
                If X > 0 Then
                   If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
-                     Dice = RollDice(6, True)
+                     Dice = RollDice(6, IIf(WSkill = 3 And hasCrew(player.ID, 55), False, True))
                      PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice
                   End If
                End If
@@ -5310,7 +5390,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                X = getPerkAttributeCrew(player.ID, "RerollNegotiate")
                If X > 0 Then
                   If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
-                     Dice = RollDice(6, IIf(WSkill = 3 And hasCrew(player.ID, 55), False, True))
+                     Dice = RollDice(6, True)
                      PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice
                   End If
                End If

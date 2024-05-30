@@ -7,6 +7,19 @@ Test Issues pending:
 
 
 Version updates:
+v 1.9.9 ~ 27 May 2024
+new: Story - Against their Will
+new: Gear - Dobson's Vector Pistol
+fix: perk value for Keyword/Skill combo
+fix: Sheydra's perk
+gui: added an alternate Map style option (Rules menu)
+gui: crew/gear/upgrds in Buy "view only" mode now have icons as per ship view
+gui: Game "Events View" makeover
+gui: "Waiting Room" form makeover
+gui: Gear pic updates (by Bill)
+gui: "Being Boarded" popup graphics update (by Bill)
+gui: updated Alliance & Reaver Alert token graphics (by Bill)
+
 v 1.9.8 ~ 16 Apr 2024
 new: Story - Blood out of a Stone
 new: goal check option - no unfinished Jobs
@@ -21,9 +34,11 @@ gui: Refresh Ship, Job, Deal & Buy lists directly after Sector selection
 gui: add tickertape view to Work action's Job display and animated dropdown button when more than 1 job
 gui: tweaked Action Panel's display logic on End Turn
 gui: further Crew picture updates by Bill
-gui: steamline re-join game steps for solo play
+gui: streamline re-join game steps for solo play
 cfg: Jubal Early promoted to Leader & Bounty Hunter
 bot: v1.1.4 - tweaks to improve compatibility with MariaDB
+bot: support for Helmsman - Solid with Harken
+bot: can purchase Gear for its Leader
 
 v 1.9.7 ~  26 Mar 2024
 new: Story "Outlaws Forever - Bustin' Bounties"

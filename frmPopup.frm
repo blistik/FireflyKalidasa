@@ -3,16 +3,16 @@ Object = "{49801673-2EC8-456E-98B2-037B9B02A1C5}#1.0#0"; "LaVolpeAlphaImg2.ocx"
 Begin VB.Form frmPopup 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Activity Notice"
-   ClientHeight    =   1830
+   ClientHeight    =   1890
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   6615
+   ClientWidth     =   6630
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmPopup.frx":0000
-   ScaleHeight     =   1830
-   ScaleWidth      =   6615
+   ScaleHeight     =   1890
+   ScaleWidth      =   6630
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton cmd 
@@ -120,6 +120,7 @@ Begin VB.Form frmPopup
       Left            =   120
       TabIndex        =   0
       Top             =   180
+      UseMnemonic     =   0   'False
       Width           =   6405
    End
 End
@@ -134,7 +135,7 @@ Public result As Integer
 Private Sub cmd_Click(Index As Integer)
    result = Index
    playsnd 8
-   Me.Hide
+   Me.hide
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)

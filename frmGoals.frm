@@ -563,12 +563,12 @@ Dim SQL
 End Sub
 
 Private Sub Form_Load()
-Dim x, filter As String
+Dim X, filter As String
    
    LoadCombo lstContacts, "contact", " WHERE ContactID > 0"
    LoadCombo cbo(2), "planet"
    filter = Nz(varDLookup("ExcludeCrew", "Story", "StoryID=" & StoryID))
-   If filter <> "" Then LoadCombo lstCrew, "crew", " WHERE CrewID IN(" & filter & ")"
+   If filter <> "" Then LoadCombo lstCrew, "crew", " WHERE CrewID IN(" & filter & ") ORDER BY CrewName"
    comboRefresh
    Me.lbl(0).Caption = "Goal " & CStr(Goal)
    If Nz(varDLookup("StoryID", "StoryGoals", "StoryID=" & StoryID & " AND Goal=" & Goal), 0) = StoryID Then
@@ -577,13 +577,13 @@ Dim x, filter As String
    End If
    
    If Goal = 0 Then
-      For x = 0 To 7
-         txt(x).Enabled = False
-      Next x
+      For X = 0 To 7
+         txt(X).Enabled = False
+      Next X
 
-      For x = 0 To cbo.Count - 1
-         cbo(x).Enabled = False
-      Next x
+      For X = 0 To cbo.Count - 1
+         cbo(X).Enabled = False
+      Next X
       cbo(1).Enabled = True
       lstContacts.Enabled = False
       lstCrew.Enabled = False
@@ -606,69 +606,69 @@ Private Sub comboRefresh()
 End Sub
 
 Private Function getSolid() As String
-Dim x
+Dim X
    If Val(txt(6)) > 0 Then 'overrides
       getSolid = ""
       Exit Function
    End If
    With lstContacts
-      For x = 0 To .ListCount - 1
-         If .selected(x) Then
-            getSolid = getSolid & IIf(getSolid = "", "", ",") & CStr(.ItemData(x))
+      For X = 0 To .ListCount - 1
+         If .selected(X) Then
+            getSolid = getSolid & IIf(getSolid = "", "", ",") & CStr(.ItemData(X))
          End If
-      Next x
+      Next X
    End With
    
 End Function
 
 Private Sub setSolid(ByVal solids As String)
-Dim x, y, a() As String
+Dim X, Y, a() As String
 
    If solids = "" Then Exit Sub
    With lstContacts
    
          a = Split(solids, ",")
-         For y = LBound(a) To UBound(a)
-            For x = 0 To .ListCount - 1
-               If .ItemData(x) = Val(a(y)) Then
-                  .selected(x) = True
+         For Y = LBound(a) To UBound(a)
+            For X = 0 To .ListCount - 1
+               If .ItemData(X) = Val(a(Y)) Then
+                  .selected(X) = True
                   Exit For
                End If
-            Next x
-         Next y
+            Next X
+         Next Y
       
    End With
    
 End Sub
 
 Private Function getList(cbo As Control) As String
-Dim x
+Dim X
    With cbo
-      For x = 0 To .ListCount - 1
-         If .selected(x) Then
-            getList = getList & IIf(getList = "", "", ",") & CStr(.ItemData(x))
+      For X = 0 To .ListCount - 1
+         If .selected(X) Then
+            getList = getList & IIf(getList = "", "", ",") & CStr(.ItemData(X))
          End If
-      Next x
+      Next X
    End With
    
 End Function
 
 Private Function SetList(cbo As Control, ByVal theList As String) As Integer
-Dim x, y, a() As String
+Dim X, Y, a() As String
 
    If theList = "" Then Exit Function
    With cbo
    
          a = Split(theList, ",")
-         For y = LBound(a) To UBound(a)
-            For x = 0 To .ListCount - 1
-               If .ItemData(x) = Val(a(y)) Then
-                  .selected(x) = True
+         For Y = LBound(a) To UBound(a)
+            For X = 0 To .ListCount - 1
+               If .ItemData(X) = Val(a(Y)) Then
+                  .selected(X) = True
                   SetList = SetList + 1
                   Exit For
                End If
-            Next x
-         Next y
+            Next X
+         Next Y
       
    End With
    

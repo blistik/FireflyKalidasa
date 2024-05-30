@@ -490,7 +490,7 @@ Begin VB.Form frmStories
          Left            =   8490
          TabIndex        =   25
          Top             =   195
-         Width           =   1965
+         Width           =   2085
       End
       Begin VB.Label lbl 
          BackColor       =   &H00CBE1ED&

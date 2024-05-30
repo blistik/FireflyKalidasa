@@ -2,6 +2,7 @@ VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.2#0"; "MSCOMCTL.OCX"
 Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SFTTREEX.OCX"
 Begin VB.Form frmDiscardGear 
+   BackColor       =   &H00000000&
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Discard the single use item"
    ClientHeight    =   2790
@@ -11,7 +12,6 @@ Begin VB.Form frmDiscardGear
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   Picture         =   "frmDiscardGear.frx":0000
    ScaleHeight     =   2790
    ScaleWidth      =   11535
    ShowInTaskbar   =   0   'False
@@ -29,13 +29,13 @@ Begin VB.Form frmDiscardGear
       ForeColor       =   16777215
       BackColor       =   8388669
       BorderStyle     =   1
-      ItemPictureExpanded=   "frmDiscardGear.frx":6714
-      ItemPictureExpandable=   "frmDiscardGear.frx":6730
-      ItemPictureLeaf =   "frmDiscardGear.frx":674C
-      PlusMinusPictureExpanded=   "frmDiscardGear.frx":6768
-      PlusMinusPictureExpandable=   "frmDiscardGear.frx":6784
-      PlusMinusPictureLeaf=   "frmDiscardGear.frx":67A0
-      ButtonPicture   =   "frmDiscardGear.frx":67BC
+      ItemPictureExpanded=   "frmDiscardGear.frx":0000
+      ItemPictureExpandable=   "frmDiscardGear.frx":001C
+      ItemPictureLeaf =   "frmDiscardGear.frx":0038
+      PlusMinusPictureExpanded=   "frmDiscardGear.frx":0054
+      PlusMinusPictureExpandable=   "frmDiscardGear.frx":0070
+      PlusMinusPictureLeaf=   "frmDiscardGear.frx":008C
+      ButtonPicture   =   "frmDiscardGear.frx":00A8
       BeginProperty ColHeaderFont {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "MS Sans Serif"
          Size            =   8.25
@@ -68,63 +68,63 @@ Begin VB.Form frmDiscardGear
       TreeLineColor   =   -2147483632
       Columns         =   9
       ColTitle0       =   "ShipID"
-      ColBmp0         =   "frmDiscardGear.frx":67D8
+      ColBmp0         =   "frmDiscardGear.frx":00C4
       ColWidth1       =   133
       ColTitle1       =   "Ship Name"
-      ColBmp1         =   "frmDiscardGear.frx":67F4
+      ColBmp1         =   "frmDiscardGear.frx":00E0
       ColWidth2       =   253
       ColTitle2       =   "Functions"
-      ColBmp2         =   "frmDiscardGear.frx":6810
+      ColBmp2         =   "frmDiscardGear.frx":00FC
       ColWidth3       =   67
       ColTitle3       =   "-"
-      ColBmp3         =   "frmDiscardGear.frx":682C
+      ColBmp3         =   "frmDiscardGear.frx":0118
       ColWidth4       =   53
       ColStyle4       =   9
       ColTitle4       =   "-"
-      ColBmp4         =   "frmDiscardGear.frx":6848
+      ColBmp4         =   "frmDiscardGear.frx":0134
       ColWidth5       =   33
       ColStyle5       =   9
       ColTitle5       =   "Fight"
-      ColBmp5         =   "frmDiscardGear.frx":6864
+      ColBmp5         =   "frmDiscardGear.frx":0150
       ColWidth6       =   33
       ColStyle6       =   9
       ColTitle6       =   "Tech"
-      ColBmp6         =   "frmDiscardGear.frx":6880
+      ColBmp6         =   "frmDiscardGear.frx":016C
       ColWidth7       =   37
       ColStyle7       =   9
       ColTitle7       =   "Nego"
-      ColBmp7         =   "frmDiscardGear.frx":689C
+      ColBmp7         =   "frmDiscardGear.frx":0188
       ColWidth8       =   47
       ColTitle8       =   "Status"
-      ColBmp8         =   "frmDiscardGear.frx":68B8
-      MouseIcon       =   "frmDiscardGear.frx":68D4
+      ColBmp8         =   "frmDiscardGear.frx":01A4
+      MouseIcon       =   "frmDiscardGear.frx":01C0
       ColHeaderBackColor=   0
       ColHeaderForeColor=   65280
       ForeColor       =   16777215
       BackColor       =   8388669
       SelectStyle     =   2
       RowColHeaderAppearance=   0
-      RowColPicture   =   "frmDiscardGear.frx":68F0
+      RowColPicture   =   "frmDiscardGear.frx":01DC
       LeftButtonOnly  =   0   'False
       RowHeaderStyle  =   128
       RowHeaderAppearance=   0
-      ColPict0        =   "frmDiscardGear.frx":690C
-      ColPict1        =   "frmDiscardGear.frx":6928
+      ColPict0        =   "frmDiscardGear.frx":01F8
+      ColPict1        =   "frmDiscardGear.frx":0214
       ColFlag2        =   4
-      ColPict2        =   "frmDiscardGear.frx":6944
+      ColPict2        =   "frmDiscardGear.frx":0230
       ColFlag3        =   12
-      ColPict3        =   "frmDiscardGear.frx":6960
+      ColPict3        =   "frmDiscardGear.frx":024C
       ColFlag4        =   8
-      ColPict4        =   "frmDiscardGear.frx":697C
+      ColPict4        =   "frmDiscardGear.frx":0268
       ColFlag5        =   8
-      ColPict5        =   "frmDiscardGear.frx":6998
+      ColPict5        =   "frmDiscardGear.frx":0284
       ColFlag6        =   8
-      ColPict6        =   "frmDiscardGear.frx":69B4
+      ColPict6        =   "frmDiscardGear.frx":02A0
       ColFlag7        =   8
-      ColPict7        =   "frmDiscardGear.frx":69D0
+      ColPict7        =   "frmDiscardGear.frx":02BC
       ColFlag8        =   8
-      ColPict8        =   "frmDiscardGear.frx":69EC
-      BackgroundPicture=   "frmDiscardGear.frx":6A08
+      ColPict8        =   "frmDiscardGear.frx":02D8
+      BackgroundPicture=   "frmDiscardGear.frx":02F4
       ShowFocusRectangle=   0   'False
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
@@ -161,75 +161,75 @@ Begin VB.Form frmDiscardGear
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   18
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":6A24
+            Picture         =   "frmDiscardGear.frx":0310
             Key             =   "UN"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":6CB6
+            Picture         =   "frmDiscardGear.frx":05A2
             Key             =   "ST"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":6F48
+            Picture         =   "frmDiscardGear.frx":0834
             Key             =   "NT"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":7B9A
+            Picture         =   "frmDiscardGear.frx":1486
             Key             =   "CS"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":83EC
+            Picture         =   "frmDiscardGear.frx":1CD8
             Key             =   "ZS"
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":8C3E
+            Picture         =   "frmDiscardGear.frx":252A
             Key             =   "L"
          EndProperty
          BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":9890
+            Picture         =   "frmDiscardGear.frx":317C
             Key             =   "U"
          EndProperty
          BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":A4E2
+            Picture         =   "frmDiscardGear.frx":3DCE
             Key             =   "SG"
          EndProperty
          BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":AD34
+            Picture         =   "frmDiscardGear.frx":4620
             Key             =   "R"
          EndProperty
          BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":B986
+            Picture         =   "frmDiscardGear.frx":5272
             Key             =   "D"
          EndProperty
          BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":C5D8
+            Picture         =   "frmDiscardGear.frx":5EC4
             Key             =   "O"
          EndProperty
          BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":D22A
+            Picture         =   "frmDiscardGear.frx":6B16
             Key             =   "P"
          EndProperty
          BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":D384
+            Picture         =   "frmDiscardGear.frx":6C70
             Key             =   "PS"
          EndProperty
          BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":D69E
+            Picture         =   "frmDiscardGear.frx":6F8A
             Key             =   "LN"
          EndProperty
          BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":D9B8
+            Picture         =   "frmDiscardGear.frx":72A4
             Key             =   "CN"
          EndProperty
          BeginProperty ListImage16 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":DCD2
+            Picture         =   "frmDiscardGear.frx":75BE
             Key             =   "GR"
          EndProperty
          BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":DFEC
+            Picture         =   "frmDiscardGear.frx":78D8
             Key             =   "UP"
          EndProperty
          BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmDiscardGear.frx":E43E
+            Picture         =   "frmDiscardGear.frx":7D2A
             Key             =   "LD"
          EndProperty
       EndProperty
@@ -259,6 +259,7 @@ Private Sub cmd_Click()
 End Sub
 
 Private Sub Form_Load()
+  Set Me.Picture = LoadPicture(App.Path & "\pictures\showdown.jpg")
     With sftTree
        Set .ItemPictureExpandable = AssetImages.Overlay("U", "U")
        Set .ItemPictureExpanded = AssetImages.Overlay("U", "D")

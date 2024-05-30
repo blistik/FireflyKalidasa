@@ -11,7 +11,6 @@ Begin VB.Form frmMisbehave
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   Picture         =   "frmMisbehave.frx":0000
    ScaleHeight     =   8115
    ScaleWidth      =   5985
    ShowInTaskbar   =   0   'False
@@ -110,7 +109,7 @@ Begin VB.Form frmMisbehave
       _ExtentX        =   1138
       _ExtentY        =   688
       Trans           =   100663295
-      Effects         =   "frmMisbehave.frx":9FFA2
+      Effects         =   "frmMisbehave.frx":0000
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl SkillImg 
       Height          =   390
@@ -121,7 +120,7 @@ Begin VB.Form frmMisbehave
       _ExtentX        =   1138
       _ExtentY        =   688
       Trans           =   100663295
-      Effects         =   "frmMisbehave.frx":9FFBA
+      Effects         =   "frmMisbehave.frx":0018
    End
    Begin VB.Label lblKey 
       Alignment       =   2  'Center
@@ -200,7 +199,7 @@ Begin VB.Form frmMisbehave
       Width           =   615
       _ExtentX        =   1085
       _ExtentY        =   1138
-      Effects         =   "frmMisbehave.frx":9FFD2
+      Effects         =   "frmMisbehave.frx":0030
    End
    Begin VB.Label lblName 
       BackStyle       =   0  'Transparent
@@ -283,7 +282,7 @@ Begin VB.Form frmMisbehave
       Width           =   615
       _ExtentX        =   1085
       _ExtentY        =   1138
-      Effects         =   "frmMisbehave.frx":9FFEA
+      Effects         =   "frmMisbehave.frx":0048
    End
 End
 Attribute VB_Name = "frmMisbehave"
@@ -295,7 +294,7 @@ Option Explicit
 Public MBCardID, MBOption, hasAce As Boolean, dalin As Boolean
 
 Private Sub cmd_Click(Index As Integer)
-Dim X
+Dim x
    playsnd 8
    Select Case Index
       Case 0
@@ -324,14 +323,15 @@ Dim X
          dalin = False
    End Select
    
-   For X = 0 To 3
-      cmd(X).Enabled = False
-   Next X
+   For x = 0 To 3
+      cmd(x).Enabled = False
+   Next x
    Me.hide
 End Sub
 
 Private Sub Form_Load()
    hasAce = False
+    Set Me.Picture = LoadPicture(App.Path & "\pictures\MisbehaveTemplate.bmp")
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)

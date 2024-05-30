@@ -151,7 +151,7 @@ Begin VB.Form frmSupply
       MaskColor       =   16777215
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   14
+         NumListImages   =   19
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "frmSupply.frx":0652
             Key             =   "UN"
@@ -207,6 +207,26 @@ Begin VB.Form frmSupply
          BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "frmSupply.frx":72CC
             Key             =   "UP"
+         EndProperty
+         BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmSupply.frx":771E
+            Key             =   "SU"
+         EndProperty
+         BeginProperty ListImage16 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmSupply.frx":7B70
+            Key             =   "MA"
+         EndProperty
+         BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmSupply.frx":7FC2
+            Key             =   "fight"
+         EndProperty
+         BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmSupply.frx":8314
+            Key             =   "negot"
+         EndProperty
+         BeginProperty ListImage19 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmSupply.frx":8666
+            Key             =   "tech"
          EndProperty
       EndProperty
    End
@@ -265,12 +285,13 @@ Dim Index, SQL
 Dim rst As New ADODB.Recordset
 Dim rst2 As New ADODB.Recordset
 Dim rst3 As New ADODB.Recordset
-Dim SectorID, SupplyID As Integer, x, first As Boolean, discount As Single
+Dim SectorID, SupplyID As Integer, X, first As Boolean, discount As Single
     
 With sftTree
    .Clear
    
    SectorID = varDLookup("SectorID", "Players", "PlayerID=" & player.ID)
+   If IsNull(SectorID) Then Exit Sub
    If Left(buyFilter, 5) = "local" Then
       If buyFilter = "localbuy" Then
          Me.Caption = "Local Buys for Consideration"
@@ -301,10 +322,10 @@ With sftTree
       .CellFont(Index, 1).Name = "BankGothic Md BT"
       .CellText(Index, 2) = CStr(getUnseenDeck("Supply", rst3!SupplyID)) & " unseen"
       .CellFont(Index, 2).Name = "BankGothic Md BT"
-      For x = 0 To 8
-         .CellForeColor(Index, x) = 0
-         .CellBackColor(Index, x) = rst3!Colour
-      Next x
+      For X = 0 To 8
+         .CellForeColor(Index, X) = 0
+         .CellBackColor(Index, X) = rst3!Colour
+      Next X
       Set .ItemPicture(Index) = AssetImages.Overlay("L", "U")
       
       'Crew for Hire ____________________________________
@@ -337,6 +358,12 @@ With sftTree
          If rst!Seq = 6 Then
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
             .ItemDataString(Index) = "UN"
+         ElseIf actionSeq = ASselect Then
+            If Main.frmShip Is Nothing Then
+               Set .ItemPicture(Index) = LoadPicture(App.Path & "\Pictures\Sm" & rst!Picture)
+            Else
+               Set .ItemPicture(Index) = Main.frmShip.AssetImages.ListImages(Main.frmShip.findImageKey(rst!Picture)).Picture
+            End If
          Else
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "O")
             .ItemDataString(Index) = "O"
@@ -422,6 +449,21 @@ With sftTree
          If rst!Seq = 6 Then
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
             .ItemDataString(Index) = "UN"
+            
+         ElseIf actionSeq = ASselect Then
+         
+            If InStr(rst!GearName, "Charts") > 0 Or InStr(rst!GearName, "Contract") > 0 Then
+               Set .ItemPicture(Index) = AssetImages.Overlay("L", "MA")
+            ElseIf rst!fight > 0 Then
+               Set .ItemPicture(Index) = AssetImages.Overlay("L", "fight")
+            ElseIf rst!tech > 0 Then
+               Set .ItemPicture(Index) = AssetImages.Overlay("L", "tech")
+            ElseIf rst!Negotiate > 0 Then
+               Set .ItemPicture(Index) = AssetImages.Overlay("L", "negot")
+            Else
+               Set .ItemPicture(Index) = AssetImages.Overlay("L", "GR")
+            End If
+         
          Else
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "O")
             .ItemDataString(Index) = "O"
@@ -482,6 +524,7 @@ With sftTree
          'Keywords
          .CellText(Index, 9) = Nz(rst!KeyWords, "")
          .CellForeColor(Index, 9) = 65280
+         If rst!discard = 1 Then .CellFont(Index, 9).Italic = True
          
          rst.MoveNext
       Wend
@@ -517,6 +560,10 @@ With sftTree
          If rst!Seq = 6 Then
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
             .ItemDataString(Index) = "UN"
+            
+         ElseIf actionSeq = ASselect Then
+            Set .ItemPicture(Index) = AssetImages.Overlay("L", IIf(rst!DriveCore = 1, "SU", "UP"))
+                        
          Else
             Set .ItemPicture(Index) = AssetImages.Overlay("L", "O")
             .ItemDataString(Index) = "O"
@@ -546,7 +593,7 @@ With sftTree
          End If
          
          'Keywords
-         .CellText(Index, 9) = Nz(rst!Keyword, "")
+         .CellText(Index, 9) = Nz(rst!keyword, "")
          .CellForeColor(Index, 9) = 65280
          
          rst.MoveNext

@@ -9,6 +9,7 @@ Begin VB.Form frmCrewLst
    ClientTop       =   465
    ClientWidth     =   11760
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   5400
@@ -132,6 +133,26 @@ Begin VB.Form frmCrewLst
       BackgroundPicture=   "frmCrewLst.frx":032C
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
+   End
+   Begin VB.CommandButton cmdSelAll 
+      BackColor       =   &H00FF8080&
+      Caption         =   "Unselect All"
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   345
+      Left            =   9090
+      Style           =   1  'Graphical
+      TabIndex        =   6
+      Top             =   4980
+      Visible         =   0   'False
+      Width           =   1365
    End
    Begin VB.CheckBox chk 
       Caption         =   "Others"
@@ -360,16 +381,28 @@ Dim Index As Integer, imposter As Integer
             End If
          Next Index
       
-         Me.Hide
+         Me.hide
       ElseIf selectCrew > 0 Then
          MessBox "No more than " & selectCrew & " crew and less than $" & costLimit, "Choose wisely", "Ooops", "", getLeader()
       Else
          MessBox "No more than 1 crew", "Choose wisely", "Ooops", "", getLeader()
       End If
    Else
-      Me.Hide
+      Me.hide
    End If
    End With
+End Sub
+
+Private Sub cmdSelAll_Click()
+Dim Index As Long
+
+   With sftTree
+      For Index = 1 To .ListCount - 1
+         .ItemDataString(Index) = "O"
+         Set .ItemPicture(Index) = AssetImages.Overlay("L", "O")
+      Next Index
+   End With
+   updatePay
 End Sub
 
 Private Sub Form_Resize()
@@ -378,9 +411,9 @@ Dim x
   For x = 0 To 2
       chk(x).Move Abs(Me.ScaleWidth - (1200 * (x + 1)) - 2000), Abs(Me.ScaleHeight - 330), chk(x).Width, chk(x).Height
   Next x
-  'chk(1).top = Me.ScaleHeight - 300
-  'chk(2).top = Me.ScaleHeight - 300
+
   cmd.Move Abs(Me.ScaleWidth - 1500), Abs(Me.ScaleHeight - 390), cmd.Width, cmd.Height
+  cmdSelAll.Move Abs(Me.ScaleWidth - 3000), Abs(Me.ScaleHeight - 390), cmdSelAll.Width, cmdSelAll.Height
   Label1.Move Label1.Left, Abs(Me.ScaleHeight - 330), Label1.Width, Label1.Height
   
 End Sub
@@ -388,7 +421,7 @@ End Sub
 Private Sub sftTree_ItemClick(ByVal Index As Long, ByVal ColNum As Integer, ByVal AreaType As Integer, ByVal Button As Integer, ByVal Shift As Integer)
 With sftTree
 
-  If Button = constSftTreeLeftButton And (AreaType = constSftTreeItem Or AreaType = constSftTreeCellText) Then
+  If Button = constSftTreeLeftButton And (AreaType = constSftTreeItem Or AreaType = constSftTreeCellText) And .ItemDataString(Index) <> "" Then
          Select Case .ItemDataString(Index)
          Case "R"  'no pay
 
@@ -495,6 +528,7 @@ With sftTree
          chk(0).Visible = True
          chk(1).Visible = True
          chk(2).Visible = True
+         cmdSelAll.Visible = False
       
          SQL = "SELECT SupplyDeck.CardID, Crew.*, Perk.PerkDescription "
          SQL = SQL & "FROM PlayerSupplies RIGHT JOIN (Perk INNER JOIN (Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID) ON Perk.PerkID = Crew.PerkID) ON PlayerSupplies.CardID = SupplyDeck.CardID "
@@ -524,6 +558,7 @@ With sftTree
          
          SQL = SQL & " ORDER BY Pilot DESC, Mechanic DESC, Companion DESC, Soldier DESC, Merc DESC, HillFolk DESC, Medic DESC, Grifter DESC, CrewName"
       Case Else 'pay crew
+         cmdSelAll.Visible = True
          SQL = "SELECT PlayerSupplies.CardID, Crew.*, Perk.PerkDescription"
          SQL = SQL & " FROM Perk INNER JOIN (Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID) ON Perk.PerkID = Crew.PerkID "
          SQL = SQL & "WHERE Leader=0 AND Crew.Pay>0 AND PlayerSupplies.PlayerID=" & player.ID    'removed AND PlayerSupplies.OffJob=0 - FAQ4.1

@@ -248,12 +248,13 @@ Dim Index, SQL, showBounty As Boolean
 Dim rst As New ADODB.Recordset
 Dim rst2 As New ADODB.Recordset
 Dim rst3 As New ADODB.Recordset
-Dim SectorID, ContactID As Integer, x, cnt As Integer
+Dim SectorID, ContactID As Integer, X, cnt As Integer
     
 With sftTree
    .Clear
    
    SectorID = varDLookup("SectorID", "Players", "PlayerID=" & player.ID)
+   If IsNull(SectorID) Then Exit Function
    showBounty = (varDLookup("Bounty", "Story", "StoryID=" & Logic!StoryID) = 1)
    If Left(dealFilter, 5) = "local" Then
       If dealFilter = "localdeal" Then
@@ -261,6 +262,7 @@ With sftTree
       Else
          Me.Caption = "Local Deals"
       End If
+      
       ContactID = Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0)
       
       If HigginsDealPerk Or (hasCrew(player.ID, 75) And ContactID = 0) And dealFilter = "locals" And Not hasCrew(player.ID, 22) Then
@@ -304,10 +306,10 @@ With sftTree
       .CellFont(Index, 1).Name = "BankGothic Md BT"
       .CellText(Index, 2) = CStr(getUnseenDeck("Contact", rst3!ContactID)) & " unseen"
       .CellFont(Index, 2).Name = "BankGothic Md BT"
-      For x = 0 To 8
-         .CellForeColor(Index, x) = 0
-         .CellBackColor(Index, x) = rst3!Colour
-      Next x
+      For X = 0 To 8
+         .CellForeColor(Index, X) = 0
+         .CellBackColor(Index, X) = rst3!Colour
+      Next X
       Set .ItemPicture(Index) = LoadPicture(App.Path & "\Pictures\Sm" & Nz(varDLookup("Picture", "Contact", "ContactID=" & rst3!ContactID)))
       'Set .ItemPicture(Index) = AssetImages.Overlay("L", "U")
     
@@ -339,10 +341,10 @@ With sftTree
          .CellText(Index, 1) = rst!JobName
          .CellBackColor(Index, 1) = rst!Colour
          If rst!ContactID = 10 Then
-            x = varDLookup("Seq", "SupplyDeck", "CrewID=" & rst!FugitiveID)
-            Select Case x
+            X = varDLookup("Seq", "SupplyDeck", "CrewID=" & rst!FugitiveID)
+            Select Case X
             Case 1, 2, 3, 4
-               .CellBackColor(Index, 1) = getPlayerColor(x)
+               .CellBackColor(Index, 1) = getPlayerColor(X)
                .CellFont(Index, 1).Bold = True
             Case DISCARDED
                .CellFont(Index, 1).Bold = True
@@ -383,8 +385,8 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 2
                .CellText(Index, 1) = rst2!JobDesc
-               x = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+               X = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
                If SectorID = rst2!SectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
@@ -417,8 +419,8 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 3
                .CellText(Index, 1) = rst2!JobDesc
-               x = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+               X = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
                If SectorID = rst2!SectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
@@ -450,8 +452,8 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 2
                .CellText(Index, 1) = rst2!JobDesc
-               x = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+               X = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
                If SectorID = rst2!SectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True

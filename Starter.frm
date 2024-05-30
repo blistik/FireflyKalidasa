@@ -1,18 +1,18 @@
 VERSION 5.00
 Begin VB.Form Starter 
+   BackColor       =   &H00000000&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Waiting Room"
-   ClientHeight    =   4725
+   ClientHeight    =   4770
    ClientLeft      =   -15
    ClientTop       =   270
-   ClientWidth     =   5760
+   ClientWidth     =   7350
    Icon            =   "Starter.frx":0000
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   Picture         =   "Starter.frx":0442
-   ScaleHeight     =   4725
-   ScaleWidth      =   5760
+   ScaleHeight     =   4770
+   ScaleWidth      =   7350
    StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
@@ -28,10 +28,10 @@ Begin VB.Form Starter
       EndProperty
       Height          =   375
       Index           =   3
-      Left            =   2550
+      Left            =   3720
       Style           =   1  'Graphical
       TabIndex        =   16
-      Top             =   2550
+      Top             =   2490
       Visible         =   0   'False
       Width           =   1905
    End
@@ -49,33 +49,45 @@ Begin VB.Form Starter
       EndProperty
       Height          =   315
       Index           =   2
-      Left            =   5200
+      Left            =   6120
       Style           =   1  'Graphical
       TabIndex        =   15
       ToolTipText     =   "Edit this Story Card"
-      Top             =   3150
+      Top             =   3090
       Width           =   375
    End
    Begin VB.CheckBox chkAI 
-      BackColor       =   &H00CBE1ED&
+      Appearance      =   0  'Flat
+      BackColor       =   &H00343644&
       Caption         =   "auto move Crusier, Corvette && Cutters"
       Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "BankGothic Md BT"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H003DCBFF&
       Height          =   195
-      Left            =   2100
+      Left            =   3000
       TabIndex        =   14
-      Top             =   2190
+      Top             =   2130
       Value           =   1  'Checked
-      Width           =   3105
+      Width           =   4095
    End
    Begin VB.ComboBox cbo 
-      BackColor       =   &H00CBE1ED&
+      BackColor       =   &H001F2025&
       Enabled         =   0   'False
+      ForeColor       =   &H003DCBFF&
       Height          =   315
-      Left            =   120
+      Left            =   1020
       Style           =   2  'Dropdown List
       TabIndex        =   10
-      Top             =   3150
-      Width           =   5085
+      Top             =   3090
+      Width           =   5100
    End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
@@ -91,26 +103,27 @@ Begin VB.Form Starter
       EndProperty
       Height          =   375
       Index           =   1
-      Left            =   4200
+      Left            =   5260
       Style           =   1  'Graphical
       TabIndex        =   9
-      Top             =   120
+      Top             =   60
       Visible         =   0   'False
       Width           =   1215
    End
    Begin VB.Timer Timing 
       Enabled         =   0   'False
       Interval        =   5000
-      Left            =   5160
-      Top             =   2520
+      Left            =   6060
+      Top             =   2460
    End
    Begin VB.ListBox Lst 
-      BackColor       =   &H00CBE1ED&
+      BackColor       =   &H001F2025&
+      ForeColor       =   &H003DCBFF&
       Height          =   1230
-      Left            =   2070
+      Left            =   2970
       TabIndex        =   8
-      Top             =   780
-      Width           =   3345
+      Top             =   740
+      Width           =   3495
    End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
@@ -127,21 +140,31 @@ Begin VB.Form Starter
       EndProperty
       Height          =   375
       Index           =   0
-      Left            =   2880
+      Left            =   3930
       Style           =   1  'Graphical
       TabIndex        =   7
-      Top             =   120
+      Top             =   60
       Width           =   1215
    End
    Begin VB.Frame Frame1 
-      BackColor       =   &H00CBE1ED&
+      BackColor       =   &H001F2025&
       Caption         =   "Choose a Firefly"
+      BeginProperty Font 
+         Name            =   "BankGothic Md BT"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H003DCBFF&
       Height          =   2175
-      Left            =   120
+      Left            =   1020
       TabIndex        =   2
       Tag             =   "Orange"
-      Top             =   600
-      Width           =   1755
+      Top             =   540
+      Width           =   1845
       Begin VB.OptionButton opt 
          BackColor       =   &H0000C000&
          Caption         =   "Green"
@@ -151,7 +174,7 @@ Begin VB.Form Starter
          TabIndex        =   6
          Tag             =   "Green"
          Top             =   1680
-         Width           =   1215
+         Width           =   1400
       End
       Begin VB.OptionButton opt 
          BackColor       =   &H0000FFFF&
@@ -162,7 +185,7 @@ Begin VB.Form Starter
          TabIndex        =   5
          Tag             =   "Yellow"
          Top             =   1200
-         Width           =   1215
+         Width           =   1400
       End
       Begin VB.OptionButton opt 
          BackColor       =   &H00FF0000&
@@ -174,7 +197,7 @@ Begin VB.Form Starter
          TabIndex        =   4
          Tag             =   "Blue"
          Top             =   720
-         Width           =   1215
+         Width           =   1400
       End
       Begin VB.OptionButton opt 
          BackColor       =   &H000080FF&
@@ -186,50 +209,82 @@ Begin VB.Form Starter
          Tag             =   "Orange"
          Top             =   240
          Value           =   -1  'True
-         Width           =   1215
+         Width           =   1400
       End
    End
    Begin VB.TextBox txt 
-      Height          =   375
-      Left            =   1320
+      BackColor       =   &H003DCBFF&
+      Height          =   320
+      Left            =   2340
       TabIndex        =   0
-      Top             =   120
+      Top             =   90
       Width           =   1455
    End
    Begin VB.Label lblStory 
-      BackColor       =   &H00CBE1ED&
+      BackColor       =   &H001F2025&
       BorderStyle     =   1  'Fixed Single
+      ForeColor       =   &H003DCBFF&
       Height          =   1065
-      Left            =   120
+      Left            =   1020
       TabIndex        =   13
-      Top             =   3570
+      Top             =   3510
       Width           =   5475
    End
    Begin VB.Label Label3 
       BackStyle       =   0  'Transparent
       Caption         =   "Story"
+      BeginProperty Font 
+         Name            =   "BankGothic Md BT"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H003DCBFF&
       Height          =   255
-      Left            =   210
+      Left            =   1040
       TabIndex        =   12
-      Top             =   2940
+      Top             =   2880
       Width           =   975
    End
    Begin VB.Label Label2 
       BackStyle       =   0  'Transparent
       Caption         =   "Players"
+      BeginProperty Font 
+         Name            =   "BankGothic Md BT"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H003DCBFF&
       Height          =   225
-      Left            =   2070
+      Left            =   2970
       TabIndex        =   11
-      Top             =   570
+      Top             =   540
       Width           =   1305
    End
    Begin VB.Label Label1 
       BackStyle       =   0  'Transparent
       Caption         =   "Player Name"
+      BeginProperty Font 
+         Name            =   "BankGothic Md BT"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H003DCBFF&
       Height          =   255
-      Left            =   240
+      Left            =   1100
       TabIndex        =   1
-      Top             =   240
+      Top             =   180
       Width           =   1215
    End
 End
@@ -245,22 +300,8 @@ Private Sub cbo_Click()
     
    If isHost Then
       DB.Execute "UPDATE GameSeq set StoryID = " & CStr(GetCombo(cbo))
-      
-      'Logic.Requery
-      'Logic!StoryID = GetCombo(cbo)
-      'Logic.Update
-      'Logic.Update "StoryID", GetCombo(cbo)
-'      If GetCombo(cbo) > 0 Then 'custom story
-'         If doCustomStory = 0 Then
-'            LoadCombo cbo, "story", " WHERE ACTIVE = 1 Order by StoryID"
-'            cbotrig = True
-'            SetCombo cbo, "", 1
-'            cbotrig = False
-'         Else
-'            cbo.List(cbo.ListIndex) = Nz(varDLookup("StoryTitle", "Story", "StoryID = " & GetCombo(cbo)))
-'         End If
-'      End If
    End If
+   
    lblStory.Caption = Nz(varDLookup("StoryDesc", "Story", "StoryID = " & GetCombo(cbo)))
 End Sub
 
@@ -269,7 +310,7 @@ Private Sub chkAI_Click()
 End Sub
 
 Private Sub cmd_Click(Index As Integer)
-Dim rst As New ADODB.Recordset, col, cnt, x
+Dim rst As New ADODB.Recordset, col, cnt, X
 Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer
 Dim randCrew As Integer, forceFugi As Integer
 Dim frmCrewList As frmCrewLst
@@ -323,13 +364,13 @@ Dim frmCrewList As frmCrewLst
          
          Timing.Enabled = True
       Else
-         For x = 0 To 3
-            If opt(x).Value Then
-               col = Left(opt(x).Tag, 1)
+         For X = 0 To 3
+            If opt(X).Value Then
+               col = Left(opt(X).Tag, 1)
                Exit For
             End If
             'Opt(x).Enabled = False
-         Next x
+         Next X
          If IsEmpty(col) Or txt.Text = "" Then Exit Sub
          rst.CursorLocation = adUseClient
          rst.Open "SELECT * FROM Players WHERE Colour = '" & col & "' ORDER BY PlayerID", DB, adOpenStatic, adLockReadOnly
@@ -339,9 +380,9 @@ Dim frmCrewList As frmCrewLst
             player.PlayName = Trim(txt.Text)
             DB.Execute "UPDATE Players SET Name = '" & SQLFilter(player.PlayName) & "' WHERE PlayerID = " & CStr(player.ID)
             
-            For x = 0 To 3
-               opt(x).Enabled = False
-            Next x
+            For X = 0 To 3
+               opt(X).Enabled = False
+            Next X
             UpdateLst
             cmd(0).Enabled = False
             cmd(0).Caption = "Pick Leader"
@@ -352,11 +393,11 @@ Dim frmCrewList As frmCrewLst
             End If
             
          Else
-            For x = 0 To 3
-               If col = Left(opt(x).Tag, 1) Then
-                  opt(x).Enabled = False
+            For X = 0 To 3
+               If col = Left(opt(X).Tag, 1) Then
+                  opt(X).Enabled = False
                End If
-            Next x
+            Next X
             UpdateLst
             MessBox rst!ship & " is taken by " & player.PlayName, "Ship taken", "Ooops", "", 0, 0, 6
             
@@ -397,19 +438,19 @@ Dim frmCrewList As frmCrewLst
       
       'show who has entered game
       cnt = 0
-      For x = 1 To 4
-         If PlayCode(x).PlayName <> "" Then
+      For X = 1 To 4
+         If PlayCode(X).PlayName <> "" Then
             cnt = cnt + 1
-            PutMsg PlayCode(x).PlayName & " has entered the game", x
+            PutMsg PlayCode(X).PlayName & " has entered the game", X
          End If
-      Next x
+      Next X
       SoloGame = isSoloGame()
                
       nextplayer = 0
       Randomize Timer
       Do
-          x = Int((4 * Rnd)) + 1
-          If PlayCode(x).PlayName <> "" Then nextplayer = x
+          X = Int((4 * Rnd)) + 1
+          If PlayCode(X).PlayName <> "" Then nextplayer = X
       Loop While nextplayer = 0
        
       'pick leader
@@ -438,7 +479,7 @@ Dim frmCrewList As frmCrewLst
          Timing.Enabled = True
       End If
    Case 3
-      x = ShellExecute(x, "OPEN", App.Path & "\FireflyAIBot.exe ", datab, vbNullString, 1)                '1=normal, 2=min, 3=max, 4=behind
+      X = ShellExecute(X, "OPEN", App.Path & "\FireflyAIBot.exe ", datab, vbNullString, 1)                '1=normal, 2=min, 3=max, 4=behind
    End Select
   
   Exit Sub
@@ -457,6 +498,7 @@ Private Sub Form_Load()
   player.PlayName = ""
   cmd(0).Enabled = False
   cmd(3).Visible = isHost
+  Set Me.Picture = LoadPicture(App.Path & "\pictures\waiting.jpg")
   
 End Sub
 
@@ -483,17 +525,17 @@ Dim rst As New ADODB.Recordset
    Wend
    cbo.Enabled = isHost
    chkAI.Enabled = isHost
-   LoadCombo cbo, "story", " WHERE ACTIVE = 1 Order by StoryID"
-   SetCombo cbo, "", 1
+   LoadCombo cbo, "story", " WHERE ACTIVE = 1 Order by StoryTitle"
+   SetCombo cbo, "", 5
 
 End Sub
 
 Private Sub UpdateLst()
-Dim rst As New ADODB.Recordset, col, x, playerID As Integer
+Dim rst As New ADODB.Recordset, col, X, playerID As Integer
    Lst.Clear
-   x = GetSeqX(playerID)
+   X = GetSeqX(playerID)
    If Not isHost Then 'client only processes
-      Select Case x
+      Select Case X
       Case "H"  'in host mode, enable join
          If cmd(0).Caption <> "Pick Leader" Then
             If Not cmd(0).Enabled Then playsnd 6
@@ -504,20 +546,20 @@ Dim rst As New ADODB.Recordset, col, x, playerID As Integer
          Lst.AddItem "..waiting for Host .."
          cmd(0).Enabled = False
          cmd(0).Caption = "Join"
-         For x = 0 To 3
-            opt(x).Enabled = True
-         Next x
+         For X = 0 To 3
+            opt(X).Enabled = True
+         Next X
          Exit Sub
       Case "L"
          'pick leader
       Case Else  'joining game
          started = True
       End Select
-   ElseIf x = "S" Then
+   ElseIf X = "S" Then
       started = True
    End If
 
-   If x = "L" And Val(player.ID) = playerID Then 'your go to pick leader
+   If X = "L" And Val(player.ID) = playerID Then 'your go to pick leader
        cmd(0).Enabled = True
    End If
   rst.CursorLocation = adUseClient
@@ -529,13 +571,13 @@ Dim rst As New ADODB.Recordset, col, x, playerID As Integer
 
       PlayCode(rst!playerID).PlayName = rst!Name
       'disable selected Ships, other than the one you have selected
-      For x = 0 To 3
-         If col = Left(opt(x).Tag, 1) And player.ID <> x + 1 Then
-            opt(x).Enabled = False
-            opt(x).Value = False
+      For X = 0 To 3
+         If col = Left(opt(X).Tag, 1) And player.ID <> X + 1 Then
+            opt(X).Enabled = False
+            opt(X).Value = False
             Exit For
          End If
-      Next x
+      Next X
       
       rst.MoveNext
   Wend

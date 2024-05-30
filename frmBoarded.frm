@@ -1,5 +1,4 @@
 VERSION 5.00
-Object = "{49801673-2EC8-456E-98B2-037B9B02A1C5}#1.0#0"; "LaVolpeAlphaImg2.ocx"
 Begin VB.Form frmBoarded 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
@@ -10,35 +9,65 @@ Begin VB.Form frmBoarded
    ClientWidth     =   14685
    ForeColor       =   &H003DCBFF&
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
+   Picture         =   "frmBoarded.frx":0000
    ScaleHeight     =   8115
    ScaleWidth      =   14685
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
-   Begin VB.CommandButton cmd 
-      BackColor       =   &H00FF8080&
-      Caption         =   "Gorram it!"
+   Begin VB.Image imgHotspot 
+      Height          =   945
+      Index           =   3
+      Left            =   13140
+      Top             =   6990
+      Width           =   915
+   End
+   Begin VB.Image imgHotspot 
+      Height          =   945
+      Index           =   2
+      Left            =   12060
+      Top             =   6990
+      Width           =   915
+   End
+   Begin VB.Image imgHotspot 
+      Height          =   945
+      Index           =   1
+      Left            =   10920
+      Top             =   6990
+      Width           =   915
+   End
+   Begin VB.Image imgHotspot 
+      Height          =   945
+      Index           =   0
+      Left            =   8880
+      Top             =   6990
+      Width           =   1875
+   End
+   Begin VB.Label lblAttacker 
+      Alignment       =   2  'Center
+      BackStyle       =   0  'Transparent
+      Caption         =   "attacker"
       BeginProperty Font 
-         Name            =   "Showcard Gothic"
-         Size            =   9.75
+         Name            =   "BankGothic Md BT"
+         Size            =   15.75
          Charset         =   0
-         Weight          =   700
+         Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   525
-      Left            =   11670
-      Style           =   1  'Graphical
-      TabIndex        =   1
-      Top             =   7290
-      Width           =   1995
+      ForeColor       =   &H003DCBFF&
+      Height          =   345
+      Left            =   30
+      TabIndex        =   3
+      Top             =   1230
+      Width           =   3345
    End
    Begin VB.Image imgHeader 
-      Height          =   1065
-      Left            =   940
-      Top             =   420
-      Width           =   2295
+      Height          =   735
+      Left            =   810
+      Stretch         =   -1  'True
+      Top             =   1830
+      Width           =   1815
    End
    Begin VB.Label lblSkill 
       BackStyle       =   0  'Transparent
@@ -55,9 +84,9 @@ Begin VB.Form frmBoarded
       ForeColor       =   &H0000C000&
       Height          =   465
       Index           =   3
-      Left            =   1740
-      TabIndex        =   4
-      Top             =   7060
+      Left            =   2250
+      TabIndex        =   2
+      Top             =   7260
       Width           =   765
    End
    Begin VB.Label lblSkill 
@@ -75,9 +104,9 @@ Begin VB.Form frmBoarded
       ForeColor       =   &H00C0C000&
       Height          =   465
       Index           =   2
-      Left            =   1740
-      TabIndex        =   3
-      Top             =   6310
+      Left            =   2250
+      TabIndex        =   1
+      Top             =   6785
       Width           =   765
    End
    Begin VB.Label lblSkill 
@@ -95,70 +124,19 @@ Begin VB.Form frmBoarded
       ForeColor       =   &H000000FF&
       Height          =   465
       Index           =   1
-      Left            =   1740
-      TabIndex        =   2
-      Top             =   5650
-      Width           =   765
-   End
-   Begin LaVolpeAlphaImg.AlphaImgCtl skillPic 
-      Height          =   675
-      Index           =   3
-      Left            =   810
-      Top             =   6960
-      Width           =   675
-      _ExtentX        =   1191
-      _ExtentY        =   1191
-      Effects         =   "frmBoarded.frx":0000
-   End
-   Begin LaVolpeAlphaImg.AlphaImgCtl skillPic 
-      Height          =   675
-      Index           =   2
-      Left            =   810
-      Top             =   6240
-      Width           =   675
-      _ExtentX        =   1191
-      _ExtentY        =   1191
-      Effects         =   "frmBoarded.frx":0018
-   End
-   Begin LaVolpeAlphaImg.AlphaImgCtl skillPic 
-      Height          =   675
-      Index           =   1
-      Left            =   810
-      Top             =   5520
-      Width           =   675
-      _ExtentX        =   1191
-      _ExtentY        =   1191
-      Effects         =   "frmBoarded.frx":0030
-   End
-   Begin VB.Label lblMsg 
-      BackColor       =   &H00000000&
-      BorderStyle     =   1  'Fixed Single
-      Caption         =   "You have been Boarded"
-      BeginProperty Font 
-         Name            =   "Britannic Bold"
-         Size            =   15.75
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H0000FF00&
-      Height          =   1395
-      Left            =   4103
+      Left            =   2250
       TabIndex        =   0
-      Top             =   270
-      Width           =   7155
-      WordWrap        =   -1  'True
+      Top             =   6280
+      Width           =   765
    End
    Begin VB.Image img 
       Height          =   750
       Index           =   0
-      Left            =   12960
+      Left            =   13650
       Stretch         =   -1  'True
-      Top             =   210
+      Top             =   150
       Visible         =   0   'False
-      Width           =   870
+      Width           =   960
    End
 End
 Attribute VB_Name = "frmBoarded"
@@ -167,16 +145,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Public thisplayer As Integer
+Public thisplayer As Integer, result As Integer ' 0 = rearrange, 1 fight, 2 tech, 3 nego
 Private Const HTCAPTION = 2
 Private Const WM_NCLBUTTONDOWN = &HA1
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
-
-
-Private Sub cmd_Click()
-   Me.hide
-End Sub
 
 Private Sub Form_Load()
    If thisplayer > 0 Then
@@ -190,7 +163,8 @@ Private Sub refreshPlayer()
 Dim rst As New ADODB.Recordset, X
 Dim SQL
    Set Me.Picture = LoadPicture(App.Path & "\pictures\boarded.jpg")
-   imgHeader.Picture = LoadPicture(App.Path & "\gui\Firefly" & thisplayer & ".jpg")
+   imgHeader.Picture = LoadPicture(App.Path & "\gui\FireflyBoard" & thisplayer & ".jpg")
+   lblAttacker.Caption = PlayCode(thisplayer).PlayName
    X = 0
    SQL = "SELECT PlayerSupplies.CardID, SupplyDeck.CrewID, Crew.CrewName, Crew.Fight, Crew.Tech, Crew.Negotiate, Crew.Picture"
    SQL = SQL & " FROM PlayerSupplies INNER JOIN (Crew INNER JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID) ON PlayerSupplies.CardID = SupplyDeck.CardID"
@@ -209,17 +183,17 @@ Dim SQL
       If X = 1 Then
          img(X).Height = 3420
          img(X).Width = 2940
-         img(X).top = 1920
-         img(X).Left = 810
+         img(X).top = 2670
+         img(X).Left = 240
       Else
-         img(X).Height = 2300
-         img(X).Width = 2000
+         img(X).Height = 2107
+         img(X).Width = 1811
          If X < 7 Then
-            img(X).top = 1920
-            img(X).Left = 3810 + (2040 * (X - 2))
+            img(X).top = 1860
+            img(X).Left = 4470 + (1836 * (X - 2))
          Else
-            img(X).top = 4290
-            img(X).Left = 3810 + (2040 * (X - 7))
+            img(X).top = 3630
+            img(X).Left = 4470 + (1836 * (X - 7))
          End If
       End If
 
@@ -230,10 +204,10 @@ Dim SQL
 
 
    For X = 1 To 3
-      Set skillPic(X).Picture = LoadPictureGDIplus(App.Path & "\pictures\" & picSkill(X) & ".bmp")
+      'Set skillPic(X).Picture = LoadPictureGDIplus(App.Path & "\pictures\" & picSkill(X) & ".bmp")
       lblSkill(X) = getSkill(thisplayer, cstrSkill(X))
-      skillPic(X).TransparentColor = 0
-      skillPic(X).TransparentColorMode = lvicUseTransparentColor
+      'skillPic(X).TransparentColor = 0
+      'skillPic(X).TransparentColorMode = lvicUseTransparentColor
    Next X
 
 End Sub
@@ -251,4 +225,9 @@ Dim frmCrew As frmCrewSel
    frmCrew.AlwaysOnTop = False
    frmCrew.Show 1
    Set frmCrew = Nothing
+End Sub
+
+Private Sub imgHotspot_Click(Index As Integer)
+   result = Index
+   Me.hide
 End Sub

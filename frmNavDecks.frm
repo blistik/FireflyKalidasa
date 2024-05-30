@@ -2,16 +2,16 @@ VERSION 5.00
 Begin VB.Form frmNavDecks 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Select a Nav Deck to Reshuffle"
-   ClientHeight    =   3015
+   ClientHeight    =   3075
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   4560
+   ClientWidth     =   4785
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmNavDecks.frx":0000
-   ScaleHeight     =   3015
-   ScaleWidth      =   4560
+   ScaleHeight     =   3075
+   ScaleWidth      =   4785
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
    Begin VB.OptionButton opt 
@@ -158,7 +158,7 @@ Dim x
       End If
    Next x
    playsnd 8
-   Me.Hide
+   Me.hide
    
 End Sub
 

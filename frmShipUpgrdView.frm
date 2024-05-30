@@ -54,6 +54,28 @@ Begin VB.Form frmShipUpgrdView
    End
    Begin VB.Label lbl 
       Alignment       =   2  'Center
+      BackColor       =   &H00CBE1ED&
+      BackStyle       =   0  'Transparent
+      BeginProperty Font 
+         Name            =   "Cyberpunk Is Not Dead"
+         Size            =   12
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00FFFFC0&
+      Height          =   405
+      Index           =   7
+      Left            =   1260
+      TabIndex        =   1
+      ToolTipText     =   "Origin"
+      Top             =   6300
+      Width           =   2655
+   End
+   Begin VB.Label lbl 
+      Alignment       =   2  'Center
       Appearance      =   0  'Flat
       BackColor       =   &H80000005&
       BackStyle       =   0  'Transparent
@@ -154,30 +176,8 @@ Begin VB.Form frmShipUpgrdView
       Index           =   6
       Left            =   4050
       TabIndex        =   2
-      Top             =   6350
+      Top             =   6330
       Width           =   1185
-   End
-   Begin VB.Label lbl 
-      Alignment       =   2  'Center
-      BackColor       =   &H00CBE1ED&
-      BackStyle       =   0  'Transparent
-      BeginProperty Font 
-         Name            =   "Cyberpunk Is Not Dead"
-         Size            =   12
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00FFFFC0&
-      Height          =   405
-      Index           =   7
-      Left            =   1350
-      TabIndex        =   1
-      ToolTipText     =   "Origin"
-      Top             =   690
-      Width           =   2655
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl AlphaImg 
       Height          =   7170
@@ -186,17 +186,16 @@ Begin VB.Form frmShipUpgrdView
       Width           =   5250
       _ExtentX        =   9260
       _ExtentY        =   12647
-      Image           =   "frmShipUpgrdView.frx":0000
-      Effects         =   "frmShipUpgrdView.frx":7AC9E
+      Effects         =   "frmShipUpgrdView.frx":0000
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl pic 
-      Height          =   2715
-      Left            =   1110
-      Top             =   1260
-      Width           =   3015
-      _ExtentX        =   5318
-      _ExtentY        =   4789
-      Effects         =   "frmShipUpgrdView.frx":7ACB6
+      Height          =   3225
+      Left            =   540
+      Top             =   620
+      Width           =   4215
+      _ExtentX        =   7435
+      _ExtentY        =   5689
+      Effects         =   "frmShipUpgrdView.frx":0018
    End
 End
 Attribute VB_Name = "frmShipUpgrdView"
@@ -215,7 +214,7 @@ Private Const SWP_NOMOVE = &H2
 'For use with USER32 Function SendMessage
 Private Const HTCAPTION = 2
 Private Const WM_NCLBUTTONDOWN = &HA1
-Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
+Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
 
@@ -237,12 +236,10 @@ Public Property Get AlwaysOnTop() As Boolean
     AlwaysOnTop = bOnTopState
 End Property
 
-Private Sub AlphaImg_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub AlphaImg_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
-
-
 
 Private Sub cboGear_Click()
    If cboGear.ListIndex = -1 Then Exit Sub
@@ -256,6 +253,11 @@ Private Sub cmd_Click()
 End Sub
 
 Private Sub Form_Load()
+   With AlphaImg
+      Set .Picture = LoadPictureGDIplus(App.Path & "\pictures\ShipUpgrdBlank.bmp")
+      .TransparentColor = 0
+      .TransparentColorMode = lvicUseTransparentColor
+   End With
    LoadCombo cboGear, "shipupgrd", gearFilter
    If cboGear.ListCount > 0 Then
       cboGear.ListIndex = 0
@@ -277,7 +279,7 @@ Private Sub lbl_DblClick(Index As Integer)
 End Sub
 
 Private Sub refreshGear(ByVal CardID)
-Dim rst As New ADODB.Recordset, SQL, x, y
+Dim rst As New ADODB.Recordset, SQL, X, Y
 
    SQL = "SELECT ShipUpgrade.*, SupplyDeck.CardID, SupplyDeck.SupplyID, SupplyDeck.Seq, Supply.Colour, Supply.SupplyName, PlayerSupplies.PlayerID, Players.Name "
    SQL = SQL & "FROM Players RIGHT JOIN (PlayerSupplies RIGHT JOIN (Supply RIGHT JOIN (ShipUpgrade LEFT JOIN SupplyDeck ON ShipUpgrade.ShipUpgradeID = SupplyDeck.ShipUpgradeID) ON Supply.SupplyID = SupplyDeck.SupplyID) ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Players.PlayerID = PlayerSupplies.PlayerID "
@@ -292,19 +294,19 @@ Dim rst As New ADODB.Recordset, SQL, x, y
          lbl(2) = "owned by: " & rst!Name
          lbl(2).Visible = True
       ElseIf rst!Seq > 0 And rst!Seq < 5 Then
-         y = Nz(varDLookup("Name", "Players", "PlayerID = " & rst!Seq), "")
-         If y <> "" Then
-            lbl(2) = "at " & y & "'s haven"
+         Y = Nz(varDLookup("Name", "Players", "PlayerID = " & rst!Seq), "")
+         If Y <> "" Then
+            lbl(2) = "at " & Y & "'s haven"
             lbl(2).Visible = True
          End If
       Else
          lbl(2).Visible = False
       End If
       
-      lbl(5) = Nz(rst!Keyword)
-      If lbl(5) <> "" Then lbl(5).Tag = "ShipUpgrade.KeyWord = '" & Nz(rst!Keyword) & "'"
+      lbl(5) = Nz(rst!keyword)
+      If lbl(5) <> "" Then lbl(5).Tag = "ShipUpgrade.KeyWord = '" & Nz(rst!keyword) & "'"
       
-      If IsNull(rst!Keyword) Then
+      If IsNull(rst!keyword) Then
          lbl(5).Visible = False
       Else
          lbl(5).Visible = True
@@ -320,9 +322,6 @@ Dim rst As New ADODB.Recordset, SQL, x, y
       
       lbl(8) = "CardID: " & rst!CardID & "    GearID: " & rst!ShipUpgradeID
             
-      AlphaImg.TransparentColor = 0
-      AlphaImg.TransparentColorMode = lvicUseTransparentColor
-      
       If Not IsNull(rst!Picture) Then
          Set pic.Picture = LoadPictureGDIplus(App.Path & "\pictures\" & rst!Picture)
       Else

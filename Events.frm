@@ -25,6 +25,15 @@ Begin VB.Form Events
       _StockProps     =   237
       ForeColor       =   -2147483640
       BackColor       =   3355725
+      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "BankGothic Md BT"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       BorderStyle     =   1
       ItemPictureExpanded=   "Events.frx":0442
       ItemPictureExpandable=   "Events.frx":045E
@@ -117,7 +126,7 @@ Attribute VB_Exposed = False
 Private LastEventNumber As Long
 
 Private Sub Form_Load()
-
+   Grid.BackgroundPicture = LoadPicture(App.Path & "\gui\tileEvents.bmp")
     LastEventNumber = 0
 End Sub
 
@@ -132,17 +141,20 @@ End Sub
 
 Public Function getNewEvents() As Boolean
 Dim rst As New ADODB.Recordset
-Dim x, ship As Boolean, evtDesc As String
+Dim X, ship As Boolean, evtDesc As String
    rst.CursorLocation = adUseClient
    rst.Open "SELECT * FROM Events WHERE EventID > " & LastEventNumber & " ORDER BY EventID", DB, adOpenStatic, adLockReadOnly
    While Not rst.EOF
       evtDesc = rst!event
       If Logic!player <> player.ID And Left(evtDesc, 9) = "New Bount" Then
-         Main.refreshDeals
+         Main.RefreshDeals
       End If
-      x = Grid.InsertItem(0, Replace(evtDesc, "^", " "))
+      X = Grid.InsertItem(0, Replace(evtDesc, "^", " "))
       If Not IsNull(rst!playerID) Then
-         Grid.CellBackColor(x, 0) = getPlayerColor(rst!playerID)
+         'Grid.CellBackColor(X, 0) = getPlayerColor(rst!playerID)
+         Grid.CellForeColor(X, 0) = getPlayerColor(rst!playerID)
+      Else
+         Grid.CellForeColor(X, 0) = QBColor(15)
       End If
       LastEventNumber = rst!EventID
       If Not ship And rst!refreshShip > 0 And actionSeq = ASidle Then
