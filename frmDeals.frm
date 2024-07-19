@@ -244,11 +244,11 @@ End Sub
 
 
 Public Function RefreshDeals() As Variant
-Dim Index, SQL, showBounty As Boolean
+Dim index, SQL, showBounty As Boolean
 Dim rst As New ADODB.Recordset
 Dim rst2 As New ADODB.Recordset
 Dim rst3 As New ADODB.Recordset
-Dim SectorID, ContactID As Integer, X, cnt As Integer
+Dim SectorID, ContactID As Integer, x, cnt As Integer
     
 With sftTree
    .Clear
@@ -299,18 +299,18 @@ With sftTree
    SQL = SQL & " Order by ContactID mod 10"
    rst3.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst3.EOF
-      Index = .AddItem(CStr(rst3!ContactID) & IIf(isSolid(player.ID, rst3!ContactID), " - Solid", ""))
-      .CellFont(Index, 0).Name = "BankGothic Md BT"
-      .ItemLevel(Index) = 0
-      .CellText(Index, 1) = rst3!ContactName  '& IIf(isSolid(player.ID, rst3!ContactID), " - Solid", "")
-      .CellFont(Index, 1).Name = "BankGothic Md BT"
-      .CellText(Index, 2) = CStr(getUnseenDeck("Contact", rst3!ContactID)) & " unseen"
-      .CellFont(Index, 2).Name = "BankGothic Md BT"
-      For X = 0 To 8
-         .CellForeColor(Index, X) = 0
-         .CellBackColor(Index, X) = rst3!Colour
-      Next X
-      Set .ItemPicture(Index) = LoadPicture(App.Path & "\Pictures\Sm" & Nz(varDLookup("Picture", "Contact", "ContactID=" & rst3!ContactID)))
+      index = .AddItem(CStr(rst3!ContactID) & IIf(isSolid(player.ID, rst3!ContactID), " - Solid", ""))
+      .CellFont(index, 0).Name = "BankGothic Md BT"
+      .ItemLevel(index) = 0
+      .CellText(index, 1) = rst3!ContactName  '& IIf(isSolid(player.ID, rst3!ContactID), " - Solid", "")
+      .CellFont(index, 1).Name = "BankGothic Md BT"
+      .CellText(index, 2) = CStr(getUnseenDeck("Contact", rst3!ContactID)) & " unseen"
+      .CellFont(index, 2).Name = "BankGothic Md BT"
+      For x = 0 To 8
+         .CellForeColor(index, x) = 0
+         .CellBackColor(index, x) = rst3!Colour
+      Next x
+      Set .ItemPicture(index) = LoadPicture(App.Path & "\Pictures\Sm" & Nz(varDLookup("Picture", "Contact", "ContactID=" & rst3!ContactID)))
       'Set .ItemPicture(Index) = AssetImages.Overlay("L", "U")
     
       SQL = "SELECT Contact.Colour, JobType.JobTypeDescr, Profession.ProfessionName, ContactDeck.*, JobType_1.JobTypeDescr AS JobType2 "
@@ -328,82 +328,82 @@ With sftTree
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
          cnt = cnt + 1
-         Index = .AddItem(CStr(rst!CardID))
-         .ItemData(Index) = rst!CardID
-         .ItemLevel(Index) = 1
+         index = .AddItem(CStr(rst!CardID))
+         .ItemData(index) = rst!CardID
+         .ItemLevel(index) = 1
          If rst!Seq = 6 Then
-            Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
-            .ItemDataString(Index) = "UN"
+            Set .ItemPicture(index) = AssetImages.Overlay("L", "UN")
+            .ItemDataString(index) = "UN"
          Else
-            Set .ItemPicture(Index) = AssetImages.Overlay("L", "O")
-            .ItemDataString(Index) = "O"
+            Set .ItemPicture(index) = AssetImages.Overlay("L", "O")
+            .ItemDataString(index) = "O"
          End If
-         .CellText(Index, 1) = rst!JobName
-         .CellBackColor(Index, 1) = rst!Colour
+         .CellText(index, 1) = rst!JobName
+         .CellBackColor(index, 1) = rst!Colour
          If rst!ContactID = 10 Then
-            X = varDLookup("Seq", "SupplyDeck", "CrewID=" & rst!FugitiveID)
-            Select Case X
+            x = varDLookup("Seq", "SupplyDeck", "CrewID=" & rst!FugitiveID)
+            Select Case x
             Case 1, 2, 3, 4
-               .CellBackColor(Index, 1) = getPlayerColor(X)
-               .CellFont(Index, 1).Bold = True
+               .CellBackColor(index, 1) = getPlayerColor(x)
+               .CellFont(index, 1).Bold = True
             Case DISCARDED
-               .CellFont(Index, 1).Bold = True
+               .CellFont(index, 1).Bold = True
             End Select
          End If
-         .CellForeColor(Index, 1) = 0
+         .CellForeColor(index, 1) = 0
         
-         .CellText(Index, 2) = rst!JobTypeDescr & IIf(rst!JobType2 <> "-", "/" & rst!JobType2, "") & IIf(rst!illegal = 1, "/illegal", "") & IIf(rst!Immoral = 1, "/immoral", "")
+         .CellText(index, 2) = rst!JobTypeDescr & IIf(rst!JobType2 <> "-", "/" & rst!JobType2, "") & IIf(rst!illegal = 1, "/illegal", "") & IIf(rst!Immoral = 1, "/immoral", "")
          If rst!illegal = 1 Or rst!Immoral Then
-            .CellBackColor(Index, 2) = 3355647
+            .CellBackColor(index, 2) = 3355647
          End If
-         .CellText(Index, 3) = Nz(rst!JobOrder)
-         .CellForeColor(Index, 3) = 51712
-         .CellText(Index, 4) = "$" & rst!pay
-         .CellBackColor(Index, 4) = 8388736
-         .CellForeColor(Index, 4) = 16777215
+         .CellText(index, 3) = Nz(rst!JobOrder)
+         .CellForeColor(index, 3) = 51712
+         .CellText(index, 4) = "$" & rst!pay
+         .CellBackColor(index, 4) = 8388736
+         .CellForeColor(index, 4) = 16777215
                               
-         .CellText(Index, 5) = IIf(rst!BonusPart > 0, " +" & rst!BonusPart & " part: ", "") & IIf(rst!bonus > 0, " +$" & rst!bonus & ":", "") & IIf(rst!KeywordBonus = 1, rst!KeyWords, "") & IIf(IsNull(rst!ProfessionName), "", " " & rst!ProfessionName) & IIf(rst!BonusPerSkill > 0, " /" & cstrSkill(rst!BonusPerSkill), "") & IIf(rst!Job3ID > 0, "Bonus Job", "")
+         .CellText(index, 5) = IIf(rst!BonusPart > 0, " +" & rst!BonusPart & " part: ", "") & IIf(rst!bonus > 0, " +$" & rst!bonus & ":", "") & IIf(rst!KeywordBonus = 1, rst!KeyWords, "") & IIf(IsNull(rst!ProfessionName), "", " " & rst!ProfessionName) & IIf(rst!BonusPerSkill > 0, " /" & cstrSkill(rst!BonusPerSkill), "") & IIf(rst!Job3ID > 0, "Bonus Job", "")
          If rst!BonusPart > 0 Or rst!bonus > 0 Then
-             .CellForeColor(Index, 5) = 0
-            .CellBackColor(Index, 5) = 1900316
+             .CellForeColor(index, 5) = 0
+            .CellBackColor(index, 5) = 1900316
          End If
-         .CellText(Index, 6) = IIf(rst!fight > 0, CStr(rst!fight), "")
-         .CellForeColor(Index, 6) = 0
-         If rst!fight > 0 Then .CellBackColor(Index, 6) = 6052315
-         .CellText(Index, 7) = IIf(rst!tech > 0, CStr(rst!tech), "")
-         .CellForeColor(Index, 7) = 0
-         If rst!tech > 0 Then .CellBackColor(Index, 7) = 16382208
-         .CellText(Index, 8) = IIf(rst!Negotiate > 0, CStr(rst!Negotiate), "")
-         .CellForeColor(Index, 8) = 0
-         If rst!Negotiate > 0 Then .CellBackColor(Index, 8) = 5373777
+         .CellText(index, 6) = IIf(rst!fight > 0, CStr(rst!fight), "")
+         .CellForeColor(index, 6) = 0
+         If rst!fight > 0 Then .CellBackColor(index, 6) = 6052315
+         .CellText(index, 7) = IIf(rst!tech > 0, CStr(rst!tech), "")
+         .CellForeColor(index, 7) = 0
+         If rst!tech > 0 Then .CellBackColor(index, 7) = 16382208
+         .CellText(index, 8) = IIf(rst!Negotiate > 0, CStr(rst!Negotiate), "")
+         .CellForeColor(index, 8) = 0
+         If rst!Negotiate > 0 Then .CellBackColor(index, 8) = 5373777
 
          
          If rst!Job1ID > 0 Then
             SQL = "SELECT Planet.PlanetName, Planet.System, Job.* FROM Job LEFT JOIN Planet ON Job.SectorID = Planet.SectorID WHERE JobID =" & rst!Job1ID
             rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
             If Not rst2.EOF Then
-                Index = .AddItem(CStr(rst2!JobID))
-                .ItemLevel(Index) = 2
-               .CellText(Index, 1) = rst2!JobDesc
-               X = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
+                index = .AddItem(CStr(rst2!JobID))
+                .ItemLevel(index) = 2
+               .CellText(index, 1) = rst2!JobDesc
+               x = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
+               .CellText(index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
                If SectorID = rst2!SectorID Then
-                  .CellFont(Index, 2).Bold = True
-                  .CellFont(Index, 3).Bold = True
+                  .CellFont(index, 2).Bold = True
+                  .CellFont(index, 3).Bold = True
                   If hasJobReqs(player.ID, rst!CardID, rst!Job1ID) Then
-                     .CellForeColor(Index, 2) = 0
-                     .CellForeColor(Index, 3) = 0
+                     .CellForeColor(index, 2) = 0
+                     .CellForeColor(index, 3) = 0
                   Else
-                     .CellForeColor(Index, 2) = 255
-                     .CellForeColor(Index, 3) = 255
+                     .CellForeColor(index, 2) = 255
+                     .CellForeColor(index, 3) = 255
                   End If
-                  .CellBackColor(Index, 2) = &HC0FFC0
+                  .CellBackColor(index, 2) = &HC0FFC0
                   
-                  .CellBackColor(Index, 3) = &HC0FFC0
+                  .CellBackColor(index, 3) = &HC0FFC0
                End If
-               .CellText(Index, 3) = Nz(rst2!System)
-               Set .ItemPicture(Index) = AssetImages.Overlay("LN", "LN")
-               .CellItemData(Index, 1) = rst2!SectorID
+               .CellText(index, 3) = Nz(rst2!System)
+               Set .ItemPicture(index) = AssetImages.Overlay("LN", "LN")
+               .CellItemData(index, 1) = rst2!SectorID
             Else
                MsgBox "Job Card " & rst!Job1ID & " Error", vbCritical
             End If
@@ -416,28 +416,28 @@ With sftTree
             SQL = "SELECT Planet.PlanetName, Planet.System, Job.* FROM Job INNER JOIN Planet ON Job.SectorID = Planet.SectorID WHERE JobID =" & rst!Job3ID
             rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
             If Not rst2.EOF Then
-                Index = .AddItem(CStr(rst2!JobID))
-                .ItemLevel(Index) = 3
-               .CellText(Index, 1) = rst2!JobDesc
-               X = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
+                index = .AddItem(CStr(rst2!JobID))
+                .ItemLevel(index) = 3
+               .CellText(index, 1) = rst2!JobDesc
+               x = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
+               .CellText(index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
                If SectorID = rst2!SectorID Then
-                  .CellFont(Index, 2).Bold = True
-                  .CellFont(Index, 3).Bold = True
+                  .CellFont(index, 2).Bold = True
+                  .CellFont(index, 3).Bold = True
                   If hasJobReqs(player.ID, rst!CardID, rst!Job3ID) Then
-                     .CellForeColor(Index, 2) = 0
-                     .CellForeColor(Index, 3) = 0
+                     .CellForeColor(index, 2) = 0
+                     .CellForeColor(index, 3) = 0
                   Else
-                     .CellForeColor(Index, 2) = 255
-                     .CellForeColor(Index, 3) = 255
+                     .CellForeColor(index, 2) = 255
+                     .CellForeColor(index, 3) = 255
                   End If
-                  .CellBackColor(Index, 2) = &HC0FFC0
+                  .CellBackColor(index, 2) = &HC0FFC0
                   
-                  .CellBackColor(Index, 3) = &HC0FFC0
+                  .CellBackColor(index, 3) = &HC0FFC0
                End If
-               .CellText(Index, 3) = rst2!System
-               Set .ItemPicture(Index) = AssetImages.Overlay("LN", "LN")
-               .CellItemData(Index, 1) = rst2!SectorID
+               .CellText(index, 3) = rst2!System
+               Set .ItemPicture(index) = AssetImages.Overlay("LN", "LN")
+               .CellItemData(index, 1) = rst2!SectorID
             Else
                MsgBox "Job Card " & rst!Job3ID & " Error", vbCritical
             End If
@@ -449,28 +449,28 @@ With sftTree
             SQL = "SELECT Planet.PlanetName, Planet.System, Job.* FROM Job INNER JOIN Planet ON Job.SectorID = Planet.SectorID WHERE JobID =" & rst!Job2ID
             rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
             If Not rst2.EOF Then
-                Index = .AddItem(CStr(rst2!JobID))
-                .ItemLevel(Index) = 2
-               .CellText(Index, 1) = rst2!JobDesc
-               X = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
+                index = .AddItem(CStr(rst2!JobID))
+                .ItemLevel(index) = 2
+               .CellText(index, 1) = rst2!JobDesc
+               x = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
+               .CellText(index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
                If SectorID = rst2!SectorID Then
-                  .CellFont(Index, 2).Bold = True
-                  .CellFont(Index, 3).Bold = True
+                  .CellFont(index, 2).Bold = True
+                  .CellFont(index, 3).Bold = True
                   If hasJobReqs(player.ID, rst!CardID, rst!Job2ID) Then
-                     .CellForeColor(Index, 2) = 0
-                     .CellForeColor(Index, 3) = 0
+                     .CellForeColor(index, 2) = 0
+                     .CellForeColor(index, 3) = 0
                   Else
-                     .CellForeColor(Index, 2) = 255
-                     .CellForeColor(Index, 3) = 255
+                     .CellForeColor(index, 2) = 255
+                     .CellForeColor(index, 3) = 255
                   End If
-                  .CellBackColor(Index, 2) = &HC0FFC0
+                  .CellBackColor(index, 2) = &HC0FFC0
                   
-                  .CellBackColor(Index, 3) = &HC0FFC0
+                  .CellBackColor(index, 3) = &HC0FFC0
                End If
-               .CellText(Index, 3) = rst2!System
-               Set .ItemPicture(Index) = AssetImages.Overlay("LN", "LN")
-               .CellItemData(Index, 1) = rst2!SectorID
+               .CellText(index, 3) = rst2!System
+               Set .ItemPicture(index) = AssetImages.Overlay("LN", "LN")
+               .CellItemData(index, 1) = rst2!SectorID
             Else
                MsgBox "Job Card " & rst!Job2ID & " Error", vbCritical
             End If
@@ -492,7 +492,7 @@ Private Sub Form_Resize()
    
 End Sub
 
-Private Sub sftTree_ItemClick(ByVal Index As Long, ByVal ColNum As Integer, ByVal AreaType As Integer, ByVal Button As Integer, ByVal Shift As Integer)
+Private Sub sftTree_ItemClick(ByVal index As Long, ByVal ColNum As Integer, ByVal AreaType As Integer, ByVal Button As Integer, ByVal Shift As Integer)
 Dim max As Integer, maxConsider
 With sftTree
 
@@ -502,19 +502,19 @@ With sftTree
             maxConsider = 4
          End If
          
-         If sftTree.CellItemData(Index, 1) > 0 Then
+         If sftTree.CellItemData(index, 1) > 0 Then
              'draw a line
-             Main.drawLine 1, sftTree.CellItemData(Index, 1), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
+             Main.drawLine 1, sftTree.CellItemData(index, 1), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
           Else
              Main.drawLine 1, -1
          End If
          
-         Select Case .ItemDataString(Index)
+         Select Case .ItemDataString(index)
          Case "UN" 'consider
             Select Case actionSeq
                Case ASDealSelDiscard
-                  .ItemDataString(Index) = "O"
-                  Set .ItemPicture(Index) = AssetImages.Overlay("L", "O")
+                  .ItemDataString(index) = "O"
+                  Set .ItemPicture(index) = AssetImages.Overlay("L", "O")
                   If getSelected("UN") = maxConsider Or (getUnseenDeck("Contact", Val(sftTree.CellText(0, 0))) = 0) Then
                      frmAction.setMultiStateButton "imgDealer", "2a"
                   Else
@@ -525,8 +525,8 @@ With sftTree
                   max = MAXINACTIVEJOBS - getPlayerJobs(player.ID, "0")
 
                   If getSelected("R") < max Then  'accept only up to 2 cards, not exceeding 6 in hand
-                     .ItemDataString(Index) = "R"
-                     Set .ItemPicture(Index) = AssetImages.Overlay("L", "R")
+                     .ItemDataString(index) = "R"
+                     Set .ItemPicture(index) = AssetImages.Overlay("L", "R")
                   Else
                      playsnd 9
                   End If
@@ -534,14 +534,14 @@ With sftTree
             
          Case "R"  'deal
             If actionSeq = ASDealSelect Then
-                  .ItemDataString(Index) = "UN"
-                  Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
+                  .ItemDataString(index) = "UN"
+                  Set .ItemPicture(index) = AssetImages.Overlay("L", "UN")
             End If
             
          Case "O"  'discard
             If actionSeq = ASDealSelDiscard And getSelected("UN") < maxConsider Then 'can consider up to 3 cards
-                  .ItemDataString(Index) = "UN"
-                  Set .ItemPicture(Index) = AssetImages.Overlay("L", "UN")
+                  .ItemDataString(index) = "UN"
+                  Set .ItemPicture(index) = AssetImages.Overlay("L", "UN")
                   If getSelected("UN") = maxConsider Or getUnseenDeck("Contact", Val(sftTree.CellText(0, 0))) = 0 Then
                      frmAction.setMultiStateButton "imgDealer", "2a"
                   Else
@@ -559,28 +559,28 @@ End With
 End Sub
 
 Private Function getSelected(ByVal status As String) As Integer
-Dim Index As Integer
+Dim index As Integer
    With sftTree
-      For Index = 0 To .ListCount - 1
-         If .ItemDataString(Index) = status Then
+      For index = 0 To .ListCount - 1
+         If .ItemDataString(index) = status Then
             getSelected = getSelected + 1
          End If
-      Next Index
+      Next index
    
    End With
 
 End Function
 
 Public Function setSelected(ByVal status As String, ByVal Seq As Integer) As Integer
-Dim Index As Integer
+Dim index As Integer
    With sftTree
-      For Index = 0 To .ListCount - 1
-         If .ItemDataString(Index) = status Then
+      For index = 0 To .ListCount - 1
+         If .ItemDataString(index) = status Then
             'mark the card as the players
-            DB.Execute "UPDATE ContactDeck SET Seq =" & Seq & " WHERE CardID = " & .ItemData(Index)
+            DB.Execute "UPDATE ContactDeck SET Seq =" & Seq & " WHERE CardID = " & .ItemData(index)
             setSelected = setSelected + 1
          End If
-      Next Index
+      Next index
    
    End With
 

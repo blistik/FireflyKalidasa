@@ -220,7 +220,7 @@ Private Sub Form_Resize()
 End Sub
 
 
-Private Sub sftTree_DragDrop(Source As Control, x As Single, y As Single)
+Private Sub sftTree_DragDrop(Source As Control, x As Single, Y As Single)
 Dim Index As Long, CardID
    With sftTree
       
@@ -241,10 +241,10 @@ Dim Index As Long, CardID
    End With
 End Sub
 
-Private Sub sftTree_DragOver(Source As Control, x As Single, y As Single, State As Integer)
+Private Sub sftTree_DragOver(Source As Control, x As Single, Y As Single, State As Integer)
 Dim Index As Long
    With sftTree
-      Index = .HitTest(x, y)
+      Index = .HitTest(x, Y)
       If Index = -1 Then Exit Sub
       .DropHighlightStyle = dropSftTreeBetween  ' = dropSftTreeOnTop
       If State = 1 Then
@@ -286,7 +286,7 @@ With sftTree
       Index = .AddItem(rst!CardName)
       .CellFont(Index, 0).Name = "BankGothic Md BT"
       .ItemData(Index) = rst!CardID
-      SQL = rst!Keyword & getCrewName(0, rst!CrewID) & getGearName(0, rst!GearID) & cstrProfession(rst!ProfessionID)
+      SQL = rst!keyword & getCrewName(0, rst!CrewID) & getGearName(0, rst!GearID) & cstrProfession(rst!ProfessionID)
       .CellText(Index, 1) = IIf(SQL = "", "", "Ace: " & SQL)
       .CellItemData(Index, 0) = 1
       .CellItemData(Index, 1) = rst!Seq
@@ -297,14 +297,14 @@ With sftTree
       
       Index = .AddItem(rst!OptionName)
       .ItemData(Index) = rst!OptionID
-      .CellText(Index, 1) = rst!Details
+      .CellText(Index, 1) = Replace(rst!Details, "^", " ")
       .CellItemData(Index, 0) = 2
       .ItemLevel(Index) = 1
       
       If Not IsNull(rst!Option2) Then
          Index = .AddItem(rst!Option2Name)
          .ItemData(Index) = rst!Option2
-         .CellText(Index, 1) = rst!Details2
+         .CellText(Index, 1) = Replace(rst!Details2, "^", " ")
          .CellItemData(Index, 0) = 2
          .ItemLevel(Index) = 1
       End If

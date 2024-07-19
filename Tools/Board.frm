@@ -22,6 +22,19 @@ Begin VB.Form Board
       TabIndex        =   0
       Top             =   30
       Width           =   22635
+      Begin VB.CommandButton Command5 
+         BackColor       =   &H80000001&
+         Caption         =   "offst"
+         Enabled         =   0   'False
+         Height          =   285
+         Left            =   19650
+         TabIndex        =   9
+         TabStop         =   0   'False
+         ToolTipText     =   "save hotspot or ship positions"
+         Top             =   14700
+         Visible         =   0   'False
+         Width           =   435
+      End
       Begin VB.CommandButton Command4 
          BackColor       =   &H80000001&
          Caption         =   "\/"
@@ -315,7 +328,33 @@ Dim sectorID, SQL
    End With
 End Sub
 
+Private Sub Command5_Click()  'offset top value for new map
+'Dim rst As New ADODB.Recordset
+'Dim coords, slot
+'Dim c() As String
+'
+'   rst.Open "SELECT * FROM Board WHERE SectorID > 0 ORDER BY SectorID", DB, adOpenDynamic, adLockOptimistic
+'   While Not rst.EOF
+'
+'      rst.Fields("STop").Value = rst.Fields("STop").Value + 4730
+'      For slot = 1 To 5
+'         coords = rst.Fields("Slot" & slot).Value
+'         If IsNull(coords) Then
+'            Exit For
+'         Else
+'            c = Split(coords, ",")
+'
+'             c(1) = c(1) + 4730
+'             rst.Fields("Slot" & slot).Value = c(0) & "," & c(1)
+'
+'
+'         End If
+'      Next slot
+'      rst.Update
+'      rst.MoveNext
+'   Wend
 
+End Sub
 
 Private Sub Form_Load()
 Dim x
@@ -347,6 +386,7 @@ Private Sub Form_Resize()
    Command2.Left = Me.Width - 2070
    Command4.Left = Me.Width - 2070
    Command3.Left = Me.Width - 2600
+   Command5.Left = Me.Width - 3000
    
    
 End Sub
@@ -427,12 +467,12 @@ Dim datab
   On Error Resume Next
   
   If Command$ = "" Then
-     myAppPath = App.Path
+     datab = App.Path & "\FireflyKalidasa.mdb"
   Else
-     myAppPath = Command$
+     datab = Command$
   End If
   
-  datab = myAppPath & "\FireflyKalidasa.mdb"
+  myAppPath = App.Path
   Set DB = New ADODB.Connection
   DB.Open "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & datab & ";Persist Security Info=False"
   If Err Then

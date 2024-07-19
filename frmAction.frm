@@ -810,7 +810,7 @@ Begin VB.Form frmAction
       Left            =   2420
       TabIndex        =   18
       Top             =   4080
-      Width           =   540
+      Width           =   570
    End
    Begin VB.Image imgPartsBuy 
       Height          =   165
@@ -1192,7 +1192,7 @@ Begin VB.Form frmAction
       EndProperty
       ForeColor       =   &H003DCBFF&
       Height          =   195
-      Left            =   3970
+      Left            =   3845
       TabIndex        =   6
       Top             =   1070
       Width           =   615
@@ -1211,7 +1211,7 @@ Begin VB.Form frmAction
       EndProperty
       ForeColor       =   &H003DCBFF&
       Height          =   195
-      Left            =   2380
+      Left            =   2360
       TabIndex        =   5
       Top             =   1070
       Width           =   640
@@ -1626,8 +1626,6 @@ Public Function checkNoOfActions() As Integer
    End If
 End Function
 
-
-
 Private Sub FDPane1_OnHidden()
    Select Case actionSeq
    Case ASend
@@ -1666,7 +1664,6 @@ End Sub
 Private Sub imgCancel_MouseExit()
 If imgCancel.Tag = "Y" Then imgCancel.Picture = LoadPictureGDIplus(App.Path & "\gui\End2CancelActive.jpg")
 End Sub
-
 
 Private Sub imgEndTurn_Click()
    With imgEndTurn
@@ -1802,8 +1799,6 @@ End Sub
 Private Sub imgShore_MouseExit()
    If imgShore.Tag = "Y" Then imgShore.Picture = LoadPictureGDIplus(App.Path & "\gui\Buy2ShoreLeaveActive.jpg")
 End Sub
-
-
 
 Private Sub imgRead_Click()
 Dim frmNavPeek As frmNavPeeks
@@ -1989,6 +1984,7 @@ Private Sub imgShop_Click()
           .Tag = "3"
        
        Case "3" 'close buy
+         If actionSeq <> ASBuySelect Then Exit Sub
           .Picture = LoadPictureGDIplus(App.Path & "\gui\Buy1FinishClick.jpg")
           
          .Tag = "4"
@@ -2073,6 +2069,7 @@ Private Sub imgDealer_Click()
          .Tag = "3"
          
       Case "3" 'close buy
+         If actionSeq <> ASDealSelect Then Exit Sub
          .Picture = LoadPictureGDIplus(App.Path & "\gui\Deal1FinishClick.jpg")
          .Tag = "4"
          setVisState imgDeal, False

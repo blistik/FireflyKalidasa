@@ -473,11 +473,12 @@ Private Const HTCAPTION = 2
 Private Const WM_NCLBUTTONDOWN = &HA1
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
-
+Public isLoaded As Boolean
 Public Event SectClick(ByVal Index As Integer)
 
 
 Private Sub Form_Load()
+   isLoaded = True
    initImages
 End Sub
 
@@ -525,10 +526,10 @@ Dim X
    Imag(5).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cruiser.gif")
    'Imag(5).AutoSize = lvicMultiAngle
    Imag(6).Picture = LoadPictureGDIplus(App.Path & "\Pictures\corvette.gif")
-   For X = 7 To 6 + NumOfReavers
+   For X = 7 To 12  '6 + NumOfReavers
       Imag(X).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.gif")
    Next X
-   For X = 1 To 6 + NumOfReavers
+   For X = 1 To 12   '6 + NumOfReavers
       Imag(X).TransparentColor = 0
       Imag(X).TransparentColorMode = lvicUseTransparentColor
    Next X

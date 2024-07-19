@@ -370,7 +370,7 @@ Private Const SWP_NOMOVE = &H2
 'For use with USER32 Function SendMessage
 Private Const HTCAPTION = 2
 Private Const WM_NCLBUTTONDOWN = &HA1
-Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
+Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
 Private bOnTopState As Boolean
@@ -391,7 +391,7 @@ Public Property Get AlwaysOnTop() As Boolean
 End Property
 
 
-Private Sub AlphaImg_MouseDown(Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub AlphaImg_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
@@ -442,12 +442,13 @@ Private Sub lbl_DblClick(Index As Integer)
 End Sub
 
 Private Sub refreshCrew(ByVal CrewID)
-Dim rst As New ADODB.Recordset, SQL, x, Y
+Dim rst As New ADODB.Recordset, SQL, X, Y
    SQL = "SELECT Crew.*, Perk.PerkDescription, SupplyDeck.CardID, SupplyDeck.SupplyID, Supply.Colour, Supply.SupplyName FROM Supply RIGHT JOIN ((Perk RIGHT JOIN Crew ON Perk.PerkID = Crew.PerkID) LEFT JOIN SupplyDeck ON Crew.CrewID = SupplyDeck.CrewID) ON Supply.SupplyID = SupplyDeck.SupplyID WHERE Crew.CrewID=" & CrewID
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
       lbl(0) = rst!CrewDescr
-      lbl(1) = Nz(rst!PerkDescription)
+      Y = rst!PerkDescription
+      lbl(1) = Nz(Y)
       lbl(2) = Trim(IIf(rst!Mechanic = 1, "Mechanic  ", "") & IIf(rst!Pilot = 1, "Pilot  ", "") & IIf(rst!Companion = 1, "Companion  ", "") & _
                IIf(rst!Merc = 1, "Merc  ", "") & IIf(rst!Soldier = 1, "Soldier  ", "") & IIf(rst!HillFolk = 1, "HillFolk  ", "") & _
                IIf(rst!Grifter = 1, "Grifter ", "") & IIf(rst!Medic = 1, "Medic ", "") & IIf(rst!Mudder = 1, "Mudder ", "") & IIf(rst!Lawman = 1, "Lawman", ""))
@@ -476,28 +477,28 @@ Dim rst As New ADODB.Recordset, SQL, x, Y
 '      End If
       'lbl(4) = Trim(IIf(rst!fight >= 1, rst!fight & " Fight  ", "") & IIf(rst!tech >= 1, rst!tech & " Tech  ", "") & IIf(rst!Negotiate >= 1, rst!Negotiate & " Negotiate", ""))
       Y = 0
-      For x = 1 To rst!fight
+      For X = 1 To rst!fight
          Set skillPic(Y).Picture = LoadPictureGDIplus(App.Path & "\pictures\fight.bmp")
          skillPic(Y).TransparentColor = 0
          skillPic(Y).TransparentColorMode = lvicUseTransparentColor
          Y = Y + 1
-      Next x
-      For x = 1 To rst!tech
+      Next X
+      For X = 1 To rst!tech
          Set skillPic(Y).Picture = LoadPictureGDIplus(App.Path & "\pictures\tech.bmp")
          skillPic(Y).TransparentColor = 0
          skillPic(Y).TransparentColorMode = lvicUseTransparentColor
          Y = Y + 1
-      Next x
-      For x = 1 To rst!Negotiate
+      Next X
+      For X = 1 To rst!Negotiate
          Set skillPic(Y).Picture = LoadPictureGDIplus(App.Path & "\pictures\nego.bmp")
          skillPic(Y).TransparentColor = 0
          skillPic(Y).TransparentColorMode = lvicUseTransparentColor
          Y = Y + 1
-      Next x
+      Next X
       If Y < 3 Then
-         For x = Y To 2
-             Set skillPic(x).Picture = Nothing
-         Next x
+         For X = Y To 2
+             Set skillPic(X).Picture = Nothing
+         Next X
       End If
       
       lbl(5) = Nz(rst!KeyWords)

@@ -7,8 +7,30 @@ Test Issues pending:
 
 
 Version updates:
+v 1.10.0 ~ 19 July 2024
+new: Story - "This Bounty Hunter Gets it Done" (by Bill)
+new: Full Map startup option with 159 sectors (orig has 152)
+add: story option to pull top card from each supply deck after turn
+add: sound for long range scanner
+add: story option - Alliance ships leave tokens behind their movements
+add: story option - Start with a Warrant 
+add: story option - Contact decks start with 0 to 6 jobs revealed
+add: story option - Supply decks start with 0 to 6 cards revealed 
+add: story goal option - Issue Warrant at Goal completion
+add: story goal option + or - Number of Reavers
+add: story goal options - Clear Alliance &/or Reaver Tokens
+add: map editor now incorporated under Rules menu
+fix: Full Burn was enabled after a Cry Baby regardless of availability prior.
+fix: option to "Consider" when all Supply cards had been revealed/discarded
+fix: "Add new story" mechanism
+fix: 4WD Mule Cargo claim on Crime jobs
+fix: Jubal's +2 fight now only when attacking
+gui: active/inactive job count exceeded popup reworked to look like Deals selection
+gui: game log includes Planet name when flying
+bot: v1.1.6 - AI will take on Goal Jobs (experimental)
+
 v 1.9.9 ~ 27 May 2024
-new: Story - Against their Will
+new: Story - "Against their Will"
 new: Gear - Dobson's Vector Pistol
 fix: perk value for Keyword/Skill combo
 fix: Sheydra's perk
@@ -19,9 +41,10 @@ gui: "Waiting Room" form makeover
 gui: Gear pic updates (by Bill)
 gui: "Being Boarded" popup graphics update (by Bill)
 gui: updated Alliance & Reaver Alert token graphics (by Bill)
+bot: v1.1.5 - tweaks 
 
 v 1.9.8 ~ 16 Apr 2024
-new: Story - Blood out of a Stone
+new: Story - "Blood out of a Stone"
 new: goal check option - no unfinished Jobs
 new: Crew - Kamal (custom. To replace custom Jubal as Wanted Pilot) with matching Bounty
 new: Crew - Dalin

@@ -314,6 +314,7 @@ Dim rst As New ADODB.Recordset, col, cnt, X
 Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer
 Dim randCrew As Integer, forceFugi As Integer
 Dim frmCrewList As frmCrewLst
+Dim supplyInit, contactInit
          
    On Error GoTo err_handler
    playsnd 8
@@ -414,17 +415,36 @@ Dim frmCrewList As frmCrewLst
       'shuffle the decks
       
       ShuffleDeck "Contact", True
+      contactInit = varDLookup("contactInit", "Story", "StoryID=" & Logic!StoryID)
+      If contactInit > 0 Then
+         DrawDeck "Contact", 1, contactInit
+         DrawDeck "Contact", 2, contactInit
+         DrawDeck "Contact", 3, contactInit
+         DrawDeck "Contact", 4, contactInit
+         DrawDeck "Contact", 5, contactInit
+         DrawDeck "Contact", 6, contactInit
+         DrawDeck "Contact", 7, contactInit
+         DrawDeck "Contact", 8, contactInit
+         DrawDeck "Contact", 9, contactInit
+      End If
+      
+      
       ShuffleDeck "Supply", True
       'exclude Crew per Story
       doExcludes
-      DrawDeck "Supply", 1, 3
-      DrawDeck "Supply", 2, 3
-      DrawDeck "Supply", 3, 3
-      DrawDeck "Supply", 4, 3
-      DrawDeck "Supply", 5, 3
-      DrawDeck "Supply", 6, 3
-      DrawDeck "Supply", 7, 3
+      supplyInit = varDLookup("supplyInit", "Story", "StoryID=" & Logic!StoryID)
+      If supplyInit > 0 Then
+         DrawDeck "Supply", 1, supplyInit
+         DrawDeck "Supply", 2, supplyInit
+         DrawDeck "Supply", 3, supplyInit
+         DrawDeck "Supply", 4, supplyInit
+         DrawDeck "Supply", 5, supplyInit
+         DrawDeck "Supply", 6, supplyInit
+         DrawDeck "Supply", 7, supplyInit
+      End If
+      
       ShuffleDeck "Nav", True, (Lst.ListCount > 2) 'Reshuffle Cards at end for 3 or more players
+      
       ShuffleDeck "Misbehave", False, True
       PutMsg "Decks are Shuffled"
       If isBountyEnabled Then

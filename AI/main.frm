@@ -671,6 +671,7 @@ Dim status As Variant, errh, thisPlayer As Integer
 Dim SectorID, ContactID As Integer, SupplyID As Integer, x, y
 Dim maxConsider, fuelleft, HavenID As Integer, DefenderID As Integer, BSupplyID As Integer
 Dim bountyJumpSector As Integer, supplyBountySector As Integer, sbountyCardID As Integer
+Dim goalSector As Integer
 On Error GoTo err_handler
 
    SectorID = getPlayerSector(player.ID)
@@ -874,11 +875,18 @@ On Error GoTo err_handler
 
             End If
          End If
+
       ' do we have a job or need to go to a Contact?
       ElseIf IsNull(targetJobCard) Then 'no job, are we at next Contact?
          SupplyID = Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0)
          targetContact = getNearestContact(SectorID)
-         If isBountyEnabled Then
+         'put a check here to see if goal bounty requirements have been met.  If so, then ignore
+         
+         'do we need to go to a goal sector?
+         If hasGoalSector(goalSector) Then
+            targetSector = goalSector
+         
+         ElseIf isBountyEnabled And Not bountiesDone() Then
         
             If (IsEmpty(targetJobCard) Or IsNull(targetJobCard)) And getCrewCount(player.ID) > 3 Then 'see if there is a rival player with a claimed bounty
                bountyJumpSector = findBountyJump(SectorID, DefenderID, bountyCardID) 'we have a bounty chase
@@ -907,15 +915,18 @@ On Error GoTo err_handler
             End If
             
          End If
+         
+         
          If targetSector > 0 Then 'we have a bounty chase
-            If goToPlayer(SectorID, targetSector, (FullburnMovesDone = 0)) > 0 And Not fullburndone Then 'move then check if a mosey or a fullburn was required
+            If goToPlayer(SectorID, targetSector, (FullburnMovesDone = 0), goalSector) > 0 And Not fullburndone Then 'move then check if a mosey or a fullburn was required
                SectorID = processMove ' getPlayerSector(player.ID)
                
             ElseIf SectorID = targetSector Then 'we are there, load fuel below
                
                fullburndone = (FullburnMovesDone > 0) Or fullburndone
                
-               If workdone Then  'we have just finished a job, so wait until next turn
+               If workdone Or goalSector Then  'we have just finished a job, so wait until next turn
+                  workdone = True
                   fullburndone = True
                
                ElseIf BSupplyID > 0 And supplyBountySector > 0 Then
@@ -984,6 +995,7 @@ On Error GoTo err_handler
          End If
          
       Else 'we have a job, go to it
+         If IsEmpty(targetJobID) Then targetJobID = 1
          targetSector = getJobSector(targetJobCard, targetJobID)
          If targetSector = SectorID Then   'we there
             'do job
@@ -1190,7 +1202,7 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
       
 End Function
 
-Private Function goToPlayer(ByVal SectorID, ByVal PlayerSectorID, ByVal canMosey)
+Private Function goToPlayer(ByVal SectorID, ByVal PlayerSectorID, ByVal canMosey, ByVal goalSector)
 Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorID, playerSector, PlanetName As String
 
       PlanetName = Nz(varDLookup("PlanetName", "Planet", "SectorID=" & PlayerSectorID))
@@ -1201,7 +1213,7 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
          If goToPlayer > 0 Then
             DB.Execute "UPDATE Players SET SectorID = " & goToPlayer & " WHERE PlayerID =" & player.ID
             Trail(FullburnMovesDone + 1) = goToPlayer
-            PutMsg player.PlayName & " moving " & PlanetName & " via Sector " & goToPlayer & " to seek a Bounty", player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " moving " & PlanetName & " via Sector " & goToPlayer & IIf(goalSector = 0, " to seek a Bounty", " to reach a goal"), player.ID, Logic!GameCntr
             playsnd 1, True
          Else
             PutMsg player.PlayName & " has no viable path", player.ID, Logic!GameCntr
@@ -1314,7 +1326,7 @@ End Sub
 
 Public Function completeFirstPartJob(ByVal CardID)
 Dim rst As New ADODB.Recordset
-Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer
+Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi As Integer, cargo As Integer
       Set rst = New ADODB.Recordset
       SQL = "SELECT Job.* FROM Job INNER JOIN ContactDeck ON Job.JobID = ContactDeck.Job1ID WHERE ContactDeck.CardID=" & CardID
       rst.CursorLocation = adUseClient
@@ -1323,10 +1335,15 @@ Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer
          contra = IIf(rst!Contraband = 14, 7, rst!Contraband)
          passgr = IIf(rst!Passenger = 14, 7, rst!Passenger)
          fugi = IIf(rst!Fugitive = 14, 7, rst!Fugitive)
+         cargo = rst!cargo
          
-         DB.Execute "UPDATE Players SET Fuel = Fuel + " & rst!fuel & ", Parts = Parts + " & rst!parts & ", Cargo = Cargo + " & rst!cargo & ", Contraband = Contraband + " & contra & ", Passenger = Passenger + " & passgr & ", Fugitive = Fugitive + " & fugi & " WHERE PlayerID=" & player.ID
+         If rst!TagnBag > 0 Then 'need to find out what to deliver on 2nd part
+            getJob2Reqs CardID, cargo, contra
+         End If
+         
+         DB.Execute "UPDATE Players SET Fuel = Fuel + " & rst!fuel & ", Parts = Parts + " & rst!parts & ", Cargo = Cargo + " & cargo & ", Contraband = Contraband + " & contra & ", Passenger = Passenger + " & passgr & ", Fugitive = Fugitive + " & fugi & " WHERE PlayerID=" & player.ID
 
-         DB.Execute "UPDATE PlayerJobs SET JobStatus = 1 WHERE CardID = " & CardID
+         DB.Execute "UPDATE PlayerJobs SET JobStatus = 1 WHERE PlayerID = " & player.ID & " AND CardID = " & CardID
          
          msg = IIf(rst!fuel = 0, "", rst!fuel & " Fuel")
          msg = msg & IIf(rst!parts = 0, "", IIf(Len(msg) > 0, ", ", "") & rst!parts & " Part" & IIf(rst!parts > 1, "s", ""))
@@ -1344,7 +1361,7 @@ End Function
 
 Public Function completeJob(ByVal CardID, ByVal JobID)
 Dim rst As New ADODB.Recordset, jobpay, crewpay, perk As Integer
-Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer
+Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer, contact As Integer
       Set rst = New ADODB.Recordset
       SQL = "SELECT Pay, WinResult, ContactID, JobTypeID, JobType2D, Job.* FROM Job INNER JOIN ContactDeck ON Job.JobID = ContactDeck.Job" & JobID & "ID WHERE ContactDeck.CardID=" & CardID
       rst.CursorLocation = adUseClient
@@ -1353,10 +1370,11 @@ Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer
          contra = IIf(rst!Contraband = -14, -7, rst!Contraband)
          passgr = IIf(rst!Passenger = -14, -7, rst!Passenger)
          fugi = IIf(rst!Fugitive = -14, -7, rst!Fugitive)
+         contact = rst!ContactID
          
-         DB.Execute "UPDATE Players SET Fuel = Fuel + " & rst!fuel & ", Parts = Parts + " & rst!parts & ", Cargo = Cargo + " & rst!cargo & ", Contraband = Contraband + " & contra & ", Passenger = Passenger + " & passgr & ", Fugitive = Fugitive + " & fugi & IIf(rst!ContactID = 10, "", ", Solid" & rst!ContactID & "= 1") & " WHERE PlayerID=" & player.ID
+         DB.Execute "UPDATE Players SET Fuel = Fuel + " & rst!fuel & ", Parts = Parts + " & rst!parts & ", Cargo = Cargo + " & rst!cargo & ", Contraband = Contraband + " & contra & ", Passenger = 0, Fugitive = Fugitive + " & fugi & IIf(contact = 10 Or contact = 0, "", ", Solid" & rst!ContactID & "= 1") & " WHERE PlayerID=" & player.ID
 
-         DB.Execute "UPDATE PlayerJobs SET JobStatus = 3 WHERE CardID = " & CardID
+         DB.Execute "UPDATE PlayerJobs SET JobStatus = 3 WHERE PlayerID = " & player.ID & " AND CardID = " & CardID
          
         
          If rst!Contraband = -14 Or rst!Passenger = -14 Or rst!Fugitive = -14 Then
@@ -1377,8 +1395,9 @@ Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer
             End If
          End If
 
-                  
-         If RollDice(6) < 4 And Not hasDisgruntled(player.ID) Then 'don't pay em
+         If contact = 0 Then 'goal job
+            crewpay = 0
+         ElseIf RollDice(6) < 4 And Not hasDisgruntled(player.ID) And jobpay > 0 Then 'don't pay em
             doDisgruntled player.ID, 2
             PutMsg player.PlayName & " didn't pay the crew and they are not Happy about it", player.ID, Logic!GameCntr
             crewpay = 0
@@ -1395,7 +1414,7 @@ Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer
          msg = msg & IIf(passgr = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(passgr) & " Passenger" & IIf(passgr < -1, "s", ""))
          msg = msg & IIf(fugi = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(fugi) & " Fugitive" & IIf(fugi < -1, "s", ""))
          
-         PutMsg player.PlayName & IIf(msg = "", "", " unloaded " & msg & " and") & " completed Job " & targetJobCard & " for $" & CStr(jobpay - crewpay) & IIf(rst!ContactID = 10, "", " and is Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!ContactID)), player.ID, Logic!GameCntr
+         PutMsg player.PlayName & IIf(msg = "", "", " unloaded " & msg & " and") & " completed Job " & targetJobCard & " for $" & CStr(jobpay - crewpay) & IIf(contact = 10 Or contact = 0, "", " and is Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!ContactID)), player.ID, Logic!GameCntr
          
       End If
       rst.Close

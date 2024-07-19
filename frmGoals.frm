@@ -2,19 +2,81 @@ VERSION 5.00
 Begin VB.Form frmGoals 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Story Goal - Criteria to achieve"
-   ClientHeight    =   4260
+   ClientHeight    =   5250
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   9330
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmGoals.frx":0000
-   ScaleHeight     =   4260
+   ScaleHeight     =   5250
    ScaleWidth      =   9330
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.Frame Frame1 
+      BackColor       =   &H00CBE1ED&
+      Caption         =   "post Goal variations"
+      Height          =   855
+      Left            =   120
+      TabIndex        =   38
+      Top             =   4290
+      Width           =   8415
+      Begin VB.CheckBox chkWarrant 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "receive Warrant"
+         Height          =   255
+         Left            =   4290
+         TabIndex        =   43
+         Top             =   240
+         Width           =   1680
+      End
+      Begin VB.CheckBox chkClearReaver 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "Clear Reaver Alerts"
+         Height          =   255
+         Left            =   2370
+         TabIndex        =   42
+         ToolTipText     =   "limit job lists to only those specifically made for goals"
+         Top             =   510
+         Width           =   1815
+      End
+      Begin VB.CheckBox chkClearAlliance 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "Clear Alliance Alerts"
+         Height          =   255
+         Left            =   2370
+         TabIndex        =   41
+         ToolTipText     =   "limit job lists to only those specifically made for goals"
+         Top             =   240
+         Width           =   1815
+      End
+      Begin VB.TextBox txt 
+         Alignment       =   2  'Center
+         Height          =   285
+         Index           =   10
+         Left            =   1590
+         TabIndex        =   39
+         Text            =   "0"
+         ToolTipText     =   "-ve or +ve change value"
+         Top             =   240
+         Width           =   405
+      End
+      Begin VB.Label lbl 
+         Alignment       =   2  'Center
+         Appearance      =   0  'Flat
+         BackColor       =   &H80000005&
+         BackStyle       =   0  'Transparent
+         Caption         =   "change in Cutters"
+         ForeColor       =   &H80000008&
+         Height          =   285
+         Index           =   15
+         Left            =   90
+         TabIndex        =   40
+         Top             =   260
+         Width           =   1365
+      End
+   End
    Begin VB.CheckBox chkUnfinished 
       BackColor       =   &H00CBE1ED&
       Caption         =   "no un- finished jobs"
@@ -475,7 +537,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Public StoryID As Integer, Goal As Integer
+Public StoryID As Integer, goal As Integer
 
 Private Sub cbo_KeyDown(Index As Integer, KeyCode As Integer, Shift As Integer)
    If KeyCode = 46 Then
@@ -493,10 +555,10 @@ Dim frmJobEdit As frmJobEditor
 Dim SQL
    Select Case Index
    Case 0 ' delete
-      DB.Execute "DELETE FROM StoryGoals WHERE StoryID = " & StoryID & " AND Goal = " & Goal
+      DB.Execute "DELETE FROM StoryGoals WHERE StoryID = " & StoryID & " AND Goal = " & goal
       Me.hide
    Case 1 ' Save
-      If Nz(varDLookup("StoryID", "StoryGoals", "StoryID=" & StoryID & " AND Goal=" & Goal), 0) = StoryID Then
+      If Nz(varDLookup("StoryID", "StoryGoals", "StoryID=" & StoryID & " AND Goal=" & goal), 0) = StoryID Then
          SQL = "UPDATE StoryGoals SET Instructions = " & "'" & SQLFilter(txt(8)) & "',"
          SQL = SQL & "Solid = " & IIf(getSolid = "", "NULL", "'" & getSolid & "'") & ","
          SQL = SQL & "AddCrew = " & IIf(getList(lstCrew) = "", "NULL", "'" & getList(lstCrew) & "'") & ","
@@ -511,17 +573,21 @@ Dim SQL
          SQL = SQL & "Negotiate = " & CStr(Val(txt(5))) & ","
          SQL = SQL & "SectorID = " & IIf(GetCombo(cbo(2)) = -1, "0", GetCombo(cbo(2))) & ","
          SQL = SQL & "Win = " & CStr(chkWin.Value) & ","
+         SQL = SQL & "clearAlliance = " & CStr(chkClearAlliance.Value) & ","
+         SQL = SQL & "clearReaver = " & CStr(chkClearReaver.Value) & ","
          SQL = SQL & "NoUnfinished = " & CStr(chkUnfinished.Value) & ","
+         SQL = SQL & "Warrant = " & CStr(chkWarrant.Value) & ","
          SQL = SQL & "Passenger = " & CStr(Val(txt(7))) & ","
-         SQL = SQL & "Bounties = " & CStr(Val(txt(9)))
-         SQL = SQL & " WHERE StoryID = " & StoryID & " AND Goal = " & Goal
+         SQL = SQL & "Bounties = " & CStr(Val(txt(9))) & ","
+         SQL = SQL & "chngInCutters = " & CStr(Val(txt(10)))
+         SQL = SQL & " WHERE StoryID = " & StoryID & " AND Goal = " & goal
          
          
       Else
          SQL = "INSERT INTO StoryGoals (StoryID, Goal, Instructions, Solid, AddCrew, SolidCount, IssueJobID, CompleteJobID, Cash, TurnLimit, Misbehaves, Fight, "
-         SQL = SQL & "Tech, Negotiate, SectorID, Win, NoUnfinished, Passenger, Bounties) VALUES ("
+         SQL = SQL & "Tech, Negotiate, SectorID, Win, NoUnfinished, Passenger, Bounties, chngInCutters, clearAlliance, clearReaver, Warrant) VALUES ("
          SQL = SQL & CStr(StoryID) & ","
-         SQL = SQL & CStr(Goal) & ","
+         SQL = SQL & CStr(goal) & ","
          SQL = SQL & "'" & SQLFilter(txt(8)) & "',"
          SQL = SQL & IIf(getSolid = "", "NULL", "'" & getSolid & "'") & ","
          SQL = SQL & IIf(getList(lstCrew) = "", "NULL", "'" & getList(lstCrew) & "'") & ","
@@ -538,7 +604,11 @@ Dim SQL
          SQL = SQL & CStr(chkWin.Value) & ","
          SQL = SQL & CStr(chkUnfinished.Value) & ","
          SQL = SQL & CStr(Val(txt(7))) & ","
-         SQL = SQL & CStr(Val(txt(9))) & ")"
+         SQL = SQL & CStr(Val(txt(9))) & ","
+         SQL = SQL & CStr(Val(txt(10))) & ","
+         SQL = SQL & CStr(chkClearAlliance.Value) & ","
+         SQL = SQL & CStr(chkClearReaver.Value) & ","
+         SQL = SQL & CStr(chkWarrant.Value) & ")"
       End If
       
       DB.Execute SQL
@@ -565,18 +635,18 @@ End Sub
 Private Sub Form_Load()
 Dim X, filter As String
    
-   LoadCombo lstContacts, "contact", " WHERE ContactID > 0"
+   LoadCombo lstContacts, "contact", " WHERE ContactID > 0 and ContactID < 10"
    LoadCombo cbo(2), "planet"
    filter = Nz(varDLookup("ExcludeCrew", "Story", "StoryID=" & StoryID))
    If filter <> "" Then LoadCombo lstCrew, "crew", " WHERE CrewID IN(" & filter & ") ORDER BY CrewName"
    comboRefresh
-   Me.lbl(0).Caption = "Goal " & CStr(Goal)
-   If Nz(varDLookup("StoryID", "StoryGoals", "StoryID=" & StoryID & " AND Goal=" & Goal), 0) = StoryID Then
+   Me.lbl(0).Caption = "Goal " & CStr(goal)
+   If Nz(varDLookup("StoryID", "StoryGoals", "StoryID=" & StoryID & " AND Goal=" & goal), 0) = StoryID Then
       refreshGoal
       cmd(0).Visible = True
    End If
    
-   If Goal = 0 Then
+   If goal = 0 Then
       For X = 0 To 7
          txt(X).Enabled = False
       Next X
@@ -589,6 +659,7 @@ Dim X, filter As String
       lstCrew.Enabled = False
       chkWin.Enabled = False
       chkUnfinished.Enabled = False
+      Me.Frame1.Enabled = False
    End If
    
    
@@ -678,11 +749,11 @@ End Function
 Private Sub refreshGoal()
 Dim rst As New ADODB.Recordset
 Dim SQL
-   SQL = "SELECT * FROM StoryGoals WHERE StoryID=" & StoryID & " AND Goal=" & Goal
+   SQL = "SELECT * FROM StoryGoals WHERE StoryID=" & StoryID & " AND Goal=" & goal
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
-      txt(8) = Nz(rst!Instructions)
       setSolid Nz(rst!Solid)
+      txt(8) = Nz(rst!Instructions & "")
       SetList lstCrew, Nz(rst!AddCrew)
       SetCombo cbo(1), "", rst!IssueJobID
       SetCombo cbo(0), "", rst!CompleteJobID
@@ -695,9 +766,13 @@ Dim SQL
       txt(6) = CStr(rst!SolidCount)
       txt(7) = CStr(rst!Passenger)
       txt(9) = CStr(rst!Bounties)
+      txt(10) = CStr(rst!chngInCutters)
       If rst!SectorID > 0 Then SetCombo cbo(2), "", rst!SectorID
       chkWin.Value = rst!win
       chkUnfinished.Value = rst!NoUnfinished
+      chkClearAlliance.Value = rst!clearAlliance
+      chkClearReaver.Value = rst!clearReaver
+      chkWarrant.Value = rst!Warrant
    End If
    rst.Close
    Set rst = Nothing

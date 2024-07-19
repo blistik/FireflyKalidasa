@@ -1155,7 +1155,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Private Sub RefreshJob(ByVal CardID)
-Dim rst As New ADODB.Recordset, MP
+Dim rst As New ADODB.Recordset, MP, x
 Dim SQL
    MP = Screen.MousePointer
    Screen.MousePointer = vbHourglass
@@ -1181,7 +1181,8 @@ Dim SQL
       txt(0) = Nz(rst!pay)
       txt(1) = Nz(rst!bonus)
       txt(2) = Nz(rst!JobName)
-      txt(3) = Nz(rst!JobOrder)
+      x = rst!JobOrder  'mariaDB fix
+      txt(3) = Nz(x)
       txt(4) = Nz(rst!BonusPart)
       txt(5) = Nz(rst!fight)
       txt(6) = Nz(rst!tech)
@@ -1417,19 +1418,19 @@ End Function
 
 
 Private Function SetChklist(cbo As Control, ByVal solids As String) As Integer
-Dim x, y, a() As String
+Dim x, Y, a() As String
 
    With cbo
       a = Split(solids, " ")
       For x = 0 To .ListCount - 1
          .selected(x) = False
-         For y = LBound(a) To UBound(a)
-            If .List(x) = a(y) Then
+         For Y = LBound(a) To UBound(a)
+            If .List(x) = a(Y) Then
                .selected(x) = True
                SetChklist = SetChklist + 1
                'Exit For
             End If
-         Next y
+         Next Y
       Next x
    End With
    

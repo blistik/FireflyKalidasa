@@ -3,15 +3,16 @@ Object = "{6ABB9000-48F8-11CF-AC42-0040332ED4E5}#4.0#0"; "SFTTREEX.OCX"
 Begin VB.Form frmStories 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "View/Edit Story"
-   ClientHeight    =   5625
+   ClientHeight    =   6975
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   12000
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmStories.frx":0000
-   ScaleHeight     =   5625
+   ScaleHeight     =   6975
    ScaleWidth      =   12000
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
@@ -20,7 +21,7 @@ Begin VB.Form frmStories
       Left            =   60
       TabIndex        =   18
       TabStop         =   0   'False
-      Top             =   3150
+      Top             =   4530
       Width           =   11895
       _Version        =   262144
       _ExtentX        =   20981
@@ -250,20 +251,81 @@ Begin VB.Form frmStories
    Begin VB.Frame Frame1 
       BackColor       =   &H00CBE1ED&
       Caption         =   "Priming the Pump"
-      Height          =   3015
+      Height          =   4395
       Left            =   60
       TabIndex        =   12
       Top             =   60
       Width           =   10605
+      Begin VB.TextBox txt 
+         Alignment       =   2  'Center
+         Height          =   285
+         Index           =   9
+         Left            =   5340
+         TabIndex        =   43
+         Text            =   "0"
+         ToolTipText     =   "cards to discard"
+         Top             =   2190
+         Width           =   405
+      End
+      Begin VB.TextBox txt 
+         Alignment       =   2  'Center
+         Height          =   285
+         Index           =   8
+         Left            =   5340
+         TabIndex        =   41
+         Text            =   "3"
+         ToolTipText     =   "cards to discard"
+         Top             =   1830
+         Width           =   405
+      End
+      Begin VB.CheckBox chkWarrant 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "start with Warrant"
+         Height          =   195
+         Left            =   6360
+         TabIndex        =   40
+         Top             =   2900
+         Width           =   1980
+      End
+      Begin VB.CheckBox chkAllianceTrail 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "Alliance Ships trail alert tokens"
+         Height          =   195
+         Left            =   180
+         TabIndex        =   39
+         ToolTipText     =   "after either Alliance Ship moves, leave a token"
+         Top             =   3150
+         Width           =   2505
+      End
+      Begin VB.CheckBox chkContact 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "pull top Contact cards per turn"
+         Height          =   195
+         Left            =   3840
+         TabIndex        =   38
+         ToolTipText     =   "after every turn pull a contact card from each deck"
+         Top             =   3150
+         Width           =   2505
+      End
+      Begin VB.CheckBox chkSupply 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "pull top Supply cards per turn"
+         Height          =   195
+         Left            =   3840
+         TabIndex        =   37
+         ToolTipText     =   "after every turn pull a supply card from each deck"
+         Top             =   2900
+         Width           =   2415
+      End
       Begin VB.CheckBox chkFugitives 
          BackColor       =   &H00CBE1ED&
          Caption         =   "force Fugitives available"
          Height          =   195
-         Left            =   1320
+         Left            =   1700
          TabIndex        =   36
          ToolTipText     =   "force starting Fugitives to be available at Supply discards"
-         Top             =   2670
-         Width           =   2430
+         Top             =   2650
+         Width           =   2130
       End
       Begin VB.CheckBox chkMoveCutter 
          BackColor       =   &H00CBE1ED&
@@ -272,7 +334,7 @@ Begin VB.Form frmStories
          Left            =   180
          TabIndex        =   35
          ToolTipText     =   "randomally move a cutter after Fullburns"
-         Top             =   2430
+         Top             =   2900
          Width           =   3045
       End
       Begin VB.CheckBox chkBounty 
@@ -282,17 +344,17 @@ Begin VB.Form frmStories
          Left            =   180
          TabIndex        =   34
          ToolTipText     =   "enable Bounty Hunts"
-         Top             =   2670
+         Top             =   2650
          Width           =   990
       End
       Begin VB.CheckBox chkHavenStorage 
          BackColor       =   &H00CBE1ED&
          Caption         =   "w/storage"
          Height          =   195
-         Left            =   5250
+         Left            =   1700
          TabIndex        =   32
          ToolTipText     =   "use Havens for storing stuff"
-         Top             =   1920
+         Top             =   2400
          Visible         =   0   'False
          Width           =   1080
       End
@@ -303,17 +365,17 @@ Begin VB.Form frmStories
          Left            =   3840
          TabIndex        =   9
          ToolTipText     =   "pick Upgrade or Drive"
-         Top             =   2400
+         Top             =   2650
          Width           =   2265
       End
       Begin VB.CheckBox chkRandomCrew 
          BackColor       =   &H00CBE1ED&
          Caption         =   "Random Crew"
          Height          =   195
-         Left            =   3840
+         Left            =   6360
          TabIndex        =   8
          ToolTipText     =   "assigned a random crew instead of selecting them"
-         Top             =   2160
+         Top             =   2650
          Width           =   1425
       End
       Begin VB.TextBox txt 
@@ -324,17 +386,17 @@ Begin VB.Form frmStories
          TabIndex        =   4
          Text            =   "3"
          ToolTipText     =   "min 1, max 6"
-         Top             =   1170
+         Top             =   1110
          Width           =   405
       End
       Begin VB.CheckBox chkHavens 
          BackColor       =   &H00CBE1ED&
          Caption         =   "use Havens"
          Height          =   195
-         Left            =   3840
+         Left            =   180
          TabIndex        =   7
          ToolTipText     =   "use Havens for starting locations"
-         Top             =   1920
+         Top             =   2400
          Width           =   1185
       End
       Begin VB.CommandButton cmd 
@@ -347,7 +409,7 @@ Begin VB.Form frmStories
          TabIndex        =   29
          TabStop         =   0   'False
          ToolTipText     =   "invert selection"
-         Top             =   2500
+         Top             =   4130
          Width           =   375
       End
       Begin VB.CommandButton cmd 
@@ -360,7 +422,7 @@ Begin VB.Form frmStories
          TabIndex        =   28
          TabStop         =   0   'False
          ToolTipText     =   "select Moral Crew"
-         Top             =   2500
+         Top             =   4130
          Width           =   525
       End
       Begin VB.CommandButton cmd 
@@ -373,7 +435,7 @@ Begin VB.Form frmStories
          TabIndex        =   27
          TabStop         =   0   'False
          ToolTipText     =   "clear selection"
-         Top             =   2500
+         Top             =   4130
          Width           =   375
       End
       Begin VB.CommandButton cmd 
@@ -386,12 +448,12 @@ Begin VB.Form frmStories
          TabIndex        =   26
          TabStop         =   0   'False
          ToolTipText     =   "select WANTED Crew"
-         Top             =   2500
+         Top             =   4130
          Width           =   675
       End
       Begin VB.ListBox lstCrew 
          BackColor       =   &H00CBE1ED&
-         Height          =   2085
+         Height          =   3660
          Left            =   8490
          Style           =   1  'Checkbox
          TabIndex        =   24
@@ -413,11 +475,11 @@ Begin VB.Form frmStories
          Alignment       =   2  'Center
          Height          =   285
          Index           =   4
-         Left            =   5700
+         Left            =   5730
          TabIndex        =   6
          Text            =   "1000"
          ToolTipText     =   "maximum cost of Crew"
-         Top             =   1560
+         Top             =   1470
          Width           =   525
       End
       Begin VB.TextBox txt 
@@ -437,8 +499,9 @@ Begin VB.Form frmStories
          Left            =   5340
          TabIndex        =   5
          Text            =   "0"
-         Top             =   1560
-         Width           =   315
+         ToolTipText     =   "max is 5"
+         Top             =   1470
+         Width           =   330
       End
       Begin VB.ListBox lstContacts 
          BackColor       =   &H00CBE1ED&
@@ -457,7 +520,7 @@ Begin VB.Form frmStories
          TabIndex        =   3
          Text            =   "2"
          ToolTipText     =   "Parts"
-         Top             =   780
+         Top             =   750
          Width           =   405
       End
       Begin VB.TextBox txt 
@@ -468,7 +531,7 @@ Begin VB.Form frmStories
          TabIndex        =   2
          Text            =   "6"
          ToolTipText     =   "Fuel"
-         Top             =   780
+         Top             =   750
          Width           =   405
       End
       Begin VB.TextBox txt 
@@ -482,6 +545,30 @@ Begin VB.Form frmStories
          Text            =   "3000"
          Top             =   390
          Width           =   885
+      End
+      Begin VB.Label lbl 
+         Alignment       =   2  'Center
+         BackColor       =   &H00CBE1ED&
+         BorderStyle     =   1  'Fixed Single
+         Caption         =   "Contact Deck init"
+         Height          =   285
+         Index           =   7
+         Left            =   3840
+         TabIndex        =   44
+         Top             =   2190
+         Width           =   1365
+      End
+      Begin VB.Label lbl 
+         Alignment       =   2  'Center
+         BackColor       =   &H00CBE1ED&
+         BorderStyle     =   1  'Fixed Single
+         Caption         =   "Supply Deck init"
+         Height          =   285
+         Index           =   6
+         Left            =   3840
+         TabIndex        =   42
+         Top             =   1830
+         Width           =   1365
       End
       Begin VB.Label Label2 
          BackStyle       =   0  'Transparent
@@ -523,7 +610,7 @@ Begin VB.Form frmStories
          Index           =   3
          Left            =   3840
          TabIndex        =   17
-         Top             =   1560
+         Top             =   1470
          Width           =   1365
       End
       Begin VB.Label Label1 
@@ -544,7 +631,7 @@ Begin VB.Form frmStories
          Index           =   2
          Left            =   3840
          TabIndex        =   15
-         Top             =   1170
+         Top             =   1110
          Width           =   1365
       End
       Begin VB.Label lbl 
@@ -556,7 +643,7 @@ Begin VB.Form frmStories
          Index           =   1
          Left            =   3840
          TabIndex        =   14
-         Top             =   780
+         Top             =   750
          Width           =   1365
       End
       Begin VB.Label lbl 
@@ -579,7 +666,7 @@ Begin VB.Form frmStories
       Index           =   5
       Left            =   60
       TabIndex        =   30
-      Top             =   5280
+      Top             =   6660
       Width           =   11895
    End
    Begin VB.Menu mnuPopup 
@@ -619,7 +706,10 @@ Dim frmScores As frmScore
    Select Case Index
    Case 0 ' save
       'validation
-      If Val(txt(7)) > 6 Or Val(txt(7)) = 0 Then txt(7) = 3
+      If Val(txt(7)) > 6 Or Val(txt(7)) < 1 Then txt(7) = 3
+      If Val(txt(3)) > 5 Then txt(3) = "5"
+      If Val(txt(8)) > 6 Then txt(8) = "6"
+      If Val(txt(9)) > 6 Then txt(9) = "6"
       
       'Save
       SQL = "UPDATE Story SET StoryTitle= " & "'" & SQLFilter(txt(5)) & "',"
@@ -637,8 +727,15 @@ Dim frmScores As frmScore
       SQL = SQL & " UpgradeDrive = " & chkUpgrade.Value & ","
       SQL = SQL & " RandomCrew = " & chkRandomCrew.Value & ","
       SQL = SQL & " Bounty = " & chkBounty.Value & ","
+      SQL = SQL & " MoveCutter = " & chkMoveCutter.Value & ","
       SQL = SQL & " Fugitives = " & chkFugitives.Value & ","
-      SQL = SQL & " MoveCutter = " & chkMoveCutter.Value
+      SQL = SQL & " pullSupply = " & chkSupply.Value & ","
+      SQL = SQL & " pullContact = " & chkContact.Value & ","
+      
+      SQL = SQL & " supplyInit = " & CStr(Val(txt(8))) & ","
+      SQL = SQL & " contactInit = " & CStr(Val(txt(9))) & ","
+      SQL = SQL & " Warrant = " & chkWarrant.Value & ","
+      SQL = SQL & " AllianceTrail = " & chkAllianceTrail.Value
       SQL = SQL & " WHERE StoryID = " & StoryID
       DB.Execute SQL
       
@@ -647,7 +744,7 @@ Dim frmScores As frmScore
    Case 1 ' add Goal
       Set frmGoal = New frmGoals
       frmGoal.StoryID = StoryID
-      frmGoal.Goal = sftTree.ListCount
+      frmGoal.goal = sftTree.ListCount
       frmGoal.chkGoal.Value = 1
       frmGoal.Show 1, Me
       RefreshGoals
@@ -696,10 +793,10 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub readonly()
-Dim x
-   For x = 0 To 6
-      cmd(x).Visible = False
-   Next x
+Dim X
+   For X = 0 To 6
+      cmd(X).Visible = False
+   Next X
 End Sub
 
 Private Sub refreshHeader()
@@ -727,8 +824,14 @@ Dim SQL, Index
          chkRandomCrew.Value = rst!RandomCrew
          chkBounty.Value = rst!Bounty
          chkFugitives.Value = rst!Fugitives
+         chkSupply = rst!pullSupply
+         chkContact = rst!pullContact
          chkMoveCutter.Value = rst!MoveCutter
          chkUpgrade.Value = rst!UpgradeDrive
+         txt(8) = Nz(rst!supplyInit)
+         txt(9) = Nz(rst!contactInit)
+         chkWarrant.Value = rst!Warrant
+         chkAllianceTrail.Value = rst!AllianceTrail
       Else 'new
          DB.Execute "Insert into Story (StoryID,StoryTitle, Active) VALUES (" & StoryID & ",'add a new story title here..',1)"
       End If
@@ -763,8 +866,8 @@ Dim SQL, Index
       SQL = SQL & " ORDER BY Goal"
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst.EOF
-         Index = .AddItem(rst!Goal)
-         .ItemData(Index) = rst!Goal
+         Index = .AddItem(rst!goal)
+         .ItemData(Index) = rst!goal
          .CellText(Index, 1) = rst!Instructions & ""
          .CellText(Index, 2) = IIf(rst!IssueJobID > 0, varDLookup("JobName", "ContactDeck", "CardID=" & rst!IssueJobID), "")
          .CellText(Index, 3) = IIf(rst!CompleteJobID > 0, varDLookup("JobName", "ContactDeck", "CardID=" & rst!CompleteJobID), "")
@@ -790,68 +893,68 @@ Dim SQL, Index
 End Sub
 
 Private Function getList(cbo As Control) As String
-Dim x
+Dim X
    With cbo
-      For x = 0 To .ListCount - 1
-         If .selected(x) Then
-            getList = getList & IIf(getList = "", "", ",") & CStr(.ItemData(x))
+      For X = 0 To .ListCount - 1
+         If .selected(X) Then
+            getList = getList & IIf(getList = "", "", ",") & CStr(.ItemData(X))
          End If
-      Next x
+      Next X
    End With
    
 End Function
 
 
 Private Function getSelected(cbo As Control) As Integer
-Dim x
+Dim X
    With cbo
-      For x = 0 To .ListCount - 1
-         If .selected(x) Then
+      For X = 0 To .ListCount - 1
+         If .selected(X) Then
             getSelected = getSelected + 1
          End If
-      Next x
+      Next X
    End With
    
 End Function
 
 Private Function SetList(cbo As Control, ByVal solids As String) As Integer
-Dim x, y, a() As String
+Dim X, Y, a() As String
 
    If solids = "" Then Exit Function
    With cbo
    
          a = Split(solids, ",")
-         For y = LBound(a) To UBound(a)
-            For x = 0 To .ListCount - 1
-               If .ItemData(x) = Val(a(y)) Then
-                  .selected(x) = True
+         For Y = LBound(a) To UBound(a)
+            For X = 0 To .ListCount - 1
+               If .ItemData(X) = Val(a(Y)) Then
+                  .selected(X) = True
                   SetList = SetList + 1
                   Exit For
                End If
-            Next x
-         Next y
+            Next X
+         Next Y
       
    End With
    
 End Function
 
 Private Function SetCrewSel(ByVal perk As String, Optional ByVal clearAll As Boolean = False, Optional ByVal invert As Boolean = False) As Integer
-Dim x
+Dim X
 
    If lstCrew.ListCount = 0 Then Exit Function
    With lstCrew
 
-      For x = 0 To .ListCount - 1
+      For X = 0 To .ListCount - 1
          If clearAll Then
-            .selected(x) = False
+            .selected(X) = False
          ElseIf invert Then
-            .selected(x) = Not .selected(x)
+            .selected(X) = Not .selected(X)
          Else
-            If varDLookup(perk, "Crew", "CrewID=" & CStr(.ItemData(x))) > 0 Then  '& " AND Leader = 0"
-              .selected(x) = True
+            If varDLookup(perk, "Crew", "CrewID=" & CStr(.ItemData(X))) > 0 Then  '& " AND Leader = 0"
+              .selected(X) = True
             End If
          End If
-      Next x
+      Next X
       
    End With
    
@@ -862,15 +965,15 @@ Private Sub lstCrew_ItemCheck(Item As Integer)
 End Sub
 
 Private Sub mnuPop_Click(Index As Integer)
-Dim frmGoal As frmGoals, x
-   x = sftTree.ListIndex
+Dim frmGoal As frmGoals, X
+   X = sftTree.ListIndex
 
    Select Case Index
    Case 0 'open
-      If x > -1 Then
+      If X > -1 Then
          Set frmGoal = New frmGoals
          frmGoal.StoryID = StoryID
-         frmGoal.Goal = sftTree.ItemData(x)
+         frmGoal.goal = sftTree.ItemData(X)
          frmGoal.Show 1, Me
          RefreshGoals
       End If
@@ -878,12 +981,12 @@ Dim frmGoal As frmGoals, x
    Case 1 'add
       Set frmGoal = New frmGoals
       frmGoal.StoryID = StoryID
-      frmGoal.Goal = sftTree.ListCount
+      frmGoal.goal = sftTree.ListCount
       frmGoal.Show 1, Me
       RefreshGoals
    
    Case 2 'delete
-      DB.Execute "DELETE FROM StoryGoals WHERE StoryID = " & StoryID & " AND Goal = " & sftTree.ItemData(x)
+      DB.Execute "DELETE FROM StoryGoals WHERE StoryID = " & StoryID & " AND Goal = " & sftTree.ItemData(X)
       RefreshGoals
    
    End Select
@@ -909,7 +1012,7 @@ Dim frmGoal As frmGoals
       If Index > -1 Then
          Set frmGoal = New frmGoals
          frmGoal.StoryID = StoryID
-         frmGoal.Goal = sftTree.ItemData(Index)
+         frmGoal.goal = sftTree.ItemData(Index)
          frmGoal.Show 1, Me
          RefreshGoals
       End If

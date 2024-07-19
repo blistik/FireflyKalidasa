@@ -1341,7 +1341,7 @@ Dim Index As Long, CrewID, CardID
          Main.showActions
       Else
          If Not (Main.frmJob Is Nothing) Then
-            Main.frmJob.RefreshJobs
+            Main.frmJob.refreshJobs
          End If
          
       End If
@@ -1600,6 +1600,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   Main.drawLine 2, 133, 104
                   wormHoleOpen = True
                   PutMsg player.PlayName & " used the " & .CellText(X, 1), player.ID, Logic!Gamecntr
+                  playsnd 15, True
                
                Case 57 '"The Best in the House"
                   doDisgruntled player.ID, -1

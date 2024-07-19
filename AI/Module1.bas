@@ -60,7 +60,6 @@ End Enum
 Public actionSeq As actionSeqCntr, NumOfReavers As Integer, ContactList As String
 Public Trail(0 To 8) As Integer 'record the trail of sectors travelled in a burn
 Public MoseyMovesDone As Integer, FullburnMovesDone As Integer
-'Public Bitpic() As Control
 Public Const JOB_SUCCESS As Integer = 3      'final JobStatus value once complete
 Public Const MAXJOBCARDDRAW As Integer = 3
 Public Const MAXACTIVEJOBS As Integer = 3
@@ -542,40 +541,41 @@ End Function
 
 Public Sub dealDriveAndJobs(ByVal playerID)
 Dim rst As New ADODB.Recordset
-Dim startjobs As String, a() As String, x, msg As String
+Dim startjobs As String, a() As String, x, y, msg As String
 
    'std Drive Core IDs 132 - 135
    DB.Execute "INSERT INTO PlayerSupplies (PlayerID,CardID) VALUES (" & playerID & ", " & 131 + playerID & ")"
    DB.Execute "Update SupplyDeck SET Seq = " & playerID & " WHERE CardID = " & 131 + playerID
    
    'get Story Issued Job
-'   x = Nz(varDLookup("IssueJobID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 0"), 0)
-'   If x > 0 Then
-'      assignDeal playerID, x
-'   End If
+   x = Nz(varDLookup("IssueJobID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 0"), 0)
+   If x > 0 Then
+      assignDeal playerID, x
+   End If
    'msg = Nz(varDLookup("Instructions", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 0"))
    'If msg <> "" Then
    '   MessBox msg, "Story - First Goal", "Shiny", "", getLeader()
    'End If
    
    'Grab a Job from configured list out of Contact decks
-   'startjobs = Nz(varDLookup("StartingJobs", "Story", "StoryID=" & Logic!StoryID), "")
+   startjobs = Nz(varDLookup("StartingJobs", "Story", "StoryID=" & Logic!StoryID), "")
    'possible future change to give optional of ALL Contact Jobs.  Use frmDeals to select 3 from the 5 Contacts
-   'If startjobs = "" Then Exit Sub
+   If startjobs = "" Then Exit Sub
    
-'   rst.Open "SELECT * FROM ContactDeck WHERE ContactID > 0 AND Seq > " & CStr(CONSIDERED) & " ORDER BY ContactID, Seq", DB, adOpenStatic, adLockReadOnly
-'
-'   a = Split(startjobs, ",")
-'   For x = LBound(a) To UBound(a)
-'      rst.Find "ContactID = " & a(x)
-'      If Not rst.EOF Then
-'         assignDeal playerID, rst!CardID
-'      End If
-'      Exit For 'just 1 pls
-'   Next x
-'
-'   rst.Close
-'   Set rst = Nothing
+   rst.Open "SELECT * FROM ContactDeck WHERE ContactID > 0 AND Seq > " & CStr(CONSIDERED) & " ORDER BY ContactID, Seq", DB, adOpenStatic, adLockReadOnly
+   y = 0
+   a = Split(startjobs, ",")
+   For x = LBound(a) To UBound(a)
+      rst.Find "ContactID = " & a(x)
+      If Not rst.EOF Then
+         assignDeal playerID, rst!CardID
+         y = y + 1
+      End If
+      If y > 2 Then Exit For
+   Next x
+
+   rst.Close
+   Set rst = Nothing
    
 End Sub
 
@@ -1186,6 +1186,12 @@ Dim c() As String
    If playerID > 6 And SectorID <> lastSectorID And lastSectorID > 0 And leaveToken Then    'cutter 7-12
       changeToken lastSectorID, 1, False    'leave another token behind
    End If
+   
+   If varDLookup("AllianceTrail", "Story", "StoryID=" & Logic!StoryID) > 0 Then
+      If (playerID = 5 Or playerID = 6) And SectorID <> lastSectorID And lastSectorID > 0 And leaveToken Then
+         changeAToken lastSectorID, 1, False      'leave another token behind
+      End If
+   End If
 
    If sound > 0 Then
       playsnd sound, syncsound
@@ -1449,12 +1455,12 @@ Dim SQL, SectorID As Integer, a() As String, b(1 To 20, 1 To 2) As Integer, c() 
    Set rst = Nothing
 End Function
 
-Public Sub changeAToken(ByVal SectorID As Integer, ByVal cnt As Integer)
+Public Sub changeAToken(ByVal SectorID As Integer, ByVal cnt As Integer, Optional ByVal sound As Boolean = True)
    If getAToken(SectorID) + cnt < 0 Then
       DB.Execute "UPDATE Board Set AToken = 0 WHERE SectorID = " & SectorID
    Else
       If Not getHaven(SectorID) > 0 Then
-         playsnd 2
+         If sound Then playsnd 2
          DB.Execute "UPDATE Board Set AToken = AToken + " & Str(cnt) & " WHERE SectorID = " & SectorID
       End If
    End If
@@ -1614,7 +1620,7 @@ Dim x
          x = RollDice(71)
          If Nz(varDLookup("Zones", "Board", "SectorID=" & x & " And Haven=0"), "B") = "A" And getClearSector(x) <> "" Then
             MoveShip 5, x
-            PutMsg "The Cruiser is sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), "SectorID " & x)
+            PutMsg "The Cruiser is sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), "Sector " & x)
             doMoveCruiserToFreeSector = True
             Exit Do
          End If
@@ -2467,9 +2473,22 @@ Dim SQL, x, cnt As Integer
             End If
          Next x
       End If
+      If goaldone And rst!SectorID > 0 Then
+         x = rst!SectorID
+         If x = 1 Then x = getCruiserSector
+         If x = 2 Then x = getCorvetteSector
+         goaldone = (getPlayerSector(player.ID) = x)
+      End If
       
-      If rst!SolidCount = 0 And Nz(rst!Solid) = "" And rst!Cash = 0 And rst!Bounties = 0 Then goaldone = False 'AI can never reach goal
+      If rst!SolidCount = 0 And Nz(rst!Solid) = "" And rst!Cash = 0 And rst!Bounties = 0 And rst!IssueJobID = 0 And rst!CompleteJobID = 0 Then goaldone = False 'AI can never reach goal
      
+      'CompleteJob
+      If goaldone And rst!CompleteJobID > 0 Then
+         If Not jobSuccess(playerID, rst!CompleteJobID) Then
+            goaldone = False
+         End If
+      End If
+      
       'money
       If goaldone And rst!Cash > 0 Then
          If getMoney(playerID) < rst!Cash Then
@@ -2498,6 +2517,12 @@ Dim SQL, x, cnt As Integer
          addGoal playerID, 1
          ContactList = getContactList(StoryID)
       End If
+      
+      'if we here and goaldone, we good to deliver job
+      If goaldone And rst!IssueJobID > 0 Then
+         assignDeal playerID, rst!IssueJobID
+      End If
+
       
        ' we good to give new instructions
       If goaldone And Nz(rst!Instructions) <> "" And Not doGoalCheck Then
@@ -2619,3 +2644,100 @@ Dim SQL, cnt
    Set rst = Nothing
 
 End Function
+
+Public Function jobSuccess(ByVal playerID, ByVal CardID) As Integer
+Dim rst As New ADODB.Recordset
+Dim SQL
+   SQL = "SELECT JobStatus FROM PlayerJobs WHERE PlayerID =" & playerID & " AND CardID=" & CardID
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      jobSuccess = (Nz(rst!JobStatus, 0) = JOB_SUCCESS)
+   End If
+   rst.Close
+   Set rst = Nothing
+End Function
+
+Public Function bountiesDone() As Boolean
+Dim rst As New ADODB.Recordset, x As Integer, y As Integer
+Dim SQL
+   
+   SQL = "SELECT Max(Bounties) as cnt FROM StoryGoals WHERE StoryGoals.StoryID=" & Logic!StoryID
+   rst.Open SQL, DB, adOpenStatic, adLockReadOnly
+   If Not rst.EOF Then
+      x = rst!cnt
+   End If
+   rst.Close
+   Set rst = Nothing
+   If x = 0 Then Exit Function 'no bounty count required for goals, so leave them active
+   
+   'ok there is a bounty requirement, keep going until reached
+   y = countBounties(player.ID)
+   bountiesDone = (y >= x)
+   
+End Function
+
+Public Function hasGoalSector(ByRef goalSector As Integer) As Boolean
+Dim rst As New ADODB.Recordset, x As Integer, y As Integer, a
+Dim SQL, Goal As Integer
+
+   Goal = varDLookup("Goals", "Players", "PlayerID = " & player.ID) + 1
+   hasGoalSector = True
+   SQL = "SELECT  SectorID, CompleteJobID, Solid, SolidCount, Bounties, NoUnfinished, Fight, Tech, Negotiate, Cash "
+   SQL = SQL & "FROM StoryGoals WHERE StoryID=" & Logic!StoryID & " AND SectorID>0 AND Goal=" & Goal
+   rst.Open SQL, DB, adOpenStatic, adLockReadOnly
+   If Not rst.EOF Then
+      goalSector = 0
+      If hasGoalSector And rst!CompleteJobID > 0 Then
+         If jobSuccess(player.ID, rst!CompleteJobID) Then
+            hasGoalSector = False
+         End If
+      End If
+      
+      If hasGoalSector And Nz(rst!Solid) <> "" Then
+         a = Split(rst!Solid, ",")
+         For x = LBound(a) To UBound(a)
+            If Not isSolid(player.ID, a(x)) Then
+               hasGoalSector = False
+               Exit For
+            End If
+         Next x
+      End If
+      y = 0
+      If hasGoalSector And rst!SolidCount > 0 Then
+         For x = 1 To NO_OF_CONTACTS
+            If isSolid(player.ID, x) Then
+               y = y + 1
+            End If
+         Next x
+         If y < rst!SolidCount Then
+            hasGoalSector = False
+         End If
+      End If
+      If hasGoalSector And rst!Bounties > 0 Then
+         If countBounties(player.ID) < rst!Bounties Then
+            hasGoalSector = False
+         End If
+      End If
+      
+      If hasGoalSector Then goalSector = rst!SectorID
+      If goalSector = 1 Then goalSector = getCruiserSector
+      If goalSector = 2 Then goalSector = getCorvetteSector
+      
+   End If
+   rst.Close
+   Set rst = Nothing
+
+End Function
+
+Public Sub getJob2Reqs(ByVal CardID, ByRef cargo As Integer, ByRef contra As Integer)
+Dim rst As New ADODB.Recordset
+Dim SQL
+   SQL = "SELECT Job.* FROM Job INNER JOIN ContactDeck ON Job.JobID = ContactDeck.Job2ID WHERE ContactDeck.CardID=" & CardID
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If Not rst.EOF Then
+      cargo = Abs(rst!cargo)
+      contra = Abs(rst!Contraband)
+   End If
+   rst.Close
+   Set rst = Nothing
+End Sub

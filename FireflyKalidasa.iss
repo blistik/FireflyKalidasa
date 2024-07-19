@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.9.9"
+#define MyAppVersion "1.10.0"
 #define MyAppPublisher "VeeBee-er"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -39,7 +39,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 ; Binaries >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireFlyAIBot.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\VerseMapTool.exe"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "D:\Progs\GitHub\FireflyKalidasa\VerseMapTool.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\SFTTREEX.OCX"; DestDir: "{sys}"; Flags: 32bit regserver sharedfile 
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\MSCOMCTL.OCX"; DestDir: "{sys}"; Flags: 32bit regserver sharedfile
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\LaVolpeAlphaImg2.ocx"; DestDir: "{sys}"; Flags: 32bit regserver sharedfile
@@ -53,6 +53,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\bin\Forque.ttf";  DestDir: "{autofonts}
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\STENCIL.TTF";  DestDir: "{autofonts}"; FontInstall: "Stencil"; Flags: onlyifdoesntexist uninsneveruninstall
 ; Primary Files >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa.mdb"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
+Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa_FullBoard.mdb"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
 Source: "D:\Progs\GitHub\FireflyKalidasa\Firefly_rulebook.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyBlueSun_rulebook.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa_rulebook.pdf"; DestDir: "{app}"; Flags: ignoreversion
@@ -72,6 +73,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Bester.jpg"; DestDir: "{app}\p
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Billy.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\KalidasaBoard.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\KalidasaBoard1.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\FireflyFullBoard.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Bourne.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Bree.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Bridgit.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
@@ -591,10 +593,13 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\yourgo.wav"; DestDir: "{app}\sou
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\gear.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\reload.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\clack.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Sonar.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Wormhole.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-;Name: "{group}\{#MyAppName} on BlisNAS"; Filename: "{app}\{#MyAppExeName} Provider=MSDASQL;Driver={{MariaDB ODBC 3.1 Driver}};Server=blis.duckdns.org;Port=3306;"
+Name: "{group}\{#MyAppName} Full Map"; Filename: "{app}\{#MyAppExeName}"; Parameters: "{app}\FireflyKalidasa_FullBoard.mdb"
+;Name: "{group}\{#MyAppName} on MariaDB"; Filename: "{app}\{#MyAppExeName}"; Parameters: "Provider=MSDASQL;Driver={{MariaDB ODBC 3.1 Driver};Server=blis.duckdns.org;Port=3306;"
 Name: "{group}\Firefly AI Bot"; Filename: "{app}\FireFlyAIBot.exe"
 Name: "{group}\Firefly Rulebook"; Filename: "{app}\Firefly_rulebook.pdf"
 Name: "{group}\BlueSun Rulebook"; Filename: "{app}\FireflyBlueSun_rulebook.pdf"
