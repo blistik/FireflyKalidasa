@@ -432,6 +432,7 @@ With sftTree
    Next Index
 
    If doClear Then .Clear  'otherwise Append
+   rst2.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       totalfight = 0
@@ -774,7 +775,7 @@ With sftTree
       SQL = "SELECT SupplyDeck.CardID, Gear.* "
       SQL = SQL & "FROM Gear INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Gear.GearID = SupplyDeck.GearID "
       SQL = SQL & "WHERE PlayerSupplies.CrewID = 0 AND PlayerSupplies.PlayerID=" & rst!playerID
-      
+      rst2.CursorLocation = adUseClient
       rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst2.EOF
          Index = .AddItem(CStr(rst2!CardID))
@@ -822,7 +823,7 @@ With sftTree
       .ItemLevel(Y) = 1
       
       SQL = "SELECT * FROM Players WHERE PlayerID=" & rst!playerID
-      
+      rst2.CursorLocation = adUseClient
       rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       If Not rst2.EOF Then
          X = 0
@@ -905,7 +906,7 @@ With sftTree
       SQL = "SELECT PlayerSupplies.CardID, ShipUpgrade.* "
       SQL = SQL & "FROM ShipUpgrade INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON ShipUpgrade.ShipUpgradeID = SupplyDeck.ShipUpgradeID "
       SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & rst!playerID
-      
+      rst2.CursorLocation = adUseClient
       rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       While Not rst2.EOF
          Index = .AddItem(CStr(rst2!CardID))

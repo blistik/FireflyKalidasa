@@ -7,6 +7,11 @@ Test Issues pending:
 
 
 Version updates:
+v 1.10.1 ~ 12 August 2024
+add: new Board refresh handling to improve perf.
+add: Gun Hand 16x16 pics to setup package
+bot: fix Bounty Job priority
+
 v 1.10.0 ~ 19 July 2024
 new: Story - "This Bounty Hunter Gets it Done" (by Bill)
 new: Full Map startup option with 159 sectors (orig has 152)

@@ -203,10 +203,10 @@ Dim msg
 End Function
 
 Public Sub ClearBoard() 'resets all tables and values for new game
-Dim X
-   For X = 1 To 4
-      PlayCode(X).PlayName = ""
-   Next X
+Dim x
+   For x = 1 To 4
+      PlayCode(x).PlayName = ""
+   Next x
    
    DB.Execute "UPDATE Players SET Name = Null, Seq=0, SectorID = Null, Leader=0, Pay = 0, Warrants=0, Goals = 0, Fuel = 0, Parts = 0, Cargo = 0, Contraband = 0, " & _
               "Fugitive = 0, Passenger = 0, HFuel = 0, HParts = 0, HCargo = 0, HContraband = 0, HFugitive = 0, HPassenger = 0, HPay = 0, " & _
@@ -411,7 +411,7 @@ Dim rst As New ADODB.Recordset, SQL
 End Function
 
 Public Sub playsnd(bittype, Optional ByVal sync As Boolean = False)
-Dim X As Long
+Dim x As Long
 Dim Y As Long
 Dim z As Long
 Dim Path As String
@@ -464,27 +464,27 @@ End Select
 
     Path = Path & ".wav"
     If sync Then
-      X = PlaySound(Path, Y, z)
+      x = PlaySound(Path, Y, z)
     Else
-      X = PlaySound(Path, Y, SND_ASYNC)
+      x = PlaySound(Path, Y, SND_ASYNC)
     End If
 
 End Sub
 
 'can the player fullburn without hitting Reavers, looking for 1 free sector
 Public Function hasValidFBMove(ByVal playerID) As Boolean
-Dim currentSectorID, adjacent, a() As String, X
+Dim currentSectorID, adjacent, a() As String, x
    
    currentSectorID = Nz(varDLookup("SectorID", "Players", "PlayerID=" & playerID), 0)
    
    adjacent = varDLookup("AdjacentRows", "Board", "SectorID=" & currentSectorID)
    a = Split(adjacent, ",")
-   For X = LBound(a) To UBound(a)
-      If getCutterSector(Val(a(X))) = 0 Or hasShipUpgrade(playerID, 18) Then
+   For x = LBound(a) To UBound(a)
+      If getCutterSector(Val(a(x))) = 0 Or hasShipUpgrade(playerID, 18) Then
          hasValidFBMove = True
          Exit For
       End If
-   Next X
+   Next x
 
 End Function
 
@@ -495,23 +495,23 @@ Public Function hasWarrant(ByVal playerID) As Boolean
 End Function
 
 Public Function isAdjacent(ByVal playerID, ByVal SectorID) As Boolean
-Dim currentSectorID, adjacent, a() As String, X
+Dim currentSectorID, adjacent, a() As String, x
    
    currentSectorID = Nz(varDLookup("SectorID", "Players", "PlayerID=" & playerID), 0)
    
    adjacent = varDLookup("AdjacentRows", "Board", "SectorID=" & currentSectorID)
    a = Split(adjacent, ",")
-   For X = LBound(a) To UBound(a)
-      If SectorID = Val(a(X)) Then
+   For x = LBound(a) To UBound(a)
+      If SectorID = Val(a(x)) Then
          isAdjacent = True
          Exit For
       End If
-   Next X
+   Next x
 
 End Function
 
 Public Function reaverMove(ByVal SectorID) As Boolean
-Dim adjacent, a() As String, X, Y
+Dim adjacent, a() As String, x, Y
    
    If Nz(varDLookup("SectorID", "Players", "PlayerID > 4 AND SectorID=" & SectorID), 0) > 0 Or getZone(SectorID) = "A" Then
        Exit Function ' something is already there or wrong zone
@@ -519,28 +519,28 @@ Dim adjacent, a() As String, X, Y
       
    adjacent = varDLookup("AdjacentRows", "Board", "SectorID=" & SectorID)
    a = Split(adjacent, ",")
-   For X = LBound(a) To UBound(a)
+   For x = LBound(a) To UBound(a)
       For Y = 7 To 6 + NumOfReavers 'see if a Corvette or Reaver is in the adjacent sector to the click
-         If Val(a(X)) = varDLookup("SectorID", "Players", "PlayerID=" & Y) Then
+         If Val(a(x)) = varDLookup("SectorID", "Players", "PlayerID=" & Y) Then
             MoveShip Y, SectorID
             reaverMove = True
             Exit Function
          End If
       Next Y
-   Next X
+   Next x
 
 End Function
 
 Public Function validMove(ByVal playerID, ByVal SectorID, Optional ByVal mosey As Boolean = False) As Boolean
-Dim currentSectorID, adjacent, a() As String, X, reaver
+Dim currentSectorID, adjacent, a() As String, x, reaver
    If Not mosey Then
-      For X = 7 To 6 + NumOfReavers
-         reaver = varDLookup("SectorID", "Players", "PlayerID=" & X)
+      For x = 7 To 6 + NumOfReavers
+         reaver = varDLookup("SectorID", "Players", "PlayerID=" & x)
          If SectorID = reaver Then
             MessBox "You do not have the necessary Ship Upgrade to Full Burn into Reaver held territory", "Reaver Cutter Ahead!", "Ooops", "", getLeader()
             Exit Function ' no go
          End If
-      Next X
+      Next x
    End If
    
    currentSectorID = Nz(varDLookup("SectorID", "Players", "PlayerID=" & playerID), 0)
@@ -550,12 +550,12 @@ Dim currentSectorID, adjacent, a() As String, X, reaver
       
    adjacent = varDLookup("AdjacentRows", "Board", "SectorID=" & currentSectorID)
    a = Split(adjacent, ",")
-   For X = LBound(a) To UBound(a)
-      If SectorID = Val(a(X)) Then
+   For x = LBound(a) To UBound(a)
+      If SectorID = Val(a(x)) Then
          validMove = True
          Exit For
       End If
-   Next X
+   Next x
    
    If wormHoleOpen = True And ((SectorID = 133 And currentSectorID = 104) Or (SectorID = 104 And currentSectorID = 133)) Then
       validMove = True
@@ -587,7 +587,7 @@ End Sub
 
 Public Sub MoveShip(ByVal playerID, ByVal SectorID, Optional ByVal sound As Integer = 0, Optional ByVal syncsound As Boolean = False, Optional ByVal leaveToken As Boolean = True)
 Dim rst As New ADODB.Recordset
-Dim coords, slot, lastSectorID As Integer, X, a, b, TimingState As Boolean
+Dim coords, slot, lastSectorID As Integer, x, a, b, TimingState As Boolean
 Dim c() As String
    
    If SectorID = 0 Then Exit Sub
@@ -633,18 +633,18 @@ Dim c() As String
       b = Main.Verse.Imag(playerID).top
       Main.Verse.Imag(playerID).Animate2.StopAnimation
       Main.Verse.Imag(playerID).ImageIndex = 2
-      For X = b To Val(c(1)) Step IIf(b > Val(c(1)), -1, 1)
-         Main.Verse.Imag(playerID).top = X            'c(1)
+      For x = b To Val(c(1)) Step IIf(b > Val(c(1)), -1, 1)
+         Main.Verse.Imag(playerID).top = x            'c(1)
          Main.Verse.Imag(playerID).Refresh
          DoEvents 'slow down!
-      Next X
+      Next x
       
       If a < Val(c(0)) Then Main.Verse.Imag(playerID).Mirror = lvicMirrorHorizontal
-      For X = a To Val(c(0)) Step IIf(a > Val(c(0)), -1, 1)
-         Main.Verse.Imag(playerID).Left = X           'c(0)
+      For x = a To Val(c(0)) Step IIf(a > Val(c(0)), -1, 1)
+         Main.Verse.Imag(playerID).Left = x           'c(0)
          Main.Verse.Imag(playerID).Refresh
          DoEvents
-      Next X
+      Next x
       Main.Verse.Imag(playerID).Mirror = lvicMirrorNone
       Main.Verse.Imag(playerID).Animate2.StartAnimation
    End If
@@ -666,17 +666,17 @@ Dim c() As String
    End If
    
    If playerID = 6 Then 'moving the Corvette, check a Reaver is not here
-      X = getCutterSector(SectorID)
-      If X > 0 Then 'move this reaver back to Reaver Space
+      x = getCutterSector(SectorID)
+      If x > 0 Then 'move this reaver back to Reaver Space
          PutMsg "The Corvette chases a Reaver Cutter off, which hightails it back to Reaver Space", playerID, Logic!Gamecntr
          'check there is room
          If getCutterSector(120) > 0 And getCutterSector(121) > 0 And getCutterSector(122) > 0 Then 'full house, goto 121 instead
-            DB.Execute "UPDATE Players SET SectorID = 121 WHERE PlayerID = " & X
+            DB.Execute "UPDATE Players SET SectorID = 121 WHERE PlayerID = " & x
          Else
             'place it at Miranda and use the AI move to get it back to the Reaver Space with preference to any Player Ship :O
-            DB.Execute "UPDATE Players SET SectorID = 123 WHERE PlayerID = " & X
+            DB.Execute "UPDATE Players SET SectorID = 123 WHERE PlayerID = " & x
          End If
-         moveAutoAI X, 0, False, False
+         moveAutoAI x, 0, False, False
       End If
       'clear any Reaver Tokens
       changeToken SectorID, -1, False
@@ -691,7 +691,8 @@ Dim c() As String
    
    Main.Timing.Enabled = TimingState
    
-   RefreshBoard
+   'RefreshBoard
+   setRefresh
    
    If playerID > 4 And getPlayerSector(player.ID) = SectorID And actionSeq <> ASNavEvade Then
       If checkWhisperX1(SectorID) Then
@@ -702,16 +703,16 @@ Dim c() As String
 End Sub
 
 Public Function checkWhisperX1(ByVal SectorID) As Boolean
-Dim X, g, Dice
+Dim x, g, Dice
 
-   X = getCutterSector(SectorID)
-   If X = 0 And getCruiserSector() = SectorID Then 'not a cutter
-      X = 5 'but a cruiser
-   ElseIf X = 0 And getCorvetteSector() = SectorID Then 'not a cutter
-      X = 6 'but a Corvette
+   x = getCutterSector(SectorID)
+   If x = 0 And getCruiserSector() = SectorID Then 'not a cutter
+      x = 5 'but a cruiser
+   ElseIf x = 0 And getCorvetteSector() = SectorID Then 'not a cutter
+      x = 6 'but a Corvette
    End If
    
-   If X > 0 Then 'we got company!
+   If x > 0 Then 'we got company!
       g = hasShipUpgrade(player.ID, 14)
       If g > 0 Then 'WhisperX1
          If MessBox("The Xunsu Whisper X1 should outrun your contact, do you want to give it a burn?", "Sector Contact", "Yes", "No", 0, 0, 14) = 0 Then
@@ -1003,11 +1004,12 @@ End Function
 
 Private Function doGoalCheck(ByVal playerID, ByVal StoryID, ByVal goal, ByVal Seq, ByRef goaldone As Boolean) As Boolean
 Dim rst As New ADODB.Recordset, a() As String
-Dim SQL, X, cnt As Integer, SectorID As Integer
+Dim SQL, x, cnt As Integer, SectorID As Integer
    goaldone = False
    If goal = -1 Then Exit Function 'never acheive goal now
    goaldone = True 'until proven otherwise
    SQL = "SELECT * FROM StoryGoals WHERE StoryID=" & StoryID & " AND Goal = " & CStr(goal + 1)
+   rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
       'Bounties
@@ -1026,22 +1028,22 @@ Dim SQL, X, cnt As Integer, SectorID As Integer
       End If
       'SOLID
       If goaldone And rst!SolidCount > 0 Then
-         For X = 1 To NO_OF_CONTACTS
-            If isSolid(playerID, X) Then
+         For x = 1 To NO_OF_CONTACTS
+            If isSolid(playerID, x) Then
                cnt = cnt + 1
             End If
-         Next X
+         Next x
          If cnt < rst!SolidCount Then
             goaldone = False
          End If
       ElseIf goaldone And Nz(rst!Solid) <> "" Then
          a = Split(rst!Solid, ",")
-         For X = LBound(a) To UBound(a)
-            If Not isSolid(playerID, a(X)) Then
+         For x = LBound(a) To UBound(a)
+            If Not isSolid(playerID, a(x)) Then
                goaldone = False
                Exit For
             End If
-         Next X
+         Next x
       End If
       
       'CompleteJob
@@ -1112,8 +1114,8 @@ Dim SQL, X, cnt As Integer, SectorID As Integer
       
       'check there are no unfinished jobs
       If goaldone And rst!NoUnfinished > 0 Then
-         X = getPlayerJobs(playerID, "1,2")
-         If X > 0 Then
+         x = getPlayerJobs(playerID, "1,2")
+         If x > 0 Then
             'MessBox "You have unfinished Active Jobs. Complete them to meet this goal.", "Unfinished Jobs", "Ooops", "", getLeader()
             PutMsg player.PlayName & " has unfinished Active Jobs. Complete them to meet this goal.", playerID, Logic!Gamecntr
             goaldone = False
@@ -1140,18 +1142,18 @@ Dim SQL, X, cnt As Integer, SectorID As Integer
             If NumOfReavers < 1 Then NumOfReavers = 1
             If NumOfReavers > 6 Then NumOfReavers = 6
             
-            For X = 7 To 12
-               If X <= NumOfReavers + 6 Then 'active cutter
+            For x = 7 To 12
+               If x <= NumOfReavers + 6 Then 'active cutter
                   'if not on map, put it there
-                  If Nz(varDLookup("SectorID", "Players", "PlayerID=" & X), 0) = 0 Then
-                     doMoveCutterPlanetary X
+                  If Nz(varDLookup("SectorID", "Players", "PlayerID=" & x), 0) = 0 Then
+                     doMoveCutterPlanetary x
                      'Main.Imag(X).Animate2.StartAnimation
                   End If
                Else   ' inactive
-                  Main.Verse.Imag(X).Visible = False
-                  DB.Execute "UPDATE Players set SectorID = NULL WHERE PlayerID =" & X
+                  Main.Verse.Imag(x).Visible = False
+                  DB.Execute "UPDATE Players set SectorID = NULL WHERE PlayerID =" & x
                End If
-            Next X
+            Next x
             
          End If
          
@@ -1184,7 +1186,7 @@ Dim SQL, X, cnt As Integer, SectorID As Integer
 End Function
 
 Public Function goalAddCrew(ByVal playerID, ByVal AddCrew As String) As Boolean
-Dim X, a() As String, crewcnt As Integer
+Dim x, a() As String, crewcnt As Integer
 
    If AddCrew = "" Then Exit Function
    
@@ -1196,11 +1198,11 @@ Dim X, a() As String, crewcnt As Integer
       Exit Function
    End If
       
-   For X = LBound(a) To UBound(a)
-      DB.Execute "UPDATE SupplyDeck SET Seq =" & playerID & " WHERE CardID = " & getCrewCardID(Val(a(X)))
+   For x = LBound(a) To UBound(a)
+      DB.Execute "UPDATE SupplyDeck SET Seq =" & playerID & " WHERE CardID = " & getCrewCardID(Val(a(x)))
       'add the card to the players deck
-      DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & playerID & ", " & getCrewCardID(Val(a(X))) & ")"
-   Next X
+      DB.Execute "INSERT INTO PlayerSupplies (PlayerID, CardID) VALUES (" & playerID & ", " & getCrewCardID(Val(a(x))) & ")"
+   Next x
    goalAddCrew = True
 End Function
 
@@ -1603,19 +1605,19 @@ Dim SQL
 End Function
 
 Public Function SQLFilter(ByVal Source As String, Optional ByVal size As Integer = 0) As String
-Dim X, Y
+Dim x, Y
 
    If Source = "" Then Exit Function
 
    If size > 0 Then Source = Left(Source, size)
 
 '  Looks for single quotes and doubles them ('') to create a literal
-   X = 1
+   x = 1
    Do
-      Y = InStr(X, Source, "'")
+      Y = InStr(x, Source, "'")
       If Y Then
         Source = Left(Source, Y) & Mid(Source, Y)
-        X = Y + 2
+        x = Y + 2
       End If
    Loop While Y
       
@@ -1810,29 +1812,29 @@ err_handler:
 End Function
 
 Public Function SetCombo(cmbo As Control, ByVal itemTxt As String, ByVal itemVal, Optional RightSide As Boolean = True) As Boolean
-Dim X
+Dim x
 On Error GoTo err_handler
 
    'validate input itemdata to screen Null value
    itemVal = Nz(itemVal, 0)
 
    With cmbo
-      For X = 0 To .ListCount - 1
+      For x = 0 To .ListCount - 1
          If itemTxt = vbNullString Then   'set using itemdata value in itemVal
-            If .ItemData(X) = Val(itemVal) Then
-              .ListIndex = X
+            If .ItemData(x) = Val(itemVal) Then
+              .ListIndex = x
               SetCombo = True
               Exit For
             End If
          Else                             'set using an itemdatastring value stored in the list text.
-            If (UCase(Trim(Right(.List(X), itemVal))) = UCase(itemTxt) And RightSide) Or _
-               (UCase(Trim(Left(.List(X), itemVal))) = UCase(itemTxt) And Not RightSide) Then
-              .ListIndex = X
+            If (UCase(Trim(Right(.List(x), itemVal))) = UCase(itemTxt) And RightSide) Or _
+               (UCase(Trim(Left(.List(x), itemVal))) = UCase(itemTxt) And Not RightSide) Then
+              .ListIndex = x
               SetCombo = True
               Exit For
             End If
          End If
-      Next X
+      Next x
    
       'if no match found then reset combo
       If Not SetCombo = True Then .ListIndex = -1
@@ -1934,16 +1936,16 @@ End Function
 
 Public Sub dealDriveAndJobs(ByVal playerID)
 Dim rst As New ADODB.Recordset
-Dim startjobs As String, a() As String, X, msg As String
+Dim startjobs As String, a() As String, x, msg As String
 
    'std Drive Core IDs 132 - 135
    DB.Execute "INSERT INTO PlayerSupplies (PlayerID,CardID) VALUES (" & playerID & ", " & 131 + playerID & ")"
    DB.Execute "Update SupplyDeck SET Seq = " & playerID & " WHERE CardID = " & 131 + playerID
    
    'get Story Issued Job
-   X = Nz(varDLookup("IssueJobID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 0"), 0)
-   If X > 0 Then
-      assignDeal playerID, X
+   x = Nz(varDLookup("IssueJobID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 0"), 0)
+   If x > 0 Then
+      assignDeal playerID, x
    End If
    msg = Nz(varDLookup("Instructions", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 0"))
    If msg <> "" Then
@@ -1958,12 +1960,12 @@ Dim startjobs As String, a() As String, X, msg As String
    rst.Open "SELECT * FROM ContactDeck WHERE ContactID > 0  and ContactID < 10  AND Seq > " & CStr(CONSIDERED) & " ORDER BY ContactID, Seq", DB, adOpenStatic, adLockReadOnly
    
    a = Split(startjobs, ",")
-   For X = LBound(a) To UBound(a)
-      rst.Find "ContactID = " & a(X)
+   For x = LBound(a) To UBound(a)
+      rst.Find "ContactID = " & a(x)
       If Not rst.EOF Then
          assignDeal playerID, rst!CardID
       End If
-   Next X
+   Next x
    
    rst.Close
    Set rst = Nothing
@@ -2030,21 +2032,21 @@ Dim SQL
 End Function
 
 Public Function CargoSpaceUsed(ByVal playerID) As Variant
-Dim rst As New ADODB.Recordset, X
+Dim rst As New ADODB.Recordset, x
 Dim SQL
 
    SQL = "SELECT * FROM Players WHERE PlayerID=" & playerID
         
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
-      X = X + rst!fuel / 2
-      X = X + rst!parts / 2
-      X = X + rst!cargo
-      X = X + rst!Passenger
-      X = X + rst!Contraband
-      X = X + rst!Fugitive
+      x = x + rst!fuel / 2
+      x = x + rst!parts / 2
+      x = x + rst!cargo
+      x = x + rst!Passenger
+      x = x + rst!Contraband
+      x = x + rst!Fugitive
    End If
-   CargoSpaceUsed = X
+   CargoSpaceUsed = x
    rst.Close
    Set rst = Nothing
    
@@ -3197,7 +3199,7 @@ End Function
 'mercs=1 count them, mercs=2 count e'ryone else
 Public Function getSkill(ByVal playerID, ByVal skill As String, Optional ByVal mercs As Integer = 0, Optional ByVal noDiscards As Boolean = False, Optional ByVal kosher As Boolean = False, Optional ByVal CrewID As Integer = 0) As Integer
 Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
-Dim SQL, X
+Dim SQL, x
    getSkill = 0
    'may need to manage "On Job" status
    SQL = "SELECT SupplyDeck.CardID, Crew.* "
@@ -3219,9 +3221,9 @@ Dim SQL, X
       'check for perk to add skill
       
       '+1 skill When carrying a Keyword (Firearm / Explosives)
-      X = getPerkAttributeCrewValue(playerID, skill, rst!CardID)
-      If X > 0 And hasGearKeyword(playerID, hasPerkKeyword(playerID, rst!CardID), rst!CrewID) Then
-         getSkill = getSkill + X
+      x = getPerkAttributeCrewValue(playerID, skill, rst!CardID)
+      If x > 0 And hasGearKeyword(playerID, hasPerkKeyword(playerID, rst!CardID), rst!CrewID) Then
+         getSkill = getSkill + x
       End If
 
       If rst!HillFolk = 1 And mercs = 0 Then
@@ -3519,7 +3521,7 @@ End Sub
 'from Nav option, load extra Salvage as per the Perks
 Public Sub doSalvage(ByVal playerID)
 Dim rst As New ADODB.Recordset
-Dim SQL, u, v As Integer, w As Integer, X As Integer, Y As Integer, z As Integer, msg
+Dim SQL, u, v As Integer, w As Integer, x As Integer, Y As Integer, z As Integer, msg
    SQL = "SELECT Perk.* "
    SQL = SQL & "FROM Perk INNER JOIN (Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Crew.CrewID = SupplyDeck.CrewID) ON Perk.PerkID = Crew.PerkID "
    SQL = SQL & "WHERE PlayerSupplies.PlayerID = " & playerID
@@ -3530,7 +3532,7 @@ Dim SQL, u, v As Integer, w As Integer, X As Integer, Y As Integer, z As Integer
          w = w + rst!SOCargo
       End If
       If rst!SOContraband > 0 Then
-         X = X + rst!SOContraband
+         x = x + rst!SOContraband
       End If
       If rst!SOFuel > 0 Then
          Y = Y + rst!SOFuel
@@ -3543,7 +3545,7 @@ Dim SQL, u, v As Integer, w As Integer, X As Integer, Y As Integer, z As Integer
    Wend
    rst.Close
    If hasShipUpgrade(playerID, 9) > 0 Then
-      X = X + 1
+      x = x + 1
       DB.Execute "UPDATE Players SET Pay = Pay + 500 WHERE PlayerID = " & playerID
       msg = msg & "and Chop Shop took $500, "
    End If
@@ -3573,11 +3575,11 @@ Dim SQL, u, v As Integer, w As Integer, X As Integer, Y As Integer, z As Integer
          u = w + u
       End If
    End If
-   If X > 0 Then
-      If X + u <= v Then
-         DB.Execute "UPDATE Players SET Contraband = Contraband + " & X & " WHERE PlayerID = " & playerID
-         msg = msg & "added " & X & " Contraband "
-         u = X + u
+   If x > 0 Then
+      If x + u <= v Then
+         DB.Execute "UPDATE Players SET Contraband = Contraband + " & x & " WHERE PlayerID = " & playerID
+         msg = msg & "added " & x & " Contraband "
+         u = x + u
       End If
    End If
    If Nz(msg) <> "" Then
@@ -3588,7 +3590,7 @@ Dim SQL, u, v As Integer, w As Integer, X As Integer, Y As Integer, z As Integer
 End Sub
 
 Public Function SeizeAllContraFugi(ByVal playerID) As Boolean
-Dim contra, fugi, stash, X
+Dim contra, fugi, stash, x
 
    contra = varDLookup("Contraband", "Players", "PlayerID=" & playerID)
    fugi = varDLookup("Fugitive", "Players", "PlayerID=" & playerID)
@@ -3596,26 +3598,26 @@ Dim contra, fugi, stash, X
    
    If contra + fugi > stash Then 'we gotta problem
       SeizeAllContraFugi = True
-      X = stash - fugi 'give priority to fugi
-      If X < 0 Then      'we got more fugi than stash, so all cargo goes, and some fugi
+      x = stash - fugi 'give priority to fugi
+      If x < 0 Then      'we got more fugi than stash, so all cargo goes, and some fugi
          DB.Execute "UPDATE Players SET Contraband= 0, Fugitive=" & stash & "  WHERE PlayerID =" & playerID
       Else 'can hold all of Fugi and some of contra
-         DB.Execute "UPDATE Players SET Contraband= " & X & " WHERE PlayerID =" & playerID
+         DB.Execute "UPDATE Players SET Contraband= " & x & " WHERE PlayerID =" & playerID
       End If
    End If
 
 End Function
 
 Public Function SeizeAllFugi(ByVal playerID) As Boolean
-Dim fugi, stash, X
+Dim fugi, stash, x
 
    fugi = varDLookup("Fugitive", "Players", "PlayerID=" & playerID)
    stash = StashCapacity(playerID)
    
    If fugi > stash Then 'we gotta problem
       SeizeAllFugi = True
-      X = stash - fugi 'give priority to fugi
-      If X < 0 Then      'we got more fugi than stash
+      x = stash - fugi 'give priority to fugi
+      If x < 0 Then      'we got more fugi than stash
          DB.Execute "UPDATE Players SET Fugitive=" & stash & "  WHERE PlayerID =" & playerID
       End If
    End If
@@ -3623,7 +3625,7 @@ Dim fugi, stash, X
 End Function
 
 Public Function SeizeAllContraCargo(ByVal playerID) As Boolean
-Dim contra, cargo, stash, X
+Dim contra, cargo, stash, x
 
    contra = varDLookup("Contraband", "Players", "PlayerID=" & playerID)
    cargo = varDLookup("cargo", "Players", "PlayerID=" & playerID)
@@ -3631,11 +3633,11 @@ Dim contra, cargo, stash, X
    
    If contra + cargo > stash Then 'we gotta problem
       SeizeAllContraCargo = True
-      X = stash - contra 'give priority to contra
-      If X < 0 Then      'we got more contra than stash, so all cargo goes, and some contra
+      x = stash - contra 'give priority to contra
+      If x < 0 Then      'we got more contra than stash, so all cargo goes, and some contra
          DB.Execute "UPDATE Players SET cargo= 0, Contraband=" & stash & "  WHERE PlayerID =" & playerID
       Else 'can hold all of Fugi and some of contra
-         DB.Execute "UPDATE Players SET cargo= " & X & " WHERE PlayerID =" & playerID
+         DB.Execute "UPDATE Players SET cargo= " & x & " WHERE PlayerID =" & playerID
       End If
    End If
 
@@ -3662,7 +3664,7 @@ Dim SQL
 End Function
 
 Public Function doKillCrew(ByVal playerID, ByVal CardID) As Integer
-Dim result As Integer, X As Integer, CrewID, Dice As Integer, mess As String
+Dim result As Integer, x As Integer, CrewID, Dice As Integer, mess As String
    
    result = 0 'assume death(0) is the result unless otherwise modified (5-discarded)
    CrewID = varDLookup("CrewID", "SupplyDeck", "CardID=" & CardID)
@@ -3673,22 +3675,22 @@ Dim result As Integer, X As Integer, CrewID, Dice As Integer, mess As String
    End If
    'Simon Tam adds 2 to Dice Roll for Medic Check
    If hasCrew(playerID, 33) Then
-      X = 2
+      x = 2
       mess = " Simon Tam"
    End If
    'Simon Tam's bag adds 1 to Dice Roll for Medic Check
    If hasGear(playerID, 19) And mess <> "" Then
-      X = X + 1
+      x = x + 1
       mess = mess & " with Simon's bag"
    End If
    'Doctor's Shuttle adds 2 to Medic Check
    If hasShipUpgrade(playerID, 23) And mess <> "" Then
-      X = X + 2
+      x = x + 2
       mess = mess & " and the Doctor's Shuttle"
    End If
    
    'Medic check to save Crew
-   Dice = (RollDice(6) + X)
+   Dice = (RollDice(6) + x)
    If mess = "" Then
       Dice = 0  'dice roll does not apply
    ElseIf mess <> "" And Dice > 4 Then
@@ -3698,7 +3700,7 @@ Dim result As Integer, X As Integer, CrewID, Dice As Integer, mess As String
    
    'reroll for Fully Equipped Med Bay
    If mess <> "" And hasShipUpgrade(playerID, 8) > 0 Then
-      Dice = (RollDice(6) + X)
+      Dice = (RollDice(6) + x)
       If Dice > 4 Then
          PutMsg player.PlayName & "'s Crew member " & getCrewName(CardID) & " was saved in our Fully Equipped Med Bay and" & mess, playerID, Logic!Gamecntr, True, CrewID, 0, 0, 0, 0, Dice
          Exit Function
@@ -3721,8 +3723,8 @@ Dim result As Integer, X As Integer, CrewID, Dice As Integer, mess As String
    '-----==== DEAD =====------ R.I.P.
    'leader to be disgruntled
    If CrewID = varDLookup("Leader", "Players", "PlayerID=" & playerID) Then
-      X = doDisgruntled(playerID, 2, CrewID)
-      If X <> 7 Then PutMsg player.PlayName & "'s Leader " & getCrewName(CardID) & " was injured and is not too happy about it.", playerID, Logic!Gamecntr, True, CrewID, 0, 0, 0, 0, Dice
+      x = doDisgruntled(playerID, 2, CrewID)
+      If x <> 7 Then PutMsg player.PlayName & "'s Leader " & getCrewName(CardID) & " was injured and is not too happy about it.", playerID, Logic!Gamecntr, True, CrewID, 0, 0, 0, 0, Dice
       doKillCrew = 0
       Exit Function
    End If
@@ -3985,14 +3987,14 @@ End Function
 
 'move the Cruiser adjacent the sector given
 Public Function doMoveAllianceAdjacent(ByVal SectorID, Optional ByVal check As Boolean = False) As Boolean
-Dim adjacent, a() As String, X, Y
+Dim adjacent, a() As String, x, Y
    
    adjacent = varDLookup("AdjacentRows", "Board", "SectorID=" & SectorID)
    a = Split(adjacent, ",")
    
    Y = 0
-   For X = LBound(a) To UBound(a)
-      If getClearSector(Val(a(X))) = "A" And getHaven(Val(a(X))) = 0 Then 'no ship in this spot
+   For x = LBound(a) To UBound(a)
+      If getClearSector(Val(a(x))) = "A" And getHaven(Val(a(x))) = 0 Then 'no ship in this spot
          Y = 1 'we have at least one possible solution
          If check Then
             doMoveAllianceAdjacent = True
@@ -4000,13 +4002,13 @@ Dim adjacent, a() As String, X, Y
          End If
          Exit For
       End If
-   Next X
+   Next x
    If Y = 1 Then
       Do
-         X = RollDice(UBound(a) - LBound(a) + 1) - 1
-         If X > UBound(a) Then X = UBound(a)
-         If getClearSector(Val(a(X))) = "A" And getHaven(Val(a(X))) = 0 Then
-            MoveShip 5, Val(a(X))
+         x = RollDice(UBound(a) - LBound(a) + 1) - 1
+         If x > UBound(a) Then x = UBound(a)
+         If getClearSector(Val(a(x))) = "A" And getHaven(Val(a(x))) = 0 Then
+            MoveShip 5, Val(a(x))
             doMoveAllianceAdjacent = True
             Exit Do
          End If
@@ -4019,14 +4021,14 @@ End Function
 
 'move the Cruiser adjacent the sector given
 Public Function doMoveCorvetteAdjacent(ByVal SectorID, Optional ByVal check As Boolean = False) As Boolean
-Dim adjacent, a() As String, X, Y
+Dim adjacent, a() As String, x, Y
    
    adjacent = varDLookup("AdjacentRows", "Board", "SectorID=" & SectorID)
    a = Split(adjacent, ",")
    
    Y = 0
-   For X = LBound(a) To UBound(a)
-      If getClearSector(Val(a(X))) <> "" And (Val(a(X)) < 120 Or Val(a(X)) > 122) And (Val(a(X)) < 156 Or Val(a(X)) > 157) Then  'no ship in this spot, and not in reaver zones
+   For x = LBound(a) To UBound(a)
+      If getClearSector(Val(a(x))) <> "" And (Val(a(x)) < 120 Or Val(a(x)) > 122) And (Val(a(x)) < 156 Or Val(a(x)) > 157) Then  'no ship in this spot, and not in reaver zones
          Y = 1 'we have at least one possible solution
          If check Then
             doMoveCorvetteAdjacent = True
@@ -4034,13 +4036,13 @@ Dim adjacent, a() As String, X, Y
          End If
          Exit For
       End If
-   Next X
+   Next x
    If Y = 1 Then
       Do
-         X = RollDice(UBound(a) - LBound(a) + 1) - 1
-         If X > UBound(a) Then X = UBound(a)
-         If getClearSector(Val(a(X))) <> "" And (Val(a(X)) < 120 Or Val(a(X)) > 122) And (Val(a(X)) < 156 Or Val(a(X)) > 157) Then
-            MoveShip 6, Val(a(X))
+         x = RollDice(UBound(a) - LBound(a) + 1) - 1
+         If x > UBound(a) Then x = UBound(a)
+         If getClearSector(Val(a(x))) <> "" And (Val(a(x)) < 120 Or Val(a(x)) > 122) And (Val(a(x)) < 156 Or Val(a(x)) > 157) Then
+            MoveShip 6, Val(a(x))
             doMoveCorvetteAdjacent = True
             Exit Do
          End If
@@ -4052,13 +4054,13 @@ End Function
 
 'move the Cruiser adjacent the sector given
 Public Function doMoveCorvettePlanetary() As Boolean
-Dim X
+Dim x
    
       Do
-         X = RollDice(152)
-         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & X), 0) > 0 And getClearSector(X) <> "" And X > 2 Then
-            MoveShip 6, X
-            PutMsg "The Corvette has been sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & X), "the unknown..")
+         x = RollDice(152)
+         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And x > 2 Then
+            MoveShip 6, x
+            PutMsg "The Corvette has been sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), "the unknown..")
             doMoveCorvettePlanetary = True
             Exit Do
          End If
@@ -4069,13 +4071,13 @@ End Function
 
 'move the Cruiser adjacent the sector given
 Public Function doMoveCutterPlanetary(ByVal ship) As Boolean
-Dim X
+Dim x
    
       Do
-         X = RollDice(152)
-         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & X), 0) > 0 And getClearSector(X) <> "" And getZone(X) <> "A" And X > 2 Then
-            MoveShip ship, X
-            PutMsg "A Cutter has been sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & X), "the unknown..")
+         x = RollDice(152)
+         If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & x), 0) > 0 And getClearSector(x) <> "" And getZone(x) <> "A" And x > 2 Then
+            MoveShip ship, x
+            PutMsg "A Cutter has been sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & x), "the unknown..")
             doMoveCutterPlanetary = True
             Exit Do
          End If
@@ -4086,14 +4088,14 @@ End Function
 
 'move the tokens adjacent the sector given
 Public Function doAddTokensAdjacent(ByVal SectorID) As Boolean
-Dim adjacent, a() As String, X
+Dim adjacent, a() As String, x
    
    adjacent = varDLookup("AdjacentRows", "Board", "SectorID=" & SectorID)
    a = Split(adjacent, ",")
 
-   For X = LBound(a) To UBound(a)
-      changeAToken Val(a(X)), 1
-   Next X
+   For x = LBound(a) To UBound(a)
+      changeAToken Val(a(x)), 1
+   Next x
       
 End Function
 
@@ -4261,7 +4263,7 @@ Public Function warrantDodge(ByVal playerID) As Boolean
 End Function
 
 Public Function hasJobReqs(ByVal playerID, ByVal CardID, ByVal JobID) As Boolean
-Dim rst As New ADODB.Recordset, a() As String, X
+Dim rst As New ADODB.Recordset, a() As String, x
 Dim SQL
 
    hasJobReqs = True  'until proven otherwise
@@ -4292,16 +4294,16 @@ Dim SQL
       ElseIf Nz(rst!KeyWords, "") <> "" And rst!Solid > 0 And rst!KeywordOrSolid > 0 Then 'needs the keywd if not solid
          If Not isSolid(playerID, rst!Solid) Then 'see if we have Keywords
             a = Split(rst!KeyWords, " ")
-            For X = LBound(a) To UBound(a)
-               If Not hasKeyword(playerID, a(X)) Then hasJobReqs = False
-            Next X
+            For x = LBound(a) To UBound(a)
+               If Not hasKeyword(playerID, a(x)) Then hasJobReqs = False
+            Next x
          End If
          
       ElseIf Nz(rst!KeyWords, "") <> "" And rst!WinOptKeyword = 0 And rst!KeywordBonus = 0 Then ' as some Keywords are not a requirement
          a = Split(rst!KeyWords, " ")
-         For X = LBound(a) To UBound(a)
-            If Not hasKeyword(playerID, a(X)) Then hasJobReqs = False
-         Next X
+         For x = LBound(a) To UBound(a)
+            If Not hasKeyword(playerID, a(x)) Then hasJobReqs = False
+         Next x
       End If
       
       If rst!RequireProfession > 0 And hasJobReqs And rst!KeywordOrSkill = 0 Then
@@ -4320,33 +4322,33 @@ Dim SQL
       End If
       
       'check if we have space for goods & people
-      X = 0
+      x = 0
       If rst!fuel > 0 Then
-         X = X + rst!fuel / 2
+         x = x + rst!fuel / 2
       End If
       If rst!parts > 0 Then
-         X = X + rst!parts / 2
+         x = x + rst!parts / 2
       End If
       If rst!cargo > 0 Then
-         X = X + rst!cargo
+         x = x + rst!cargo
       End If
       If rst!Contraband > 0 Then
-         X = X + rst!Contraband
+         x = x + rst!Contraband
       End If
       
       If rst!Passenger > 0 And rst!Passenger < 14 Then
-         X = X + rst!Passenger
+         x = x + rst!Passenger
       ElseIf rst!Passenger = 14 Then
-         X = X + 1
+         x = x + 1
       End If
 
       If rst!Fugitive > 0 And rst!Fugitive < 14 Then
-         X = X + rst!Fugitive
+         x = x + rst!Fugitive
       ElseIf rst!Fugitive = 14 Then
-         X = X + 1
+         x = x + 1
       End If
       
-      If CargoCapacity(playerID) < CargoSpaceUsed(playerID) + X Then
+      If CargoCapacity(playerID) < CargoSpaceUsed(playerID) + x Then
          hasJobReqs = False
       End If
 
@@ -4490,7 +4492,7 @@ End Function
 'move a NPC Ship one sector, preferencing a player ship sector if adjacent.    Return: sectorID of any ship encountered
 Public Function moveAutoAI(ByVal ship As Integer, Optional ByVal sound As Integer = 0, Optional ByVal syncsound As Boolean = False, Optional ByVal leaveToken As Boolean = True) As Integer
 Dim rst As New ADODB.Recordset, cnt
-Dim SQL, SectorID As Integer, Zone As String, a() As String, b(1 To 20) As Integer, X, Y, z, adjacent, NPCFlag As Boolean
+Dim SQL, SectorID As Integer, Zone As String, a() As String, b(1 To 20) As Integer, x, Y, z, adjacent, NPCFlag As Boolean
 
    Zone = IIf(ship = 5, "A", "B") 'lock cruiser to A, treat B & R as same
    SectorID = varDLookup("SectorID", "Players", "PlayerID = " & ship)
@@ -4510,8 +4512,8 @@ Dim SQL, SectorID As Integer, Zone As String, a() As String, b(1 To 20) As Integ
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       'look at each adjacent Sector and record if there is a Player as a count and B()
-      For X = LBound(a) To UBound(a)
-         If Val(a(X)) = rst!SectorID And IIf(getZone(rst!SectorID) = "A", "A", "B") = Zone And ship > 4 Then   'found one, treat B & R as same
+      For x = LBound(a) To UBound(a)
+         If Val(a(x)) = rst!SectorID And IIf(getZone(rst!SectorID) = "A", "A", "B") = Zone And ship > 4 Then   'found one, treat B & R as same
             If rst!playerID < 5 Then ' tag you're it
                'then check if Haven exists and if this is Cruiser
                If Not (getHaven(rst!SectorID) > 0 And ship = 5) Then
@@ -4522,7 +4524,7 @@ Dim SQL, SectorID As Integer, Zone As String, a() As String, b(1 To 20) As Integ
                b(rst!playerID) = rst!SectorID
             End If
          End If
-      Next X
+      Next x
       rst.MoveNext
    Wend
    rst.Close
@@ -4550,19 +4552,19 @@ Dim SQL, SectorID As Integer, Zone As String, a() As String, b(1 To 20) As Integ
       End If
       If adjacent = 0 Then 'no AI solution, just move randomally
          Y = 0
-         For X = LBound(a) To UBound(a)
+         For x = LBound(a) To UBound(a)
             NPCFlag = True
             For z = 6 To 6 + NumOfReavers  'check if a NPC ship already there
-               If Val(a(X)) = b(z) Then
+               If Val(a(x)) = b(z) Then
                   NPCFlag = False
                   Exit For
                End If
             Next z
-            If NPCFlag And (IIf(getZone(Val(a(X))) = "A", "A", "B") = Zone Or ship < 5) And Not (getHaven(a(X)) > 0 And ship = 5) Then
+            If NPCFlag And (IIf(getZone(Val(a(x))) = "A", "A", "B") = Zone Or ship < 5) And Not (getHaven(a(x)) > 0 And ship = 5) Then
                Y = 1 'we have at least one possible solution
                Exit For
             End If
-         Next X
+         Next x
          If Y = 1 Then
             Do
                cnt = RollDice(UBound(a) - LBound(a) + 1) - 1
@@ -4603,7 +4605,7 @@ End Function
 'move the Corvette 2 sector2, preferencing a player ship sector if adjacent.    Return: sectorID of any ship encountered
 Public Function moveAutoCorvette2(Optional ByVal sound As Integer = 0, Optional ByVal syncsound As Boolean = False, Optional ByVal avoid As Integer = 0) As Integer
 Dim rst As New ADODB.Recordset, cnt, ship, found As Boolean
-Dim SQL, SectorID As Integer, a() As String, b(1 To 20, 1 To 2) As Integer, c() As String, X, Y, z, adjacent As String, vector As Integer, vector2 As Integer
+Dim SQL, SectorID As Integer, a() As String, b(1 To 20, 1 To 2) As Integer, c() As String, x, Y, z, adjacent As String, vector As Integer, vector2 As Integer
 
    ship = 6
    SectorID = getCorvetteSector()
@@ -4618,19 +4620,19 @@ Dim SQL, SectorID As Integer, a() As String, b(1 To 20, 1 To 2) As Integer, c() 
    While Not rst.EOF
       'look at each adjacent Sector and record if there is a Player as a count and B()
       
-      For X = LBound(a) To UBound(a) 'first step array
-         If a(X) = "-1" Then 'ignore
+      For x = LBound(a) To UBound(a) 'first step array
+         If a(x) = "-1" Then 'ignore
 
-         ElseIf (avoid > 0 And avoid = Val(a(X)) And Y = 0) Then 'take out this start sector from scan, unless a player is there
-            a(X) = "-1"
-         ElseIf Val(a(X)) = rst!SectorID And (rst!SectorID < 120 Or rst!SectorID > 122) And (rst!SectorID < 156 Or rst!SectorID > 157) Then    'found one, treat B & R as same
+         ElseIf (avoid > 0 And avoid = Val(a(x)) And Y = 0) Then 'take out this start sector from scan, unless a player is there
+            a(x) = "-1"
+         ElseIf Val(a(x)) = rst!SectorID And (rst!SectorID < 120 Or rst!SectorID > 122) And (rst!SectorID < 156 Or rst!SectorID > 157) Then    'found one, treat B & R as same
             If rst!playerID < 5 Then ' tag you're it
                cnt = cnt + 1
                b(cnt, 1) = rst!SectorID
                Exit For
             End If
          Else 'nothing found, check second step sectors
-            adjacent = getAdjacentRows(Val(a(X)))
+            adjacent = getAdjacentRows(Val(a(x)))
             c = Split(adjacent, ",")
             For z = LBound(c) To UBound(c)
             
@@ -4639,7 +4641,7 @@ Dim SQL, SectorID As Integer, a() As String, b(1 To 20, 1 To 2) As Integer, c() 
                ElseIf Val(c(z)) = rst!SectorID And (rst!SectorID < 120 Or rst!SectorID > 122) And (rst!SectorID < 156 Or rst!SectorID > 157) Then      'found one, treat B & R as same
                   If rst!playerID < 5 Then ' tag you're it
                      cnt = cnt + 1
-                     b(cnt, 1) = Val(a(X)) 'breadcrumb
+                     b(cnt, 1) = Val(a(x)) 'breadcrumb
                      b(cnt, 2) = rst!SectorID 'destination
                      found = True
                      Exit For
@@ -4652,7 +4654,7 @@ Dim SQL, SectorID As Integer, a() As String, b(1 To 20, 1 To 2) As Integer, c() 
                Exit For
             End If
          End If
-      Next X
+      Next x
       rst.MoveNext
    Wend
    rst.Close
@@ -4691,13 +4693,13 @@ End Function
 ' return the pursuit sector to move to.- Sector of ship moving,   ID of ship where 6 = Corvette
 Private Function getPursuitSector(ByVal SectorID, Optional ByVal ship As Integer = 6) As Integer
 Dim rst As New ADODB.Recordset
-Dim SQL, b(1 To 20, 1 To 3) As Long, X As Integer, Y As Long, z As Long, adjacent
+Dim SQL, b(1 To 20, 1 To 3) As Long, x As Integer, Y As Long, z As Long, adjacent
 
    SQL = "SELECT Players.PlayerID, Players.SectorID, Board.STop, Board.SLeft, Board.SHeight, Board.SWidth, Board.Zones "
    SQL = SQL & "FROM Board INNER JOIN Players ON Board.SectorID = Players.SectorID "
    SQL = SQL & "WHERE Players.Name Is Not Null OR PlayerID = " & ship
    SQL = SQL & " ORDER BY PlayerID DESC"
-   X = 0
+   x = 0
    Y = 0
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
@@ -4708,13 +4710,13 @@ Dim SQL, b(1 To 20, 1 To 3) As Long, X As Integer, Y As Long, z As Long, adjacen
          b(rst!playerID, 3) = Int(Sqr((b(ship, 1) - b(rst!playerID, 1)) ^ 2 + (b(ship, 2) - b(rst!playerID, 2)) ^ 2))
          If Y = 0 Or Y > b(rst!playerID, 3) Then
             Y = b(rst!playerID, 3)
-            X = rst!playerID   'the closest Player
+            x = rst!playerID   'the closest Player
          End If
       End If
       rst.MoveNext
    Wend
    rst.Close
-   If X = 0 Then 'noone found
+   If x = 0 Then 'noone found
       Exit Function
    End If
    Y = -1
@@ -4727,7 +4729,7 @@ Dim SQL, b(1 To 20, 1 To 3) As Long, X As Integer, Y As Long, z As Long, adjacen
    While Not rst.EOF
       If (ship = 5 And rst!Zones = "A") Or (ship = 6 And (rst!SectorID < 120 Or rst!SectorID > 122 Or getCorvetteSector() = 123)) Or (ship > 6 And rst!Zones <> "A" And Nz(rst!playerID, 0) < 5) Then 'path rules for the ships
          'find the adjacent sector closest to the closest player
-         z = Int(Sqr((b(X, 1) - Int(rst!SHeight / 2 + rst!STop)) ^ 2 + (b(X, 2) - Int(rst!SWidth / 2 + rst!SLeft)) ^ 2))
+         z = Int(Sqr((b(x, 1) - Int(rst!SHeight / 2 + rst!STop)) ^ 2 + (b(x, 2) - Int(rst!SWidth / 2 + rst!SLeft)) ^ 2))
          If Y = -1 Or Y > z Then
             Y = z
             getPursuitSector = rst!SectorID
@@ -4874,7 +4876,7 @@ End Function
 
 'returns which ship turns up if any
 Public Function resolveToken(ByVal SectorID, Optional ByVal adjacent As Boolean = False) As Integer
-Dim rst As New ADODB.Recordset, X, alliance As Boolean
+Dim rst As New ADODB.Recordset, x, alliance As Boolean
 Dim SQL
 
    SQL = "SELECT * FROM Board WHERE SectorID= " & SectorID
@@ -4883,8 +4885,8 @@ Dim SQL
    If Not rst.EOF Then
       'do alliance tokens first
       If rst!AToken > 0 Then ' we gotta roll
-         X = RollDice(6, True)
-         If X <= rst!AToken Then ' we not good
+         x = RollDice(6, True)
+         If x <= rst!AToken Then ' we not good
             alliance = True
             If getZone(SectorID) = "A" Then 'roll for which one
                resolveToken = 4 + RollDice(2)
@@ -4895,9 +4897,9 @@ Dim SQL
             'clear any reaver tokens  'these are permanent min 1
             changeToken SectorID, -1, False
             MoveShip resolveToken, SectorID
-            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Alliance Alert Level " & CStr(rst!AToken) & ", and got a nasty surprise by rolling a " & X, player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, X
+            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Alliance Alert Level " & CStr(rst!AToken) & ", and got a nasty surprise by rolling a " & x, player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, x
          Else
-            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Alliance Alert Level " & CStr(rst!AToken) & ", but found it all clear by rolling a " & X, player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Alliance Alert Level " & CStr(rst!AToken) & ", but found it all clear by rolling a " & x, player.ID, Logic!Gamecntr
          End If
          'rst!AToken = 0  'clear Alliance tokens
          'rst.Update
@@ -4906,15 +4908,15 @@ Dim SQL
       rst.Requery
       'is token and check a cutter is not in this sector already
       If rst!Token > 0 And getCutterSector(SectorID) = 0 And Not alliance Then ' we gotta roll
-         X = RollDice(6, True)
-         If X <= rst!Token Then ' we not good, reaver incoming
+         x = RollDice(6, True)
+         If x <= rst!Token Then ' we not good, reaver incoming
             resolveToken = 6 + RollDice(NumOfReavers)
             If resolveToken > 6 + NumOfReavers Then resolveToken = 6 + NumOfReavers
-            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Reaver Alert Level " & CStr(rst!Token) & ", and got a nasty surprise by rolling a " & X, player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, X
+            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Reaver Alert Level " & CStr(rst!Token) & ", and got a nasty surprise by rolling a " & x, player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, x
             MoveShip resolveToken, SectorID
             
          Else
-            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Reaver Alert Level " & CStr(rst!Token) & ", but found it all clear by rolling a " & X, player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Reaver Alert Level " & CStr(rst!Token) & ", but found it all clear by rolling a " & x, player.ID, Logic!Gamecntr
          End If
          DB.Execute "UPDATE Board SET Token = " & IIf(SectorID > 119 And SectorID < 123, "1", "0") & " WHERE SectorID = " & SectorID
 
@@ -4927,22 +4929,23 @@ Dim SQL
    End If
    rst.Close
    Set rst = Nothing
+   setRefresh True
 End Function
 
 'can the player fullburn without hitting Reavers, looking for 1 free sector
 Public Function hasAdjacentAlert(ByVal playerID) As Boolean
-Dim currentSectorID, adjacent, a() As String, X
+Dim currentSectorID, adjacent, a() As String, x
    
    currentSectorID = Nz(varDLookup("SectorID", "Players", "PlayerID=" & playerID), 0)
    
    adjacent = varDLookup("AdjacentRows", "Board", "SectorID=" & currentSectorID)
    a = Split(adjacent, ",")
-   For X = LBound(a) To UBound(a)
-      If (varDLookup("Token", "Board", "SectorID=" & a(X)) > 0 And getCutterSector(a(X)) = 0) Or (varDLookup("AToken", "Board", "SectorID=" & a(X)) > 0 And getCruiserCorvette(a(X)) = 0) Then
+   For x = LBound(a) To UBound(a)
+      If (varDLookup("Token", "Board", "SectorID=" & a(x)) > 0 And getCutterSector(a(x)) = 0) Or (varDLookup("AToken", "Board", "SectorID=" & a(x)) > 0 And getCruiserCorvette(a(x)) = 0) Then
          hasAdjacentAlert = True
          Exit For
       End If
-   Next X
+   Next x
 
 End Function
 
@@ -5158,6 +5161,29 @@ Dim goal
    Set rst = Nothing
 End Function
 
+Public Sub setRefresh(Optional ByVal All As Boolean = False)
+Dim x
+   For x = 1 To 4
+      If Not All And x = player.ID Then
+         'skip
+      Else
+         DB.Execute "UPDATE GameSeq SET Refresh" & x & " = 1"
+      End If
+   Next x
+
+End Sub
+
+Public Sub clearRefresh(Optional ByVal All As Boolean = False)
+Dim x
+   For x = 1 To 4
+      If Not All And x <> player.ID Then
+         'skip
+      Else
+         DB.Execute "UPDATE GameSeq SET Refresh" & x & " = 0"
+      End If
+   Next x
+
+End Sub
 
 'Public Function getsumtin(ByVal playerID) As Integer
 'Dim rst As New ADODB.Recordset

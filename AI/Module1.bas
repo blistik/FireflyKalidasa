@@ -1233,7 +1233,7 @@ Dim c() As String
 '   Main.Timing.Enabled = TimingState
    
    'RefreshBoard
-   
+   setRefresh
 '   If playerID > 4 And getPlayerSector(player.ID) = SectorID And actionSeq <> ASNavEvade Then
 '      If checkWhisperX1(SectorID) Then
 '         actionSeq = ASNavEvade ' and get away
@@ -2444,6 +2444,7 @@ Dim SQL, x, cnt As Integer
    If Goal = -1 Then Exit Function
    goaldone = True 'until proven otherwise
    SQL = "SELECT * FROM StoryGoals WHERE StoryID=" & StoryID & " AND Goal = " & CStr(Goal + 1)
+   rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
    
@@ -2509,6 +2510,13 @@ Dim SQL, x, cnt As Integer
             addGoal playerID, -1
             PutMsg player.PlayName & " has Failed to meet the Story Goal Turn limit of " & rst!TurnLimit & ". GAME OVER!", player.ID, Seq
             goaldone = False
+         End If
+      End If
+            
+            'load any Passengers if there is room
+      If goaldone And rst!Passenger > 0 Then
+         If CargoCapacity(playerID) - CargoSpaceUsed(playerID) >= rst!Passenger Then
+            DB.Execute "UPDATE Players SET Passenger = Passenger + " & CStr(rst!Passenger) & " WHERE PlayerID = " & playerID
          End If
       End If
       
@@ -2684,8 +2692,11 @@ Dim SQL, Goal As Integer
    hasGoalSector = True
    SQL = "SELECT  SectorID, CompleteJobID, Solid, SolidCount, Bounties, NoUnfinished, Fight, Tech, Negotiate, Cash "
    SQL = SQL & "FROM StoryGoals WHERE StoryID=" & Logic!StoryID & " AND SectorID>0 AND Goal=" & Goal
+   rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenStatic, adLockReadOnly
-   If Not rst.EOF Then
+   If rst.EOF Then
+      hasGoalSector = False
+   Else
       goalSector = 0
       If hasGoalSector And rst!CompleteJobID > 0 Then
          If jobSuccess(player.ID, rst!CompleteJobID) Then
@@ -2740,4 +2751,28 @@ Dim SQL
    End If
    rst.Close
    Set rst = Nothing
+End Sub
+
+Public Sub setRefresh(Optional ByVal All As Boolean = False)
+Dim x
+   For x = 1 To 4
+      If Not All And x = player.ID Then
+         'skip
+      Else
+         DB.Execute "UPDATE GameSeq SET Refresh" & x & " = 1"
+      End If
+   Next x
+
+End Sub
+
+Public Sub clearRefresh(Optional ByVal All As Boolean = False)
+Dim x
+   For x = 1 To 4
+      If Not All And x <> player.ID Then
+         'skip
+      Else
+         DB.Execute "UPDATE GameSeq SET Refresh" & x & " = 0"
+      End If
+   Next x
+
 End Sub
