@@ -289,7 +289,7 @@ Begin VB.MDIForm Main
             ImageKey        =   "deal"
             Style           =   5
             BeginProperty ButtonMenus {66833FEC-8583-11D1-B16A-00C0F0283628} 
-               NumButtonMenus  =   2
+               NumButtonMenus  =   3
                BeginProperty ButtonMenu1 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "alldeals"
                   Text            =   "All Deals"
@@ -297,6 +297,10 @@ Begin VB.MDIForm Main
                BeginProperty ButtonMenu2 {66833FEE-8583-11D1-B16A-00C0F0283628} 
                   Key             =   "localdeals"
                   Text            =   "Local Deals"
+               EndProperty
+               BeginProperty ButtonMenu3 {66833FEE-8583-11D1-B16A-00C0F0283628} 
+                  Key             =   "bounties"
+                  Text            =   "Bounties"
                EndProperty
             EndProperty
          EndProperty
@@ -605,7 +609,7 @@ Private usedStitchSkill As Boolean, dontnagme As Boolean, rejoininprogress As Bo
 Public frmJob As frmJobs, frmShip As frmShips, frmDeal As frmDeals, frmBuy As frmSupply, frmStat As frmStats, frmSkill As frmSkillSel
 
 Private Sub MDIForm_Load()
-Dim x
+Dim X
    
    PlayCode(1).Color = "Orange"
    PlayCode(2).Color = "Blue"
@@ -622,12 +626,12 @@ Dim x
 
    If Not Logon Then End
    
-   For x = 1 To NO_OF_CONTACTS
-      pic(x).Visible = False
-   Next x
+   For X = 1 To NO_OF_CONTACTS
+      pic(X).Visible = False
+   Next X
    
    Logic.Open "GameSeq", DB, adOpenDynamic, adLockPessimistic  ', adLockOptimistic
-   x = GetSeq
+   X = GetSeq
    Timing.Enabled = True
    
 End Sub
@@ -655,7 +659,7 @@ End Sub
 ' actionSeq States = ASidle , ASselect --- >>> , ASend, -> ASidle, <repeat>
 Private Sub Timing_Timer()
 Dim status As Variant, errh, thisplayer As Integer
-Dim SectorID, ContactID As Integer, SupplyID As Integer, x, Y As Integer
+Dim SectorID, ContactID As Integer, SupplyID As Integer, X, Y As Integer
 Dim maxConsider
 On Error GoTo err_handler
 
@@ -691,9 +695,9 @@ On Error GoTo err_handler
       Verse.Caption = "the 'Verse - " & varDLookup("StoryTitle", "Story", "StoryID = " & Logic!StoryID)
       NumOfReavers = varDLookup("NoOfReavers", "Story", "StoryID = " & Logic!StoryID)
       'set game ships
-      For x = 5 To 6 + NumOfReavers
-         MoveShip x, varDLookup("StartSectorID", "Players", "PlayerID=" & CStr(x))
-      Next x
+      For X = 5 To 6 + NumOfReavers
+         MoveShip X, varDLookup("StartSectorID", "Players", "PlayerID=" & CStr(X))
+      Next X
       PutMsg player.PlayName & " selecting Start Sector", player.ID, Logic!Gamecntr
       
       If useHavens(Logic!StoryID) Then
@@ -748,10 +752,10 @@ On Error GoTo err_handler
       'initiate the skill selection
       actionSeq = ASBountySkill
       'MessBox "You have been Boarded by " & PlayCode(thisplayer).PlayName & "!!" & vbNewLine & "Prepare your Crew for a Showdown, then select a Skill once you're ready.", "SHOWDOWN", "OK", "", getLeader()
-      x = showBoarded(thisplayer)
+      X = showBoarded(thisplayer)
       Set frmSkill = New frmSkillSel
-      If x > 0 Then
-         frmSkill.skill = x
+      If X > 0 Then
+         frmSkill.skill = X
          actionSeq = ASBountySkillSel
          playsnd 8
       Else
@@ -761,18 +765,18 @@ On Error GoTo err_handler
       End If
    ElseIf status = "F" And thisplayer <> player.ID And actionSeq = ASBountySkillSel And Logic!trader = player.ID Then 'showdown - defend!
       'MessBox "You have selected Skill " & frmSkill.Skill, "Skill", "OK"
-      x = frmSkill.skill
+      X = frmSkill.skill
       Set frmSkill = Nothing
       Y = Logic!player
       'initiate the Showdown
-      doShowdownDefend Y, x
+      doShowdownDefend Y, X
       actionSeq = ASidle
    
    ElseIf status = "T" And thisplayer <> player.ID And actionSeq = ASidle And Logic!trader = player.ID Then
       doSlaveTrade Logic!player
       
    ElseIf status = "U" And thisplayer = player.ID And actionSeq = ASidle Then 'capture the Move Corvette to any planetary sector
-      x = setPlayer(player.ID, "", 0, True)
+      X = setPlayer(player.ID, "", 0, True)
       MessBox "Move the Operative's Corvette to any Planetary Sector", "Place the Corvette", "OK"
       'kick it off
       actionSeq = ASNavCorvPlanetary
@@ -807,14 +811,14 @@ On Error GoTo err_handler
       End If
       
    ElseIf status = "Z" And thisplayer = player.ID And actionSeq = ASidle Then 'capture the Move Cruiser Cycle from another Player's Nav move
-      x = setPlayer(player.ID, "", 0, True)
-      MessBox "Move the Alliance Cruiser adjacent to " & PlayCode(x).PlayName, "Move the Alliance Cruiser", "OK"
+      X = setPlayer(player.ID, "", 0, True)
+      MessBox "Move the Alliance Cruiser adjacent to " & PlayCode(X).PlayName, "Move the Alliance Cruiser", "OK"
       'kick it off
       actionSeq = ASNavCrusAdjacent
          
    ElseIf status = "V" And thisplayer = player.ID And actionSeq = ASidle Then 'capture the Move Corvette Cycle from another Player's Nav move
-      x = setPlayer(player.ID, "", 0, True)
-      MessBox "Move the Operative's Corvette adjacent to " & PlayCode(x).PlayName, "Move the Operative's Corvette", "OK"
+      X = setPlayer(player.ID, "", 0, True)
+      MessBox "Move the Operative's Corvette adjacent to " & PlayCode(X).PlayName, "Move the Operative's Corvette", "OK"
       'kick it off
       actionSeq = ASNavCorvAdjacent
          
@@ -834,8 +838,8 @@ On Error GoTo err_handler
       End If
    
    ElseIf status = "R" And thisplayer = player.ID And actionSeq = ASMoseyEnd Then   'Mosey Cycle - your go
-      x = getPlanetName(SectorID)
-      PutMsg player.PlayName & " moseyed to " & IIf(x = "", "sector " & SectorID, x), player.ID, Logic!Gamecntr
+      X = getPlanetName(SectorID)
+      PutMsg player.PlayName & " moseyed to " & IIf(X = "", "sector " & SectorID, X), player.ID, Logic!Gamecntr
       If resolveToken(SectorID) = 6 And isOutlaw(player.ID) Then 'no Nav card when Corvette arrives
          If actionSeq <> ASNavEvade Then
             actionSeq = ASselect 'in limbo awaiting user to select
@@ -854,12 +858,12 @@ On Error GoTo err_handler
 '      showActions   'throw it back to the action window to resolve end of mosey and offer other actions
    
    ElseIf status = "R" And thisplayer = player.ID And actionSeq = ASFullburnEnd Then   'fullburn Cycle - your go
-      x = getPlanetName(SectorID)
-      PutMsg player.PlayName & " fullburned to " & IIf(x = "", "sector " & SectorID, x), player.ID, Logic!Gamecntr
-      x = resolveToken(SectorID)
+      X = getPlanetName(SectorID)
+      PutMsg player.PlayName & " fullburned to " & IIf(X = "", "sector " & SectorID, X), player.ID, Logic!Gamecntr
+      X = resolveToken(SectorID)
       'check if Alliance is in the Sector
-      If x = 0 Then x = getCruiserCorvette(SectorID)
-      If (x = 5 Or x = 6) And isOutlaw(player.ID) Then 'no Nav card when Alliance arrives
+      If X = 0 Then X = getCruiserCorvette(SectorID)
+      If (X = 5 Or X = 6) And isOutlaw(player.ID) Then 'no Nav card when Alliance arrives
          If actionSeq = ASNavEvade Then
             frmAction.fullburndone = True
          Else
@@ -924,14 +928,14 @@ On Error GoTo err_handler
    
    ElseIf status = "R" And thisplayer = player.ID And actionSeq = ASDealDrew Then   'Deal Cycle - your go
       'save selected card as Seq = 6
-      x = frmDeal.setSelected("UN", CONSIDERED)
+      X = frmDeal.setSelected("UN", CONSIDERED)
       maxConsider = MAXJOBCARDDRAW + getGearFeature(player.ID, "MaxJobs")
       If isSolid(player.ID, 4) And ContactID = 4 Then
          maxConsider = 4
       End If
       'and draw cards up to 3
-      If x < maxConsider Then
-         DrawDeck "Contact", ContactID, maxConsider - x, CONSIDERED
+      If X < maxConsider Then
+         DrawDeck "Contact", ContactID, maxConsider - X, CONSIDERED
       End If
       actionSeq = ASDealSelect
       showDeals False, "localdeal" 'only show those considered (6)
@@ -940,9 +944,9 @@ On Error GoTo err_handler
    ElseIf status = "R" And thisplayer = player.ID And actionSeq = ASDealEnd Then   'Deal Cycle - your go
       'save selected (Seq=6 + selected) to players Jobs, unselected back to 5
       
-      x = doDeal(player.ID)
+      X = doDeal(player.ID)
       
-      PutMsg player.PlayName & " dealt and accepted " & IIf(x = 0, "no", CStr(x)) & " deals from " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!Gamecntr
+      PutMsg player.PlayName & " dealt and accepted " & IIf(X = 0, "no", CStr(X)) & " deals from " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), player.ID, Logic!Gamecntr
       
       'do any Sell Cargo/Contra Dealing now----------------
       If ContactID = 6 Then  'lord Harrow
@@ -1024,25 +1028,25 @@ On Error GoTo err_handler
    
    ElseIf status = "R" And thisplayer = player.ID And actionSeq = ASBuyDrew Then   'Buy Cycle - your go
       'save selected card as Seq = 6
-      x = frmBuy.setSelected("UN", CONSIDERED)
+      X = frmBuy.setSelected("UN", CONSIDERED)
       'and draw cards up to 3
-      If x < MAXJOBCARDDRAW Then
-         DrawDeck "Supply", SupplyID, MAXJOBCARDDRAW - x, CONSIDERED
+      If X < MAXJOBCARDDRAW Then
+         DrawDeck "Supply", SupplyID, MAXJOBCARDDRAW - X, CONSIDERED
       End If
       actionSeq = ASBuySelect
       showBuys False, "localbuy" 'only show those considered (6)
       showActions
       
    ElseIf status = "R" And thisplayer = player.ID And actionSeq = ASBuyShore Then   'Buy Cycle - your go
-      x = doShoreLeave(player.ID)
+      X = doShoreLeave(player.ID)
       actionSeq = ASselect 'in limbo awaiting user to select
       
       If getPerkAttributeCrew(player.ID, "FreeShoreLeave") > 0 Then
          PutMsg player.PlayName & " had the Barkeep shout the Crew some free Shore Leave", player.ID, Logic!Gamecntr, True, 71
       ElseIf hasShipUpgrade(player.ID, 19) Then
-         PutMsg player.PlayName & " treated the Crew with a shiny Board Game for $" & CStr(Abs(x)), player.ID, Logic!Gamecntr, True, 0, 0, 19
+         PutMsg player.PlayName & " treated the Crew with a shiny Board Game for $" & CStr(Abs(X)), player.ID, Logic!Gamecntr, True, 0, 0, 19
       Else
-         PutMsg player.PlayName & " went on Shore Leave at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID) & " for $" & CStr(Abs(x)), player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " went on Shore Leave at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID) & " for $" & CStr(Abs(X)), player.ID, Logic!Gamecntr
       End If
             
       showActions
@@ -1062,26 +1066,26 @@ On Error GoTo err_handler
          frmAction.lblBuyFuel = "0"
          frmAction.lblBuyParts = "0"
       End If
-      x = 0
+      X = 0
       'Haven Shore Leave
       If hasDisgruntled(player.ID) Then
          If MessBox("Do you want to take Shore Leave at your Haven as well?", "Haven Leave", "Yes", "No", getLeader()) = 0 Then
-            x = doShoreLeave(player.ID, False, (getHaven(SectorID) = player.ID))
+            X = doShoreLeave(player.ID, False, (getHaven(SectorID) = player.ID))
          End If
       End If
       
       actionSeq = ASselect 'in limbo awaiting user to select
-      If x = -1 Then
+      If X = -1 Then
          PutMsg player.PlayName & " took some free Shore Leave at the Haven", player.ID, Logic!Gamecntr, True, getLeader()
-      ElseIf x > 0 Then
-         PutMsg player.PlayName & " went on Shore Leave at a Haven for $" & CStr(Abs(x)), player.ID, Logic!Gamecntr
+      ElseIf X > 0 Then
+         PutMsg player.PlayName & " went on Shore Leave at a Haven for $" & CStr(Abs(X)), player.ID, Logic!Gamecntr
       End If
       showActions
       
    ElseIf status = "R" And thisplayer = player.ID And actionSeq = ASBuyEnd Then   'Buy Cycle - your go
       'save selected (Seq=6 + selected) to players Jobs, unselected back to 5
-      x = doBuy(player.ID)
-      PutMsg player.PlayName & " accepted and bought " & IIf(x = 0, "no", CStr(x)) & " buys from " & varDLookup("SupplyName", "Supply", "SupplyID=" & SupplyID), player.ID, Logic!Gamecntr
+      X = doBuy(player.ID)
+      PutMsg player.PlayName & " accepted and bought " & IIf(X = 0, "no", CStr(X)) & " buys from " & varDLookup("SupplyName", "Supply", "SupplyID=" & SupplyID), player.ID, Logic!Gamecntr
       
       'buy fuel & parts now
       If frmAction.imgFuelBuy.Tag = "Y" And (Val(frmAction.lblBuyFuel) > 0 Or Val(frmAction.lblBuyParts) > 0) Then
@@ -1165,16 +1169,16 @@ On Error GoTo err_handler
       drawLine 2, -1
       'option to pull top card from Supply Decks
       If varDLookup("pullSupply", "Story", "StoryID=" & Logic!StoryID) = 1 Then
-         For x = 1 To 7
-            DrawDeck "Supply", x, 1
-         Next x
+         For X = 1 To 7
+            DrawDeck "Supply", X, 1
+         Next X
       End If
       
       'option to pull top card from Supply Decks
       If varDLookup("pullContact", "Story", "StoryID=" & Logic!StoryID) = 1 Then
-         For x = 1 To 9
-            DrawDeck "Contact", x, 1
-         Next x
+         For X = 1 To 9
+            DrawDeck "Contact", X, 1
+         Next X
       End If
       
       'Check if WON!
@@ -1215,7 +1219,7 @@ err_handler:
 End Sub
 
 Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
-Dim ChatTxt As String, x
+Dim ChatTxt As String, X
   playsnd 13
   Logic.Requery
   Select Case Button.key
@@ -1260,8 +1264,8 @@ Dim ChatTxt As String, x
 
      Case Else
         dontnagme = True
-        x = MsgBox("Game in progress. If you want to re-join, use JOIN button." & vbNewLine & "otherwise press OK to RESET the Game", vbExclamation + vbOKCancel, "Game in Progress")
-        Select Case x
+        X = MsgBox("Game in progress. If you want to re-join, use JOIN button." & vbNewLine & "otherwise press OK to RESET the Game", vbExclamation + vbOKCancel, "Game in Progress")
+        Select Case X
         Case vbOK
             DB.Execute "UPDATE GameSeq SET Seq = 'E'"
             'Logic.Update "Seq", "E"
@@ -1407,7 +1411,7 @@ Dim ChatTxt As String, x
     End With
   
   Case "help"
-    x = ShellExecute(x, "OPEN", App.Path & "\FireflyForPC.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
+    X = ShellExecute(X, "OPEN", App.Path & "\FireflyForPC.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
   
   End Select
 End Sub
@@ -1458,7 +1462,7 @@ End Sub
 
 Private Sub initBoard()
 Dim rst As New ADODB.Recordset
-Dim coords, c() As String, x
+Dim coords, c() As String, X
    NumOfReavers = getNumOfReavers()
    If Verse Is Nothing Then
       Set Verse = New Board
@@ -1469,13 +1473,13 @@ Dim coords, c() As String, x
       .Height = Logic!BHeight
       .Width = Logic!BWidth
    
-      For x = 1 To 4
-         Load .imgHaven(x)
-         Set .imgHaven(x).Container = .Picture1
-         .imgHaven(x).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Haven" & x & ".bmp")
-         .imgHaven(x).TransparentColor = &HFFFFFF
-         .imgHaven(x).TransparentColorMode = lvicUseTransparentColor
-      Next x
+      For X = 1 To 4
+         Load .imgHaven(X)
+         Set .imgHaven(X).Container = .Picture1
+         .imgHaven(X).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Haven" & X & ".bmp")
+         .imgHaven(X).TransparentColor = &HFFFFFF
+         .imgHaven(X).TransparentColorMode = lvicUseTransparentColor
+      Next X
       rst.CursorLocation = adUseClient
       rst.Open "SELECT SectorID, Slot5,STop,SLeft,SHeight,SWidth, Token, AToken, Haven FROM Board WHERE SectorID > 0 ORDER BY SectorID", DB, adOpenStatic, adLockReadOnly
       While Not rst.EOF
@@ -1524,9 +1528,9 @@ Dim coords, c() As String, x
          
          rst.MoveNext
       Wend
-      For x = 5 To 6 + NumOfReavers ' .Imag.Count
-         .Imag(x).Animate2.StartAnimation
-      Next x
+      For X = 5 To 6 + NumOfReavers ' .Imag.Count
+         .Imag(X).Animate2.StartAnimation
+      Next X
       .Caption = "the 'Verse - " & varDLookup("StoryTitle", "Story", "StoryID=" & Logic!StoryID)
       .Show
       
@@ -1555,7 +1559,7 @@ Private Sub initToolbar(ByVal start As Boolean, Optional ByVal admin As Boolean 
 End Sub
 
 Private Sub killAllForms()
-Dim x
+Dim X
 
    If Verse.Visible Then
       Verse.hide
@@ -1592,16 +1596,16 @@ Dim x
    frmAction.endAction
    If frmAction.FDPane1.PaneVisible Then Unload frmAction
    
-   For x = 1 To NO_OF_CONTACTS
-     pic(x).Visible = False
-   Next x
+   For X = 1 To NO_OF_CONTACTS
+     pic(X).Visible = False
+   Next X
 
 
 End Sub
 
 
 Private Sub Toolbar1_ButtonMenuClick(ByVal ButtonMenu As MSComctlLib.ButtonMenu)
-Dim frmJobEdit As frmJobEditor, x
+Dim frmJobEdit As frmJobEditor, X
 
    playsnd 13
    Select Case ButtonMenu.key
@@ -1638,7 +1642,10 @@ Dim frmJobEdit As frmJobEditor, x
 
    Case "localdeals"
       showDeals False, "local"
-
+      
+   Case "bounties"
+      showDeals False, "bounties"
+      
    Case "allbuys"
       If actionSeq < ASBuy Or actionSeq > ASBuyEnd Then
          showBuys
@@ -1671,21 +1678,21 @@ Dim frmJobEdit As frmJobEditor, x
       frmShip.FDPane1.PaneVisible = True
       
    Case "firefly"
-      x = ShellExecute(x, "OPEN", App.Path & "\Firefly_rulebook.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
+      X = ShellExecute(X, "OPEN", App.Path & "\Firefly_rulebook.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
    Case "bluesun"
-      x = ShellExecute(x, "OPEN", App.Path & "\FireflyBlueSun_rulebook.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
+      X = ShellExecute(X, "OPEN", App.Path & "\FireflyBlueSun_rulebook.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
    Case "kalidasa"
-      x = ShellExecute(x, "OPEN", App.Path & "\FireflyKalidasa_rulebook.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
+      X = ShellExecute(X, "OPEN", App.Path & "\FireflyKalidasa_rulebook.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
    Case "pbh"
-      x = ShellExecute(x, "OPEN", App.Path & "\Firefly_Pirates_Bounty_Hunters_rulebook.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
+      X = ShellExecute(X, "OPEN", App.Path & "\Firefly_Pirates_Bounty_Hunters_rulebook.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
 
    Case "pcguide"
-      x = ShellExecute(x, "OPEN", App.Path & "\FireflyForPC.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
+      X = ShellExecute(X, "OPEN", App.Path & "\FireflyForPC.pdf", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
    Case "jobs"
     Set frmJobEdit = New frmJobEditor
     frmJobEdit.Show 1
    Case "bot"
-      x = ShellExecute(x, "OPEN", App.Path & "\FireflyAIBot.exe ", datab, vbNullString, 1)               '1=normal, 2=min, 3=max, 4=behind
+      X = ShellExecute(X, "OPEN", App.Path & "\FireflyAIBot.exe ", datab, vbNullString, 1)               '1=normal, 2=min, 3=max, 4=behind
    Case "map"
 
       Logic.Requery
@@ -1703,7 +1710,7 @@ Dim frmJobEdit As frmJobEditor, x
 
       showEditBoard
    Case "check"
-      x = ShellExecute(x, "OPEN", "https://github.com/blistik/FireflyKalidasa/releases", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
+      X = ShellExecute(X, "OPEN", "https://github.com/blistik/FireflyKalidasa/releases", vbNullString, vbNullString, 1)              '1=normal, 2=min, 3=max, 4=behind
    
    Case "about"
       MessBox "Firefly + Blue Sun/Kalidasa  V" & App.Major & "." & App.Minor & "." & App.Revision & vbNewLine & "*Open Freeware* - use at your own risk" & vbNewLine & "Coded by: Vee Bee-er " & Chr(169) & " 2021-24 BLiSoftware" & _
@@ -1794,7 +1801,7 @@ Public Sub showBuys(Optional ByVal toggle As Boolean = False, Optional ByVal fil
 End Sub
 
 Private Sub showNav(ByVal SectorID, Optional ByVal CardID As Integer = 0)
-Dim SQL, reshuffle, Zone, x
+Dim SQL, reshuffle, Zone, X
 Dim rst As New ADODB.Recordset
 
    With frmNav
@@ -1845,8 +1852,8 @@ Dim rst As New ADODB.Recordset
          If actionSeq = ASNavEvade Then 'we are evading already
             'evade
          ElseIf (rst!CardName = "Reaver Cutter!") And getCruiserCorvette(SectorID) = 6 Then 'corvette shoos the Reavers away
-            x = getCutterSector(SectorID)
-            moveAutoAI x
+            X = getCutterSector(SectorID)
+            moveAutoAI X
             actionSeq = ASnavEnd
             PutMsg player.PlayName & " is Shielded from a Reaver Cutter attack by the Alliance Corvette", player.ID, Logic!Gamecntr, True, getLeader()
          ElseIf checkFlacGun(SectorID, Not (rst!CardName = "Reaver Cutter!")) Then
@@ -1970,7 +1977,7 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Public Sub showActions()
-Dim SQL, SectorID, onlyFullburn As Boolean, x As Integer, Y As Integer, z, unseenDeck As Integer
+Dim SQL, SectorID, onlyFullburn As Boolean, X As Integer, Y As Integer, z, unseenDeck As Integer
 Dim rst As New ADODB.Recordset, reaverActive As Boolean, moseyrng As Integer
 Dim frmJoSel As frmJobSel, hide As Boolean
 
@@ -2017,9 +2024,9 @@ Dim frmJoSel As frmJobSel, hide As Boolean
    End If
    
    'check active job limit not exceeded
-   x = getPlayerJobs(player.ID, "1,2")
+   X = getPlayerJobs(player.ID, "1,2")
    Y = MAXACTIVEJOBS + IIf(isSolid(player.ID, 8), 1, 0)
-   If x > Y Then
+   If X > Y Then
       Set frmJoSel = New frmJobSel
       frmJoSel.jobFilter = " IN (1,2)"
       frmJoSel.Caption = "Too many ACTIVE Jobs"
@@ -2031,8 +2038,8 @@ Dim frmJoSel As frmJobSel, hide As Boolean
       Set frmJoSel = Nothing
    End If
    'check inactive job limit not exceeded
-   x = getPlayerJobs(player.ID, "0")
-   If x > MAXINACTIVEJOBS Then
+   X = getPlayerJobs(player.ID, "0")
+   If X > MAXINACTIVEJOBS Then
       Set frmJoSel = New frmJobSel
       frmJoSel.jobFilter = "=0"
       frmJoSel.Caption = "Too many INACTIVE Jobs"
@@ -2062,16 +2069,16 @@ Dim frmJoSel As frmJobSel, hide As Boolean
       'Header Info ===============================
       .setVisState .imgOutlaw, isOutlaw(player.ID)
       
-      x = getTurnLimit(player.ID)
-      .lblTurn.Caption = CStr(Logic!Gamecntr - 1) & IIf(x > 0, "/" & x, "")
-      If Logic!Gamecntr >= x And x > 0 Then
+      X = getTurnLimit(player.ID)
+      .lblTurn.Caption = CStr(Logic!Gamecntr - 1) & IIf(X > 0, "/" & X, "")
+      If Logic!Gamecntr >= X And X > 0 Then
          .lblTurn.ForeColor = &HFF&
       Else
          .lblTurn.ForeColor = &H3DCBFF
       End If
       
       z = countMisbehaves(player.ID)
-      Y = totalMisbehaves(player.ID, x)
+      Y = totalMisbehaves(player.ID, X)
       .lblMisbehaves = z & IIf(Y > 0, "/" & Y, "")
       
       If Y > 0 And z >= Y Then
@@ -2081,24 +2088,24 @@ Dim frmJoSel As frmJobSel, hide As Boolean
       End If
       
       Y = countBounties(player.ID)
-      .lblBounties = Y & IIf(x > 0, "/" & x, "")
-      If x > 0 And Y >= x Then
+      .lblBounties = Y & IIf(X > 0, "/" & X, "")
+      If X > 0 And Y >= X Then
          .lblBounties.ForeColor = &H3E631
       Else
          .lblBounties.ForeColor = &H3DCBFF
       End If
       
-      x = getPlayerJobs(player.ID, "0")
-      .lblInactiveJobs = x & "/" & MAXINACTIVEJOBS
-      If x >= MAXINACTIVEJOBS Then
+      X = getPlayerJobs(player.ID, "0")
+      .lblInactiveJobs = X & "/" & MAXINACTIVEJOBS
+      If X >= MAXINACTIVEJOBS Then
          .lblInactiveJobs.ForeColor = &HFF&
       Else
          .lblInactiveJobs.ForeColor = &H3DCBFF
       End If
-      x = getPlayerJobs(player.ID, "1,2")
+      X = getPlayerJobs(player.ID, "1,2")
       Y = (MAXACTIVEJOBS + IIf(isSolid(player.ID, 8), 1, 0))
-      .lblActiveJobs = x & "/" & Y
-      If x >= Y Then
+      .lblActiveJobs = X & "/" & Y
+      If X >= Y Then
          .lblActiveJobs.ForeColor = &HFF&
       Else
          .lblActiveJobs.ForeColor = &H3DCBFF
@@ -2152,22 +2159,22 @@ Dim frmJoSel As frmJobSel, hide As Boolean
          .lblHoldSpace.ForeColor = &H3DCBFF
       End If
       
-      x = CrewCapacity(player.ID)
+      X = CrewCapacity(player.ID)
       Y = getCrewCount(player.ID)
-      .lblCrewSpace = Y & "/" & x
+      .lblCrewSpace = Y & "/" & X
       If Y > 9 Then
          .lblCrewSpace.Left = 2360
       Else
          .lblCrewSpace.Left = 2420
       End If
-      If Y >= x Then
+      If Y >= X Then
          .lblCrewSpace.ForeColor = &HFF&
       Else
          .lblCrewSpace.ForeColor = &H3DCBFF
       End If
-      x = getShipUpgrades(player.ID)
-      .lblUpgrades = x & "/3"
-      If x >= 3 Then
+      X = getShipUpgrades(player.ID)
+      .lblUpgrades = X & "/3"
+      If X >= 3 Then
          .lblUpgrades.ForeColor = &HFF&
       Else
          .lblUpgrades.ForeColor = &H3DCBFF
@@ -2190,15 +2197,15 @@ Dim frmJoSel As frmJobSel, hide As Boolean
          End If
          
          'is Full Burn available?
-         x = getExtraBurn(player.ID)  ' Heavy Load??
-         .setVisState .imgFlyHL, (x > 0)
-         .actionButtonEnable "imgFullBurn", (((rst!burnFuel + x + IIf(.rangeBoost > 0, 1, 0)) <= Val(.lblFuel.Caption)) Or FullburnMovesDone > 0) And (Not .fullburndone) And (actionSeq = ASselect) And Not reaverActive And hasValidFBMove(player.ID) And Not (HemmorrhagingFuel And FullburnMovesDone > 0 And Val(.lblFuel.Caption) = 0)
+         X = getExtraBurn(player.ID)  ' Heavy Load??
+         .setVisState .imgFlyHL, (X > 0)
+         .actionButtonEnable "imgFullBurn", (((rst!burnFuel + X + IIf(.rangeBoost > 0, 1, 0)) <= Val(.lblFuel.Caption)) Or FullburnMovesDone > 0) And (Not .fullburndone) And (actionSeq = ASselect) And Not reaverActive And hasValidFBMove(player.ID) And Not (HemmorrhagingFuel And FullburnMovesDone > 0 And Val(.lblFuel.Caption) = 0)
          'single use extended Range
          .imgFlyBoost.Visible = (hasShipUpgrade(player.ID, 17) > 0)
-         .actionButtonEnable "imgFlyBoost", (hasShipUpgrade(player.ID, 17) > 0 And FullburnMovesDone = 0 And .imgFullBurn.Tag = "Y" And Val(.lblFuel.Caption) >= rst!burnFuel + x + 1)  ', .rangeBoost > 0
+         .actionButtonEnable "imgFlyBoost", (hasShipUpgrade(player.ID, 17) > 0 And FullburnMovesDone = 0 And .imgFullBurn.Tag = "Y" And Val(.lblFuel.Caption) >= rst!burnFuel + X + 1)  ', .rangeBoost > 0
 
-         .lblFBFuel.Caption = rst!burnFuel + x + IIf(.rangeBoost > 0, 1, 0)
-         If x > 0 Then
+         .lblFBFuel.Caption = rst!burnFuel + X + IIf(.rangeBoost > 0, 1, 0)
+         If X > 0 Then
             .lblFBFuel.ForeColor = &HFF&
          Else
             .lblFBFuel.ForeColor = &H45A8D4
@@ -2367,33 +2374,33 @@ Dim frmJoSel As frmJobSel, hide As Boolean
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       '.cbo.Clear
       
-      For x = 1 To .mnuWorkPop.Count - 1
-         Unload .mnuWorkPop(x)
-      Next x
-      x = -1
+      For X = 1 To .mnuWorkPop.Count - 1
+         Unload .mnuWorkPop(X)
+      Next X
+      X = -1
       While Not rst.EOF
          If ((rst!sector1 = 1 And getCruiserSector() = SectorID) Or (rst!sector1 = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!sector1)) And rst!JobStatus = 0 And getPlayerJobs(player.ID, "1,2") < MAXACTIVEJOBS + IIf(isSolid(player.ID, 8), 1, 0) Then ' check requirements met for job
             If hasJobReqs(player.ID, rst!CardID, rst!Job1) Then
-               x = x + 1
-               If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
-               .mnuWorkPop(x).Caption = rst!Jobdes1 & " (" & CStr(rst!CardID) & ")"
-               .mnuWorkPop(x).Tag = CStr(rst!CardID)
+               X = X + 1
+               If .mnuWorkPop.Count < X + 1 Then Load .mnuWorkPop(X)
+               .mnuWorkPop(X).Caption = rst!Jobdes1 & " (" & CStr(rst!CardID) & ")"
+               .mnuWorkPop(X).Tag = CStr(rst!CardID)
             End If
 
          ElseIf ((rst!Sector3 = 1 And getCruiserSector() = SectorID) Or (rst!Sector3 = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!Sector3)) And rst!JobStatus = 1 Then 'Job3 must be in the sector
             If hasJobReqs(player.ID, rst!CardID, rst!Job3) Then
-               x = x + 1
-               If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
-               .mnuWorkPop(x).Caption = rst!Jobdes3 & " (" & CStr(rst!CardID) & ")"
-               .mnuWorkPop(x).Tag = CStr(rst!CardID)
+               X = X + 1
+               If .mnuWorkPop.Count < X + 1 Then Load .mnuWorkPop(X)
+               .mnuWorkPop(X).Caption = rst!Jobdes3 & " (" & CStr(rst!CardID) & ")"
+               .mnuWorkPop(X).Tag = CStr(rst!CardID)
             End If
 
          ElseIf ((rst!sector2 = 1 And getCruiserSector() = SectorID) Or (rst!sector2 = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!sector2)) And (rst!JobStatus = 1 Or rst!JobStatus = 2) Then 'Job2 must be in the sector
             If hasJobReqs(player.ID, rst!CardID, rst!Job2) Then
-               x = x + 1
-               If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
-               .mnuWorkPop(x).Caption = rst!Jobdes2 & " (" & CStr(rst!CardID) & ")"
-               .mnuWorkPop(x).Tag = CStr(rst!CardID)
+               X = X + 1
+               If .mnuWorkPop.Count < X + 1 Then Load .mnuWorkPop(X)
+               .mnuWorkPop(X).Caption = rst!Jobdes2 & " (" & CStr(rst!CardID) & ")"
+               .mnuWorkPop(X).Tag = CStr(rst!CardID)
             End If
 
          End If
@@ -2403,17 +2410,17 @@ Dim frmJoSel As frmJobSel, hide As Boolean
 
       'do supply transfer at Haven
       If getHaven(SectorID) = player.ID And useHavenStorage(Logic!StoryID) Then
-         x = x + 1
-         If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
-         .mnuWorkPop(x).Caption = "Supplies Transfer at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
-         .mnuWorkPop(x).Tag = "-1"
+         X = X + 1
+         If .mnuWorkPop.Count < X + 1 Then Load .mnuWorkPop(X)
+         .mnuWorkPop(X).Caption = "Supplies Transfer at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
+         .mnuWorkPop(X).Tag = "-1"
       End If
 
       'look for Possible Bounty
-      loadBounties .mnuWorkPop, Val(.imgSupply.Tag), SectorID, x
+      loadBounties .mnuWorkPop, Val(.imgSupply.Tag), SectorID, X
       
       'load onto the display
-      If x > -1 Then
+      If X > -1 Then
          .lblJobName = .mnuWorkPop(0).Caption
          .lblJobName.ToolTipText = .mnuWorkPop(0).Caption
          .lblJobName.Tag = .mnuWorkPop(0).Tag
@@ -2489,7 +2496,7 @@ End Sub
 
 'returns doWork = 0 Normal, 1= Evade
 Public Function doWork(ByVal playerID, ByVal CardID) As Integer
-Dim rst As New ADODB.Recordset, x, parts As Integer, a() As String, DoubleDown As Integer
+Dim rst As New ADODB.Recordset, X, Y, parts As Integer, a() As String, DoubleDown As Integer
 Dim SQL, SectorID, ContactID, JobID, finalstate, result As Integer, misbehaveNum, bonus, cargofit As Integer, fugifit As Integer, cargopay As Integer
 Dim frmCrew As frmCrewLst, Dice As Integer, payment As Integer, KeywordInUse As Boolean
 Dim skillcnt, payCrewTotal As Integer, WSkill As Integer
@@ -2753,23 +2760,23 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
             PutMsg player.PlayName & " Tech Test comes to " & skillcnt & " for the Tag and Bag", playerID, Logic!Gamecntr
             Select Case skillcnt
             Case 1 - 4
-               x = 3
+               X = 3
             Case 5 - 7
-               x = 6
+               X = 6
             Case Else
-               x = 20
+               X = 20
             End Select
          ElseIf rst!tagnbag = 20 Then
-            x = 20
+            X = 20
             PutMsg player.PlayName & " does a Tag and Bag to grab some goods", playerID, Logic!Gamecntr
          Else
-            x = rst!tagnbag
+            X = rst!tagnbag
          End If
          If frmSalvage Is Nothing Then
             Set frmSalvage = New frmSalvaging
          End If
          frmSalvage.mode = 2
-         frmSalvage.salvageCount = x
+         frmSalvage.salvageCount = X
          frmSalvage.Show 1
          
       End If
@@ -2798,7 +2805,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
             doDisgruntled playerID, 3
          End If
          'KEYWORD CHECKS - ========================
-         If rst!WinOptKeyword > 0 Then ' give option to use Keyword to Win -  only applies to HACKINGRIG or Explosives (getting paid half)
+         If rst!WinOptKeyword > 0 And hasKeyword(playerID, Nz(rst!KeyWords)) Then ' give option to use Keyword to Win -  only applies to HACKINGRIG or Explosives (getting paid half)
                
             'check if the keyword was single use, and discard
             
@@ -2825,12 +2832,12 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
              
          ElseIf rst!WinOptKeyword = 0 And rst!KeywordBonus = 0 And Not IsNull(rst!KeyWords) And Not (rst!KeywordOrSkill > 0 And hasCrewAttribute(playerID, cstrProfession(rst!RequireProfession))) Then   'check for discard
             a = Split(rst!KeyWords, " ")
-            For x = LBound(a) To UBound(a)
-               If discardGearKeyword(playerID, a(x), True) Then
-                  MessBox "Discarding spent " & a(x), "Job Required Gear Keyword", "OK", "", getLeader()
-                  discardGearKeyword playerID, a(x)
+            For X = LBound(a) To UBound(a)
+               If discardGearKeyword(playerID, a(X), True) Then
+                  MessBox "Discarding spent " & a(X), "Job Required Gear Keyword", "OK", "", getLeader()
+                  discardGearKeyword playerID, a(X)
                End If
-            Next x
+            Next X
             
          End If
          
@@ -3043,15 +3050,15 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
          setRefresh True
          
          If hasGear(playerID, 31) And (rst!JobTypeID = 1 Or rst!JobType2D = 1) Then 'MF-813 Flying Mule After completing a Crime Job, Load 6 Goods, minus 1 per Crew Working the Job.
-            x = getCrewCount(playerID, True)
-            If x < 6 Then
+            X = getCrewCount(playerID, True)
+            If X < 6 Then
                If frmSalvage Is Nothing Then
                   Set frmSalvage = New frmSalvaging
                End If
                frmSalvage.mode = 2
-               frmSalvage.salvageCount = (6 - x)
+               frmSalvage.salvageCount = (6 - X)
                frmSalvage.Show 1
-               PutMsg player.PlayName & " uses the MF-813 Flying Mule to grab some goods (" & CStr(6 - x) & ")", playerID, Logic!Gamecntr, True, 0, 31
+               PutMsg player.PlayName & " uses the MF-813 Flying Mule to grab some goods (" & CStr(6 - X) & ")", playerID, Logic!Gamecntr, True, 0, 31
             End If
          End If
          If hasGear(playerID, 7) And (rst!JobTypeID = 1 Or rst!JobType2D = 1) Then '4WD Mule, after completing a Crime Job, Load 1 Cargo
@@ -3076,16 +3083,16 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
             If MessBox(varDLookup("ContactName", "Contact", "ContactID=" & rst!ContactID) & " is offering to Gamble $500 of the takings. Guess the next Card Suit and Win $3000" & vbNewLine & "Wanna Gamble?", "Gamble", "You're On", "I'll sit", 0, 0, 0, 0, rst!ContactID) = 0 Then
                Set frmGamb = New frmGamble
                frmGamb.Show 1
-               x = 0
-               While x = 0
-                  x = doGamble() 'return suit No.
+               X = 0
+               While X = 0
+                  X = doGamble() 'return suit No.
                Wend
-               If frmGamb.mySuit = x Then
+               If frmGamb.mySuit = X Then
                   DB.Execute "UPDATE Players Set Pay = Pay + 3000 WHERE PlayerID =" & playerID
                   PutMsg player.PlayName & " gambles and Wins $3000", playerID, Logic!Gamecntr, True, getLeader()
                Else
                   DB.Execute "UPDATE Players Set Pay = Pay - 500 WHERE PlayerID =" & playerID
-                  PutMsg player.PlayName & " gambles and loses $500.  It was a " & IIf(x = 1, "Spade", IIf(x = 2, "Club", IIf(x = 3, "Diamond", "Heart"))), playerID, Logic!Gamecntr, True, 0, 0, 0, rst!ContactID
+                  PutMsg player.PlayName & " gambles and loses $500.  It was a " & IIf(X = 1, "Spade", IIf(X = 2, "Club", IIf(X = 3, "Diamond", "Heart"))), playerID, Logic!Gamecntr, True, 0, 0, 0, rst!ContactID
                End If
                
             End If
@@ -3098,7 +3105,18 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
 
    'update the status of the job
    DB.Execute "UPDATE PlayerJobs SET JobStatus =" & finalstate & " WHERE PlayerID = " & playerID & " AND CardID = " & CardID
-   If ContactID = 10 Then frmAction.lblBounties = CStr(countBounties(playerID))
+   
+   If ContactID = 10 Then
+      Y = totalMisbehaves(player.ID, X)
+      Y = countBounties(player.ID)
+      frmAction.lblBounties = Y & IIf(X > 0, "/" & X, "")
+      If X > 0 And Y >= X Then
+         frmAction.lblBounties.ForeColor = &H3E631
+      Else
+         frmAction.lblBounties.ForeColor = &H3DCBFF
+      End If
+      
+   End If
    If Not (frmJob Is Nothing) Then
       frmJob.refreshJobs
    End If
@@ -3288,14 +3306,14 @@ End Function
 
 'returns the Result Flag passed from doMisbehave: 1=proceed, 2=botched, 3=warrant, 4=load 1 contra per crew wit no gear, 5-double down
 Public Function doMisbehaves(ByVal playerID, ByVal cnt As Integer, ByVal SectorID) As Integer
-Dim x, CardID As Integer, opt, actualcnt As Integer, suit, c(1 To 4) As Integer, dalin As Boolean
+Dim X, CardID As Integer, opt, actualcnt As Integer, suit, c(1 To 4) As Integer, dalin As Boolean
    clearPicMB
    actualcnt = 0
    dalin = hasCrew(playerID, 102)
-   For x = 1 To cnt
+   For X = 1 To cnt
       CardID = 0
       While CardID = 0 'allow for reshuffle
-         CardID = getMisbehave(opt, x, cnt, suit, dalin)
+         CardID = getMisbehave(opt, X, cnt, suit, dalin)
       Wend
       c(suit) = c(suit) + 1
 
@@ -3323,15 +3341,15 @@ Dim x, CardID As Integer, opt, actualcnt As Integer, suit, c(1 To 4) As Integer,
       End If
       'refresh as stuff may have changed
       If Not (frmShip Is Nothing) Then frmShip.RefreshShips
-   Next x
+   Next X
    'do double down check
    If doMisbehaves = 1 Then 'normal success (not 4)
-      For x = 1 To 4
-         If c(x) > 1 Then
+      For X = 1 To 4
+         If c(X) > 1 Then
             doMisbehaves = 5
             Exit For
          End If
-      Next x
+      Next X
    End If
    
    'inform of the success
@@ -3349,7 +3367,7 @@ End Function
 
 ' CardID is from MisbehaveDeck, opt is which option selected returns: 1=proceed, 2=botched, 3=warrant, 4=load 1 contra per crew wit no gear
 Public Function doMisbehave(ByVal playerID, ByVal CardID, ByVal opt) As Integer
-Dim SQL, skillcnt, skillwin, skillint, skilldiscards, x, bribe As Integer, riverskill As Integer
+Dim SQL, skillcnt, skillwin, skillint, skilldiscards, X, bribe As Integer, riverskill As Integer
 Dim Dice As Integer, WSkill As Integer, extraSkill As Integer, KeywordSkill As Integer, result '0=win,1-inter,2=fail
 Dim rst As New ADODB.Recordset, frmDiscardGr As frmDiscardGear
 Dim frmCrew As frmCrewSel, oneOnOne As Integer
@@ -3463,9 +3481,9 @@ Dim frmCrew As frmCrewSel, oneOnOne As Integer
             End If
          End If
          
-         x = hasGearCrew(playerID, 28) 'Mal's Brown Coat
-         If x > 0 And varDLookup("Disgruntled", "Crew", "CrewID=" & x) > 0 And varDLookup("Fight", "Crew", "CrewID=" & x) > 0 And WSkill = 3 Then
-            extraSkill = extraSkill + varDLookup("Fight", "Crew", "CrewID=" & x)
+         X = hasGearCrew(playerID, 28) 'Mal's Brown Coat
+         If X > 0 And varDLookup("Disgruntled", "Crew", "CrewID=" & X) > 0 And varDLookup("Fight", "Crew", "CrewID=" & X) > 0 And WSkill = 3 Then
+            extraSkill = extraSkill + varDLookup("Fight", "Crew", "CrewID=" & X)
             PutMsg player.PlayName & "'s Disgruntled Crew wearing the Brown Coat adds their Fight skills to the Negotiation", playerID, Logic!Gamecntr, True, 0, 28
          End If
          
@@ -3478,10 +3496,10 @@ Dim frmCrew As frmCrewSel, oneOnOne As Integer
          
          
          If WSkill = 1 And hasGear(playerID, 47) Then ' Zoe's Mare's Leg Rifle -When making a Fight Test, roll two dice and use the highest.
-            x = RollDice(6, True)
-            If x > Dice Then
-               PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(x), playerID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, Dice
-               Dice = x
+            X = RollDice(6, True)
+            If X > Dice Then
+               PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(X), playerID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, Dice
+               Dice = X
             End If
          End If
          
@@ -3493,9 +3511,9 @@ Dim frmCrew As frmCrewSel, oneOnOne As Integer
                PutMsg player.PlayName & " uses Jaynes Cunning Hat to reRoll a 1 and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, 0, 6, 0, 0, 0, Dice
                
             ElseIf hasGear(playerID, 35) And WSkill = 1 Then 'Inara's Bow
-               x = hasGearCrew(playerID, 35)
-               If x > 0 Then
-                  If hasCrewAttribute(playerID, "Companion", 0, x) Then
+               X = hasGearCrew(playerID, 35)
+               If X > 0 Then
+                  If hasCrewAttribute(playerID, "Companion", 0, X) Then
                      Do While Dice = 1
                         Dice = RollDice(6, True)
                      Loop
@@ -3507,33 +3525,33 @@ Dim frmCrew As frmCrewSel, oneOnOne As Integer
          
          'Zoe's skill can reroll a Fight test
          If WSkill = 1 And Dice < 6 Then
-            x = getPerkAttributeCrew(playerID, "RerollFight")
-            If x > 0 Then
-               If MessBox("You rolled a " & Dice & vbNewLine & "Your Fight Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
+            X = getPerkAttributeCrew(playerID, "RerollFight")
+            If X > 0 Then
+               If MessBox("You rolled a " & Dice & vbNewLine & "Your Fight Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, True)
-                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice
                End If
             End If
          End If
          
          'Kaylee can reroll a Tech test
          If WSkill = 2 And Dice < 6 Then
-            x = getPerkAttributeCrew(playerID, "RerollTech")
-            If x > 0 Then
-               If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
+            X = getPerkAttributeCrew(playerID, "RerollTech")
+            If X > 0 Then
+               If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, IIf(WSkill = 2 And hasCrew(playerID, 55), False, True))
-                  PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                  PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice
                End If
             End If
          End If
 
          'Inara can reroll a negotiate test
          If WSkill = 3 And Dice < 6 Then
-            x = getPerkAttributeCrew(playerID, "RerollNegotiate")
-            If x > 0 Then
-               If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
+            X = getPerkAttributeCrew(playerID, "RerollNegotiate")
+            If X > 0 Then
+               If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, True)
-                  PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                  PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), playerID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice
                End If
             End If
          End If
@@ -3692,12 +3710,12 @@ Dim frmCrew As frmCrewSel, oneOnOne As Integer
       
       If rst!Contraband <> 0 Then ' could be -neg
          If doMisbehave = 4 Then ' one per Crew with no gear (doMisbehave=4)
-            x = getCrewWithNoGear(playerID)
+            X = getCrewWithNoGear(playerID)
          Else
-            x = rst!Contraband
+            X = rst!Contraband
          End If
          skillcnt = Int(CargoCapacity(playerID) - CargoSpaceUsed(playerID))
-         If skillcnt > x Then skillcnt = x
+         If skillcnt > X Then skillcnt = X
          If skillcnt <> 0 Then
             DB.Execute "UPDATE Players Set Contraband = Contraband + " & skillcnt & " WHERE PlayerID = " & playerID
             PutMsg player.PlayName & IIf(skillcnt > 0, " scored ", " lost ") & skillcnt & " Contraband", playerID, Logic!Gamecntr
@@ -3731,7 +3749,7 @@ End Function
 'this is where we apply the 1000 rules and outcomes of the nav option :(
 'these apply to FULLBURN only. to Full Stop, set fullburndone = True
 Public Function doNav(ByVal CardID, ByVal opt) As Boolean
-Dim SQL, SectorID, skillcnt, x, Y, z
+Dim SQL, SectorID, skillcnt, X, Y, z
 Dim result   '0=win,1-inter,2=fail
 Dim rst As New ADODB.Recordset
 Dim frmShUp As frmShipUpgd, frmBart As frmBarter
@@ -3746,12 +3764,12 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
    If Not rst.EOF Then
       PutMsg player.PlayName & "'s Nav log: " & rst!Details, player.ID, Logic!Gamecntr
       'let the tests begin ... :O  WIN, INTER OR FAIL ?
-      x = 0
-      If rst!Breakdown = 1 Then x = hasShipUpgradeAttribute(player.ID, "IgnoreBreakdowns")
+      X = 0
+      If rst!Breakdown = 1 Then X = hasShipUpgradeAttribute(player.ID, "IgnoreBreakdowns")
       'has breakdown insurance ?
-      If rst!Breakdown = 1 And x > 0 Then
+      If rst!Breakdown = 1 And X > 0 Then
          result = 0
-         PutMsg player.PlayName & "'s Ship is Breakdown Proof!", player.ID, Logic!Gamecntr, True, 0, 0, x
+         PutMsg player.PlayName & "'s Ship is Breakdown Proof!", player.ID, Logic!Gamecntr, True, 0, 0, X
          Exit Function
          
       ElseIf rst!WinProfession > 0 And Not hasCrewAttribute(player.ID, cstrProfession(rst!WinProfession)) Then
@@ -3813,9 +3831,9 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          ElseIf rst!WinFuel = 14 Then ' all you can load
             skillcnt = (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID)) * 2
             Do
-               x = InputBoxx("Select up to " & skillcnt & " Fuel to salvage", "Salvage Fuel", getLeader())
-               If x <= skillcnt And x > -1 Then
-                  skillcnt = x
+               X = InputBoxx("Select up to " & skillcnt & " Fuel to salvage", "Salvage Fuel", CStr(skillcnt), getLeader())
+               If X <= skillcnt And X > -1 Then
+                  skillcnt = X
                   Exit Do
                Else
                   MessBox "Invalid Fuel quantity", "Fuel Requirements", "Ooops", "", getLeader()
@@ -3832,12 +3850,12 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             Do
                Y = varDLookup("Parts", "Players", "PlayerID=" & player.ID)
                If Y = 0 Then Exit Do
-               x = InputBoxx("How many Parts (you have " & Y & ") would you like to sell for $500ea?", "Sell Parts", "0", getLeader())
-               If x > Y Then
+               X = InputBoxx("How many Parts (you have " & Y & ") would you like to sell for $500ea?", "Sell Parts", "0", getLeader())
+               If X > Y Then
                   MessBox "Invalid Parts quantity", "Parts Requirements", "Ooops", "", getLeader()
                Else
-                  If x > 0 Then
-                     DB.Execute "UPDATE Players SET Parts = Parts - " & x & ", Pay = Pay + " & CStr(x * 500) & " WHERE PlayerID=" & player.ID
+                  If X > 0 Then
+                     DB.Execute "UPDATE Players SET Parts = Parts - " & X & ", Pay = Pay + " & CStr(X * 500) & " WHERE PlayerID=" & player.ID
                   End If
                   Exit Do
                End If
@@ -3887,8 +3905,8 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          End If
          
          If rst!WinKillCrew <> 0 Then
-            x = doKillCrews(player.ID, rst!WinKillCrew)
-            If rst!OptionName = "If we're very lucky" And hasShipUpgrade(player.ID, 18) > 0 And x > 0 Then
+            X = doKillCrews(player.ID, rst!WinKillCrew)
+            If rst!OptionName = "If we're very lucky" And hasShipUpgrade(player.ID, 18) > 0 And X > 0 Then
                doDiscardGear player.ID, hasShipUpgrade(player.ID, 18)
                PutMsg player.PlayName & " lost the Reaver-Flage upgrade in the Reaver skuffle", player.ID, Logic!Gamecntr
             End If
@@ -3906,32 +3924,32 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
                   If getMoney(player.ID) < 1000 Then
                      MessBox "You don't have the Cash to make the bet", "Cashflow Problem", "Ooops", "", getLeader()
                   Else
-                     x = RollDice(6)
-                     If x > 4 Then
+                     X = RollDice(6)
+                     If X > 4 Then
                         getMoney player.ID, 2000
-                        PutMsg player.PlayName & " rolls a " & x & " and wins $2000", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, x
+                        PutMsg player.PlayName & " rolls a " & X & " and wins $2000", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, X
                      Else
                         getMoney player.ID, -1000
-                        PutMsg player.PlayName & " rolls a " & x & " and loses $1000", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, x
+                        PutMsg player.PlayName & " rolls a " & X & " and loses $1000", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, X
                      End If
                   End If
                
                Case 3 'Passengers and Fugitives dispute
-                  x = RollDice(6, True) 'use Thrillin heroics roll
-                  skillcnt = x
+                  X = RollDice(6, True) 'use Thrillin heroics roll
+                  skillcnt = X
                   Y = varDLookup("Fugitive", "Players", "PlayerID=" & player.ID)
                   z = varDLookup("Passenger", "Players", "PlayerID=" & player.ID)
-                  If x < (Y + z) Then  'out they go -auto mode. preference to Passengers go first
-                     If x >= Y Then
-                        x = x - Y
+                  If X < (Y + z) Then  'out they go -auto mode. preference to Passengers go first
+                     If X >= Y Then
+                        X = X - Y
                         Y = 0
-                        If x >= z Then
+                        If X >= z Then
                            z = 0
                         Else
-                           z = z - x
+                           z = z - X
                         End If
                      Else
-                        Y = Y - x
+                        Y = Y - X
                      End If
                      DB.Execute "UPDATE Players SET Passenger =" & z & ", Fugitive =" & Y & " WHERE PlayerID=" & player.ID
                      PutMsg player.PlayName & " rolls a " & skillcnt & " and is left with " & z & " Passengers and " & Y & " Fugitives", player.ID, Logic!Gamecntr, True, getLeader(), 0, 0, 0, 0, skillcnt
@@ -3990,8 +4008,8 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             DB.Execute "UPDATE Players Set Cargo = Cargo + " & rst!InterCargo & " WHERE PlayerID = " & player.ID
          End If
          If rst!InterKillCrew <> 0 Then
-            x = doKillCrews(player.ID, rst!InterKillCrew)
-            If rst!OptionName = "If we're very lucky" And hasShipUpgrade(player.ID, 18) > 0 And x > 0 Then
+            X = doKillCrews(player.ID, rst!InterKillCrew)
+            If rst!OptionName = "If we're very lucky" And hasShipUpgrade(player.ID, 18) > 0 And X > 0 Then
                doDiscardGear player.ID, hasShipUpgrade(player.ID, 18)
                PutMsg player.PlayName & " lost the Reaver-Flage upgrade in the Reaver skuffle", player.ID, Logic!Gamecntr
             End If
@@ -4042,8 +4060,8 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             End If
          End If
          If rst!FailKillCrew <> 0 Then
-            x = doKillCrews(player.ID, rst!FailKillCrew)
-            If rst!OptionName = "If we're very lucky" And hasShipUpgrade(player.ID, 18) > 0 And x > 0 Then
+            X = doKillCrews(player.ID, rst!FailKillCrew)
+            If rst!OptionName = "If we're very lucky" And hasShipUpgrade(player.ID, 18) > 0 And X > 0 Then
                doDiscardGear player.ID, hasShipUpgrade(player.ID, 18)
                PutMsg player.PlayName & " lost the Reaver-Flage upgrade in the Reaver skuffle", player.ID, Logic!Gamecntr
             End If
@@ -4130,10 +4148,10 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          Case 4 'alliance pays you a visit
             'for each Wanted Crew: 1-Remove Crew, 2+ Crew safe
             'may use Cry Baby - or other modifiers? eg. Concealed Smuggling Compartments
-            x = isOutlaw(player.ID)
+            X = isOutlaw(player.ID)
             If doMoveAlliance(player.ID, SectorID) Then
                CruiserCutter = SectorID 'set it as faced
-               If Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) And x Then 'only stop if Flying
+               If Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) And X Then 'only stop if Flying
                   frmAction.moseydone = True 'Full Stop!
                   frmAction.fullburndone = True
                End If
@@ -4217,11 +4235,11 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
       End Select
       
       If rst!MovePlayer > 0 Then
-         For x = 1 To rst!MovePlayer
+         For X = 1 To rst!MovePlayer
             moveAutoAI player.ID, 1, True
             drawLine 0, -2, getPlayerSector(player.ID)
             drawLine 1, -2, getPlayerSector(player.ID)
-         Next x
+         Next X
       End If
       
       
@@ -4262,6 +4280,10 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             PutMsg player.PlayName & "'s Nav log: a Warrant has been issued" & IIf(isSolid(player.ID, 5), " and you are no longer Solid with Harken", "") & "!", player.ID, Logic!Gamecntr, True, getLeader()
             'add a Warrant and clear any Solid with Harken (5)
             DB.Execute "UPDATE Players SET Warrants = Warrants + 1" & IIf(discardRoberta(player.ID), "", ", Solid5 = 0") & " WHERE PlayerID = " & player.ID
+            X = varDLookup("Warrants", "Players", "PlayerID =" & player.ID)
+            frmAction.setVisState frmAction.imgWarrants, True
+            frmAction.lblWarrants = X
+            frmAction.lblWarrants.Visible = (X > 0)
          End If
       End If
       If rst!Warrant = -1 Then
@@ -4394,18 +4416,18 @@ Dim frmplayer As New frmSelPlayer
 End Function
 
 Private Function checkFlacGun(ByVal SectorID, Optional ByVal ignore As Boolean = False) As Boolean
-Dim x, g
+Dim X, g
 
    If ignore Then Exit Function 'use when other conditions already fail so as to not trigger the test
 
-   x = getCutterSector(SectorID)
-   If x > 0 Then  'we got company!
+   X = getCutterSector(SectorID)
+   If X > 0 Then  'we got company!
       g = hasShipUpgrade(player.ID, 15)
       If g > 0 Then 'Flac Gun
          If MessBox("Reaver within firing Range, do you want to use the single-use Flac Gun to fend it off?", "Reaver Cutter", "Yes", "No", 0, 0, 15) = 0 Then
             checkFlacGun = True
             doDiscardGear player.ID, g
-            moveAutoAI x
+            moveAutoAI X
             PutMsg player.PlayName & " depleted their Hull-Mounted Flak Gun to fend off a Reaver", player.ID, Logic!Gamecntr
          End If
       End If
@@ -4689,23 +4711,23 @@ Dim SQL, X1, X2, Y1, Y2
 End Sub
 
 Private Sub animatePlayer(ByVal playerID)
-Dim x
-   For x = 1 To 4
-      If x = playerID Then
-         If Verse.Imag(x).Animate2.AnimationState = lvicAniCmdStop Then
-            Verse.Imag(x).Animate2.StartAnimation
+Dim X
+   For X = 1 To 4
+      If X = playerID Then
+         If Verse.Imag(X).Animate2.AnimationState = lvicAniCmdStop Then
+            Verse.Imag(X).Animate2.StartAnimation
          End If
       Else
-         If Verse.Imag(x).Animate2.AnimationState = lvicAniCmdStart Then
-            Verse.Imag(x).Animate2.StopAnimation
-            Verse.Imag(x).ImageIndex = 1
+         If Verse.Imag(X).Animate2.AnimationState = lvicAniCmdStart Then
+            Verse.Imag(X).Animate2.StopAnimation
+            Verse.Imag(X).ImageIndex = 1
          End If
       End If
-   Next x
+   Next X
 End Sub
 
 Private Sub refreshSolid()
-Dim x, s As Boolean
+Dim X, s As Boolean
 Dim SQL
 Dim rst As New ADODB.Recordset
 
@@ -4713,14 +4735,14 @@ Dim rst As New ADODB.Recordset
    rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenStatic, adLockReadOnly
    While Not rst.EOF
-      x = rst!ContactID
-      pic(x).Visible = True
-      s = isSolid(player.ID, x)
-      If Not (pic(x).Tag = "s" And s) Or (pic(x).Tag = "" And Not s) Then  'prevent reloading the same image
-         pic(x).Picture = LoadPicture(App.Path & "\pictures\Solid" & IIf(s, "2", "1") & rst!Picture)
-         pic(x).ToolTipText = IIf(s, "Solid with " & rst!ContactName & " - ", "") & rst!DealDescr & _
-         IIf(x = 5, " Sells Fuel: $100", IIf(rst!cargo = 0, "", " Buys Cargo: $" & rst!cargo & " & Contraband: $" & rst!Contraband))
-         pic(x).Tag = IIf(s, "s", "")
+      X = rst!ContactID
+      pic(X).Visible = True
+      s = isSolid(player.ID, X)
+      If Not (pic(X).Tag = "s" And s) Or (pic(X).Tag = "" And Not s) Then  'prevent reloading the same image
+         pic(X).Picture = LoadPicture(App.Path & "\pictures\Solid" & IIf(s, "2", "1") & rst!Picture)
+         pic(X).ToolTipText = IIf(s, "Solid with " & rst!ContactName & " - ", "") & rst!DealDescr & _
+         IIf(X = 5, " Sells Fuel: $100", IIf(rst!cargo = 0, "", " Buys Cargo: $" & rst!cargo & " & Contraband: $" & rst!Contraband))
+         pic(X).Tag = IIf(s, "s", "")
       End If
       rst.MoveNext
    Wend
@@ -4728,10 +4750,10 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Private Sub clearPicMB()
-Dim x
-   For x = 1 To 4
-      picMB(x).Visible = False
-   Next x
+Dim X
+   For X = 1 To 4
+      picMB(X).Visible = False
+   Next X
 End Sub
 
 Private Function doGamble() As Integer
@@ -4780,7 +4802,7 @@ Dim frmHavn As New frmHaven
 
 End Function
 
-Private Function loadBounties(mnuWorkPop As Object, ByVal SupplyID As Integer, ByVal SectorID, ByRef x)
+Private Function loadBounties(mnuWorkPop As Object, ByVal SupplyID As Integer, ByVal SectorID, ByRef X)
 Dim SQL As String
 Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
 
@@ -4791,25 +4813,25 @@ Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
    While Not rst.EOF
       'see if the bounty is on board
       If hasCrew(player.ID, rst!FugitiveID) Then
-         x = x + 1
-         If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
-         mnuWorkPop(x).Caption = "Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
-         mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
+         X = X + 1
+         If mnuWorkPop.Count < X + 1 Then Load mnuWorkPop(X)
+         mnuWorkPop(X).Caption = "Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+         mnuWorkPop(X).Tag = CStr(rst!CardID * -1)
          
       ElseIf Nz(varDLookup("SupplyID", "SupplyDeck", "CrewID = " & rst!FugitiveID & " AND Seq = " & DISCARDED), 0) = SupplyID And SupplyID > 0 Then 'see if the bounty is at the current supply planet
-         x = x + 1
-         If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
-         mnuWorkPop(x).Caption = "Supply Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
-         mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
+         X = X + 1
+         If mnuWorkPop.Count < X + 1 Then Load mnuWorkPop(X)
+         mnuWorkPop(X).Caption = "Supply Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+         mnuWorkPop(X).Tag = CStr(rst!CardID * -1)
             
       Else 'or Rival crew
          SQL = "SELECT Players.PlayerID FROM Players INNER JOIN PlayerSupplies ON Players.PlayerID = PlayerSupplies.PlayerID WHERE Players.SectorID=" & SectorID & " AND PlayerSupplies.CardID = " & getCrewCardID(rst!FugitiveID)
          rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
          If Not rst2.EOF Then
-            x = x + 1
-            If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
-            mnuWorkPop(x).Caption = "Rival Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
-            mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
+            X = X + 1
+            If mnuWorkPop.Count < X + 1 Then Load mnuWorkPop(X)
+            mnuWorkPop(X).Caption = "Rival Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+            mnuWorkPop(X).Tag = CStr(rst!CardID * -1)
          End If
          rst2.Close
       
@@ -4824,10 +4846,10 @@ Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
    SQL = SQL & "Where ContactDeck.ContactID = 10 And PlayerJobs.JobStatus =0 And Players.SectorID = " & SectorID & " And PlayerJobs.PlayerID <> " & player.ID & " And PlayerJobs.PlayerID > 0 And PlayerJobs.PlayerID <" & DISCARDED
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      x = x + 1
-      If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
-      mnuWorkPop(x).Caption = "Bounty Jump " & rst!JobName & " (" & CStr(rst!CardID) & ")"
-      mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
+      X = X + 1
+      If mnuWorkPop.Count < X + 1 Then Load mnuWorkPop(X)
+      mnuWorkPop(X).Caption = "Bounty Jump " & rst!JobName & " (" & CStr(rst!CardID) & ")"
+      mnuWorkPop(X).Tag = CStr(rst!CardID * -1)
       rst.MoveNext
    Wend
    rst.Close
@@ -4901,20 +4923,20 @@ End Function
 
 Private Function doShowDownSupply(ByVal CrewID) As Boolean
 Dim frmSS As New frmSkillSel, skillcnt As Integer, skill As Integer, Dice As Integer
-Dim Cskillcnt As Integer, Cskill As Integer, CDice As Integer, x, cnt, msg, win As Boolean
+Dim Cskillcnt As Integer, Cskill As Integer, CDice As Integer, X, cnt, msg, win As Boolean
 
    'select skill to use
    frmSS.Show vbModal, Me
    skill = frmSS.skill
    
    'pick highest skill of Fugitive
-   For x = 1 To 3
-      cnt = getSkillCrew(CrewID, cstrSkill(x))
+   For X = 1 To 3
+      cnt = getSkillCrew(CrewID, cstrSkill(X))
       If cnt > Cskillcnt Then
          Cskillcnt = cnt
-         Cskill = x
+         Cskill = X
       End If
-   Next x
+   Next X
       
    'Crazy River Tam (cardID 51/CrewID 32)
    If CrewID = 32 Then
@@ -5089,7 +5111,7 @@ End Sub
 
 ' use for Nav type Skill Tests (not Work)
 Private Function doSkillTest(ByVal skill As Integer, ByVal skillwin As Integer, Optional ByVal skillint As Integer = 0, Optional bribe As Integer = 0, Optional boarding As Integer = 0) As Integer
-Dim skillcnt, skilldiscards, x
+Dim skillcnt, skilldiscards, X
 Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr As frmDiscardGear
 
          'Crazy River Tam (cardID 51/CrewID 32)
@@ -5135,9 +5157,9 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
             End If
          End If
 
-         x = hasGearCrew(player.ID, 28) 'Mal's Brown Coat
-         If x > 0 And varDLookup("Disgruntled", "Crew", "CrewID=" & x) > 0 And varDLookup("Fight", "Crew", "CrewID=" & x) > 0 And skill = 3 Then
-            extraSkill = extraSkill + varDLookup("Fight", "Crew", "CrewID=" & x)
+         X = hasGearCrew(player.ID, 28) 'Mal's Brown Coat
+         If X > 0 And varDLookup("Disgruntled", "Crew", "CrewID=" & X) > 0 And varDLookup("Fight", "Crew", "CrewID=" & X) > 0 And skill = 3 Then
+            extraSkill = extraSkill + varDLookup("Fight", "Crew", "CrewID=" & X)
             PutMsg player.PlayName & "'s Disgruntled Crew wearing the Brown Coat adds their Fight skills to the Negotiation", player.ID, Logic!Gamecntr, True, 0, 28
          End If
             
@@ -5163,10 +5185,10 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
          Dice = RollDice(6, IIf(skill = 2 And hasCrew(player.ID, 55), False, True))
          
          If skill = 1 And hasGear(player.ID, 47) Then ' Zoe's Mare's Leg Rifle -When making a Fight Test, roll two dice and use the highest.
-            x = RollDice(6, True)
-            If x > Dice Then
-               PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(x), player.ID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, x, skill
-               Dice = x
+            X = RollDice(6, True)
+            If X > Dice Then
+               PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(X), player.ID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, X, skill
+               Dice = X
             End If
          End If
          
@@ -5179,9 +5201,9 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
                PutMsg player.PlayName & " uses Wash's Lucky Dinosaurs to reRoll a 1 and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, 0, 56, 0, 0, 0, Dice, skill
                
             ElseIf hasGear(player.ID, 35) And skill = 1 Then 'Inara's Bow
-               x = hasGearCrew(player.ID, 35)
-               If x > 0 Then
-                  If hasCrewAttribute(player.ID, "Companion", 0, x) Then
+               X = hasGearCrew(player.ID, 35)
+               If X > 0 Then
+                  If hasCrewAttribute(player.ID, "Companion", 0, X) Then
                      Do While Dice = 1
                         Dice = RollDice(6, True)
                      Loop
@@ -5193,31 +5215,31 @@ Dim Dice As Integer, riverskill As Integer, extraSkill As Integer, frmDiscardGr 
 
          'Zoe's skill can reroll a fight test
          If skill = 1 And Dice < 6 Then
-            x = getPerkAttributeCrew(player.ID, "RerollFight")
-            If x > 0 Then
-               If MessBox("You rolled a " & Dice & vbNewLine & "Your Fight Skills allow you a re-roll, do you want to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
+            X = getPerkAttributeCrew(player.ID, "RerollFight")
+            If X > 0 Then
+               If MessBox("You rolled a " & Dice & vbNewLine & "Your Fight Skills allow you a re-roll, do you want to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, True)
-                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice, skill
+                  PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice, skill
                End If
             End If
          End If
          'Kaylee can reroll a Tech test
          If skill = 2 And Dice < 6 Then
-            x = getPerkAttributeCrew(player.ID, "RerollTech")
-            If x > 0 Then
-               If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
+            X = getPerkAttributeCrew(player.ID, "RerollTech")
+            If X > 0 Then
+               If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, IIf(hasCrew(player.ID, 55), False, True))
-                  PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice, skill
+                  PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice, skill
                End If
             End If
          End If
          'Inara can reroll a negotiate test
          If skill = 3 And Dice < 6 Then
-            x = getPerkAttributeCrew(player.ID, "RerollNegotiate")
-            If x > 0 Then
-               If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
+            X = getPerkAttributeCrew(player.ID, "RerollNegotiate")
+            If X > 0 Then
+               If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
                   Dice = RollDice(6, True)
-                  PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice, skill
+                  PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice, skill
                End If
             End If
          End If
@@ -5295,7 +5317,7 @@ End Function
 
 'mode = 0 normal work test. 1= showdown defend. 2= showdown attack
 Private Function doWorkSkillTest(ByRef Dice As Integer, ByVal WSkill As Integer, Optional ByVal skillwin As Integer = 0, Optional ByVal skillint As Integer = 0, Optional ByVal mode As Integer = 0) As Integer
-Dim x, bribe As Integer
+Dim X, bribe As Integer
 Dim riverskill As Integer, frmDiscardGr As frmDiscardGear
 Dim skillcnt, skilldiscards, extraSkill As Integer
 
@@ -5358,9 +5380,9 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
                End If
             End If
             
-            x = hasGearCrew(player.ID, 28) 'Mal's Brown Coat
-            If x > 0 And varDLookup("Disgruntled", "Crew", "CrewID=" & x) > 0 And varDLookup("Fight", "Crew", "CrewID=" & x) > 0 And WSkill = 3 Then
-               extraSkill = extraSkill + varDLookup("Fight", "Crew", "CrewID=" & x)
+            X = hasGearCrew(player.ID, 28) 'Mal's Brown Coat
+            If X > 0 And varDLookup("Disgruntled", "Crew", "CrewID=" & X) > 0 And varDLookup("Fight", "Crew", "CrewID=" & X) > 0 And WSkill = 3 Then
+               extraSkill = extraSkill + varDLookup("Fight", "Crew", "CrewID=" & X)
                PutMsg player.PlayName & "'s Disgruntled Crew wearing the Brown Coat adds their Fight skills to the Negotiation", player.ID, Logic!Gamecntr, True, 0, 28
             End If
             
@@ -5391,18 +5413,18 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
             Dice = RollDice(6, IIf(WSkill = 2 And hasCrew(player.ID, 55), False, True))
             
             If WSkill = 1 And hasGear(player.ID, 47) Then ' Zoe's Mare's Leg Rifle -When making a Fight Test, roll two dice and use the highest.
-               x = RollDice(6, True)
-               If x > Dice Then
-                  PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(x), player.ID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, x
-                  Dice = x
+               X = RollDice(6, True)
+               If X > Dice Then
+                  PutMsg player.PlayName & " had rolled a " & CStr(Dice) & " so using Zoe's Mare's Leg Rifle rerolled a " & CStr(X), player.ID, Logic!Gamecntr, True, 0, 47, 0, 0, 0, X
+                  Dice = X
                End If
             End If
             
             If Dice = 1 Then  'reroll ones?
                If hasGear(player.ID, 35) And WSkill = 1 Then 'Inara's Bow
-                  x = hasGearCrew(player.ID, 35)
-                  If x > 0 Then
-                     If hasCrewAttribute(player.ID, "Companion", 0, x) Then
+                  X = hasGearCrew(player.ID, 35)
+                  If X > 0 Then
+                     If hasCrewAttribute(player.ID, "Companion", 0, X) Then
                         Do While Dice = 1
                            Dice = RollDice(6, True)
                         Loop
@@ -5414,33 +5436,33 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
             
             'Zoe's skill can reroll a Fight test
             If WSkill = 1 And Dice < 6 Then
-               x = getPerkAttributeCrew(player.ID, "RerollFight")
-               If x > 0 Then
-                  If MessBox("You rolled a " & Dice & vbNewLine & "Your Fight Skills allow you a re-roll, do you want to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
+               X = getPerkAttributeCrew(player.ID, "RerollFight")
+               If X > 0 Then
+                  If MessBox("You rolled a " & Dice & vbNewLine & "Your Fight Skills allow you a re-roll, do you want to take that extra chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
                      Dice = RollDice(6, True)
-                     PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                     PutMsg player.PlayName & " uses extra Fight Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice
                   End If
                End If
             End If
             
             'Kaylee can reroll a Tech test
             If WSkill = 2 And Dice < 6 Then
-               x = getPerkAttributeCrew(player.ID, "RerollTech")
-               If x > 0 Then
-                  If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
+               X = getPerkAttributeCrew(player.ID, "RerollTech")
+               If X > 0 Then
+                  If MessBox("You rolled a " & Dice & vbNewLine & "Your Tech Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
                      Dice = RollDice(6, IIf(WSkill = 3 And hasCrew(player.ID, 55), False, True))
-                     PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                     PutMsg player.PlayName & " uses extra Tech Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice
                   End If
                End If
             End If
          
             'Inara can reroll a negotiate test
             If WSkill = 3 And Dice < 6 Then
-               x = getPerkAttributeCrew(player.ID, "RerollNegotiate")
-               If x > 0 Then
-                  If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", x, 0, 0, Dice) = 0 Then
+               X = getPerkAttributeCrew(player.ID, "RerollNegotiate")
+               If X > 0 Then
+                  If MessBox("You rolled a " & Dice & vbNewLine & "Your Negotiation Skills allow you a re-roll, do you want to take that chance?", "Re-Roll option", "Re-roll", "Keep", X, 0, 0, Dice) = 0 Then
                      Dice = RollDice(6, True)
-                     PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, x, 0, 0, 0, 0, Dice
+                     PutMsg player.PlayName & " uses extra Negotiation Skills to reRoll and got a " & CStr(Dice), player.ID, Logic!Gamecntr, True, X, 0, 0, 0, 0, Dice
                   End If
                End If
             End If
@@ -5524,7 +5546,7 @@ End Function
 
 Public Function getPerkCount(ByVal Attrib As String, ByVal keyword As String, ByVal mode As Integer) As Integer
 Dim rst As New ADODB.Recordset
-Dim SQL, x As Integer
+Dim SQL, X As Integer
 
    SQL = "SELECT Perk.Fight, Crew.CrewName, SupplyDeck.CrewID "
    SQL = SQL & "FROM Perk INNER JOIN (Crew INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) "
@@ -5532,9 +5554,9 @@ Dim SQL, x As Integer
    SQL = SQL & "WHERE PlayerSupplies.OffJob=0 AND Perk." & Attrib & " > 0 AND Perk." & Attrib & " <= " & mode & " AND Perk.Keyword='" & keyword & "' AND PlayerSupplies.PlayerID=" & player.ID
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      x = rst.Fields(Attrib)
-      getPerkCount = getPerkCount + x
-      PutMsg player.PlayName & "'s " & rst!CrewName & " adds " & x & " more to the Showdown " & Attrib & " skill", player.ID, Logic!Gamecntr, True, rst!CrewID
+      X = rst.Fields(Attrib)
+      getPerkCount = getPerkCount + X
+      PutMsg player.PlayName & "'s " & rst!CrewName & " adds " & X & " more to the Showdown " & Attrib & " skill", player.ID, Logic!Gamecntr, True, rst!CrewID
       rst.MoveNext
    Wend
    rst.Close

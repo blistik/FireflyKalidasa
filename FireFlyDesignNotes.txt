@@ -2,11 +2,19 @@ Firefly The PC Game: Project Commenced 27 Feb 2021 - Completed first release 24 
 
 Dev Ideas:
 
-
 Test Issues pending: 
 
-
 Version updates:
+v 1.10.2 ~ 4 December 2024
+add: Deals menu item - show "Bounties" only
+gui: sort Contact's Jobs by most lucrative first
+gui: add option to cancel a long range scan of alert tokens
+gui: fugitive’s mini pic displayed on bounties 
+fix: restrict jobs accepted from a Contact to 2
+fix: Nav option "fill her up". Fill Value now defaults to storage available.
+fix: Test on Job completion for optional Keyword only when player has that keyword.
+fix: prevent accidental 2nd click on "complete" Deals & Buys breaking the logic.
+
 v 1.10.1 ~ 12 August 2024
 add: new Board refresh handling to improve perf.
 add: Gun Hand 16x16 pics to setup package

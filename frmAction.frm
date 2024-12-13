@@ -1731,10 +1731,13 @@ Private Sub imgResolve_Click()
           
          .Tag = "1"
          
-         MessBox "Select an Alert Token to resolve", "Alert Token", "Will Do", "", getLeader()
-         actionSeq = ASResolveAlert
+         If MessBox("Select an adjacent Sector containing Alert Tokens to have them resolved using the Long-Range Scanner Array", "Long-Range Scanner Array", "Will Do", "Cancel that", 0, 0, 16) = 1 Then
+            imgResolve.Tag = "Y"
+            imgResolve.Picture = LoadPictureGDIplus(App.Path & "\gui\Bonus2AlertsActive.jpg")
+         Else
+            actionSeq = ASResolveAlert
+         End If
          
-          
       End If
    End With
 End Sub
@@ -2012,6 +2015,8 @@ Private Sub imgShop_Click()
          Case ASBuySelDiscard
       '            'save selected card as Seq = 6 and draw cards up to 3
             actionSeq = ASBuyDrew 'bounce back and refresh formAction via timer
+         Case ASBuyEnd
+            playsnd 9
          Case Else
             actionSeq = ASBuy
          End Select
@@ -2096,6 +2101,8 @@ Private Sub imgDealer_Click()
          Case ASDealSelDiscard
             'save selected card as Seq = 6 and draw cards up to 3
             actionSeq = ASDealDrew 'bounce back and refresh formAction via timer
+         Case ASDealEnd
+            playsnd 9
          Case Else
             actionSeq = ASDeal
          End Select
