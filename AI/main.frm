@@ -1366,7 +1366,7 @@ End Function
 
 Public Function completeJob(ByVal CardID, ByVal JobID)
 Dim rst As New ADODB.Recordset, jobpay, crewpay, perk As Integer
-Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer, contact As Integer
+Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer, contact As Integer, parts As Integer
       Set rst = New ADODB.Recordset
       SQL = "SELECT Pay, WinResult, ContactID, JobTypeID, JobType2D, Job.* FROM Job INNER JOIN ContactDeck ON Job.JobID = ContactDeck.Job" & JobID & "ID WHERE ContactDeck.CardID=" & CardID
       rst.CursorLocation = adUseClient
@@ -1376,8 +1376,9 @@ Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer,
          passgr = IIf(rst!Passenger = -14, -7, rst!Passenger)
          fugi = IIf(rst!Fugitive = -14, -7, rst!Fugitive)
          contact = rst!ContactID
+         parts = rst!parts
          
-         DB.Execute "UPDATE Players SET Fuel = Fuel + " & rst!fuel & ", Parts = Parts + " & rst!parts & ", Cargo = Cargo + " & rst!cargo & ", Contraband = Contraband + " & contra & ", Passenger = 0, Fugitive = Fugitive + " & fugi & IIf(contact = 10 Or contact = 0, "", ", Solid" & rst!ContactID & "= 1") & " WHERE PlayerID=" & player.ID
+         DB.Execute "UPDATE Players SET Fuel = Fuel + " & rst!fuel & ", Parts = Parts + " & parts & ", Cargo = Cargo + " & rst!cargo & ", Contraband = Contraband + " & contra & ", Passenger = 0, Fugitive = Fugitive + " & fugi & IIf(contact = 10 Or contact = 0, "", ", Solid" & rst!ContactID & "= 1") & " WHERE PlayerID=" & player.ID
 
          DB.Execute "UPDATE PlayerJobs SET JobStatus = 3 WHERE PlayerID = " & player.ID & " AND CardID = " & CardID
          
@@ -1413,13 +1414,13 @@ Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer,
          DB.Execute "UPDATE Players SET Pay = Pay + " & CStr(jobpay - crewpay) & " WHERE PlayerID = " & player.ID
          
          msg = IIf(rst!fuel = 0, "", Abs(rst!fuel) & " Fuel")
-         msg = msg & IIf(rst!parts = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(rst!parts) & " Part" & IIf(rst!parts < -1, "s", ""))
+         msg = msg & IIf(parts = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(parts) & " Part" & IIf(Abs(parts) > 1, "s", ""))
          msg = msg & IIf(rst!cargo = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(rst!cargo) & " Cargo")
          msg = msg & IIf(contra = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(contra) & " Contraband")
-         msg = msg & IIf(passgr = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(passgr) & " Passenger" & IIf(passgr < -1, "s", ""))
-         msg = msg & IIf(fugi = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(fugi) & " Fugitive" & IIf(fugi < -1, "s", ""))
+         msg = msg & IIf(passgr = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(passgr) & " Passenger" & IIf(Abs(passgr) > 1, "s", ""))
+         msg = msg & IIf(fugi = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(fugi) & " Fugitive" & IIf(Abs(fugi) > 1, "s", ""))
          
-         PutMsg player.PlayName & IIf(msg = "", "", " unloaded " & msg & " and") & " completed Job " & targetJobCard & " for $" & CStr(jobpay - crewpay) & IIf(contact = 10 Or contact = 0, "", " and is Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!ContactID)), player.ID, Logic!GameCntr
+         PutMsg player.PlayName & IIf(msg = "", "", " moved " & msg & " and") & " completed Job " & targetJobCard & " for $" & CStr(jobpay - crewpay) & IIf(contact = 10 Or contact = 0, "", " and is Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!ContactID)), player.ID, Logic!GameCntr
          
       End If
       rst.Close
@@ -2383,13 +2384,6 @@ Dim Skilltype As Integer, skill As Integer, Dice As Integer
 Dim x As Integer, y As Integer
 
    skill = getMySkill(Skilltype)
-'   For x = 1 To 3
-'      y = getSkill(player.ID, cstrSkill(x), 1)
-'      If y > skill Then
-'         Skilltype = x
-'         skill = y
-'      End If
-'   Next x
 
    Dice = RollDice(6, True)
    If hasCrew(player.ID, 90) And Dice = 1 Then
@@ -2423,13 +2417,6 @@ Dim CSkilltype As Integer, Cskill As Integer, CDice As Integer, cnt, msg, win As
    CrewCardID = getCrewCardID(FugitiveID)
 
    skill = getMySkill(Skilltype)
-   '   For x = 1 To 3
-   '      y = getSkill(player.ID, cstrSkill(x), 1)
-   '      If y > skill Then
-   '         Skilltype = x
-   '         skill = y
-   '      End If
-   '   Next x
 
    Dice = RollDice(6, True)
    
@@ -2437,8 +2424,8 @@ Dim CSkilltype As Integer, Cskill As Integer, CDice As Integer, cnt, msg, win As
    For x = 1 To 3
       cnt = getSkillCrew(FugitiveID, cstrSkill(x))
       If cnt > CSkilltype Then
-         CSkilltype = cnt
-         Cskill = x
+         CSkilltype = x
+         Cskill = cnt
       End If
    Next x
       
@@ -2517,8 +2504,6 @@ End Function
 
 Private Function processBountyJump(ByVal bountyCardID As Integer) As Boolean
 Dim DefenderID As Integer, killCrew, FugitiveID As Integer, CardID As Integer
-'Dim rst As New ADODB.Recordset,SQL As String
-'Dim ASkill, DSkill, ADice, DDice
 Dim msg As String
 
    If bountyCardID = 0 Then Exit Function
@@ -2606,9 +2591,6 @@ Dim x
    dist = 1000
    
    'return Players with a Claimed Fugitive or Crew with a bounty on them
-'   SQL = "SELECT Players.PlayerID, Players.SectorID, ContactDeck.CardID "
-'   SQL = SQL & "FROM Players INNER JOIN (PlayerJobs INNER JOIN ContactDeck ON PlayerJobs.CardID = ContactDeck.CardID) ON Players.PlayerID = PlayerJobs.PlayerID"
-'   SQL = SQL & " WHERE ContactDeck.ContactID=10 AND PlayerJobs.JobStatus=0 ORDER BY Players.Pay DESC"
    SQL = "SELECT Players.PlayerID, Players.SectorID, ContactDeck.CardID, Players.Pay, ContactDeck.Pay"
    SQL = SQL & " FROM ContactDeck INNER JOIN ((Players INNER JOIN PlayerSupplies ON Players.PlayerID = PlayerSupplies.PlayerID) INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON ContactDeck.FugitiveID = SupplyDeck.CrewID"
    SQL = SQL & " Where ContactDeck.ContactID = 10 And ContactDeck.Seq = 5 AND Players.PlayerID <> " & player.ID

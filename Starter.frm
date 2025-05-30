@@ -9,6 +9,7 @@ Begin VB.Form Starter
    ClientWidth     =   7350
    Icon            =   "Starter.frx":0000
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   4770
@@ -372,7 +373,10 @@ Dim supplyInit, contactInit
             End If
             'Opt(x).Enabled = False
          Next X
-         If IsEmpty(col) Or txt.Text = "" Then Exit Sub
+         If IsEmpty(col) Or txt.Text = "" Then
+            MessBox "Please enter your player name", "Ship taken", "Ooops", "", 0, 0, 0, 0, 3
+            Exit Sub
+         End If
          rst.CursorLocation = adUseClient
          rst.Open "SELECT * FROM Players WHERE Colour = '" & col & "' ORDER BY PlayerID", DB, adOpenStatic, adLockReadOnly
          If IsNull(rst!Name) Then

@@ -660,7 +660,7 @@ End Sub
 Private Sub Timing_Timer()
 Dim status As Variant, errh, thisplayer As Integer
 Dim SectorID, ContactID As Integer, SupplyID As Integer, X, Y As Integer
-Dim maxConsider
+Dim maxConsider, StartSectorIDs As String, a() As String
 On Error GoTo err_handler
 
    SectorID = getPlayerSector(player.ID)
@@ -694,20 +694,34 @@ On Error GoTo err_handler
    ElseIf status = "S" And thisplayer = player.ID And pickStartSector = 0 Then  'your go to pick starting sector on MAP
       Verse.Caption = "the 'Verse - " & varDLookup("StoryTitle", "Story", "StoryID = " & Logic!StoryID)
       NumOfReavers = varDLookup("NoOfReavers", "Story", "StoryID = " & Logic!StoryID)
-      'set game ships
-      For X = 5 To 6 + NumOfReavers
-         MoveShip X, varDLookup("StartSectorID", "Players", "PlayerID=" & CStr(X))
-      Next X
-      PutMsg player.PlayName & " selecting Start Sector", player.ID, Logic!Gamecntr
-      
-      If useHavens(Logic!StoryID) Then
-         MessBox "Click on the Planet Sector to be your Haven", "Pick your Haven", "Will do", "", getLeader()
-      Else
-         MessBox "Click on the Sector you want to start in", "Place your Ship", "Will do", "", getLeader()
+      StartSectorIDs = Nz(varDLookup("StartSectorIDs", "Story", "StoryID = " & Logic!StoryID))
+      If StartSectorIDs <> "" Then  'use story driven starting sectors
+         a = Split(StartSectorIDs, ",")
+         For X = 5 To 6 + NumOfReavers
+            MoveShip X, IIf(Val(a(X - 1)) = 0, varDLookup("StartSectorID", "Players", "PlayerID=" & CStr(X)), Val(a(X - 1)))
+         Next X
+         If Val(a(player.ID - 1)) > 0 Then
+            MoveShip player.ID, Val(a(player.ID - 1))
+            pickStartSector = 2  'flag the selection is done
+         Else
+            MessBox "Click on the Sector you want to start in", "Place your Ship", "Will do", "", getLeader()
+            pickStartSector = 1
+         End If
+      Else  'use the default setup params
+         'set game ships
+         For X = 5 To 6 + NumOfReavers
+            MoveShip X, varDLookup("StartSectorID", "Players", "PlayerID=" & CStr(X))
+         Next X
+         PutMsg player.PlayName & " selecting Start Sector", player.ID, Logic!Gamecntr
+         
+         If useHavens(Logic!StoryID) Then
+            MessBox "Click on the Planet Sector to be your Haven", "Pick your Haven", "Will do", "", getLeader()
+         Else
+            MessBox "Click on the Sector you want to start in", "Place your Ship", "Will do", "", getLeader()
+         End If
+         
+         pickStartSector = 1
       End If
-      
-      pickStartSector = 1
-      
    ElseIf status = "S" And thisplayer = player.ID And pickStartSector = 2 Then  'setup
       PutMsg player.PlayName & "'s on the Map", player.ID, Logic!Gamecntr
       
@@ -4726,7 +4740,7 @@ Dim X
    Next X
 End Sub
 
-Private Sub refreshSolid()
+Public Sub refreshSolid()
 Dim X, s As Boolean
 Dim SQL
 Dim rst As New ADODB.Recordset

@@ -453,7 +453,7 @@ Dim rst As New ADODB.Recordset, SQL, CrewID, crewcnt, imposter
                imposter = 54
             End If
          End If
-         PutMsg player.PlayName & " hires " & rst!CrewName, player.ID, Logic!GameCntr
+         PutMsg player.PlayName & " hires " & rst!CrewName, player.ID, Logic!Gamecntr
          If imposter > 0 Then
             PutMsg getCrewName(0, imposter) & " has turned up as " & rst!CrewName & " on " & player.PlayName & "'s Ship"
          End If
@@ -588,7 +588,7 @@ Dim rst As New ADODB.Recordset
 
     If Not rst.EOF Then
        'set my cntr to current Game Seq
-       DB.Execute "UPDATE Players SET Seq = " & CStr(Logic!GameCntr) & " WHERE PlayerID = " & playerID
+       DB.Execute "UPDATE Players SET Seq = " & CStr(Logic!Gamecntr) & " WHERE PlayerID = " & playerID
        'rst!Seq = Logic!GameCntr 'set my go as done
        'rst.Update
        rst.MoveNext
@@ -601,8 +601,8 @@ Dim rst As New ADODB.Recordset
        'Logic.Requery
        'Logic.Update "Player", setNextPlayer
        
-       If rst!Seq = Logic!GameCntr Then  'round over, increment GameCntr
-          DB.Execute "UPDATE GameSeq SET GameCntr = " & CStr(Logic!GameCntr + 1)
+       If rst!Seq = Logic!Gamecntr Then  'round over, increment GameCntr
+          DB.Execute "UPDATE GameSeq SET GameCntr = " & CStr(Logic!Gamecntr + 1)
           'Logic!GameCntr = Logic!GameCntr + 1
           'Logic.Update
        End If
@@ -620,7 +620,7 @@ Dim rst As New ADODB.Recordset
 
     If Not rst.EOF Then
        'set my cntr to current Game Seq
-       DB.Execute "UPDATE Players SET Seq = " & CStr(Logic!GameCntr) & " WHERE PlayerID = " & playerID
+       DB.Execute "UPDATE Players SET Seq = " & CStr(Logic!Gamecntr) & " WHERE PlayerID = " & playerID
        'rst!Seq = Logic!GameCntr 'set my go as done
        'rst.Update
        rst.MoveNext
@@ -629,12 +629,12 @@ Dim rst As New ADODB.Recordset
          rst.MoveFirst
        End If
        
-       If rst!Seq = Logic!GameCntr Then  'round over, increment GameCntr
+       If rst!Seq = Logic!Gamecntr Then  'round over, increment GameCntr
           setNextPlayerREV = player.ID
           If nextStatus <> "" Then
              DB.Execute "UPDATE GameSeq SET Seq = '" & nextStatus & "'"
           End If
-          DB.Execute "UPDATE GameSeq SET Player=" & CStr(player.ID) & ", GameCntr = " & CStr(Logic!GameCntr + 1)
+          DB.Execute "UPDATE GameSeq SET Player=" & CStr(player.ID) & ", GameCntr = " & CStr(Logic!Gamecntr + 1)
           'Logic!player = player.ID
           'Logic!GameCntr = Logic!GameCntr + 1
           'Logic.Update
@@ -802,7 +802,7 @@ Dim SQL
       'remove crew from supply
       DB.Execute "UPDATE SupplyDeck SET Seq =0 WHERE CardID = " & rst!CrewCardID
       getBounty = rst!CardID
-      PutMsg player.PlayName & " claims a Bounty " & rst!JobName, player.ID, Logic!GameCntr
+      PutMsg player.PlayName & " claims a Bounty " & rst!JobName, player.ID, Logic!Gamecntr
    End If
    rst.Close
    If Not IsEmpty(getBounty) Then
@@ -829,7 +829,7 @@ Dim SQL
       'add the card to the players deck
       DB.Execute "INSERT INTO PlayerJobs (PlayerID, CardID) VALUES (" & player.ID & ", " & rst!CardID & ")"
       getJob = rst!CardID
-      PutMsg player.PlayName & " picks up a new Job " & getJob, player.ID, Logic!GameCntr
+      PutMsg player.PlayName & " picks up a new Job " & getJob, player.ID, Logic!Gamecntr
    End If
    rst.Close
    SQL = "SELECT Seq FROM ContactDeck WHERE Seq > 5 AND ContactID = " & ContactID & " Order by Seq"
@@ -1209,7 +1209,7 @@ Dim c() As String
    If playerID = 6 Then 'moving the Corvette, check a Reaver is not here
       x = getCutterSector(SectorID)
       If x > 0 Then 'move this reaver back to Reaver Space
-         PutMsg "The Corvette chases a Reaver Cutter off, which hightails it back to Reaver Space", playerID, Logic!GameCntr
+         PutMsg "The Corvette chases a Reaver Cutter off, which hightails it back to Reaver Space", playerID, Logic!Gamecntr
          'check there is room
          If getCutterSector(120) > 0 And getCutterSector(121) > 0 And getCutterSector(122) > 0 Then 'full house, goto 121 instead
             DB.Execute "UPDATE Players SET SectorID = 121 WHERE PlayerID = " & x
@@ -1652,9 +1652,9 @@ Dim SQL
             'clear any reaver tokens  'these are permanent min 1
             changeToken SectorID, -1, False
             MoveShip resolveToken, SectorID
-            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Alliance Alert Level " & CStr(rst!AToken) & ", and got a nasty surprise by rolling a " & x, player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Alliance Alert Level " & CStr(rst!AToken) & ", and got a nasty surprise by rolling a " & x, player.ID, Logic!Gamecntr
          Else
-            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Alliance Alert Level " & CStr(rst!AToken) & ", but found it all clear by rolling a " & x, player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Alliance Alert Level " & CStr(rst!AToken) & ", but found it all clear by rolling a " & x, player.ID, Logic!Gamecntr
          End If
          'rst!AToken = 0  'clear Alliance tokens
          'rst.Update
@@ -1668,15 +1668,15 @@ Dim SQL
             resolveToken = 6 + RollDice(NumOfReavers)
             If resolveToken > 6 + NumOfReavers Then resolveToken = 6 + NumOfReavers
             MoveShip resolveToken, SectorID
-            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Reaver Alert Level " & CStr(rst!Token) & ", and got a nasty surprise by rolling a " & x, player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Reaver Alert Level " & CStr(rst!Token) & ", and got a nasty surprise by rolling a " & x, player.ID, Logic!Gamecntr
          Else
-            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Reaver Alert Level " & CStr(rst!Token) & ", but found it all clear by rolling a " & x, player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Reaver Alert Level " & CStr(rst!Token) & ", but found it all clear by rolling a " & x, player.ID, Logic!Gamecntr
          End If
          DB.Execute "UPDATE Board SET Token = " & IIf(SectorID > 119 And SectorID < 123, "1", "0") & " WHERE SectorID = " & SectorID
 
       ElseIf rst!Token > 0 And getCutterSector(SectorID) > 0 And Not alliance Then 'reaver already there, just clear the token
          DB.Execute "UPDATE Board SET Token = " & IIf(SectorID > 119 And SectorID < 123, "1", "0") & " WHERE SectorID = " & SectorID
-         PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Reaver Alert Level " & CStr(rst!Token) & ", clearing the Alert and noting the known threat there", player.ID, Logic!GameCntr
+         PutMsg player.PlayName & " " & IIf(adjacent, "scanned", "entered") & " a Sector on Reaver Alert Level " & CStr(rst!Token) & ", clearing the Alert and noting the known threat there", player.ID, Logic!Gamecntr
       End If
 
    
@@ -1705,7 +1705,7 @@ Dim SQL, leader
    If hasCrewAttribute(playerID, "Disgruntled", 0, leader) And (mode = 2 Or (mode = 1 And hasCrewAttribute(playerID, "Moral", 0, leader))) And (CrewID = 0 Or CrewID = leader) Then
       mode = 4 'all fired regardless of original mode
       If getCrewCount(playerID) > 1 Then
-         PutMsg player.PlayName & "'s entire Crew has been Fired by a disgruntled Captain!", playerID, Logic!GameCntr, True, leader
+         PutMsg player.PlayName & "'s entire Crew has been Fired by a disgruntled Captain!", playerID, Logic!Gamecntr, True, leader
       End If
       
    Else
@@ -1734,7 +1734,7 @@ Dim SQL, leader
                   'remove Disgruntled
                   DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & rst!CrewID
                   If rst!CrewID <> leader Then
-                     PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " left the Ship, fully disgruntled", playerID, Logic!GameCntr
+                     PutMsg player.PlayName & "'s Crew member " & rst!CrewName & " left the Ship, fully disgruntled", playerID, Logic!Gamecntr
                      'remove any Gear from Crew
                      DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE PlayerID = " & playerID & " AND CrewID = " & rst!CrewID
                      'remove from players hand
@@ -1877,7 +1877,7 @@ Dim SQL, Dice As Integer, cnt As Integer
          Dice = RollDice(6)
       End If
       If Dice > 4 Then
-         PutMsg player.PlayName & "'s Medic saved " & rst!CrewName, player.ID, Logic!GameCntr
+         PutMsg player.PlayName & "'s Medic saved " & rst!CrewName, player.ID, Logic!Gamecntr
       Else
          'update their pile status - 0 removed, 5 -discarded
          DB.Execute "UPDATE SupplyDeck SET Seq =5 WHERE CardID = " & rst!CardID
@@ -1887,7 +1887,7 @@ Dim SQL, Dice As Integer, cnt As Integer
          DB.Execute "DELETE FROM PlayerSupplies WHERE PlayerID =" & player.ID & " AND CardID = " & rst!CardID
          'clear disgruntled
          DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & rst!CrewID
-         PutMsg player.PlayName & " lost " & rst!CrewName & " in the meelee", player.ID, Logic!GameCntr
+         PutMsg player.PlayName & " lost " & rst!CrewName & " in the meelee", player.ID, Logic!Gamecntr
       End If
       cnt = cnt + 1
       If cnt = killCrew Then Exit Do
@@ -2427,10 +2427,10 @@ Dim rst As New ADODB.Recordset, SQL, goaldone As Boolean
 
    If CheckWon = True Then
       playsnd 5, True
-      DB.Execute "INSERT INTO Scores (StoryID,PlayerName,Turns,StartDate,PlayDate) Values (" & CStr(Logic!StoryID) & ",'" & SQLFilter(player.PlayName) & "'," & CStr(Logic!GameCntr - 1) & ", " & SQLDate(varDLookup("EventTime", "Events", "Event ='" & player.PlayName & "''s on the Map'")) & ", " & SQLNow & ")"
+      DB.Execute "INSERT INTO Scores (StoryID,PlayerName,Turns,StartDate,PlayDate) Values (" & CStr(Logic!StoryID) & ",'" & SQLFilter(player.PlayName) & "'," & CStr(Logic!Gamecntr - 1) & ", " & SQLDate(varDLookup("EventTime", "Events", "Event ='" & player.PlayName & "''s on the Map'")) & ", " & SQLNow & ")"
 
       'DB.Execute "INSERT INTO Scores (StoryID,PlayerName,Turns,StartDate,PlayDate) Values (" & CStr(Logic!StoryID) & ",'" & SQLFilter(player.PlayName) & "'," & CStr(Logic!GameCntr - 1) & ", #" & Format(varDLookup("EventTime", "Events", "Event ='" & player.PlayName & "''s on the Map'"), "MM-DD-YY HH:nn") & "#, #" & Format(Now, "MM-DD-YY HH:nn") & "#)"
-      PutMsg PlayCode(playerID).PlayName & " has WON the Game in " & Logic!GameCntr - 1 & " turns", playerID, Logic!GameCntr
+      PutMsg PlayCode(playerID).PlayName & " has WON the Game in " & Logic!Gamecntr - 1 & " turns", playerID, Logic!Gamecntr
    End If
 
 
@@ -2439,7 +2439,7 @@ End Function
 
 Private Function doGoalCheck(ByVal playerID, ByVal StoryID, ByVal Goal, ByVal Seq, ByRef goaldone As Boolean) As Boolean
 Dim rst As New ADODB.Recordset, a() As String
-Dim SQL, x, cnt As Integer
+Dim SQL, x, cnt As Integer, ContactID As Integer
    goaldone = False
    If Goal = -1 Then Exit Function
    goaldone = True 'until proven otherwise
@@ -2524,6 +2524,19 @@ Dim SQL, x, cnt As Integer
       If goaldone Then
          addGoal playerID, 1
          ContactList = getContactList(StoryID)
+         'check if we get solid
+         ContactID = rst!doSolid
+         If ContactID = 0 Then
+            'pass
+         ElseIf ContactID = 5 And hasWarrant() Then
+            'no solid
+         Else
+            SQL = "UPDATE Players SET "
+            SQL = SQL & " Solid" & ContactID & "=1 "  'setting SOLID with the Contact
+            PutMsg player.PlayName & " is solid with " & varDLookup("ContactName", "Contact", "ContactID=" & ContactID), playerID, Logic!Gamecntr
+            SQL = SQL & " Where playerID = " & playerID
+            DB.Execute SQL
+         End If
       End If
       
       'if we here and goaldone, we good to deliver job
@@ -2534,7 +2547,7 @@ Dim SQL, x, cnt As Integer
       
        ' we good to give new instructions
       If goaldone And Nz(rst!Instructions) <> "" And Not doGoalCheck Then
-         PutMsg player.PlayName & " has completed Goal " & Goal + 1 & vbNewLine & rst!Instructions, playerID, Logic!GameCntr
+         PutMsg player.PlayName & " has completed Goal " & Goal + 1 & vbNewLine & rst!Instructions, playerID, Logic!Gamecntr
       End If
    Else
       goaldone = False

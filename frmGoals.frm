@@ -7,6 +7,7 @@ Begin VB.Form frmGoals
    ClientTop       =   390
    ClientWidth     =   9330
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmGoals.frx":0000
@@ -22,6 +23,15 @@ Begin VB.Form frmGoals
       TabIndex        =   38
       Top             =   4290
       Width           =   8415
+      Begin VB.ComboBox cbo 
+         Height          =   315
+         Index           =   3
+         Left            =   6120
+         Style           =   2  'Dropdown List
+         TabIndex        =   45
+         Top             =   460
+         Width           =   2145
+      End
       Begin VB.CheckBox chkWarrant 
          BackColor       =   &H00CBE1ED&
          Caption         =   "receive Warrant"
@@ -61,6 +71,20 @@ Begin VB.Form frmGoals
          ToolTipText     =   "-ve or +ve change value"
          Top             =   240
          Width           =   405
+      End
+      Begin VB.Label lbl 
+         Alignment       =   2  'Center
+         Appearance      =   0  'Flat
+         BackColor       =   &H80000005&
+         BackStyle       =   0  'Transparent
+         Caption         =   "become Solid with"
+         ForeColor       =   &H80000008&
+         Height          =   285
+         Index           =   16
+         Left            =   6120
+         TabIndex        =   44
+         Top             =   260
+         Width           =   1365
       End
       Begin VB.Label lbl 
          Alignment       =   2  'Center
@@ -579,7 +603,12 @@ Dim SQL
          SQL = SQL & "Warrant = " & CStr(chkWarrant.Value) & ","
          SQL = SQL & "Passenger = " & CStr(Val(txt(7))) & ","
          SQL = SQL & "Bounties = " & CStr(Val(txt(9))) & ","
-         SQL = SQL & "chngInCutters = " & CStr(Val(txt(10)))
+         SQL = SQL & "chngInCutters = " & CStr(Val(txt(10))) & ","
+         If GetCombo(cbo(3)) = -1 Then
+            SQL = SQL & " doSolid=0"
+         Else
+            SQL = SQL & " doSolid=" & GetCombo(cbo(3))
+         End If
          SQL = SQL & " WHERE StoryID = " & StoryID & " AND Goal = " & goal
          
          
@@ -637,6 +666,7 @@ Dim X, filter As String
    
    LoadCombo lstContacts, "contact", " WHERE ContactID > 0 and ContactID < 10"
    LoadCombo cbo(2), "planet"
+   LoadCombo cbo(3), "contact", " WHERE ContactID > 0 and ContactID < 10"
    filter = Nz(varDLookup("ExcludeCrew", "Story", "StoryID=" & StoryID))
    If filter <> "" Then LoadCombo lstCrew, "crew", " WHERE CrewID IN(" & filter & ") ORDER BY CrewName"
    comboRefresh
@@ -768,6 +798,7 @@ Dim SQL
       txt(9) = CStr(rst!Bounties)
       txt(10) = CStr(rst!chngInCutters)
       If rst!SectorID > 0 Then SetCombo cbo(2), "", rst!SectorID
+      SetCombo cbo(3), "", rst!doSolid
       chkWin.Value = rst!win
       chkUnfinished.Value = rst!NoUnfinished
       chkClearAlliance.Value = rst!clearAlliance

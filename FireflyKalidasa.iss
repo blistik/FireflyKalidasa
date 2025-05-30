@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.10.2"
+#define MyAppVersion "1.10.3"
 #define MyAppPublisher "VeeBee-er"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -609,6 +609,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Wormhole.wav"; DestDir: "{app}\s
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\{#MyAppName} Full Map"; Filename: "{app}\{#MyAppExeName}"; Parameters: "{app}\FireflyKalidasa_FullBoard.mdb"
 Name: "{group}\Firefly AI Bot"; Filename: "{app}\FireFlyAIBot.exe"
+;Name: "{group}\{#MyAppName} on MariaDB"; Filename: "{app}\{#MyAppExeName}"; Parameters: "Provider=MSDASQL;Driver={{MariaDB ODBC 3.1 Driver};Server=blis.duckdns.org;Port=3306;"
 Name: "{group}\Firefly Rulebook"; Filename: "{app}\Firefly_rulebook.pdf"
 Name: "{group}\BlueSun Rulebook"; Filename: "{app}\FireflyBlueSun_rulebook.pdf"
 Name: "{group}\Kalidasa Rulebook"; Filename: "{app}\FireflyKalidasa_rulebook.pdf"

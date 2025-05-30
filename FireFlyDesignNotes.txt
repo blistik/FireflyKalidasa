@@ -5,6 +5,13 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
+v 1.10.3 ~ 30 May 2025
+new: Story - "Beaumonde Blockade"
+add: Story option to set the starting positions of all (up to 12) ships, player & NPC
+add: Story Goal option to become Solid with a Contact on completion of that goal
+gui: add help message to Join
+bot: fix Supply Bounty fugitive skill count v1.1.8
+
 v 1.10.2 ~ 4 December 2024
 add: Deals menu item - show "Bounties" only
 gui: sort Contact's Jobs by most lucrative first
@@ -18,7 +25,7 @@ fix: prevent accidental 2nd click on "complete" Deals & Buys breaking the logic.
 v 1.10.1 ~ 12 August 2024
 add: new Board refresh handling to improve perf.
 add: Gun Hand 16x16 pics to setup package
-bot: fix Bounty Job priority
+bot: fix Bounty Job priority v1.1.7
 
 v 1.10.0 ~ 19 July 2024
 new: Story - "This Bounty Hunter Gets it Done" (by Bill)

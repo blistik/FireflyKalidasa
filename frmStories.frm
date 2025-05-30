@@ -8,7 +8,6 @@ Begin VB.Form frmStories
    ClientTop       =   390
    ClientWidth     =   12000
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmStories.frx":0000
@@ -256,6 +255,16 @@ Begin VB.Form frmStories
       TabIndex        =   12
       Top             =   60
       Width           =   10605
+      Begin VB.TextBox txt 
+         Height          =   285
+         Index           =   10
+         Left            =   3840
+         MaxLength       =   255
+         TabIndex        =   45
+         ToolTipText     =   "CSV format. Up to 12 sector IDs, 1 for each player and NPC ship. 0 can be used for players for default"
+         Top             =   3390
+         Width           =   3855
+      End
       Begin VB.TextBox txt 
          Alignment       =   2  'Center
          Height          =   285
@@ -547,6 +556,17 @@ Begin VB.Form frmStories
          Width           =   885
       End
       Begin VB.Label lbl 
+         BackColor       =   &H00CBE1ED&
+         BackStyle       =   0  'Transparent
+         Caption         =   "Ship && NPC Starting Sectors. leave blank for default"
+         Height          =   285
+         Index           =   8
+         Left            =   150
+         TabIndex        =   46
+         Top             =   3420
+         Width           =   3765
+      End
+      Begin VB.Label lbl 
          Alignment       =   2  'Center
          BackColor       =   &H00CBE1ED&
          BorderStyle     =   1  'Fixed Single
@@ -712,7 +732,7 @@ Dim frmScores As frmScore
       If Val(txt(9)) > 6 Then txt(9) = "6"
       
       'Save
-      SQL = "UPDATE Story SET StoryTitle= " & "'" & SQLFilter(txt(5)) & "',"
+      SQL = "UPDATE Story SET StoryTitle= '" & SQLFilter(txt(5)) & "',"
       SQL = SQL & " StoryDesc = " & " '" & SQLFilter(txt(6)) & "',"
       SQL = SQL & " StartingCash = " & CStr(Val(txt(0))) & ","
       SQL = SQL & " StartingFuel = " & CStr(Val(txt(1))) & ","
@@ -731,11 +751,11 @@ Dim frmScores As frmScore
       SQL = SQL & " Fugitives = " & chkFugitives.Value & ","
       SQL = SQL & " pullSupply = " & chkSupply.Value & ","
       SQL = SQL & " pullContact = " & chkContact.Value & ","
-      
       SQL = SQL & " supplyInit = " & CStr(Val(txt(8))) & ","
       SQL = SQL & " contactInit = " & CStr(Val(txt(9))) & ","
       SQL = SQL & " Warrant = " & chkWarrant.Value & ","
-      SQL = SQL & " AllianceTrail = " & chkAllianceTrail.Value
+      SQL = SQL & " AllianceTrail = " & chkAllianceTrail.Value & ","
+      SQL = SQL & " StartSectorIDs = '" & Trim(txt(10)) & "'"
       SQL = SQL & " WHERE StoryID = " & StoryID
       DB.Execute SQL
       
@@ -832,6 +852,7 @@ Dim SQL, Index
          txt(9) = Nz(rst!contactInit)
          chkWarrant.Value = rst!Warrant
          chkAllianceTrail.Value = rst!AllianceTrail
+         txt(10) = Nz(rst!StartSectorIDs)
       Else 'new
          DB.Execute "Insert into Story (StoryID,StoryTitle, Active) VALUES (" & StoryID & ",'add a new story title here..',1)"
       End If
