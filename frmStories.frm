@@ -8,6 +8,7 @@ Begin VB.Form frmStories
    ClientTop       =   390
    ClientWidth     =   12000
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmStories.frx":0000
@@ -255,6 +256,16 @@ Begin VB.Form frmStories
       TabIndex        =   12
       Top             =   60
       Width           =   10605
+      Begin VB.CheckBox chkAIBotEnabled 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "Allow AI Bot"
+         Height          =   195
+         Left            =   6360
+         TabIndex        =   47
+         ToolTipText     =   "allow an AI Bot to join this story"
+         Top             =   3140
+         Width           =   1425
+      End
       Begin VB.TextBox txt 
          Height          =   285
          Index           =   10
@@ -272,7 +283,7 @@ Begin VB.Form frmStories
          Left            =   5340
          TabIndex        =   43
          Text            =   "0"
-         ToolTipText     =   "cards to discard"
+         ToolTipText     =   "cards to discard per Contact"
          Top             =   2190
          Width           =   405
       End
@@ -283,7 +294,7 @@ Begin VB.Form frmStories
          Left            =   5340
          TabIndex        =   41
          Text            =   "3"
-         ToolTipText     =   "cards to discard"
+         ToolTipText     =   "cards to discard per Supplier"
          Top             =   1830
          Width           =   405
       End
@@ -755,6 +766,7 @@ Dim frmScores As frmScore
       SQL = SQL & " contactInit = " & CStr(Val(txt(9))) & ","
       SQL = SQL & " Warrant = " & chkWarrant.Value & ","
       SQL = SQL & " AllianceTrail = " & chkAllianceTrail.Value & ","
+      SQL = SQL & " AIBotEnabled = " & chkAIBotEnabled.Value & ","
       SQL = SQL & " StartSectorIDs = '" & Trim(txt(10)) & "'"
       SQL = SQL & " WHERE StoryID = " & StoryID
       DB.Execute SQL
@@ -813,10 +825,10 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub readonly()
-Dim X
-   For X = 0 To 6
-      cmd(X).Visible = False
-   Next X
+Dim x
+   For x = 0 To 6
+      cmd(x).Visible = False
+   Next x
 End Sub
 
 Private Sub refreshHeader()
@@ -851,6 +863,7 @@ Dim SQL, Index
          txt(8) = Nz(rst!supplyInit)
          txt(9) = Nz(rst!contactInit)
          chkWarrant.Value = rst!Warrant
+         chkAIBotEnabled.Value = rst!AIBotEnabled
          chkAllianceTrail.Value = rst!AllianceTrail
          txt(10) = Nz(rst!StartSectorIDs)
       Else 'new
@@ -900,7 +913,7 @@ Dim SQL, Index
          .CellText(Index, 9) = rst!tech & ""
          .CellText(Index, 10) = rst!Negotiate & ""
          .CellText(Index, 11) = rst!Misbehaves & ""
-         .CellText(Index, 12) = rst!SectorID & ""
+         .CellText(Index, 12) = rst!sectorID & ""
          .CellText(Index, 13) = rst!AddCrew & ""
          .CellText(Index, 14) = rst!Passenger & ""
          
@@ -914,68 +927,68 @@ Dim SQL, Index
 End Sub
 
 Private Function getList(cbo As Control) As String
-Dim X
+Dim x
    With cbo
-      For X = 0 To .ListCount - 1
-         If .selected(X) Then
-            getList = getList & IIf(getList = "", "", ",") & CStr(.ItemData(X))
+      For x = 0 To .ListCount - 1
+         If .selected(x) Then
+            getList = getList & IIf(getList = "", "", ",") & CStr(.ItemData(x))
          End If
-      Next X
+      Next x
    End With
    
 End Function
 
 
 Private Function getSelected(cbo As Control) As Integer
-Dim X
+Dim x
    With cbo
-      For X = 0 To .ListCount - 1
-         If .selected(X) Then
+      For x = 0 To .ListCount - 1
+         If .selected(x) Then
             getSelected = getSelected + 1
          End If
-      Next X
+      Next x
    End With
    
 End Function
 
 Private Function SetList(cbo As Control, ByVal solids As String) As Integer
-Dim X, Y, a() As String
+Dim x, y, a() As String
 
    If solids = "" Then Exit Function
    With cbo
    
          a = Split(solids, ",")
-         For Y = LBound(a) To UBound(a)
-            For X = 0 To .ListCount - 1
-               If .ItemData(X) = Val(a(Y)) Then
-                  .selected(X) = True
+         For y = LBound(a) To UBound(a)
+            For x = 0 To .ListCount - 1
+               If .ItemData(x) = Val(a(y)) Then
+                  .selected(x) = True
                   SetList = SetList + 1
                   Exit For
                End If
-            Next X
-         Next Y
+            Next x
+         Next y
       
    End With
    
 End Function
 
 Private Function SetCrewSel(ByVal perk As String, Optional ByVal clearAll As Boolean = False, Optional ByVal invert As Boolean = False) As Integer
-Dim X
+Dim x
 
    If lstCrew.ListCount = 0 Then Exit Function
    With lstCrew
 
-      For X = 0 To .ListCount - 1
+      For x = 0 To .ListCount - 1
          If clearAll Then
-            .selected(X) = False
+            .selected(x) = False
          ElseIf invert Then
-            .selected(X) = Not .selected(X)
+            .selected(x) = Not .selected(x)
          Else
-            If varDLookup(perk, "Crew", "CrewID=" & CStr(.ItemData(X))) > 0 Then  '& " AND Leader = 0"
-              .selected(X) = True
+            If varDLookup(perk, "Crew", "CrewID=" & CStr(.ItemData(x))) > 0 Then  '& " AND Leader = 0"
+              .selected(x) = True
             End If
          End If
-      Next X
+      Next x
       
    End With
    
@@ -986,15 +999,15 @@ Private Sub lstCrew_ItemCheck(Item As Integer)
 End Sub
 
 Private Sub mnuPop_Click(Index As Integer)
-Dim frmGoal As frmGoals, X
-   X = sftTree.ListIndex
+Dim frmGoal As frmGoals, x
+   x = sftTree.ListIndex
 
    Select Case Index
    Case 0 'open
-      If X > -1 Then
+      If x > -1 Then
          Set frmGoal = New frmGoals
          frmGoal.StoryID = StoryID
-         frmGoal.goal = sftTree.ItemData(X)
+         frmGoal.goal = sftTree.ItemData(x)
          frmGoal.Show 1, Me
          RefreshGoals
       End If
@@ -1007,7 +1020,7 @@ Dim frmGoal As frmGoals, X
       RefreshGoals
    
    Case 2 'delete
-      DB.Execute "DELETE FROM StoryGoals WHERE StoryID = " & StoryID & " AND Goal = " & sftTree.ItemData(X)
+      DB.Execute "DELETE FROM StoryGoals WHERE StoryID = " & StoryID & " AND Goal = " & sftTree.ItemData(x)
       RefreshGoals
    
    End Select

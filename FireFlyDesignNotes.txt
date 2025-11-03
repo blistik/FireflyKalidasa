@@ -5,6 +5,18 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
+v 1.10.4 ~ June 2025 - Nov 2025
+new: Story - "Out of Gas - Miranda Blockade"
+gui: Host/Join form visual improvements
+gui: add last winner's name as dropdown option on Host form
+gui: improve update of Cash displayed on Action Form
+gui: tweaks to map editor controls
+fix: Buy & Deal logic when unseen = 0 (all discarded) to show "Consider"
+fix: Resolve Alerts action now available where a Cutter/Corvette is adjacent with an active Alert token. No roll required.
+fix: Resolve Alerts "Cancel" action
+fix: set persistent Alert tokens in Reaver Space on expanded board (Sect 156 & 157)
+bot: add AIBotEnable option on stories to prevent AI Bot connecting to Solo only stories. v1.1.9
+
 v 1.10.3 ~ 30 May 2025
 new: Story - "Beaumonde Blockade"
 add: Story option to set the starting positions of all (up to 12) ships, player & NPC

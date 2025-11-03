@@ -1726,7 +1726,7 @@ Private Sub imgResolve_Click()
    With imgResolve
        If .Tag = "Y" Then
          playsnd 8
-         disableAllButtons
+         
          .Picture = LoadPictureGDIplus(App.Path & "\gui\Bonus2AlertsClick.jpg")
           
          .Tag = "1"
@@ -1735,6 +1735,7 @@ Private Sub imgResolve_Click()
             imgResolve.Tag = "Y"
             imgResolve.Picture = LoadPictureGDIplus(App.Path & "\gui\Bonus2AlertsActive.jpg")
          Else
+            disableAllButtons
             actionSeq = ASResolveAlert
          End If
          
@@ -2294,9 +2295,9 @@ Public Sub clearWarrant()
 
 End Sub
 
-Public Sub setSupply(ByVal SectorID)
+Public Sub setSupply(ByVal sectorID)
 Dim s
-   s = varDLookup("SupplyID", "Supply", "SectorID=" & SectorID)
+   s = varDLookup("SupplyID", "Supply", "SectorID=" & sectorID)
    If s > 0 Then
       imgSupply.Picture = LoadPicture(App.Path & "\gui\Supply" & s & ".jpg")
       imgSupply.Tag = s
@@ -2308,12 +2309,12 @@ Dim s
 
 End Sub
 
-Public Sub setContact(ByVal SectorID)
+Public Sub setContact(ByVal sectorID)
 Dim s
-   If SectorID = -1 Then 'deal with Harken
+   If sectorID = -1 Then 'deal with Harken
       s = 5 'harken's contactID
    Else
-      s = varDLookup("ContactID", "Contact", "SectorID=" & SectorID)
+      s = varDLookup("ContactID", "Contact", "SectorID=" & sectorID)
    End If
    If s > 0 Then
       imgContact.Picture = LoadPicture(App.Path & "\gui\Contact" & s & ".jpg")
@@ -2589,7 +2590,7 @@ Public Sub buyIsDone()
    If FullburnMovesDone > 0 Then fullburndone = True
    actionButtonEnable "imgShop", False
    actionButtonEnable "imgShore", False
-   lblCash = "$" & getMoney(player.ID)
+   setPay getMoney(player.ID)
    buydone = True
 End Sub
 

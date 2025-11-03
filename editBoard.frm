@@ -19,45 +19,62 @@ Begin VB.Form editBoard
    Begin VB.PictureBox Picture1 
       AutoSize        =   -1  'True
       Height          =   15060
-      Left            =   30
+      Left            =   0
       ScaleHeight     =   15000
       ScaleWidth      =   22575
       TabIndex        =   0
-      Top             =   30
+      Top             =   0
       Width           =   22635
       Begin VB.CommandButton Command5 
          BackColor       =   &H80000001&
-         Caption         =   "offst"
-         Enabled         =   0   'False
+         Caption         =   "?"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   285
-         Left            =   19650
+         Left            =   12780
          TabIndex        =   9
          TabStop         =   0   'False
-         ToolTipText     =   "save hotspot or ship positions"
-         Top             =   14700
-         Visible         =   0   'False
+         ToolTipText     =   "help"
+         Top             =   30
          Width           =   435
       End
       Begin VB.CommandButton Command4 
          BackColor       =   &H80000001&
-         Caption         =   "\/"
-         Height          =   195
-         Left            =   20670
+         Caption         =   ">"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   220
+         Left            =   15700
          TabIndex        =   8
          TabStop         =   0   'False
-         ToolTipText     =   "prev.sector"
-         Top             =   14840
+         ToolTipText     =   "next sector"
+         Top             =   60
          Width           =   435
       End
       Begin VB.CommandButton Command3 
          BackColor       =   &H80000001&
          Caption         =   "+"
          Height          =   285
-         Left            =   20130
+         Left            =   13230
          TabIndex        =   7
          TabStop         =   0   'False
          ToolTipText     =   "add sector"
-         Top             =   14700
+         Top             =   30
+         Visible         =   0   'False
          Width           =   435
       End
       Begin VB.CheckBox Check1 
@@ -65,54 +82,71 @@ Begin VB.Form editBoard
          Caption         =   "edit Hotspots"
          ForeColor       =   &H0000FFFF&
          Height          =   315
-         Left            =   21060
+         Left            =   11580
          TabIndex        =   6
-         ToolTipText     =   "off edits ship posn"
-         Top             =   60
-         Value           =   1  'Checked
+         ToolTipText     =   "edit hotspots or ship positions"
+         Top             =   30
          Width           =   1485
       End
       Begin VB.CommandButton Command2 
          BackColor       =   &H80000001&
-         Caption         =   "/\"
-         Height          =   195
-         Left            =   20670
+         Caption         =   "<"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   220
+         Left            =   14250
          TabIndex        =   4
          TabStop         =   0   'False
-         ToolTipText     =   "next sector"
-         Top             =   14640
+         ToolTipText     =   "prev sector"
+         Top             =   60
          Width           =   435
       End
       Begin VB.TextBox Text1 
          BackColor       =   &H80000001&
          ForeColor       =   &H80000005&
          Height          =   285
-         Left            =   20250
+         Left            =   16280
          TabIndex        =   3
-         Top             =   14340
-         Width           =   2265
+         ToolTipText     =   "adjacent sectors"
+         Top             =   30
+         Width           =   2320
       End
       Begin VB.CommandButton Command1 
          BackColor       =   &H80000001&
-         Caption         =   "Sav"
+         Caption         =   "Save"
          Height          =   285
-         Left            =   22080
+         Left            =   13740
          TabIndex        =   2
          TabStop         =   0   'False
-         ToolTipText     =   "save hotspot or ship positions"
-         Top             =   14700
-         Width           =   435
+         ToolTipText     =   "save ship positions in current sector"
+         Top             =   30
+         Width           =   540
       End
       Begin VB.ComboBox Combo1 
          BackColor       =   &H80000001&
          ForeColor       =   &H80000005&
          Height          =   315
-         Left            =   21240
+         Left            =   14700
          Style           =   2  'Dropdown List
          TabIndex        =   1
-         ToolTipText     =   "sector selector"
-         Top             =   14670
+         ToolTipText     =   "sector list"
+         Top             =   30
          Width           =   795
+      End
+      Begin VB.Image DrgImg 
+         Height          =   345
+         Left            =   18660
+         Picture         =   "editBoard.frx":0442
+         ToolTipText     =   "drag these controls"
+         Top             =   30
+         Width           =   345
       End
       Begin XDOCKFLOATLibCtl.FDPane FDPane1 
          Height          =   420
@@ -140,62 +174,62 @@ Begin VB.Form editBoard
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   465
          Index           =   6
-         Left            =   21570
-         Top             =   13320
-         Width           =   850
+         Left            =   6390
+         Top             =   60
+         Width           =   855
          _ExtentX        =   1508
          _ExtentY        =   820
-         Effects         =   "editBoard.frx":0442
+         Effects         =   "editBoard.frx":0AFC
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   615
          Index           =   5
-         Left            =   21690
-         Top             =   12570
+         Left            =   7410
+         Top             =   0
          Width           =   735
          _ExtentX        =   1296
          _ExtentY        =   1085
-         Effects         =   "editBoard.frx":045A
+         Effects         =   "editBoard.frx":0B14
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   615
          Index           =   4
-         Left            =   21750
-         Top             =   11850
+         Left            =   10770
+         Top             =   0
          Width           =   735
          _ExtentX        =   1296
          _ExtentY        =   1085
-         Effects         =   "editBoard.frx":0472
+         Effects         =   "editBoard.frx":0B2C
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   615
          Index           =   3
-         Left            =   21690
-         Top             =   11160
+         Left            =   9960
+         Top             =   0
          Width           =   735
          _ExtentX        =   1296
          _ExtentY        =   1085
-         Effects         =   "editBoard.frx":048A
+         Effects         =   "editBoard.frx":0B44
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   615
          Index           =   2
-         Left            =   21720
-         Top             =   10440
+         Left            =   9150
+         Top             =   0
          Width           =   735
          _ExtentX        =   1296
          _ExtentY        =   1085
-         Effects         =   "editBoard.frx":04A2
+         Effects         =   "editBoard.frx":0B5C
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   615
          Index           =   1
-         Left            =   21660
-         Top             =   9720
+         Left            =   8340
+         Top             =   0
          Width           =   735
          _ExtentX        =   1296
          _ExtentY        =   1085
-         Effects         =   "editBoard.frx":04BA
+         Effects         =   "editBoard.frx":0B74
       End
    End
    Begin VB.Label lbl 
@@ -221,11 +255,11 @@ Begin VB.Form editBoard
    Begin VB.Image HotSpot 
       Height          =   330
       Index           =   0
-      Left            =   22080
-      MouseIcon       =   "editBoard.frx":04D2
+      Left            =   12000
+      MouseIcon       =   "editBoard.frx":0B8C
       MousePointer    =   4  'Icon
       Stretch         =   -1  'True
-      Top             =   15120
+      Top             =   90
       Width           =   540
    End
 End
@@ -240,7 +274,7 @@ Private Const SWP_NOMOVE = &H2
 'For use with USER32 Function SendMessage
 Private Const HTCAPTION = 2
 Private Const WM_NCLBUTTONDOWN = &HA1
-Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
+Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
 
@@ -267,9 +301,11 @@ Dim rst As New ADODB.Recordset, slot
             .HotSpot(rst!sectorID).Picture = LoadPicture(myAppPath & "\Pictures\" & "HotSpot.jpg")
             .HotSpot(rst!sectorID).ZOrder
             .lbl(rst!sectorID).ZOrder
+            
          Else
             .HotSpot(rst!sectorID).Picture = LoadPicture()
             .HotSpot(rst!sectorID).ZOrder
+            
          End If
        
          rst.MoveNext
@@ -280,8 +316,13 @@ Dim rst As New ADODB.Recordset, slot
          For slot = 1 To 6
             .Imag(slot).ZOrder
          Next slot
+         Command1.ToolTipText = "save Ship positions in current Sector"
+      Else
+         Command1.ToolTipText = "save selected Hotspot position"
       End If
+      Text1.Visible = (Check1.Value = 0)
       Command3.Visible = (Check1.Value = 1)
+      DrgImg.ZOrder
    
    End With
    
@@ -291,28 +332,28 @@ End Sub
 Private Sub Combo1_Click()
    If Combo1.ListIndex > -1 Then
       Text1 = ""
-      LoadCoords Combo1.List(Combo1.ListIndex)
+      LoadCoords GetCombo(Combo1)   '.List(Combo1.ListIndex)
    End If
 End Sub
 
 Private Sub Command1_Click()
    'shiftCoords
    'SaveHotPoints
-   SaveCoords Combo1.List(Combo1.ListIndex)
+   SaveCoords GetCombo(Combo1)
 End Sub
 
-Private Sub Command2_Click()
+Private Sub Command4_Click()
    If Combo1.ListIndex < Combo1.ListCount - 1 Then
       Combo1.ListIndex = Combo1.ListIndex + 1
    Else
-      Combo1.ListIndex = 1
+      Combo1.ListIndex = 0
    End If
 End Sub
-Private Sub Command4_Click()
+Private Sub Command2_Click()
    
    If Combo1.ListIndex = -1 Then
       Combo1.ListIndex = Combo1.ListCount - 1
-   ElseIf Combo1.ListIndex = 1 Then
+   ElseIf Combo1.ListIndex = 0 Then
       Combo1.ListIndex = Combo1.ListCount - 1
    Else
       Combo1.ListIndex = Combo1.ListIndex - 1
@@ -350,11 +391,17 @@ Dim sectorID, SQL
       SQL = SQL & HotSpot(sectorID).top & ", " & HotSpot(sectorID).Left & ", " & HotSpot(sectorID).Height & ", " & HotSpot(sectorID).Width & ")"
       DB.Execute SQL
       Combo1.AddItem sectorID
+      Combo1.ItemData(Combo1.NewIndex) = sectorID
       Combo1.ListIndex = Combo1.ListCount - 1
    End With
 End Sub
 
-Private Sub Command5_Click()  'offset top value for new map
+Private Sub Command5_Click()
+   MsgBox "Toggle between Ship and Hotspot placement modes with tickbox top right of map" & vbNewLine & vbNewLine & _
+     "Ship Mode: Select a Sector Number, Hold shift and click/drag ships into position within that sector. Click on adjacent Sectors to add to Path list." & vbNewLine & _
+     vbNewLine & "Hotspot Mode: Click on a Sector to edit. Hold Shift to move a Sector's Hotspot position (top left), hold Ctrl to resize the Hotspot (bottom right)." & _
+     vbNewLine & vbNewLine & "Click Save after a Sector has been edited. Edit with caution, make a backup first.", vbInformation, "Map Editor Help"
+ 'offset top value for new map
 'Dim rst As New ADODB.Recordset
 'Dim coords, slot
 'Dim c() As String
@@ -382,8 +429,54 @@ Private Sub Command5_Click()  'offset top value for new map
 
 End Sub
 
+
+' image to act as a control group drag handle
+Private Sub DrgImg_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    If Button = vbLeftButton Then
+        DragControl = 100
+    End If
+End Sub
+
+Private Sub DrgImg_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+Dim z, w
+
+   z = DrgImg.Left - 90
+   w = DrgImg.top - 90
+   If DragControl = 100 Then
+      DrgImg.Left = z + X
+      DrgImg.top = w + Y
+      Check1.Move z + X + 400, w + Y, Check1.Width, Check1.Height
+      Text1.Move z + X + 4800, w + Y, Text1.Width, Text1.Height
+      Command1.Move z + X + 2340, w + Y, Command1.Width, Command1.Height
+      Combo1.Left = z + X + 3400
+      Combo1.top = w + Y
+      Command2.Move z + X + 2960, w + Y + 30, Command2.Width, Command2.Height
+      Command4.Move z + X + 4220, w + Y + 30, Command4.Width, Command4.Height
+      Command3.Move z + X + 4800, w + Y, Command3.Width, Command3.Height
+      Command5.Move z + X + 1800, w + Y, Command5.Width, Command5.Height
+   End If
+End Sub
+
+Private Sub DrgImg_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
+
+   DragControl = 0
+   Screen.MousePointer = vbDefault
+   DrgImg.ZOrder
+   If DrgImg.top < 30 Then
+      DrgImg.top = 30
+      Check1.top = 30
+      Text1.top = 30
+      Command1.top = 30
+      Combo1.top = 30
+      Command2.top = 60
+      Command4.top = 60
+      Command3.top = 30
+      Command5.top = 30
+   End If
+End Sub
+
 Private Sub Form_Load()
-Dim x
+Dim X
    'If Not Logon Then End
    myAppPath = App.Path
    Imag(1).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\FireflyOrange.gif")
@@ -393,45 +486,52 @@ Dim x
    Imag(5).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\Cruiser.gif")
    Imag(5).AutoSize = lvicMultiAngle
    Imag(6).Picture = LoadPictureGDIplus(myAppPath & "\Pictures\Cutter.gif") 'corvette.gif")  '
-   For x = 1 To 6
-      Imag(x).TransparentColor = 0
-      Imag(x).TransparentColorMode = lvicUseTransparentColor
-   Next x
+   For X = 1 To 6
+      Imag(X).TransparentColor = 0
+      Imag(X).TransparentColorMode = lvicUseTransparentColor
+   Next X
    
    'Logic.Open "GameSeq", DB, adOpenDynamic, adLockOptimistic
    initBoard
    InitCbo
-
+   Call Command5_Click
 End Sub
 
 Private Sub Form_Resize()
-   Check1.Left = Me.Width - 1680
-   Text1.Left = Me.Width - 2490
-   Command1.Left = Me.Width - 660
-   Combo1.Left = Me.Width - 1500
-   Command2.Left = Me.Width - 2070
-   Command4.Left = Me.Width - 2070
+   DrgImg.Left = Me.Width - 7500
+   Check1.Left = Me.Width - 7000
+   Text1.Left = Me.Width - 2600
+   Command1.Left = Me.Width - 5060
+   Combo1.Left = Me.Width - 4000
+   Command2.Left = Me.Width - 4440
+   Command4.Left = Me.Width - 3180
    Command3.Left = Me.Width - 2600
-   Command5.Left = Me.Width - 3000
+   Command5.Left = Me.Width - 5600
    
    
 End Sub
 
 Private Sub HotSpot_Click(Index As Integer)
-      'MsgBox "You clicked on " & Index
+      
       'Picture1.Visible = Not Picture1.Visible
-      Text1 = Text1 & IIf(Text1 = "", "", ",") & CStr(Index)
+     If Check1.Value = 0 Then
+         Text1 = Text1 & IIf(Text1 = "", "", ",") & CStr(Index)
+     End If
 End Sub
 
 
-Private Sub lbl_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub lbl_Click(Index As Integer)
+   If GetCombo(Combo1) <> Index Then SetCombo Combo1, "", Index
+End Sub
+
+Private Sub lbl_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
    If Button = 1 And Check1.Value = 1 Then
       DragControl = Shift
       Screen.MousePointer = vbCrosshair
    End If
 End Sub
 
-Private Sub lbl_MouseMove(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub lbl_MouseMove(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim z, w
 
    z = lbl(Index).Left
@@ -440,18 +540,18 @@ Dim z, w
    Select Case DragControl
    Case vbShiftMask
       
-      lbl(Index).Left = z + x - 40
-      lbl(Index).top = w + y - 40
+      lbl(Index).Left = z + X - 40
+      lbl(Index).top = w + Y - 40
       
    Case vbCtrlMask
 
-      lbl(Index).Width = Abs(x)
-      lbl(Index).Height = Abs(y)
+      lbl(Index).Width = Abs(X)
+      lbl(Index).Height = Abs(Y)
   
    End Select
 End Sub
 
-Private Sub lbl_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub lbl_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
    DragControl = 0
    Screen.MousePointer = vbDefault
    HotSpot(Index).Left = lbl(Index).Left
@@ -460,14 +560,14 @@ Private Sub lbl_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x
    HotSpot(Index).Height = lbl(Index).Height
 End Sub
 
-Private Sub Imag_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Imag_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
    If Button = 1 And Check1.Value = 0 Then
       DragControl = Shift
       Screen.MousePointer = vbCrosshair
    End If
 End Sub
 
-Private Sub Imag_MouseMove(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Imag_MouseMove(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim z, w
 
    z = Imag(Index).Left
@@ -476,48 +576,27 @@ Dim z, w
    Select Case DragControl
    Case vbShiftMask
       
-      Imag(Index).Left = z + x - 40
-      Imag(Index).top = w + y - 40
+      Imag(Index).Left = z + X - 40
+      Imag(Index).top = w + Y - 40
       
    End Select
 End Sub
 
-Private Sub Imag_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Imag_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
    DragControl = 0
    Screen.MousePointer = vbDefault
 End Sub
 
-'Public Function Logon() As Boolean
-'Dim datab
-'
-'  On Error Resume Next
-'
-'  If Command$ = "" Then
-'     datab = App.Path & "\FireflyKalidasa.mdb"
-'  Else
-'     datab = Command$
-'  End If
-'
-'  myAppPath = App.Path
-'  Set DB = New ADODB.Connection
-'  DB.Open "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & datab & ";Persist Security Info=False"
-'  If Err Then
-'     Logon = False
-'  Else
-'     Logon = True
-'  End If
-'
-'
-'End Function
 Public Sub InitCbo()
 Dim rst As New ADODB.Recordset
 Dim coords, slot
 Dim c()
    Combo1.Clear
      
-   rst.Open "SELECT SectorID FROM Board ORDER BY SectorID ", DB, adOpenDynamic, adLockOptimistic
+   rst.Open "SELECT SectorID FROM Board WHERE SectorID > 0 ORDER BY SectorID ", DB, adOpenDynamic, adLockOptimistic
    While Not rst.EOF
       Combo1.AddItem rst!sectorID
+      Combo1.ItemData(Combo1.NewIndex) = rst!sectorID
       rst.MoveNext
    Wend
    rst.Close
@@ -561,6 +640,10 @@ Dim c() As String
 End Sub
 Public Sub SaveCoords(ByVal sectorID)
 Dim more
+   If sectorID < 1 Or sectorID = "" Then
+      MsgBox "No Sector selected (in the dropdown box)", vbExclamation, "Save failed"
+      Exit Sub
+   End If
    If Check1.Value = 0 Then 'saving ships
       more = 0
       If Me.Imag(5).Tag = "B" Or Me.Imag(5).Tag = "R" Then more = 1
@@ -569,7 +652,7 @@ Dim more
       "', Slot3 = '" & Imag(3).Left & "," & Imag(3).top & "', Slot4 = '" & Imag(4).Left & "," & Imag(4).top & "', Slot5 = '" & _
       Imag(5 + more).Left & "," & Imag(5 + more).top & "', AdjacentRows = '" & Text1 & "' WHERE SectorID = " & sectorID
    
-   Else 'saving hotspots
+   Else 'saving hotspot
       DB.Execute "Update Board Set STop = " & HotSpot(sectorID).top & ", SLeft = " & HotSpot(sectorID).Left & ", SHeight = " & HotSpot(sectorID).Height & ", SWidth = " & HotSpot(sectorID).Width & " WHERE SectorID = " & sectorID
    End If
 End Sub
@@ -630,7 +713,7 @@ Dim rst As New ADODB.Recordset
          .HotSpot(rst!sectorID).Width = rst!SWidth
          .HotSpot(rst!sectorID).ZOrder
          .HotSpot(rst!sectorID).Visible = True
-         .HotSpot(rst!sectorID).Picture = LoadPicture(myAppPath & "\Pictures\" & "HotSpot.jpg")
+         '.HotSpot(rst!sectorID).Picture = LoadPicture(myAppPath & "\Pictures\" & "HotSpot.jpg")
          .HotSpot(rst!sectorID).BorderStyle = 0
          .HotSpot(rst!sectorID).ToolTipText = CStr(rst!sectorID)
          Load .lbl(rst!sectorID)
@@ -640,7 +723,7 @@ Dim rst As New ADODB.Recordset
          .lbl(rst!sectorID).Height = rst!SHeight
          .lbl(rst!sectorID).Width = rst!SWidth
          .lbl(rst!sectorID).Visible = True
-         .lbl(rst!sectorID).ZOrder
+         '.lbl(rst!sectorID).ZOrder
          .lbl(rst!sectorID).ToolTipText = CStr(rst!sectorID)
          .lbl(rst!sectorID) = rst!sectorID
          rst.MoveNext
@@ -728,7 +811,7 @@ errhandler:
   
 End Function
 
-Private Sub Picture1_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Picture1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub

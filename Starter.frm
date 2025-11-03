@@ -1,4 +1,5 @@
 VERSION 5.00
+Object = "{49801673-2EC8-456E-98B2-037B9B02A1C5}#1.0#0"; "LaVolpeAlphaImg2.ocx"
 Begin VB.Form Starter 
    BackColor       =   &H00000000&
    BorderStyle     =   1  'Fixed Single
@@ -9,12 +10,19 @@ Begin VB.Form Starter
    ClientWidth     =   7350
    Icon            =   "Starter.frx":0000
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   4770
    ScaleWidth      =   7350
    StartUpPosition =   1  'CenterOwner
+   Begin VB.ComboBox ComboTxt 
+      BackColor       =   &H003DCBFF&
+      Height          =   315
+      Left            =   2340
+      TabIndex        =   0
+      Top             =   90
+      Width           =   1485
+   End
    Begin VB.CommandButton cmd 
       BackColor       =   &H00FF8080&
       Caption         =   "add a bot player"
@@ -31,7 +39,7 @@ Begin VB.Form Starter
       Index           =   3
       Left            =   3720
       Style           =   1  'Graphical
-      TabIndex        =   16
+      TabIndex        =   10
       Top             =   2490
       Visible         =   0   'False
       Width           =   1905
@@ -52,7 +60,7 @@ Begin VB.Form Starter
       Index           =   2
       Left            =   6120
       Style           =   1  'Graphical
-      TabIndex        =   15
+      TabIndex        =   9
       ToolTipText     =   "Edit this Story Card"
       Top             =   3090
       Width           =   375
@@ -74,7 +82,7 @@ Begin VB.Form Starter
       ForeColor       =   &H003DCBFF&
       Height          =   195
       Left            =   3000
-      TabIndex        =   14
+      TabIndex        =   7
       Top             =   2130
       Value           =   1  'Checked
       Width           =   4095
@@ -86,7 +94,7 @@ Begin VB.Form Starter
       Height          =   315
       Left            =   1020
       Style           =   2  'Dropdown List
-      TabIndex        =   10
+      TabIndex        =   8
       Top             =   3090
       Width           =   5100
    End
@@ -106,7 +114,7 @@ Begin VB.Form Starter
       Index           =   1
       Left            =   5260
       Style           =   1  'Graphical
-      TabIndex        =   9
+      TabIndex        =   2
       Top             =   60
       Visible         =   0   'False
       Width           =   1215
@@ -122,7 +130,7 @@ Begin VB.Form Starter
       ForeColor       =   &H003DCBFF&
       Height          =   1230
       Left            =   2970
-      TabIndex        =   8
+      TabIndex        =   13
       Top             =   740
       Width           =   3495
    End
@@ -143,7 +151,7 @@ Begin VB.Form Starter
       Index           =   0
       Left            =   3930
       Style           =   1  'Graphical
-      TabIndex        =   7
+      TabIndex        =   1
       Top             =   60
       Width           =   1215
    End
@@ -162,35 +170,32 @@ Begin VB.Form Starter
       ForeColor       =   &H003DCBFF&
       Height          =   2175
       Left            =   1020
-      TabIndex        =   2
+      TabIndex        =   12
       Tag             =   "Orange"
       Top             =   540
       Width           =   1845
       Begin VB.OptionButton opt 
          BackColor       =   &H0000C000&
-         Caption         =   "Green"
          Height          =   375
          Index           =   3
          Left            =   240
          TabIndex        =   6
          Tag             =   "Green"
          Top             =   1680
-         Width           =   1400
+         Width           =   255
       End
       Begin VB.OptionButton opt 
          BackColor       =   &H0000FFFF&
-         Caption         =   "Yellow"
          Height          =   375
          Index           =   2
          Left            =   240
          TabIndex        =   5
          Tag             =   "Yellow"
          Top             =   1200
-         Width           =   1400
+         Width           =   255
       End
       Begin VB.OptionButton opt 
          BackColor       =   &H00FF0000&
-         Caption         =   "Blue"
          ForeColor       =   &H8000000F&
          Height          =   375
          Index           =   1
@@ -198,11 +203,10 @@ Begin VB.Form Starter
          TabIndex        =   4
          Tag             =   "Blue"
          Top             =   720
-         Width           =   1400
+         Width           =   255
       End
       Begin VB.OptionButton opt 
          BackColor       =   &H000080FF&
-         Caption         =   "Orange"
          Height          =   375
          Index           =   0
          Left            =   240
@@ -210,16 +214,48 @@ Begin VB.Form Starter
          Tag             =   "Orange"
          Top             =   240
          Value           =   -1  'True
-         Width           =   1400
+         Width           =   255
       End
-   End
-   Begin VB.TextBox txt 
-      BackColor       =   &H003DCBFF&
-      Height          =   320
-      Left            =   2340
-      TabIndex        =   0
-      Top             =   90
-      Width           =   1455
+      Begin LaVolpeAlphaImg.AlphaImgCtl imgShip 
+         Height          =   375
+         Index           =   3
+         Left            =   510
+         Top             =   1680
+         Width           =   1275
+         _ExtentX        =   2249
+         _ExtentY        =   661
+         Effects         =   "Starter.frx":0442
+      End
+      Begin LaVolpeAlphaImg.AlphaImgCtl imgShip 
+         Height          =   375
+         Index           =   2
+         Left            =   510
+         Top             =   1200
+         Width           =   1275
+         _ExtentX        =   2249
+         _ExtentY        =   661
+         Effects         =   "Starter.frx":045A
+      End
+      Begin LaVolpeAlphaImg.AlphaImgCtl imgShip 
+         Height          =   375
+         Index           =   1
+         Left            =   510
+         Top             =   720
+         Width           =   1275
+         _ExtentX        =   2249
+         _ExtentY        =   661
+         Effects         =   "Starter.frx":0472
+      End
+      Begin LaVolpeAlphaImg.AlphaImgCtl imgShip 
+         Height          =   375
+         Index           =   0
+         Left            =   510
+         Top             =   240
+         Width           =   1275
+         _ExtentX        =   2249
+         _ExtentY        =   661
+         Effects         =   "Starter.frx":048A
+      End
    End
    Begin VB.Label lblStory 
       BackColor       =   &H001F2025&
@@ -227,7 +263,7 @@ Begin VB.Form Starter
       ForeColor       =   &H003DCBFF&
       Height          =   1065
       Left            =   1020
-      TabIndex        =   13
+      TabIndex        =   16
       Top             =   3510
       Width           =   5475
    End
@@ -246,7 +282,7 @@ Begin VB.Form Starter
       ForeColor       =   &H003DCBFF&
       Height          =   255
       Left            =   1040
-      TabIndex        =   12
+      TabIndex        =   15
       Top             =   2880
       Width           =   975
    End
@@ -265,7 +301,7 @@ Begin VB.Form Starter
       ForeColor       =   &H003DCBFF&
       Height          =   225
       Left            =   2970
-      TabIndex        =   11
+      TabIndex        =   14
       Top             =   540
       Width           =   1305
    End
@@ -284,7 +320,7 @@ Begin VB.Form Starter
       ForeColor       =   &H003DCBFF&
       Height          =   255
       Left            =   1100
-      TabIndex        =   1
+      TabIndex        =   11
       Top             =   180
       Width           =   1215
    End
@@ -301,6 +337,7 @@ Private Sub cbo_Click()
     
    If isHost Then
       DB.Execute "UPDATE GameSeq set StoryID = " & CStr(GetCombo(cbo))
+      cmd(3).Visible = Nz(varDLookup("AIBotEnabled", "Story", "StoryID = " & GetCombo(cbo)), 0)
    End If
    
    lblStory.Caption = Nz(varDLookup("StoryDesc", "Story", "StoryID = " & GetCombo(cbo)))
@@ -311,7 +348,7 @@ Private Sub chkAI_Click()
 End Sub
 
 Private Sub cmd_Click(Index As Integer)
-Dim rst As New ADODB.Recordset, col, cnt, X
+Dim rst As New ADODB.Recordset, col, cnt, x
 Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer
 Dim randCrew As Integer, forceFugi As Integer
 Dim frmCrewList As frmCrewLst
@@ -366,15 +403,15 @@ Dim supplyInit, contactInit
          
          Timing.Enabled = True
       Else
-         For X = 0 To 3
-            If opt(X).Value Then
-               col = Left(opt(X).Tag, 1)
+         For x = 0 To 3
+            If opt(x).Value Then
+               col = Left(opt(x).Tag, 1)
                Exit For
             End If
             'Opt(x).Enabled = False
-         Next X
-         If IsEmpty(col) Or txt.Text = "" Then
-            MessBox "Please enter your player name", "Ship taken", "Ooops", "", 0, 0, 0, 0, 3
+         Next x
+         If IsEmpty(col) Or ComboTxt.Text = "" Then
+            MessBox "Please enter your player name and select a Ship", "Joining", "Ooops", "", 0, 0, 0, 0, 3
             Exit Sub
          End If
          rst.CursorLocation = adUseClient
@@ -382,12 +419,12 @@ Dim supplyInit, contactInit
          If IsNull(rst!Name) Then
             'rst.Update "Name", txt.Text
             player.ID = rst!playerID
-            player.PlayName = Trim(txt.Text)
+            player.PlayName = Trim(ComboTxt.Text)
             DB.Execute "UPDATE Players SET Name = '" & SQLFilter(player.PlayName) & "' WHERE PlayerID = " & CStr(player.ID)
             
-            For X = 0 To 3
-               opt(X).Enabled = False
-            Next X
+            For x = 0 To 3
+               opt(x).Enabled = False
+            Next x
             UpdateLst
             cmd(0).Enabled = False
             cmd(0).Caption = "Pick Leader"
@@ -398,11 +435,11 @@ Dim supplyInit, contactInit
             End If
             
          Else
-            For X = 0 To 3
-               If col = Left(opt(X).Tag, 1) Then
-                  opt(X).Enabled = False
+            For x = 0 To 3
+               If col = Left(opt(x).Tag, 1) Then
+                  opt(x).Enabled = False
                End If
-            Next X
+            Next x
             UpdateLst
             MessBox rst!ship & " is taken by " & player.PlayName, "Ship taken", "Ooops", "", 0, 0, 6
             
@@ -462,19 +499,19 @@ Dim supplyInit, contactInit
       
       'show who has entered game
       cnt = 0
-      For X = 1 To 4
-         If PlayCode(X).PlayName <> "" Then
+      For x = 1 To 4
+         If PlayCode(x).PlayName <> "" Then
             cnt = cnt + 1
-            PutMsg PlayCode(X).PlayName & " has entered the game", X
+            PutMsg PlayCode(x).PlayName & " has entered the game", x
          End If
-      Next X
+      Next x
       SoloGame = isSoloGame()
                
       nextplayer = 0
       Randomize Timer
       Do
-          X = Int((4 * Rnd)) + 1
-          If PlayCode(X).PlayName <> "" Then nextplayer = X
+          x = Int((4 * Rnd)) + 1
+          If PlayCode(x).PlayName <> "" Then nextplayer = x
       Loop While nextplayer = 0
        
       'pick leader
@@ -503,7 +540,7 @@ Dim supplyInit, contactInit
          Timing.Enabled = True
       End If
    Case 3
-      X = ShellExecute(X, "OPEN", App.Path & "\FireflyAIBot.exe ", datab, vbNullString, 1)                '1=normal, 2=min, 3=max, 4=behind
+      x = ShellExecute(x, "OPEN", App.Path & "\FireflyAIBot.exe ", datab, vbNullString, 1)                '1=normal, 2=min, 3=max, 4=behind
    End Select
   
   Exit Sub
@@ -514,6 +551,7 @@ err_handler:
 End Sub
 
 Private Sub Form_Load()
+Dim lastPlayer As String
   initForm
   UpdateLst
   Timing.Enabled = True
@@ -521,8 +559,12 @@ Private Sub Form_Load()
   player.Color = ""
   player.PlayName = ""
   cmd(0).Enabled = False
-  cmd(3).Visible = isHost
+  'cmd(3).Visible = isHost
   Set Me.Picture = LoadPicture(App.Path & "\pictures\waiting.jpg")
+  lastPlayer = getLastPlayer
+  If lastPlayer <> vbNullString Then
+    ComboTxt.AddItem lastPlayer
+  End If
   
 End Sub
 
@@ -534,19 +576,26 @@ Private Sub Form_Unload(Cancel As Integer)
    End If
 End Sub
 
+Private Sub imgShip_Click(Index As Integer)
+   If opt(Index).Enabled Then opt(Index).Value = True
+End Sub
+
 Private Sub Timing_Timer()
    UpdateLst
 End Sub
 
 Private Sub initForm()
-Dim rst As New ADODB.Recordset
+Dim x As Integer  ' rst As New ADODB.Recordset
    started = False
-   rst.CursorLocation = adUseClient
-   rst.Open "SELECT * FROM Players WHERE PlayerID > 0 AND PlayerID < 5 ORDER BY PlayerID", DB, adOpenStatic, adLockReadOnly
-   While Not rst.EOF
-      opt(rst!playerID - 1).Caption = rst!ship
-      rst.MoveNext
-   Wend
+   For x = 1 To 4
+      imgShip(x - 1).Picture = LoadPictureGDIplus(App.Path & "\gui\FireflyShip" & CStr(x) & ".jpg")
+   Next x
+   'rst.CursorLocation = adUseClient
+   'rst.Open "SELECT * FROM Players WHERE PlayerID > 0 AND PlayerID < 5 ORDER BY PlayerID", DB, adOpenStatic, adLockReadOnly
+   'While Not rst.EOF
+   '   opt(rst!playerID - 1).Caption = rst!ship
+   '   rst.MoveNext
+   'Wend
    cbo.Enabled = isHost
    chkAI.Enabled = isHost
    LoadCombo cbo, "story", " WHERE ACTIVE = 1 Order by StoryTitle"
@@ -555,11 +604,11 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Private Sub UpdateLst()
-Dim rst As New ADODB.Recordset, col, X, playerID As Integer
+Dim rst As New ADODB.Recordset, x, playerID As Integer
    Lst.Clear
-   X = GetSeqX(playerID)
+   x = GetSeqX(playerID)
    If Not isHost Then 'client only processes
-      Select Case X
+      Select Case x
       Case "H"  'in host mode, enable join
          If cmd(0).Caption <> "Pick Leader" Then
             If Not cmd(0).Enabled Then playsnd 6
@@ -570,40 +619,47 @@ Dim rst As New ADODB.Recordset, col, X, playerID As Integer
          Lst.AddItem "..waiting for Host .."
          cmd(0).Enabled = False
          cmd(0).Caption = "Join"
-         For X = 0 To 3
-            opt(X).Enabled = True
-         Next X
+         For x = 0 To 3
+            opt(x).Enabled = True
+            imgShip(x).GrayScale = lvicNoGrayScale
+         Next x
          Exit Sub
       Case "L"
          'pick leader
       Case Else  'joining game
          started = True
       End Select
-   ElseIf X = "S" Then
+   ElseIf x = "S" Then
       started = True
    End If
 
-   If X = "L" And Val(player.ID) = playerID Then 'your go to pick leader
+   If x = "L" And Val(player.ID) = playerID Then 'your go to pick leader
        cmd(0).Enabled = True
    End If
   rst.CursorLocation = adUseClient
-  rst.Open "SELECT Players.*,Crew.CrewName FROM Crew RIGHT JOIN Players ON Crew.CrewID = Players.Leader Where Players.Name Is Not Null And Players.PlayerID < 5 ORDER BY Players.PlayerID", DB, adOpenStatic, adLockReadOnly
+  rst.Open "SELECT Players.*,Crew.CrewName FROM Crew RIGHT JOIN Players ON Crew.CrewID = Players.Leader Where Players.PlayerID < 5 ORDER BY Players.PlayerID", DB, adOpenStatic, adLockReadOnly ' Players.Name Is Not Null And
   
   While Not rst.EOF
-      col = rst!Colour
-      Lst.AddItem rst!ship & "  -  " & rst!Name & "  -  " & rst!CrewName
-
+    If IsNull(rst!Name) Then
+      If opt(rst!playerID - 1).Enabled = False And player.ID = 0 Then
+         opt(rst!playerID - 1).Enabled = True
+         opt(rst!playerID - 1).Value = False
+         opt(rst!playerID - 1).Visible = True
+         imgShip(rst!playerID - 1).GrayScale = lvicNoGrayScale
+      End If
+      PlayCode(rst!playerID).PlayName = ""
+    Else
+      Lst.AddItem rst!ship & "  -  " & IIf(rst!AI = 1, "AI Bot", rst!Name) & "  -  " & rst!CrewName
       PlayCode(rst!playerID).PlayName = rst!Name
-      'disable selected Ships, other than the one you have selected
-      For X = 0 To 3
-         If col = Left(opt(X).Tag, 1) And player.ID <> X + 1 Then
-            opt(X).Enabled = False
-            opt(X).Value = False
-            Exit For
-         End If
-      Next X
       
-      rst.MoveNext
+      If player.ID <> rst!playerID Then
+         opt(rst!playerID - 1).Enabled = False
+         opt(rst!playerID - 1).Value = False
+         opt(rst!playerID - 1).Visible = False
+         imgShip(rst!playerID - 1).GrayScale = lvicSimpleAverage
+      End If
+    End If
+    rst.MoveNext
   Wend
   
   rst.Close
@@ -657,4 +713,16 @@ Dim rst As New ADODB.Recordset, SQL, CrewID, maxCrewID, crewcnt
    Wend
    rst.Close
 End Sub
+
+Private Function getLastPlayer() As String
+Dim rst As New ADODB.Recordset, SQL
+   SQL = "SELECT Scores.PlayerName FROM Scores LEFT JOIN Crew ON Scores.PlayerName = Crew.CrewName WHERE Crew.CrewName Is Null ORDER BY Scores.StartDate DESC"
+   rst.CursorLocation = adUseClient
+   rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
+   If Not rst.EOF Then
+      getLastPlayer = rst!PlayerName
+   End If
+   rst.Close
+
+End Function
 

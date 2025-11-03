@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.10.3"
+#define MyAppVersion "1.10.4"
 #define MyAppPublisher "VeeBee-er"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -53,7 +53,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\bin\Forque.ttf";  DestDir: "{autofonts}
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\STENCIL.TTF";  DestDir: "{autofonts}"; FontInstall: "Stencil"; Flags: onlyifdoesntexist uninsneveruninstall
 ; Primary Files >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa.mdb"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
-Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa_FullBoard.mdb"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
+;Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa_FullBoard.mdb"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
 Source: "D:\Progs\GitHub\FireflyKalidasa\Firefly_rulebook.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyBlueSun_rulebook.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa_rulebook.pdf"; DestDir: "{app}"; Flags: ignoreversion
@@ -71,8 +71,8 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\AToken6.gif"; DestDir: "{app}\
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\badger.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Bester.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Billy.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\KalidasaBoard.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\KalidasaBoard1.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+;Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\KalidasaBoard.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+;Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\KalidasaBoard1.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\FireflyFullBoard.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Bourne.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Bree.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
@@ -567,6 +567,10 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyBoard1.jpg"; DestDir: "{app}
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyBoard2.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyBoard3.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyBoard4.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip1.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip2.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip3.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip4.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 
 ; Solids >>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Solid1harken.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
@@ -607,7 +611,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Wormhole.wav"; DestDir: "{app}\s
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\{#MyAppName} Full Map"; Filename: "{app}\{#MyAppExeName}"; Parameters: "{app}\FireflyKalidasa_FullBoard.mdb"
+;Name: "{group}\{#MyAppName} Full Map"; Filename: "{app}\{#MyAppExeName}"; Parameters: "{app}\FireflyKalidasa_FullBoard.mdb"
 Name: "{group}\Firefly AI Bot"; Filename: "{app}\FireFlyAIBot.exe"
 ;Name: "{group}\{#MyAppName} on MariaDB"; Filename: "{app}\{#MyAppExeName}"; Parameters: "Provider=MSDASQL;Driver={{MariaDB ODBC 3.1 Driver};Server=blis.duckdns.org;Port=3306;"
 Name: "{group}\Firefly Rulebook"; Filename: "{app}\Firefly_rulebook.pdf"

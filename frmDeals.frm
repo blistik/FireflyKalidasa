@@ -248,13 +248,13 @@ Dim Index, SQL, showBounty As Boolean
 Dim rst As New ADODB.Recordset
 Dim rst2 As New ADODB.Recordset
 Dim rst3 As New ADODB.Recordset
-Dim SectorID, ContactID As Integer, X, cnt As Integer
+Dim sectorID, ContactID As Integer, x, cnt As Integer
     
 With sftTree
    .Clear
    
-   SectorID = varDLookup("SectorID", "Players", "PlayerID=" & player.ID)
-   If IsNull(SectorID) Then Exit Function
+   sectorID = varDLookup("SectorID", "Players", "PlayerID=" & player.ID)
+   If IsNull(sectorID) Then Exit Function
    showBounty = (varDLookup("Bounty", "Story", "StoryID=" & Logic!StoryID) = 1)
    If dealFilter = "bounties" Then
       Me.Caption = "Bounties"
@@ -265,7 +265,7 @@ With sftTree
          Me.Caption = "Local Deals"
       End If
       
-      ContactID = Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0)
+      ContactID = Nz(varDLookup("ContactID", "Contact", "SectorID=" & sectorID), 0)
       
       If HigginsDealPerk Or (hasCrew(player.ID, 75) And ContactID = 0) And dealFilter = "locals" And Not hasCrew(player.ID, 22) Then
          ContactID = 8
@@ -280,7 +280,7 @@ With sftTree
       Else
          If ContactID = 0 Then Exit Function 'no Deals in this Sector
       End If
-      If getCruiserSector = 29 And SectorID = 29 And dealFilter = "locals" And Not HigginsDealPerk And Not HarkenDeal Then   'option to deal with Harken
+      If getCruiserSector = 29 And sectorID = 29 And dealFilter = "locals" And Not HigginsDealPerk And Not HarkenDeal Then   'option to deal with Harken
          If MessBox("Do you want Deal with Harken instead?", "Cruiser Deals", "Deal", "Not now", 0, 0, 0, 0, 5) = 0 Then
             ContactID = 5
             HarkenDeal = True
@@ -309,15 +309,15 @@ With sftTree
       .CellFont(Index, 1).Name = "BankGothic Md BT"
       .CellText(Index, 2) = CStr(getUnseenDeck("Contact", rst3!ContactID)) & " unseen"
       .CellFont(Index, 2).Name = "BankGothic Md BT"
-      For X = 0 To 8
+      For x = 0 To 8
          If rst3!ContactID = 10 Then
-            .CellForeColor(Index, X) = 14019306
+            .CellForeColor(Index, x) = 14019306
          Else
-            .CellForeColor(Index, X) = 0
+            .CellForeColor(Index, x) = 0
          End If
          
-         .CellBackColor(Index, X) = rst3!Colour
-      Next X
+         .CellBackColor(Index, x) = rst3!Colour
+      Next x
       Set .ItemPicture(Index) = LoadPicture(App.Path & "\Pictures\Sm" & Nz(varDLookup("Picture", "Contact", "ContactID=" & rst3!ContactID)))
       'Set .ItemPicture(Index) = AssetImages.Overlay("L", "U")
     
@@ -356,10 +356,10 @@ With sftTree
          .CellText(Index, 1) = rst!JobName
          .CellBackColor(Index, 1) = rst!Colour
          If rst!ContactID = 10 Then
-            X = varDLookup("Seq", "SupplyDeck", "CrewID=" & rst!FugitiveID)
-            Select Case X
+            x = varDLookup("Seq", "SupplyDeck", "CrewID=" & rst!FugitiveID)
+            Select Case x
             Case 1, 2, 3, 4
-               .CellBackColor(Index, 1) = getPlayerColor(X)
+               .CellBackColor(Index, 1) = getPlayerColor(x)
                .CellFont(Index, 1).Bold = True
             Case DISCARDED
                .CellFont(Index, 1).Bold = True
@@ -404,9 +404,9 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 2
                .CellText(Index, 1) = rst2!JobDesc
-               X = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
-               If SectorID = rst2!SectorID Then
+               x = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+               If sectorID = rst2!sectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
                   If hasJobReqs(player.ID, rst!CardID, rst!Job1ID) Then
@@ -422,7 +422,7 @@ With sftTree
                End If
                .CellText(Index, 3) = Nz(rst2!System)
                Set .ItemPicture(Index) = AssetImages.Overlay("LN", "LN")
-               .CellItemData(Index, 1) = rst2!SectorID
+               .CellItemData(Index, 1) = rst2!sectorID
             Else
                MsgBox "Job Card " & rst!Job1ID & " Error", vbCritical
             End If
@@ -438,9 +438,9 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 3
                .CellText(Index, 1) = rst2!JobDesc
-               X = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
-               If SectorID = rst2!SectorID Then
+               x = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+               If sectorID = rst2!sectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
                   If hasJobReqs(player.ID, rst!CardID, rst!Job3ID) Then
@@ -456,7 +456,7 @@ With sftTree
                End If
                .CellText(Index, 3) = rst2!System
                Set .ItemPicture(Index) = AssetImages.Overlay("LN", "LN")
-               .CellItemData(Index, 1) = rst2!SectorID
+               .CellItemData(Index, 1) = rst2!sectorID
             Else
                MsgBox "Job Card " & rst!Job3ID & " Error", vbCritical
             End If
@@ -471,9 +471,9 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 2
                .CellText(Index, 1) = rst2!JobDesc
-               X = getSectorCount(getPlayerSector(player.ID), rst2!SectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
-               If SectorID = rst2!SectorID Then
+               x = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+               If sectorID = rst2!sectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
                   If hasJobReqs(player.ID, rst!CardID, rst!Job2ID) Then
@@ -489,7 +489,7 @@ With sftTree
                End If
                .CellText(Index, 3) = rst2!System
                Set .ItemPicture(Index) = AssetImages.Overlay("LN", "LN")
-               .CellItemData(Index, 1) = rst2!SectorID
+               .CellItemData(Index, 1) = rst2!sectorID
             Else
                MsgBox "Job Card " & rst!Job2ID & " Error", vbCritical
             End If

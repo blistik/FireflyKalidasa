@@ -220,7 +220,7 @@ Private Sub Form_Resize()
 End Sub
 
 
-Private Sub sftTree_DragDrop(Source As Control, x As Single, Y As Single)
+Private Sub sftTree_DragDrop(Source As Control, X As Single, Y As Single)
 Dim Index As Long, CardID
    With sftTree
       
@@ -241,10 +241,10 @@ Dim Index As Long, CardID
    End With
 End Sub
 
-Private Sub sftTree_DragOver(Source As Control, x As Single, Y As Single, State As Integer)
+Private Sub sftTree_DragOver(Source As Control, X As Single, Y As Single, State As Integer)
 Dim Index As Long
    With sftTree
-      Index = .HitTest(x, Y)
+      Index = .HitTest(X, Y)
       If Index = -1 Then Exit Sub
       .DropHighlightStyle = dropSftTreeBetween  ' = dropSftTreeOnTop
       If State = 1 Then

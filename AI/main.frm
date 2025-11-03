@@ -687,18 +687,23 @@ Dim goalSector As Integer
      ' RefreshBoard
    'End If
    If status = "E" Then 'currently in End Game
-      PutMsg "Waiting to Host or Join a Game"
+      PutMsg "Waiting to Join a Game"
       player.ID = 0
    ElseIf (status = "H" Or status = "L") And player.ID = 0 Then 'ready to join
-      player.ID = getNewPlayer()
-      If player.ID = 0 Then
-         MsgBox "No available player slots", vbExclamation, "AI Bot: Fail to join"
-         End
+      If Nz(varDLookup("AIBotEnabled", "Story", "StoryID = " & Logic!StoryID), 0) = 1 Then
+         player.ID = getNewPlayer()
+         If player.ID = 0 Then
+            MsgBox "No available player slots", vbExclamation, "AI Bot: Fail to join"
+            End
+         End If
+         player.PlayName = varDLookup("Ship", "Players", "PlayerID=" & player.ID)  '"FireflyAI" & CStr(player.ID)
+         DB.Execute "Update Players SET Name ='" & player.PlayName & "', AI = 1 WHERE PlayerID = " & player.ID & " AND Name IS NULL"
       End If
-      player.PlayName = varDLookup("Ship", "Players", "PlayerID=" & player.ID)  '"FireflyAI" & CStr(player.ID)
-      DB.Execute "Update Players SET Name ='" & player.PlayName & "', AI = 1 WHERE PlayerID = " & player.ID & " AND Name IS NULL"
-      
-
+   ElseIf status = "H" And player.ID > 0 Then ' joined, but waiting for host
+      If Nz(varDLookup("AIBotEnabled", "Story", "StoryID = " & Logic!StoryID), 0) = 0 Then  'bail out
+         DB.Execute "Update Players SET Name =Null, AI = 0 WHERE PlayerID = " & player.ID
+         player.ID = 0
+      End If
    ElseIf status = "L" And player.ID = thisPlayer Then 'pick leader
       getPlayerCount True
       SetupPlayer player.ID, Logic!StoryID
@@ -719,7 +724,7 @@ Dim goalSector As Integer
       
       ContactList = getContactList(Logic!StoryID)
       
-      PutMsg player.PlayName & " selecting Start Sector", player.ID, Logic!GameCntr
+      PutMsg player.PlayName & " selecting Start Sector", player.ID, Logic!Gamecntr
 
        pickStartSector = 1
        x = getStartSector
@@ -730,7 +735,7 @@ Dim goalSector As Integer
        pickStartSector = 2
       
    ElseIf status = "S" And thisPlayer = player.ID And pickStartSector = 2 Then  'setup
-      PutMsg player.PlayName & "'s on the Map", player.ID, Logic!GameCntr
+      PutMsg player.PlayName & "'s on the Map", player.ID, Logic!Gamecntr
 
       'deal start drive core, and Jobs
       dealDriveAndJobs player.ID
@@ -739,7 +744,7 @@ Dim goalSector As Integer
       setNextPlayerREV player.ID, "R"
       Logic.Requery
       If Logic!Seq = "R" Then
-         PutMsg "Next Player's Turn", Logic!player, Logic!GameCntr
+         PutMsg "Next Player's Turn", Logic!player, Logic!Gamecntr
       End If
    
    ElseIf status = "F" And thisPlayer <> player.ID And actionSeq = ASidle And Logic!Trader = player.ID And Logic!ClientAccept = 0 Then  'showdown - defend!
@@ -782,7 +787,7 @@ Dim goalSector As Integer
          x = RollDice(6, True)
          DB.Execute "UPDATE ShowdownScores Set Dice = " & x & " WHERE PlayerID = " & player.ID
          DB.Execute "UPDATE ShowdownScores Set forcereroll = 0 WHERE PlayerID = " & Logic!Trader
-         PutMsg player.PlayName & " is forced to re-roll and gets a " & x, player.ID, Logic!GameCntr
+         PutMsg player.PlayName & " is forced to re-roll and gets a " & x, player.ID, Logic!Gamecntr
       ElseIf Not processBountyJumpScore(DefenderID) And hasCrew(player.ID, 91) And Not forcererollused Then
          If DefenderID > 0 Then
             DB.Execute "Update ShowdownScores set forcereroll = 1 WHERE PlayerID = " & player.ID
@@ -854,7 +859,7 @@ Dim goalSector As Integer
       bountyCardID = 0
       
       If getCruiserSector = SectorID And hasWarrant Then
-         PutMsg player.PlayName & " pays fine for Warrants", player.ID, Logic!GameCntr
+         PutMsg player.PlayName & " pays fine for Warrants", player.ID, Logic!Gamecntr
          DB.Execute "UPDATE Players SET Warrants=0, Pay = " & IIf(getMoney(player.ID) < 1000, "0", "Pay - 1000") & " WHERE PlayerID =" & player.ID
       End If
       
@@ -951,13 +956,13 @@ Dim goalSector As Integer
             End If
          ElseIf SectorID = varDLookup("SectorID", "Contact", "ContactID=" & targetContact) And (IsEmpty(targetJobCard) Or IsNull(targetJobCard)) Then 'yes, we're at the Contact
             If targetContact = 2 And hasWarrant() And isSolid(player.ID, targetContact) And getMoney(player.ID) > 1999 Then
-               PutMsg player.PlayName & " gets Badger to clear Warrants for $1000", player.ID, Logic!GameCntr
+               PutMsg player.PlayName & " gets Badger to clear Warrants for $1000", player.ID, Logic!Gamecntr
                DB.Execute "UPDATE Players SET Warrants=0, Pay = Pay - 1000 WHERE PlayerID =" & player.ID
             End If
             'pickup a job
             targetJobCard = getJob(targetContact)
             If IsEmpty(targetJobCard) Then
-               PutMsg player.PlayName & " finds no Legal Jobs for " & varDLookup("ContactName", "Contact", "ContactID=" & targetContact), player.ID, Logic!GameCntr
+               PutMsg player.PlayName & " finds no Legal Jobs for " & varDLookup("ContactName", "Contact", "ContactID=" & targetContact), player.ID, Logic!Gamecntr
                'reset for next contact
                ContactList = Replace(ContactList, targetContact & ",", "") 'for 4,5
                ContactList = Replace(ContactList, "," & targetContact, "") 'for 3,4
@@ -1044,7 +1049,7 @@ Dim goalSector As Integer
       'ShoreLeave
       If (SupplyID > 0 Or HavenID > 0) And Abs(doShoreLeave(player.ID, True)) <= getMoney(player.ID) And hasDisgruntled(player.ID) Then
          x = doShoreLeave(player.ID, False, (HavenID = player.ID))
-         PutMsg player.PlayName & " decides to shout the Crew some Shoreleave for " & IIf(x = -1, "Free!", "$" & Abs(x)), player.ID, Logic!GameCntr
+         PutMsg player.PlayName & " decides to shout the Crew some Shoreleave for " & IIf(x = -1, "Free!", "$" & Abs(x)), player.ID, Logic!Gamecntr
          fullburndone = (FullburnMovesDone > 0) Or fullburndone
       ElseIf SupplyID > 0 And Not buydone Then
          pullSupplies SupplyID
@@ -1080,7 +1085,7 @@ Dim goalSector As Integer
       'turn finished, push to next player (for SP thats you)
       thisPlayer = setNextPlayer(player.ID)
       If thisPlayer <> player.ID Then
-         PutMsg "Next Player's Turn", thisPlayer, Logic!GameCntr
+         PutMsg "Next Player's Turn", thisPlayer, Logic!Gamecntr
       End If
 
       actionSeq = ASidle
@@ -1124,14 +1129,14 @@ Dim x
                x = 0
             End If
             DB.Execute "UPDATE Players SET Fuel =Fuel + (" & MAXFUEL & "- " & CStr(fuelleft) & "),Pay = Pay - (" & CStr(x) & "*100) WHERE PlayerID = " & player.ID
-            PutMsg player.PlayName & " gets " & CStr(MAXFUEL - fuelleft) & " Fuel at their Haven", player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " gets " & CStr(MAXFUEL - fuelleft) & " Fuel at their Haven", player.ID, Logic!Gamecntr
          Else
             'buy fuel
             DB.Execute "UPDATE Players SET Fuel =Fuel + (" & MAXFUEL & "- " & CStr(fuelleft) & "),Pay = Pay - ((" & MAXFUEL & "-" & CStr(fuelleft) & ")*100) WHERE PlayerID = " & player.ID
             If HavenID > 0 Then
-               PutMsg player.PlayName & " buys " & CStr(MAXFUEL - fuelleft) & " Fuel at " & varDLookup("Name", "Players", "PlayerID=" & HavenID) & "'s Haven", player.ID, Logic!GameCntr
+               PutMsg player.PlayName & " buys " & CStr(MAXFUEL - fuelleft) & " Fuel at " & varDLookup("Name", "Players", "PlayerID=" & HavenID) & "'s Haven", player.ID, Logic!Gamecntr
             Else
-               PutMsg player.PlayName & " buys " & CStr(MAXFUEL - fuelleft) & " Fuel at " & varDLookup("SupplyName", "Supply", "SectorID=" & SectorID), player.ID, Logic!GameCntr
+               PutMsg player.PlayName & " buys " & CStr(MAXFUEL - fuelleft) & " Fuel at " & varDLookup("SupplyName", "Supply", "SectorID=" & SectorID), player.ID, Logic!Gamecntr
             End If
 
          End If
@@ -1145,12 +1150,12 @@ Dim fuel As Integer
    fuel = 1 + getExtraBurn(player.ID)
    processMove = getPlayerSector(player.ID)
    If FullburnMovesDone = 0 And (targetSector = processMove Or getFuel(player.ID) < 1) Then 'Mosey
-      PutMsg player.PlayName & " Moseys to Sector " & processMove, player.ID, Logic!GameCntr
+      PutMsg player.PlayName & " Moseys to Sector " & processMove, player.ID, Logic!Gamecntr
       fullburndone = True
    ElseIf FullburnMovesDone = 0 Then
       'burn 1 fuel
       DB.Execute "UPDATE Players Set Fuel = Fuel - " & fuel & " WHERE PlayerID = " & player.ID
-      PutMsg player.PlayName & " goes FullBurn" & IIf(fuel > 1, " with Heavy Load", "") & " and has " & varDLookup("Fuel", "Players", "PlayerID=" & player.ID) & " Fuel left", player.ID, Logic!GameCntr
+      PutMsg player.PlayName & " goes FullBurn" & IIf(fuel > 1, " with Heavy Load", "") & " and has " & varDLookup("Fuel", "Players", "PlayerID=" & player.ID) & " Fuel left", player.ID, Logic!Gamecntr
       FullburnMovesDone = FullburnMovesDone + 1
       showNav processMove
    Else
@@ -1168,11 +1173,11 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
             DB.Execute "UPDATE Players SET SectorID = " & goToContact & " WHERE PlayerID =" & player.ID
             setRefresh
             Trail(FullburnMovesDone + 1) = goToContact
-            PutMsg player.PlayName & " moving towards " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & ContactSectorID), "the Cruiser") & " via Sector " & goToContact, player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " moving towards " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & ContactSectorID), "the Cruiser") & " via Sector " & goToContact, player.ID, Logic!Gamecntr
             playsnd 1, True
             
          Else
-            PutMsg player.PlayName & " has no viable path", player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " has no viable path", player.ID, Logic!Gamecntr
             movesDone
             actionSeq = ASEnd
          End If
@@ -1192,10 +1197,10 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
             DB.Execute "UPDATE Players SET SectorID = " & goToSupply & " WHERE PlayerID =" & player.ID
             setRefresh
             Trail(FullburnMovesDone + 1) = goToSupply
-            PutMsg player.PlayName & " moving towards " & varDLookup("PlanetName", "Planet", "SectorID=" & SupplySectorID) & " via Sector " & goToSupply & " to get Supplies", player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " moving towards " & varDLookup("PlanetName", "Planet", "SectorID=" & SupplySectorID) & " via Sector " & goToSupply & " to get Supplies", player.ID, Logic!Gamecntr
             playsnd 1, True
          Else
-            PutMsg player.PlayName & " has no viable path", player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " has no viable path", player.ID, Logic!Gamecntr
             movesDone
             actionSeq = ASEnd
          End If
@@ -1218,10 +1223,10 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
             DB.Execute "UPDATE Players SET SectorID = " & goToPlayer & " WHERE PlayerID =" & player.ID
             setRefresh
             Trail(FullburnMovesDone + 1) = goToPlayer
-            PutMsg player.PlayName & " moving " & PlanetName & " via Sector " & goToPlayer & IIf(goalSector = 0, " to seek a Bounty", " to reach a goal"), player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " moving " & PlanetName & " via Sector " & goToPlayer & IIf(goalSector = 0, " to seek a Bounty", " to reach a goal"), player.ID, Logic!Gamecntr
             playsnd 1, True
          Else
-            PutMsg player.PlayName & " has no viable path", player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " has no viable path", player.ID, Logic!Gamecntr
             movesDone
             actionSeq = ASEnd
          End If
@@ -1357,7 +1362,7 @@ Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi As Integer, 
          msg = msg & IIf(passgr = 0, "", IIf(Len(msg) > 0, ", ", "") & passgr & " Passenger" & IIf(passgr > 1, "s", ""))
          msg = msg & IIf(fugi = 0, "", IIf(Len(msg) > 0, ", ", "") & fugi & " Fugitive" & IIf(fugi > 1, "s", ""))
          
-         PutMsg player.PlayName & " completed the first part of Job " & CardID & IIf(msg = "", "", " and took on " & msg), player.ID, Logic!GameCntr
+         PutMsg player.PlayName & " completed the first part of Job " & CardID & IIf(msg = "", "", " and took on " & msg), player.ID, Logic!Gamecntr
 
       End If
       rst.Close
@@ -1396,7 +1401,7 @@ Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer,
          If rst!ContactID = 10 Then
             perk = getPerkAttributeSum(player.ID, "BountyBonus")
             If perk > 0 Then
-               PutMsg player.PlayName & " gets an extra $" & perk & " Bounty bonus for having Lawmen in the crew", player.ID, Logic!GameCntr
+               PutMsg player.PlayName & " gets an extra $" & perk & " Bounty bonus for having Lawmen in the crew", player.ID, Logic!Gamecntr
                jobpay = jobpay + perk
             End If
          End If
@@ -1405,7 +1410,7 @@ Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer,
             crewpay = 0
          ElseIf RollDice(6) < 4 And Not hasDisgruntled(player.ID) And jobpay > 0 Then 'don't pay em
             doDisgruntled player.ID, 2
-            PutMsg player.PlayName & " didn't pay the crew and they are not Happy about it", player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " didn't pay the crew and they are not Happy about it", player.ID, Logic!Gamecntr
             crewpay = 0
          Else
             crewpay = getCrewPay
@@ -1420,7 +1425,7 @@ Dim SQL, msg As String, contra As Integer, passgr  As Integer, fugi  As Integer,
          msg = msg & IIf(passgr = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(passgr) & " Passenger" & IIf(Abs(passgr) > 1, "s", ""))
          msg = msg & IIf(fugi = 0, "", IIf(Len(msg) > 0, ", ", "") & Abs(fugi) & " Fugitive" & IIf(Abs(fugi) > 1, "s", ""))
          
-         PutMsg player.PlayName & IIf(msg = "", "", " moved " & msg & " and") & " completed Job " & targetJobCard & " for $" & CStr(jobpay - crewpay) & IIf(contact = 10 Or contact = 0, "", " and is Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!ContactID)), player.ID, Logic!GameCntr
+         PutMsg player.PlayName & IIf(msg = "", "", " moved " & msg & " and") & " completed Job " & targetJobCard & " for $" & CStr(jobpay - crewpay) & IIf(contact = 10 Or contact = 0, "", " and is Solid with " & varDLookup("ContactName", "Contact", "ContactID=" & rst!ContactID)), player.ID, Logic!Gamecntr
          
       End If
       rst.Close
@@ -1446,7 +1451,7 @@ Dim rst As New ADODB.Recordset
       rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       If rst.EOF Then  ' this happens when the reshuffle card is in the discard pile at start of game setup
          ShuffleDeck "Nav", True, False, Zone
-         PutMsg player.PlayName & " Reshuffling NavDeck " & Zone & " due to end of deck", player.ID, Logic!GameCntr
+         PutMsg player.PlayName & " Reshuffling NavDeck " & Zone & " due to end of deck", player.ID, Logic!Gamecntr
          rst.Close
          rst.Open SQL, DB, adOpenStatic, adLockReadOnly
       End If
@@ -1455,22 +1460,22 @@ Dim rst As New ADODB.Recordset
          If (rst!CardName = "Reaver Cutter!") And getCruiserCorvette(SectorID) = 6 Then 'corvette shoos the Reavers away
             movesDone
             actionSeq = ASEnd
-            PutMsg player.PlayName & " is Shielded from a Reaver Cutter attack by the Alliance Corvette", player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " is Shielded from a Reaver Cutter attack by the Alliance Corvette", player.ID, Logic!Gamecntr
             
          'skip Customs Inspection if solid with Harken
          ElseIf (rst!CardName = "Customs Inspection") And isSolid(player.ID, 5) Then
-            PutMsg player.PlayName & " being Solid with Harken avoided a Customs Inspection", player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " being Solid with Harken avoided a Customs Inspection", player.ID, Logic!Gamecntr
          'skip Customs Inspection if solid with Harken
          ElseIf (rst!CardName = "Customs Inspection") And Not isSolid(player.ID, 5) Then
             movesDone
             actionSeq = ASEnd
-            PutMsg player.PlayName & " was stopped by a Customs Inspection", player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " was stopped by a Customs Inspection", player.ID, Logic!Gamecntr
          ElseIf rst!WinSolid > 0 And Not isSolid(player.ID, rst!WinSolid) And Zone = "A" Then
             If doMoveAllianceAdjacent(SectorID) Then
-               PutMsg player.PlayName & " has the Cruiser move into an adjacent Sector, tipped off by " & varDLookup("ContactName", "Contact", "ContactID=" & rst!WinSolid), player.ID, Logic!GameCntr
+               PutMsg player.PlayName & " has the Cruiser move into an adjacent Sector, tipped off by " & varDLookup("ContactName", "Contact", "ContactID=" & rst!WinSolid), player.ID, Logic!Gamecntr
             End If
          Else
-            PutMsg player.PlayName & " Nav: " & rst!OptionName & " - " & rst!Details, player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " Nav: " & rst!OptionName & " - " & rst!Details, player.ID, Logic!Gamecntr
 
             '<<<<<<<<<<  INSERT NAV OUTCOMES >>>>>>>>>>>>>>
             Select Case rst!MoveReaver
@@ -1556,9 +1561,9 @@ Dim rst As New ADODB.Recordset
                actionSeq = ASEnd
                If rst!Evade > 0 Then
                   moveAutoAI player.ID, 1, True
-                  PutMsg player.PlayName & " has had to Evade", player.ID, Logic!GameCntr
+                  PutMsg player.PlayName & " has had to Evade", player.ID, Logic!Gamecntr
                Else
-                  PutMsg player.PlayName & " has come to an abrupt halt", player.ID, Logic!GameCntr
+                  PutMsg player.PlayName & " has come to an abrupt halt", player.ID, Logic!Gamecntr
                End If
             End If
 
@@ -1573,7 +1578,7 @@ Dim rst As New ADODB.Recordset
      
       If reshuffle = 1 Then 'ready for next turn
          ShuffleDeck "Nav", True, False, Zone
-         PutMsg player.PlayName & " Reshuffling NavDeck " & Zone & " due to reshuffle card", player.ID, Logic!GameCntr
+         PutMsg player.PlayName & " Reshuffling NavDeck " & Zone & " due to reshuffle card", player.ID, Logic!Gamecntr
          If Zone = "A" Then
             If pushBounties() Then
                If DrawDeck("Contact", 10, 3) Then PutMsg "New Bounties available"
@@ -1624,7 +1629,7 @@ Dim Skilltype As Integer, skill As Integer
             x = 1
             If ldr = 4 And (InStr(kword, "FIREARM") > 0 Or InStr(kword, "EXPLOSIVES") > 0) Then x = 2
             getMoney player.ID, -1 * (rst!Pay / x)
-            PutMsg player.PlayName & " buys " & rst!GearName & " at " & getSupplyName(SupplyID), player.ID, Logic!GameCntr
+            PutMsg player.PlayName & " buys " & rst!GearName & " at " & getSupplyName(SupplyID), player.ID, Logic!Gamecntr
          End If
          rst.Close
       End If
@@ -1678,7 +1683,7 @@ With sftTree
          .CellText(Index, 2) = " << IN PLAY >> $" & rst!Pay
          Set .CellPicture(Index, 2) = AssetImages.ListImages("dino").Picture
       Else
-         .CellText(Index, 2) = "Cash in Hand: $" & rst!Pay
+         .CellText(Index, 2) = "Cash on Hand: $" & rst!Pay
       End If
          
       .CellForeColor(Index, 2) = 0
@@ -1710,7 +1715,7 @@ With sftTree
       Else
          .CellBackColor(Index, 4) = 16711680
       End If
-      .CellText(Index, 9) = "Goals: " & CStr(rst!Goals) & " Turns: " & CStr(Logic!GameCntr - 1) & IIf(isBountyEnabled, " Bounties: " & CStr(countBounties(player.ID)), "")
+      .CellText(Index, 9) = "Goals: " & CStr(rst!Goals) & " Turns: " & CStr(Logic!Gamecntr - 1) & IIf(isBountyEnabled, " Bounties: " & CStr(countBounties(player.ID)), "")
       
       'CREW---------------------------------------------
       Index = .AddItem("Crew")
@@ -2368,7 +2373,7 @@ Dim x As Integer, y As Integer
    Dice = RollDice(6, True)
    If hasCrew(player.ID, 90) And Dice = 1 Then
       Dice = RollDice(6, True)
-      PutMsg player.PlayName & " rolls a 1 and uses The Guardian to re-roll a " & Dice, player.ID, Logic!GameCntr
+      PutMsg player.PlayName & " rolls a 1 and uses The Guardian to re-roll a " & Dice, player.ID, Logic!Gamecntr
    End If
 
    DB.Execute "Insert into ShowdownScores (PlayerID,SkillType,Skill,Dice) Values (" & player.ID & "," & Skilltype & "," & skill & "," & Dice & ")"
@@ -2388,7 +2393,7 @@ Dim x As Integer, y As Integer
    Dice = RollDice(6, True)
    If hasCrew(player.ID, 90) And Dice = 1 Then
       Dice = RollDice(6, True)
-      PutMsg player.PlayName & " rolls a 1 and uses The Guardian to re-roll a " & Dice, player.ID, Logic!GameCntr
+      PutMsg player.PlayName & " rolls a 1 and uses The Guardian to re-roll a " & Dice, player.ID, Logic!Gamecntr
    End If
    DB.Execute "Insert into ShowdownScores (PlayerID,SkillType,Skill,Dice) Values (" & player.ID & "," & Skilltype & "," & skill & "," & Dice & ")"
 '   Logic.Requery
@@ -2449,12 +2454,12 @@ Dim CSkilltype As Integer, Cskill As Integer, CDice As Integer, cnt, msg, win As
    'fugitive rolls
    CDice = RollDice(6, True)
    
-   PutMsg "Showdown: " & getCrewName(0, FugitiveID) & IIf(Cskill = 0, " has no Skills", " uses the " & cstrSkill(CSkilltype) & " skill of " & Cskill) & " and rolls a " & CDice & " for a total of " & CStr(Cskill + CDice), player.ID, Logic!GameCntr
+   PutMsg "Showdown: " & getCrewName(0, FugitiveID) & IIf(Cskill = 0, " has no Skills", " uses the " & cstrSkill(CSkilltype) & " skill of " & Cskill) & " and rolls a " & CDice & " for a total of " & CStr(Cskill + CDice), player.ID, Logic!Gamecntr
     
    win = ((skill + Dice) > (Cskill + CDice))
    
    msg = "Showdown: " & player.PlayName & " uses the " & cstrSkill(Skilltype) & " skill of " & skill & " and rolls a " & Dice & " for a total of " & CStr(skill + Dice) & IIf(win, " to apprehend " & getCrewName(0, FugitiveID), " and Botches the job!")
-   PutMsg msg, player.ID, Logic!GameCntr
+   PutMsg msg, player.ID, Logic!Gamecntr
    
    If win Then
       DB.Execute "UPDATE SupplyDeck SET Seq =0 WHERE CardID = " & CrewCardID
@@ -2498,7 +2503,7 @@ Dim x As Integer, y As Integer
       Logic.Update
    End If
       
-   PutMsg player.PlayName & IIf(doBoardingTest, " boards", " fails to board") & " " & PlayCode(DefenderID).PlayName & "'s Ship using " & skill & " " & cstrSkill(Skilltype) & " skills and a dice roll of " & Dice, player.ID, Logic!GameCntr
+   PutMsg player.PlayName & IIf(doBoardingTest, " boards", " fails to board") & " " & PlayCode(DefenderID).PlayName & "'s Ship using " & skill & " " & cstrSkill(Skilltype) & " skills and a dice roll of " & Dice, player.ID, Logic!Gamecntr
 
 End Function
 
@@ -2547,7 +2552,7 @@ Dim msg As String
       'Agent McGinnis is a bad loser
       If hasCrew(player.ID, 92) Then issueWarrant DefenderID, player.ID
    End If
-   PutMsg player.PlayName & msg & " the Showdown against " & PlayCode(DefenderID).PlayName, player.ID, Logic!GameCntr
+   PutMsg player.PlayName & msg & " the Showdown against " & PlayCode(DefenderID).PlayName, player.ID, Logic!Gamecntr
 
 
 End Function
@@ -2580,7 +2585,7 @@ End Function
 Private Sub issueWarrant(ByVal takerID As Integer, ByVal giverID As Integer)
 
    DB.Execute "UPDATE Players set Warrants = Warrants + 1 WHERE PlayerID = " & CStr(takerID)
-   PutMsg "Agent McGinnis didn't take kindly to the Showdown result and has issued a Warrant to " & PlayCode(takerID).PlayName, giverID, Logic!GameCntr
+   PutMsg "Agent McGinnis didn't take kindly to the Showdown result and has issued a Warrant to " & PlayCode(takerID).PlayName, giverID, Logic!Gamecntr
    
 End Sub
 

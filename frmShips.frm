@@ -383,15 +383,15 @@ Dim rst As New ADODB.Recordset
    
 End Sub
 Public Function findImageKey(ByVal key As String) As Integer
-Dim X
+Dim x
    key = Left(key, Len(key) - 4) 'remove .jpg
    With AssetImages
-      For X = 1 To .ListImages.Count
-         If key = .ListImages.Item(X).key Then
-            findImageKey = X
+      For x = 1 To .ListImages.Count
+         If key = .ListImages.Item(x).key Then
+            findImageKey = x
             Exit For
          End If
-      Next X
+      Next x
    End With
 End Function
 
@@ -407,7 +407,7 @@ Public Sub RefreshShips()
 End Sub
 
 Private Sub refreshShip(filter, Optional ByVal doClear As Boolean = True)
-Dim Index, SQL, v, w, X, Y, z
+Dim Index, SQL, v, w, x, y, z
 Dim totalfight, totaltech, totalnego, totalpay, lastplayer, fight As Integer, tech As Integer, nego As Integer
 Dim discardF As Boolean, discardT As Boolean, discardN As Boolean, planet As String
 Dim rst As New ADODB.Recordset
@@ -454,7 +454,7 @@ With sftTree
          .CellText(Index, 2) = " << IN PLAY >>"
          Set .CellPicture(Index, 2) = AssetImages.ListImages("dino").Picture
       Else
-         .CellText(Index, 2) = "Cash in Hand: $" & rst!pay
+         .CellText(Index, 2) = "Cash on Hand: $" & rst!pay
       End If
       .CellFont(Index, 2).Name = "BankGothic Md BT"
       .CellForeColor(Index, 2) = 0
@@ -470,13 +470,13 @@ With sftTree
       End If
       planet = rst!PlanetName & ""
       If planet = "" Or planet = "Cruiser" Or planet = "Corvette" Then
-          .CellText(Index, 4) = "Sector " & CStr(rst!SectorID)
+          .CellText(Index, 4) = "Sector " & CStr(rst!sectorID)
       Else
          .CellText(Index, 4) = planet
       End If
       .CellItemData(Index, 4) = rst!playerID
       .CellItemData(Index, 5) = rst!AI
-      .CellItemData(Index, 6) = rst!SectorID
+      .CellItemData(Index, 6) = rst!sectorID
       If rst!Zones = "B" Then
          .CellBackColor(Index, 4) = 0
       ElseIf rst!Zones = "R" Then
@@ -489,9 +489,9 @@ With sftTree
       Index = .AddItem("Crew")
       .CellFont(Index, 0).Name = "BankGothic Md BT"
       'Display actual Crew Number and Capacity (6) with modifiers
-      X = CrewCapacity(rst!playerID)
-      Y = getCrewCount(rst!playerID)
-      .CellText(Index, 2) = "Crew Cap: " & CStr(X) & " Crew: " & CStr(Y) & "  Spare: " & CStr(X - Y)
+      x = CrewCapacity(rst!playerID)
+      y = getCrewCount(rst!playerID)
+      .CellText(Index, 2) = "Crew Cap: " & CStr(x) & " Crew: " & CStr(y) & "  Spare: " & CStr(x - y)
       .CellFont(Index, 2).Name = "BankGothic Md BT"
       If getCrewCount(rst!playerID) >= CrewCapacity(rst!playerID) Then
          .CellForeColor(Index, 2) = QBColor(12)
@@ -510,7 +510,7 @@ With sftTree
          .CellItemData(Index, 2) = rst2!CrewID
          .CellItemData(Index, 3) = rst2!leader
          .CellItemData(Index, 4) = rst!playerID
-         .CellItemData(Index, 6) = rst!SectorID
+         .CellItemData(Index, 6) = rst!sectorID
          .CellItemData(Index, 7) = rst2!Disgruntled
          .CellItemData(Index, 8) = rst2!pay
          .ItemLevel(Index) = 2
@@ -556,15 +556,15 @@ With sftTree
                .CellFont(Index, 5).Bold = True
             End If
          End If
-         If rst2!CrewID = 94 And getZone(rst!SectorID) = "B" Then 'Sheriff Bourne
+         If rst2!CrewID = 94 And getZone(rst!sectorID) = "B" Then 'Sheriff Bourne
             fight = fight + 2
             .CellFont(Index, 5).Bold = True
          End If
          
-         X = getPerkAttributeCrewValue(rst!playerID, "fight", rst2!CardID) 'has a +Fight perk
-         If X > 0 Then
+         x = getPerkAttributeCrewValue(rst!playerID, "fight", rst2!CardID) 'has a +Fight perk
+         If x > 0 Then
             If hasGearKeyword(rst!playerID, hasPerkKeyword(rst!playerID, rst2!CardID), rst2!CrewID) Then 'crow's special Knife rule
-               fight = fight + X
+               fight = fight + x
                .CellFont(Index, 5).Bold = True
             End If
          End If
@@ -596,9 +596,9 @@ With sftTree
          
          'NEGOTIATE
          nego = rst2!Negotiate
-         X = hasGearCrew(rst!playerID, 28)  'Mal's Brown Coat
-         If X = rst2!CrewID Then
-            If varDLookup("Disgruntled", "Crew", "CrewID=" & X) > 0 Then
+         x = hasGearCrew(rst!playerID, 28)  'Mal's Brown Coat
+         If x = rst2!CrewID Then
+            If varDLookup("Disgruntled", "Crew", "CrewID=" & x) > 0 Then
                nego = nego + fight
                .CellFont(Index, 7).Bold = True
             End If
@@ -818,18 +818,18 @@ With sftTree
       rst2.Close
        
       'CARGO-----------------------------------
-      Y = .AddItem("Cargo Hold / Stash")
-      .CellFont(Y, 0).Name = "BankGothic Md BT"
-      .ItemLevel(Y) = 1
+      y = .AddItem("Cargo Hold / Stash")
+      .CellFont(y, 0).Name = "BankGothic Md BT"
+      .ItemLevel(y) = 1
       
       SQL = "SELECT * FROM Players WHERE PlayerID=" & rst!playerID
       rst2.CursorLocation = adUseClient
       rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       If Not rst2.EOF Then
-         X = 0
+         x = 0
          If rst2!fuel > 0 Then
-            X = X + Int(rst2!fuel / 2) + (rst2!fuel Mod 2)
-            Index = .AddItem(CStr(X))
+            x = x + Int(rst2!fuel / 2) + (rst2!fuel Mod 2)
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 6 'fuel
             .CellItemData(Index, 4) = rst!playerID
@@ -839,8 +839,8 @@ With sftTree
             
          End If
          If rst2!parts > 0 Then
-            X = X + Int(rst2!parts / 2) + (rst2!parts Mod 2)
-            Index = .AddItem(CStr(X))
+            x = x + Int(rst2!parts / 2) + (rst2!parts Mod 2)
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 7 'parts
             .CellItemData(Index, 4) = rst!playerID
@@ -850,8 +850,8 @@ With sftTree
             
          End If
          If rst2!cargo > 0 Then
-            X = X + rst2!cargo
-            Index = .AddItem(CStr(X))
+            x = x + rst2!cargo
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 8 'cargo
             .CellItemData(Index, 4) = rst!playerID
@@ -859,8 +859,8 @@ With sftTree
             .CellText(Index, 1) = "Cargo: " & CStr(rst2!cargo)
          End If
          If rst2!Passenger > 0 Then
-            X = X + rst2!Passenger
-            Index = .AddItem(CStr(X))
+            x = x + rst2!Passenger
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 9 'Passengers
             .CellItemData(Index, 4) = rst!playerID
@@ -869,8 +869,8 @@ With sftTree
             
          End If
          If rst2!Contraband > 0 Then
-            X = X + rst2!Contraband
-            Index = .AddItem(CStr(X))
+            x = x + rst2!Contraband
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 10 'Contraband
             .CellItemData(Index, 4) = rst!playerID
@@ -879,8 +879,8 @@ With sftTree
 
          End If
          If rst2!Fugitive > 0 Then
-            X = X + rst2!Fugitive
-            Index = .AddItem(CStr(X))
+            x = x + rst2!Fugitive
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 11 ' Fugitives
             .CellItemData(Index, 4) = rst!playerID
@@ -892,17 +892,17 @@ With sftTree
       End If
       v = StashCapacity(rst!playerID)
       w = CargoCapacity(rst!playerID)
-      X = CargoSpaceUsed(rst!playerID)
-      .CellText(Y, 2) = "Hold Capacity: " & CStr(w - v) & ",  Stash Capacity: " & CStr(v) & ",  Carrying: " & CStr(X) & "  Spare: " & CStr((w - X))
-      .CellFont(Y, 2).Name = "BankGothic Md BT"
-      If (w - CargoSpaceUsed(rst!playerID)) < 1 Then .CellForeColor(Y, 2) = QBColor(12)
+      x = CargoSpaceUsed(rst!playerID)
+      .CellText(y, 2) = "Hold Capacity: " & CStr(w - v) & ",  Stash Capacity: " & CStr(v) & ",  Carrying: " & CStr(x) & "  Spare: " & CStr((w - x))
+      .CellFont(y, 2).Name = "BankGothic Md BT"
+      If (w - CargoSpaceUsed(rst!playerID)) < 1 Then .CellForeColor(y, 2) = QBColor(12)
       
-      If z = Y Then .Collapse Y, True
+      If z = y Then .Collapse y, True
       rst2.Close
       'SHIP UPDGRADES-----------------------------------
-      Y = .AddItem("Drive Core & Ship Upgrades")
-      .CellFont(Y, 0).Name = "BankGothic Md BT"
-      .ItemLevel(Y) = 1
+      y = .AddItem("Drive Core & Ship Upgrades")
+      .CellFont(y, 0).Name = "BankGothic Md BT"
+      .ItemLevel(y) = 1
       SQL = "SELECT PlayerSupplies.CardID, ShipUpgrade.* "
       SQL = SQL & "FROM ShipUpgrade INNER JOIN (PlayerSupplies INNER JOIN SupplyDeck ON PlayerSupplies.CardID = SupplyDeck.CardID) ON ShipUpgrade.ShipUpgradeID = SupplyDeck.ShipUpgradeID "
       SQL = SQL & "WHERE PlayerSupplies.PlayerID=" & rst!playerID
@@ -925,12 +925,12 @@ With sftTree
          Set .ItemPicture(Index) = AssetImages.Overlay("LN", IIf(rst2!DriveCore = 1, "SU", "UP"))
          rst2.MoveNext
       Wend
-      If z = Y Then .Collapse Y, True
+      If z = y Then .Collapse y, True
       rst2.Close
       w = getShipUpgrades(rst!playerID)
-      .CellText(Y, 2) = "Spare Slots: " & (3 - w)
-      .CellFont(Y, 2).Name = "BankGothic Md BT"
-      If w > 2 Then .CellForeColor(Y, 2) = QBColor(12)
+      .CellText(y, 2) = "Spare Slots: " & (3 - w)
+      .CellFont(y, 2).Name = "BankGothic Md BT"
+      If w > 2 Then .CellForeColor(y, 2) = QBColor(12)
       '--------------------------------------------------
       rst.MoveNext
    Wend
@@ -940,7 +940,7 @@ With sftTree
 End Sub
 
 Private Sub refreshHavens(filter, Optional ByVal doClear As Boolean = True)
-Dim Index, SQL, X, Y, z
+Dim Index, SQL, x, y, z
 Dim totalfight, totaltech, totalnego, totalpay, lastplayer, fight As Integer, tech As Integer, nego As Integer
 Dim rst As New ADODB.Recordset
 Dim rst2 As New ADODB.Recordset
@@ -984,7 +984,7 @@ With sftTree
       
       .CellText(Index, 4) = rst!PlanetName
       .CellItemData(Index, 4) = rst!playerID
-      .CellItemData(Index, 6) = rst!SectorID
+      .CellItemData(Index, 6) = rst!sectorID
       If rst!Zones = "B" Then
          .CellBackColor(Index, 4) = 0
       ElseIf rst!Zones = "R" Then
@@ -1010,7 +1010,7 @@ With sftTree
          .CellItemData(Index, 2) = rst2!CrewID
          .CellItemData(Index, 3) = rst2!leader
          .CellItemData(Index, 4) = 0 ' rst!playerID
-         .CellItemData(Index, 6) = rst!SectorID
+         .CellItemData(Index, 6) = rst!sectorID
          .CellItemData(Index, 7) = rst2!Disgruntled
          .CellItemData(Index, 8) = rst2!pay
          .ItemLevel(Index) = 2
@@ -1055,10 +1055,10 @@ With sftTree
             End If
          End If
          
-         X = getPerkAttributeCrewValue(rst!playerID, "fight", rst2!CardID)  'has a +Fight perk
-         If X > 0 Then
+         x = getPerkAttributeCrewValue(rst!playerID, "fight", rst2!CardID)  'has a +Fight perk
+         If x > 0 Then
             If hasGearKeyword(rst!playerID, hasPerkKeyword(rst!playerID, rst2!CardID), rst2!CrewID) Then 'crow's special Knife rule
-               fight = fight + X
+               fight = fight + x
                .CellFont(Index, 5).Bold = True
             End If
          End If
@@ -1082,9 +1082,9 @@ With sftTree
          
          'NEGOTIATE
          nego = rst2!Negotiate
-         X = hasGearCrew(rst!playerID, 28)  'Mal's Brown Coat
-         If X = rst2!CrewID Then
-            If varDLookup("Disgruntled", "Crew", "CrewID=" & X) > 0 Then
+         x = hasGearCrew(rst!playerID, 28)  'Mal's Brown Coat
+         If x = rst2!CrewID Then
+            If varDLookup("Disgruntled", "Crew", "CrewID=" & x) > 0 Then
                nego = nego + fight
                .CellFont(Index, 7).Bold = True
             End If
@@ -1200,18 +1200,18 @@ With sftTree
       rst2.Close
        
       'CARGO-----------------------------------
-      Y = .AddItem("Cargo Hold")
-      .CellFont(Y, 0).Name = "BankGothic Md BT"
-      .ItemLevel(Y) = 1
+      y = .AddItem("Cargo Hold")
+      .CellFont(y, 0).Name = "BankGothic Md BT"
+      .ItemLevel(y) = 1
       
       SQL = "SELECT * FROM Players WHERE PlayerID=" & rst!playerID
       
       rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       If Not rst2.EOF Then
-         X = 0
+         x = 0
          If rst2!hfuel > 0 Then
-            X = X + Int(rst2!hfuel / 2) + (rst2!hfuel Mod 2)
-            Index = .AddItem(CStr(X))
+            x = x + Int(rst2!hfuel / 2) + (rst2!hfuel Mod 2)
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 6 'fuel
             .CellItemData(Index, 4) = 0 ' rst!playerID
@@ -1221,8 +1221,8 @@ With sftTree
             
          End If
          If rst2!hparts > 0 Then
-            X = X + Int(rst2!hparts / 2) + (rst2!hparts Mod 2)
-            Index = .AddItem(CStr(X))
+            x = x + Int(rst2!hparts / 2) + (rst2!hparts Mod 2)
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 7 'parts
             .CellItemData(Index, 4) = 0  ' rst!playerID
@@ -1232,8 +1232,8 @@ With sftTree
             
          End If
          If rst2!hcargo > 0 Then
-            X = X + rst2!hcargo
-            Index = .AddItem(CStr(X))
+            x = x + rst2!hcargo
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 8 'cargo
             .CellItemData(Index, 4) = 0  ' rst!playerID
@@ -1241,8 +1241,8 @@ With sftTree
             .CellText(Index, 1) = "Cargo: " & CStr(rst2!hcargo)
          End If
          If rst2!hPassenger > 0 Then
-            X = X + rst2!hPassenger
-            Index = .AddItem(CStr(X))
+            x = x + rst2!hPassenger
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 9 'Passengers
             .CellItemData(Index, 4) = 0  ' rst!playerID
@@ -1251,8 +1251,8 @@ With sftTree
             
          End If
          If rst2!hContraband > 0 Then
-            X = X + rst2!hContraband
-            Index = .AddItem(CStr(X))
+            x = x + rst2!hContraband
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 10 'Contraband
             .CellItemData(Index, 4) = 0  ' rst!playerID
@@ -1261,8 +1261,8 @@ With sftTree
 
          End If
          If rst2!hFugitive > 0 Then
-            X = X + rst2!hFugitive
-            Index = .AddItem(CStr(X))
+            x = x + rst2!hFugitive
+            Index = .AddItem(CStr(x))
             .ItemLevel(Index) = 2
             .CellItemData(Index, 0) = 11 ' Fugitives
             .CellItemData(Index, 4) = 0  ' rst!playerID
@@ -1273,12 +1273,12 @@ With sftTree
 
       End If
 
-      If z = Y Then .Collapse Y, True
+      If z = y Then .Collapse y, True
       rst2.Close
       'SHIP UPDGRADES-----------------------------------
-      Y = .AddItem("Drive Core & Ship Upgrades")
-      .CellFont(Y, 0).Name = "BankGothic Md BT"
-      .ItemLevel(Y) = 1
+      y = .AddItem("Drive Core & Ship Upgrades")
+      .CellFont(y, 0).Name = "BankGothic Md BT"
+      .ItemLevel(y) = 1
       SQL = "SELECT HavenSupplies.CardID, ShipUpgrade.* "
       SQL = SQL & "FROM ShipUpgrade INNER JOIN (HavenSupplies INNER JOIN SupplyDeck ON HavenSupplies.CardID = SupplyDeck.CardID) ON ShipUpgrade.ShipUpgradeID = SupplyDeck.ShipUpgradeID "
       SQL = SQL & "WHERE HavenSupplies.PlayerID=" & rst!playerID
@@ -1298,7 +1298,7 @@ With sftTree
          Set .ItemPicture(Index) = AssetImages.Overlay("LN", IIf(rst2!DriveCore = 1, "SU", "UP"))
          rst2.MoveNext
       Wend
-      If z = Y Then .Collapse Y, True
+      If z = y Then .Collapse y, True
       rst2.Close
       '--------------------------------------------------
       rst.MoveNext
@@ -1314,7 +1314,7 @@ Private Sub Form_Resize()
 
 End Sub
 
-Private Sub sftTree_DragDrop(Source As Control, X As Single, Y As Single)
+Private Sub sftTree_DragDrop(Source As Control, x As Single, y As Single)
 Dim Index As Long, CrewID, CardID
    With sftTree
    
@@ -1351,10 +1351,10 @@ Dim Index As Long, CrewID, CardID
    End With
 End Sub
 
-Private Sub sftTree_DragOver(Source As Control, X As Single, Y As Single, State As Integer)
+Private Sub sftTree_DragOver(Source As Control, x As Single, y As Single, State As Integer)
 Dim Index As Long
    With sftTree
-      Index = .HitTest(X, Y)
+      Index = .HitTest(x, y)
       If Index = -1 Then Exit Sub
       .DropHighlightStyle = dropSftTreeOnTop
       If State = 1 Then
@@ -1476,34 +1476,34 @@ Private Sub sftTree_ItemDblClick(ByVal Index As Long, ByVal ColNum As Integer, B
 End Sub
 
 Private Sub mnuPopUp_Click(Index As Integer)
-Dim frmCrew As frmCrewSel, X, Y, z, frmShUp As frmShipUpgd, frmCrewList As frmCrewLst
+Dim frmCrew As frmCrewSel, x, y, z, frmShUp As frmShipUpgd, frmCrewList As frmCrewLst
 Dim frmNavDeck As frmNavDecks, frmNavPeek As frmNavPeeks, status
 Dim frmGear As frmGearView, frmTrade As frmTrader
 
-   X = sftTreeListIndex
+   x = sftTreeListIndex
    sftTreeListIndex = -1
-   If X < 1 Then Exit Sub
+   If x < 1 Then Exit Sub
 
    With sftTree
       Select Case Index 'menu option
          Case 0 'view
-            If .CellItemData(X, 0) = 1 Then
+            If .CellItemData(x, 0) = 1 Then
                Set frmCrew = New frmCrewSel
-               frmCrew.crewFilter = " WHERE CrewID =" & .CellItemData(X, 2)
+               frmCrew.crewFilter = " WHERE CrewID =" & .CellItemData(x, 2)
                frmCrew.AlwaysOnTop = True
                frmCrew.Show
                Set frmCrew = Nothing
             End If
-            If .CellItemData(X, 0) = 2 Or .CellItemData(X, 0) = 3 Then
+            If .CellItemData(x, 0) = 2 Or .CellItemData(x, 0) = 3 Then
                Set frmGear = New frmGearView
-               frmGear.gearFilter = " WHERE Gear.GearID=" & .CellItemData(X, 2)
+               frmGear.gearFilter = " WHERE Gear.GearID=" & .CellItemData(x, 2)
                frmGear.AlwaysOnTop = True
                frmGear.Show
                Set frmGear = Nothing
             End If
-            If sftTree.CellItemData(X, 0) = 5 Then
+            If sftTree.CellItemData(x, 0) = 5 Then
                Dim frmUpGrd As New frmShipUpgrdView
-               frmUpGrd.gearFilter = " WHERE CardID=" & sftTree.CellItemData(X, 1)
+               frmUpGrd.gearFilter = " WHERE CardID=" & sftTree.CellItemData(x, 1)
                frmUpGrd.AlwaysOnTop = True
                frmUpGrd.Show
                Set frmUpGrd = Nothing
@@ -1511,19 +1511,19 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
          
          Case 1 'DISCARD <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             'MsgBox "CardID = " & .CellItemData(x, 1)
-            Select Case .CellItemData(X, 0) ' 1-crew 2-linked gear, 3-unlinked gear, 5-ship upgd
+            Select Case .CellItemData(x, 0) ' 1-crew 2-linked gear, 3-unlinked gear, 5-ship upgd
             Case 1 'CREW
                status = DISCARDED
                'The Salesman - buy ShipUpGrd at half price
-               If .CellItemData(X, 2) = 68 And frmAction.buydone Then
+               If .CellItemData(x, 2) = 68 And frmAction.buydone Then
                   If MessBox("No Buy action available, do you want to forego The Saleman's buy perk and discard him?", "The Salesman", "Discard", "Keep", 68) = 1 Then
                      Exit Sub
                   End If
-               ElseIf .CellItemData(X, 2) = 68 And actionSeq >= ASBuy And actionSeq <= ASBuyEnd Then
+               ElseIf .CellItemData(x, 2) = 68 And actionSeq >= ASBuy And actionSeq <= ASBuyEnd Then
                       If MessBox("A Buy action is in progress, do you want to forego The Saleman's buy perk and discard him?", "The Salesman", "Discard", "Keep", 68) = 1 Then
                          Exit Sub
                       End If
-               ElseIf .CellItemData(X, 2) = 68 Then
+               ElseIf .CellItemData(x, 2) = 68 Then
                   'present list of upgrades to buy one at half price
                   Set frmShUp = New frmShipUpgd
                   frmShUp.discardMode = 2
@@ -1532,23 +1532,23 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   PutMsg player.PlayName & " sent The Salesman off to buy a nice Ship Upgrade", player.ID, Logic!Gamecntr
 
                'Remove from Play at Harvest, Red Sun to take $500. This counts as Immoral.
-               ElseIf getPerkAttributeCrew(player.ID, "Indentured", .CellItemData(X, 1)) > 0 And getPlayerSector(player.ID) = 16 Then
+               ElseIf getPerkAttributeCrew(player.ID, "Indentured", .CellItemData(x, 1)) > 0 And getPlayerSector(player.ID) = 16 Then
                   getMoney player.ID, 500
                   doDisgruntled player.ID, 1
                   PutMsg player.PlayName & " indentured a Mudder to Higgins for $500" & IIf(hasCrewAttribute(player.ID, "Moral"), " and some of the Crew aren't impressed", ""), player.ID, Logic!Gamecntr, True, 0, 0, 0, 8
                   status = 0
                
                Else
-                  PutMsg player.PlayName & " decided to part company with " & getCrewName(sftTree.CellItemData(X, 1)), player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " decided to part company with " & getCrewName(sftTree.CellItemData(x, 1)), player.ID, Logic!Gamecntr
                   
                End If
                
-               doDiscardCrew .CellItemData(X, 1), status
+               doDiscardCrew .CellItemData(x, 1), status
                
                
                RefreshShips
             Case 2, 3  '2-linked gear, 3-unlinked gear
-               Select Case .CellItemData(X, 2)
+               Select Case .CellItemData(x, 2)
                Case 30  'Maque Tiles
                   If RollDice(6) > 4 Then '1:3 chance
                      getMoney player.ID, 1200
@@ -1559,21 +1559,21 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                      PutMsg player.PlayName & " gambled with Maque Tiles and had no luck", player.ID, Logic!Gamecntr, True, getLeader()
                   End If
                Case 24  'eating a fruity bar
-                  If .CellItemData(X, 0) = 2 Then 'must be on a crew
-                     DB.Execute "UPDATE Crew SET Disgruntled=0 WHERE CrewID=" & .CellItemData(X, 5)
+                  If .CellItemData(x, 0) = 2 Then 'must be on a crew
+                     DB.Execute "UPDATE Crew SET Disgruntled=0 WHERE CrewID=" & .CellItemData(x, 5)
                   End If
                   
                Case 25
                   Set frmNavPeek = New frmNavPeeks
                   frmNavPeek.NavZone = "M"
                   frmNavPeek.Show 1
-                  PutMsg player.PlayName & " used the " & .CellText(X, 1) & " to fiddle with the Misbehave deck", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " used the " & .CellText(x, 1) & " to fiddle with the Misbehave deck", player.ID, Logic!Gamecntr
                   
                Case 34 'Billiards Betting -  roll two dice. Take $100 times the total of the dice and discard this card.
-                  Y = RollDice(6) + RollDice(6)
-                  getMoney player.ID, (Y * 100)
+                  y = RollDice(6) + RollDice(6)
+                  getMoney player.ID, (y * 100)
                   
-                  PutMsg player.PlayName & " gambled with Billiards Betting, rolled " & Y & " and won $" & CStr(Y * 100), player.ID, Logic!Gamecntr, True, 0, 34
+                  PutMsg player.PlayName & " gambled with Billiards Betting, rolled " & y & " and won $" & CStr(y * 100), player.ID, Logic!Gamecntr, True, 0, 34
                   frmAction.lblCash.Caption = "$" & getMoney(player.ID)
                   
                Case 43 'Wash's Hawaiian Shirt
@@ -1593,63 +1593,63 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                   
                Case 50, 51, 52 'Nav Chart
                   Set frmNavPeek = New frmNavPeeks
-                  frmNavPeek.NavZone = IIf(.CellItemData(X, 2) = 50, "A", IIf(.CellItemData(X, 2) = 51, "B", "R"))
+                  frmNavPeek.NavZone = IIf(.CellItemData(x, 2) = 50, "A", IIf(.CellItemData(x, 2) = 51, "B", "R"))
                   frmNavPeek.Show 1
-                  PutMsg player.PlayName & " used the " & .CellText(X, 1) & " to fiddle with the " & frmNavPeek.NavZone & " deck", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " used the " & .CellText(x, 1) & " to fiddle with the " & frmNavPeek.NavZone & " deck", player.ID, Logic!Gamecntr
                
                Case 53 'wormhole
                   Main.drawLine 2, 133, 104
                   wormHoleOpen = True
-                  PutMsg player.PlayName & " used the " & .CellText(X, 1), player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " used the " & .CellText(x, 1), player.ID, Logic!Gamecntr
                   playsnd 15, True
                
                Case 57 '"The Best in the House"
                   doDisgruntled player.ID, -1
-                  PutMsg player.PlayName & " shouted the crew " & .CellText(X, 1) & ". Everyone's happy again!", player.ID, Logic!Gamecntr
+                  PutMsg player.PlayName & " shouted the crew " & .CellText(x, 1) & ". Everyone's happy again!", player.ID, Logic!Gamecntr
                End Select
                
-               doDiscardGear player.ID, .CellItemData(X, 1)
+               doDiscardGear player.ID, .CellItemData(x, 1)
                RefreshShips
             Case 5   '5-ship upgd
-               If canRemoveUpgrade(player.ID, .CellItemData(X, 1)) Then
-                  doDiscardGear player.ID, .CellItemData(X, 1)
+               If canRemoveUpgrade(player.ID, .CellItemData(x, 1)) Then
+                  doDiscardGear player.ID, .CellItemData(x, 1)
                End If
                
             Case 6 ' fuel
-               Y = varDLookup("Fuel", "Players", "PlayerID=" & player.ID)
+               y = varDLookup("Fuel", "Players", "PlayerID=" & player.ID)
                Do
                   z = InputBoxx("How much Fuel do you want to toss overboard?", "Make room in the Cargo Hold", "1", getLeader())
-                  If z >= 0 And z <= Y Then
+                  If z >= 0 And z <= y Then
                      Exit Do
                   End If
                Loop
                DB.Execute "UPDATE Players SET Fuel = Fuel - " & z & " WHERE PlayerID=" & player.ID
                
             Case 7 'parts
-               Y = varDLookup("Parts", "Players", "PlayerID=" & player.ID)
+               y = varDLookup("Parts", "Players", "PlayerID=" & player.ID)
                Do
-                  z = InputBoxx("How many Parts do you want to toss overboard?", "Make room in the Cargo Hold", CStr(Y), getLeader())
-                  If z >= 0 And z <= Y Then
+                  z = InputBoxx("How many Parts do you want to toss overboard?", "Make room in the Cargo Hold", CStr(y), getLeader())
+                  If z >= 0 And z <= y Then
                      Exit Do
                   End If
                Loop
                DB.Execute "UPDATE Players SET Parts = Parts - " & z & " WHERE PlayerID=" & player.ID
             
             Case 8 'Cargo
-               Y = varDLookup("Cargo", "Players", "PlayerID=" & player.ID)
+               y = varDLookup("Cargo", "Players", "PlayerID=" & player.ID)
                Do
-                  z = InputBoxx("How much Cargo do you want to toss overboard?", "Make room in the Cargo Hold", CStr(Y), getLeader())
-                  If z >= 0 And z <= Y Then
+                  z = InputBoxx("How much Cargo do you want to toss overboard?", "Make room in the Cargo Hold", CStr(y), getLeader())
+                  If z >= 0 And z <= y Then
                      Exit Do
                   End If
                Loop
                DB.Execute "UPDATE Players SET Cargo = Cargo - " & z & " WHERE PlayerID=" & player.ID
             
             Case 10 'Contraband
-               Y = varDLookup("Contraband", "Players", "PlayerID=" & player.ID)
+               y = varDLookup("Contraband", "Players", "PlayerID=" & player.ID)
                Do
-                  z = InputBoxx("How much Contraband do you want to toss overboard?", "Make room in the Cargo Hold", CStr(Y), getLeader())
-                  If z >= 0 And z <= Y Then
+                  z = InputBoxx("How much Contraband do you want to toss overboard?", "Make room in the Cargo Hold", CStr(y), getLeader())
+                  If z >= 0 And z <= y Then
                      Exit Do
                   End If
                Loop
@@ -1657,20 +1657,20 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
                                           
             
             Case 9 'Passenger
-               Y = varDLookup("Passenger", "Players", "PlayerID=" & player.ID)
+               y = varDLookup("Passenger", "Players", "PlayerID=" & player.ID)
                Do
-                  z = InputBoxx("How many Passengers do you want to set ashore?", "Make room in the Cargo Hold", CStr(Y), getLeader())
-                  If z >= 0 And z <= Y Then
+                  z = InputBoxx("How many Passengers do you want to set ashore?", "Make room in the Cargo Hold", CStr(y), getLeader())
+                  If z >= 0 And z <= y Then
                      Exit Do
                   End If
                Loop
                DB.Execute "UPDATE Players SET Passenger = Passenger - " & z & " WHERE PlayerID=" & player.ID
              
             Case 11 'Fugitive
-               Y = varDLookup("Fugitive", "Players", "PlayerID=" & player.ID)
+               y = varDLookup("Fugitive", "Players", "PlayerID=" & player.ID)
                Do
-                  z = InputBoxx("How many Fugitives do you want to set ashore?", "Make room in the Cargo Hold", CStr(Y), getLeader())
-                  If z >= 0 And z <= Y Then
+                  z = InputBoxx("How many Fugitives do you want to set ashore?", "Make room in the Cargo Hold", CStr(y), getLeader())
+                  If z >= 0 And z <= y Then
                      Exit Do
                   End If
                Loop
@@ -1682,7 +1682,7 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             If getCrewCount(player.ID) < CrewCapacity(player.ID) Then
                Set frmCrewList = New frmCrewLst
                frmCrewList.selectCrew = -1
-               frmCrewList.SupplyID = hasGearAttribute(player.ID, "LabourContract", .CellItemData(X, 2))
+               frmCrewList.SupplyID = hasGearAttribute(player.ID, "LabourContract", .CellItemData(x, 2))
                frmCrewList.Caption = "Select 1 " & getSupplyName(frmCrewList.SupplyID) & " Crew from Discards"
                frmCrewList.Show 1
                If frmCrewList.crewcnt = 1 Then
@@ -1695,9 +1695,9 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             End If
          
          Case 3 'Trade
-            PutMsg player.PlayName & " requesting to Trade with " & PlayCode(.CellItemData(X, 4)).PlayName, player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " requesting to Trade with " & PlayCode(.CellItemData(x, 4)).PlayName, player.ID, Logic!Gamecntr
             
-            DB.Execute "UPDATE GameSeq SET Seq = 'T',HostAccept = 0,ClientAccept = 0, Trader = " & CStr(.CellItemData(X, 4))
+            DB.Execute "UPDATE GameSeq SET Seq = 'T',HostAccept = 0,ClientAccept = 0, Trader = " & CStr(.CellItemData(x, 4))
             Logic.Requery
             'Logic!Seq = "T"
             'Logic!HostAccept = 0
@@ -1706,38 +1706,38 @@ Dim frmGear As frmGearView, frmTrade As frmTrader
             'Logic.Update
             Set frmTrade = New frmTrader
             frmTrade.isHost = True
-            frmTrade.TraderID = .CellItemData(X, 4)
-            frmTrade.lblTitle(1).Caption = PlayCode(.CellItemData(X, 4)).PlayName & "'s Trade Items"
+            frmTrade.TraderID = .CellItemData(x, 4)
+            frmTrade.lblTitle(1).Caption = PlayCode(.CellItemData(x, 4)).PlayName & "'s Trade Items"
             frmTrade.Show 1
             DB.Execute "UPDATE GameSeq SET Seq = 'R'"
             Logic.Requery
             'Logic.Update "Seq", "R"
-            PutMsg player.PlayName & " ended Trading with " & PlayCode(.CellItemData(X, 4)).PlayName, player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " ended Trading with " & PlayCode(.CellItemData(x, 4)).PlayName, player.ID, Logic!Gamecntr
             RefreshShips
             Main.showActions
          
          Case 4 'poach
             'check can afford Crew pay
-            If getMoney(player.ID) < .CellItemData(X, 8) Then
-               MessBox "You cannot afford " & getCrewName(.CellItemData(X, 1)), "Money Problems", "Ooops", "", .CellItemData(X, 2)
+            If getMoney(player.ID) < .CellItemData(x, 8) Then
+               MessBox "You cannot afford " & getCrewName(.CellItemData(x, 1)), "Money Problems", "Ooops", "", .CellItemData(x, 2)
                Exit Sub
             End If
             
             'update their pile status
-            DB.Execute "UPDATE SupplyDeck SET Seq =" & player.ID & " WHERE CardID = " & .CellItemData(X, 1)
+            DB.Execute "UPDATE SupplyDeck SET Seq =" & player.ID & " WHERE CardID = " & .CellItemData(x, 1)
             'remove any Gear first
-            DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = " & .CellItemData(X, 2)
+            DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE CrewID = " & .CellItemData(x, 2)
             'delete the card to the players deck
-            DB.Execute "UPDATE PlayerSupplies SET PlayerID = " & player.ID & " WHERE CardID = " & .CellItemData(X, 1)
+            DB.Execute "UPDATE PlayerSupplies SET PlayerID = " & player.ID & " WHERE CardID = " & .CellItemData(x, 1)
             'remove Disgruntled
-            DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & .CellItemData(X, 2)
-            getMoney player.ID, .CellItemData(X, 8) * -1
-            PutMsg player.PlayName & " gave disgruntled " & getCrewName(.CellItemData(X, 1)) & " a BETTER OFFER and poached them", player.ID, Logic!Gamecntr, False, 0, 0, 0, 0, 1
+            DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & .CellItemData(x, 2)
+            getMoney player.ID, .CellItemData(x, 8) * -1
+            PutMsg player.PlayName & " gave disgruntled " & getCrewName(.CellItemData(x, 1)) & " a BETTER OFFER and poached them", player.ID, Logic!Gamecntr, False, 0, 0, 0, 0, 1
             
             RefreshShips
             Main.showActions
          Case 5, 6 'Off / On next Job
-            DB.Execute "UPDATE PlayerSupplies SET OffJob =" & IIf(Index = 5, "1", "0") & " WHERE CardID = " & .CellItemData(X, 1)
+            DB.Execute "UPDATE PlayerSupplies SET OffJob =" & IIf(Index = 5, "1", "0") & " WHERE CardID = " & .CellItemData(x, 1)
             RefreshShips
             Main.showActions
          End Select
