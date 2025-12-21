@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.10.4"
-#define MyAppPublisher "VeeBee-er"
+#define MyAppVersion "1.10.5"
+#define MyAppPublisher "BLiSoft"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
 
@@ -608,6 +608,9 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\reload.wav"; DestDir: "{app}\sou
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\clack.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Sonar.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Wormhole.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Boarded.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Alarm.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\refresh.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

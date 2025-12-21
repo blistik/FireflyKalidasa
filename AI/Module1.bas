@@ -1193,18 +1193,18 @@ Dim c() As String
       End If
    End If
 
-   If sound > 0 Then
-      playsnd sound, syncsound
-   Else
-      Select Case playerID
-      Case 1 To 4
-         playsnd 1, syncsound
-      Case 5, 6
-         playsnd 4, syncsound
-      Case Else
-         playsnd 3, syncsound
-      End Select
-   End If
+'   If sound > 0 Then
+'      playsnd sound, syncsound
+'   Else
+'      Select Case playerID
+'      Case 1 To 4
+'         playsnd 1, syncsound
+'      Case 5, 6
+'         playsnd 4, syncsound
+'      Case Else
+'         playsnd 3, syncsound
+'      End Select
+'   End If
    
    If playerID = 6 Then 'moving the Corvette, check a Reaver is not here
       x = getCutterSector(SectorID)

@@ -348,7 +348,7 @@ Private Sub chkAI_Click()
 End Sub
 
 Private Sub cmd_Click(Index As Integer)
-Dim rst As New ADODB.Recordset, col, cnt, x
+Dim rst As New ADODB.Recordset, col, cnt, X
 Dim frmCrew As frmCrewSel, leader, nextplayer As Integer, noOfCrew As Integer, costLimit As Integer
 Dim randCrew As Integer, forceFugi As Integer
 Dim frmCrewList As frmCrewLst
@@ -403,13 +403,13 @@ Dim supplyInit, contactInit
          
          Timing.Enabled = True
       Else
-         For x = 0 To 3
-            If opt(x).Value Then
-               col = Left(opt(x).Tag, 1)
+         For X = 0 To 3
+            If opt(X).Value Then
+               col = Left(opt(X).Tag, 1)
                Exit For
             End If
             'Opt(x).Enabled = False
-         Next x
+         Next X
          If IsEmpty(col) Or ComboTxt.Text = "" Then
             MessBox "Please enter your player name and select a Ship", "Joining", "Ooops", "", 0, 0, 0, 0, 3
             Exit Sub
@@ -422,9 +422,9 @@ Dim supplyInit, contactInit
             player.PlayName = Trim(ComboTxt.Text)
             DB.Execute "UPDATE Players SET Name = '" & SQLFilter(player.PlayName) & "' WHERE PlayerID = " & CStr(player.ID)
             
-            For x = 0 To 3
-               opt(x).Enabled = False
-            Next x
+            For X = 0 To 3
+               opt(X).Enabled = False
+            Next X
             UpdateLst
             cmd(0).Enabled = False
             cmd(0).Caption = "Pick Leader"
@@ -435,11 +435,11 @@ Dim supplyInit, contactInit
             End If
             
          Else
-            For x = 0 To 3
-               If col = Left(opt(x).Tag, 1) Then
-                  opt(x).Enabled = False
+            For X = 0 To 3
+               If col = Left(opt(X).Tag, 1) Then
+                  opt(X).Enabled = False
                End If
-            Next x
+            Next X
             UpdateLst
             MessBox rst!ship & " is taken by " & player.PlayName, "Ship taken", "Ooops", "", 0, 0, 6
             
@@ -499,19 +499,19 @@ Dim supplyInit, contactInit
       
       'show who has entered game
       cnt = 0
-      For x = 1 To 4
-         If PlayCode(x).PlayName <> "" Then
+      For X = 1 To 4
+         If PlayCode(X).PlayName <> "" Then
             cnt = cnt + 1
-            PutMsg PlayCode(x).PlayName & " has entered the game", x
+            PutMsg PlayCode(X).PlayName & " has entered the game", X
          End If
-      Next x
+      Next X
       SoloGame = isSoloGame()
                
       nextplayer = 0
       Randomize Timer
       Do
-          x = Int((4 * Rnd)) + 1
-          If PlayCode(x).PlayName <> "" Then nextplayer = x
+          X = Int((4 * Rnd)) + 1
+          If PlayCode(X).PlayName <> "" Then nextplayer = X
       Loop While nextplayer = 0
        
       'pick leader
@@ -540,7 +540,7 @@ Dim supplyInit, contactInit
          Timing.Enabled = True
       End If
    Case 3
-      x = ShellExecute(x, "OPEN", App.Path & "\FireflyAIBot.exe ", datab, vbNullString, 1)                '1=normal, 2=min, 3=max, 4=behind
+      X = ShellExecute(X, "OPEN", App.Path & "\FireflyAIBot.exe ", datab, vbNullString, 1)                '1=normal, 2=min, 3=max, 4=behind
    End Select
   
   Exit Sub
@@ -551,7 +551,7 @@ err_handler:
 End Sub
 
 Private Sub Form_Load()
-Dim lastPlayer As String
+Dim lastplayer As String
   initForm
   UpdateLst
   Timing.Enabled = True
@@ -561,10 +561,11 @@ Dim lastPlayer As String
   cmd(0).Enabled = False
   'cmd(3).Visible = isHost
   Set Me.Picture = LoadPicture(App.Path & "\pictures\waiting.jpg")
-  lastPlayer = getLastPlayer
-  If lastPlayer <> vbNullString Then
-    ComboTxt.AddItem lastPlayer
+  lastplayer = getLastPlayer
+  If lastplayer <> vbNullString Then
+    ComboTxt.AddItem lastplayer
   End If
+  ComboTxt.Text = GetSetting(App.ProductName, "Game", "PlayerName", vbNullString)
   
 End Sub
 
@@ -585,11 +586,11 @@ Private Sub Timing_Timer()
 End Sub
 
 Private Sub initForm()
-Dim x As Integer  ' rst As New ADODB.Recordset
+Dim X As Integer  ' rst As New ADODB.Recordset
    started = False
-   For x = 1 To 4
-      imgShip(x - 1).Picture = LoadPictureGDIplus(App.Path & "\gui\FireflyShip" & CStr(x) & ".jpg")
-   Next x
+   For X = 1 To 4
+      imgShip(X - 1).Picture = LoadPictureGDIplus(App.Path & "\gui\FireflyShip" & CStr(X) & ".jpg")
+   Next X
    'rst.CursorLocation = adUseClient
    'rst.Open "SELECT * FROM Players WHERE PlayerID > 0 AND PlayerID < 5 ORDER BY PlayerID", DB, adOpenStatic, adLockReadOnly
    'While Not rst.EOF
@@ -604,11 +605,11 @@ Dim x As Integer  ' rst As New ADODB.Recordset
 End Sub
 
 Private Sub UpdateLst()
-Dim rst As New ADODB.Recordset, x, playerID As Integer
+Dim rst As New ADODB.Recordset, X, playerID As Integer
    Lst.Clear
-   x = GetSeqX(playerID)
+   X = GetSeqX(playerID)
    If Not isHost Then 'client only processes
-      Select Case x
+      Select Case X
       Case "H"  'in host mode, enable join
          If cmd(0).Caption <> "Pick Leader" Then
             If Not cmd(0).Enabled Then playsnd 6
@@ -619,21 +620,21 @@ Dim rst As New ADODB.Recordset, x, playerID As Integer
          Lst.AddItem "..waiting for Host .."
          cmd(0).Enabled = False
          cmd(0).Caption = "Join"
-         For x = 0 To 3
-            opt(x).Enabled = True
-            imgShip(x).GrayScale = lvicNoGrayScale
-         Next x
+         For X = 0 To 3
+            opt(X).Enabled = True
+            imgShip(X).GrayScale = lvicNoGrayScale
+         Next X
          Exit Sub
       Case "L"
          'pick leader
       Case Else  'joining game
          started = True
       End Select
-   ElseIf x = "S" Then
+   ElseIf X = "S" Then
       started = True
    End If
 
-   If x = "L" And Val(player.ID) = playerID Then 'your go to pick leader
+   If X = "L" And Val(player.ID) = playerID Then 'your go to pick leader
        cmd(0).Enabled = True
    End If
   rst.CursorLocation = adUseClient

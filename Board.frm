@@ -52,8 +52,8 @@ Begin VB.Form Board
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
          Index           =   10
-         Left            =   3000
-         Top             =   270
+         Left            =   75
+         Top             =   1980
          Visible         =   0   'False
          Width           =   750
          _ExtentX        =   1323
@@ -63,8 +63,8 @@ Begin VB.Form Board
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
          Index           =   11
-         Left            =   1890
-         Top             =   2040
+         Left            =   60
+         Top             =   2310
          Visible         =   0   'False
          Width           =   750
          _ExtentX        =   1323
@@ -74,8 +74,8 @@ Begin VB.Form Board
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
          Index           =   12
-         Left            =   570
-         Top             =   3360
+         Left            =   30
+         Top             =   2610
          Visible         =   0   'False
          Width           =   750
          _ExtentX        =   1323
@@ -85,8 +85,8 @@ Begin VB.Form Board
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
          Index           =   9
-         Left            =   5550
-         Top             =   60
+         Left            =   60
+         Top             =   1650
          Visible         =   0   'False
          Width           =   750
          _ExtentX        =   1323
@@ -96,8 +96,8 @@ Begin VB.Form Board
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
          Index           =   8
-         Left            =   4770
-         Top             =   60
+         Left            =   60
+         Top             =   1320
          Visible         =   0   'False
          Width           =   750
          _ExtentX        =   1323
@@ -107,8 +107,8 @@ Begin VB.Form Board
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
          Index           =   7
-         Left            =   3990
-         Top             =   60
+         Left            =   60
+         Top             =   990
          Visible         =   0   'False
          Width           =   750
          _ExtentX        =   1323
@@ -495,12 +495,12 @@ Private Sub HotSpot_Click(Index As Integer)
      
 End Sub
 
-Private Sub Imag_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Imag_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
 'allow title drag
-Private Sub HotSpot_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub HotSpot_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
    If pickStartSector <> 1 Then
       Select Case actionSeq
          Case ASmosey, ASfullburn, ASNavEvade, ASNavReav, ASNavReavBorder, ASNavCrus, ASNavCrusBorder, ASNavCrusOutlaw, ASNavCrusAdjacent, ASNavCorvAdjacent, ASNavCorvPlanetary, ASResolveAlert
@@ -511,24 +511,24 @@ Private Sub HotSpot_MouseDown(Index As Integer, Button As Integer, Shift As Inte
    End If
 End Sub
 
-Private Sub Picture1_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Picture1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
 
 Private Sub initImages()
-Dim x
+Dim X
    Imag(1).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyOrange.gif")
    Imag(2).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyBlue.gif")
    Imag(3).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyYellow.gif")
    Imag(4).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyGreen.gif")
    Imag(5).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cruiser.gif")
    Imag(6).Picture = LoadPictureGDIplus(App.Path & "\Pictures\corvette.gif")
-   For x = 7 To 12  '6 Reavers
-      Imag(x).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.gif")
-   Next x
-   For x = 1 To 12   'all ships set invisible to start
-      Imag(x).TransparentColor = 0
-      Imag(x).TransparentColorMode = lvicUseTransparentColor
-   Next x
+   For X = 7 To 12  '6 Reavers
+      Imag(X).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.gif")
+   Next X
+   For X = 1 To 12   'all ships set invisible to start
+      Imag(X).TransparentColor = 0
+      Imag(X).TransparentColorMode = lvicUseTransparentColor
+   Next X
 End Sub

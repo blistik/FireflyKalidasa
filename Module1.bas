@@ -46,6 +46,7 @@ Public Enum actionSeqCntr
    ASBountySkillSel
    ASend     'end action, selectnext player
 End Enum
+
 Public actionSeq As actionSeqCntr, NumOfReavers As Integer
 
 Public MoseyMovesDone As Integer, FullburnMovesDone As Integer
@@ -56,6 +57,18 @@ Type Playertype
   PlayName As String
 End Type
 
+Type TAnim
+    playerID As Integer
+    startX As Long
+    startY As Long
+    targetX As Long
+    targetY As Long
+    startTime As Double
+    durationMs As Long
+    active As Boolean
+End Type
+
+Public Anim(1 To 12) As TAnim       'no of Ships to be animated
 Public DB As ADODB.Connection, Logic As New ADODB.Recordset
 Public player As Playertype, SoloGame As Boolean, PlayCode(4) As Playertype
 Public HemmorrhagingFuel As Boolean, turnExtraRange As Integer
@@ -432,32 +445,30 @@ Select Case bittype
         Path = Path & "Win"
     Case 6
         Path = Path & "yourgo"
-
     Case 7
         Path = Path & "mosey"
-
     Case 8
         Path = Path & "beep"
-
     Case 9
         Path = Path & "no"
-
     Case 10
         Path = Path & "msg"
-
     Case 11
         Path = Path & "gear"
-
     Case 12
         Path = Path & "reload"
-
     Case 13
         Path = Path & "clack"
-        
     Case 14
         Path = Path & "Sonar"
     Case 15
         Path = Path & "Wormhole"
+    Case 16
+        Path = Path & "Boarded"
+    Case 17
+        Path = Path & "Alarm"
+    Case 18
+        Path = Path & "refresh"
     Case Else
         Path = Path & "RadioChat"
 End Select
@@ -563,34 +574,7 @@ Dim currentSectorID, adjacent, a() As String, X, reaver
 
 End Function
 
-Public Sub displayShip(ByVal playerID, sectorID)
-Dim rst As New ADODB.Recordset
-Dim coords, slot, X
-Dim c() As String
-   
-   slot = IIf(playerID > 4, 5, playerID)
-   If sectorID = 0 Then  'remove
-      Main.Verse.Imag(playerID).Visible = False
-   Else
-      rst.Open "SELECT * FROM Board WHERE SectorID = " & sectorID, DB, adOpenForwardOnly, adLockReadOnly
-      If Not rst.EOF Then
-         coords = rst.Fields("Slot" & slot).Value
-         c = Split(coords, ",")
-         Main.Verse.Imag(playerID).Visible = True
-         Main.Verse.Imag(playerID).Left = c(0)
-         Main.Verse.Imag(playerID).top = c(1)
-         X = Int((10 * Rnd) + 1)
-         If X > 7 And playerID > 4 Then
-            Main.Verse.Imag(playerID).Mirror = lvicMirrorHorizontal
-         Else
-            Main.Verse.Imag(playerID).Mirror = lvicMirrorNone
-         End If
-      End If
-   End If
-   
-End Sub
-
-Public Sub MoveShip(ByVal playerID, ByVal sectorID, Optional ByVal sound As Integer = 0, Optional ByVal syncsound As Boolean = False, Optional ByVal leaveToken As Boolean = True)
+Public Sub MoveShip(ByVal playerID, ByVal sectorID, Optional ByVal sound As Integer = 0, Optional ByVal syncsound As Boolean = False, Optional ByVal leaveToken As Boolean = True, Optional ByVal speed As Integer = 2000)
 Dim rst As New ADODB.Recordset
 Dim coords, slot, lastSectorID As Integer, X, a, b, TimingState As Boolean
 Dim c() As String
@@ -598,7 +582,9 @@ Dim c() As String
    If sectorID = 0 Then Exit Sub
    TimingState = Main.Timing.Enabled
    Main.Timing.Enabled = False
+   'move from current sector..
    lastSectorID = getPlayerSector(playerID)
+   'what slot on the board's sector is this ship located to (1 - 5)
    slot = IIf(playerID > 4, 5, playerID)
    DB.BeginTrans
    DB.Execute "Update Players Set SectorID = " & sectorID & " WHERE PlayerID = " & playerID
@@ -614,6 +600,7 @@ Dim c() As String
       End If
    End If
    
+   ' Play movement sound (non-synced)
    If Not syncsound Then
       If sound > 0 Then
          playsnd sound, syncsound
@@ -631,28 +618,34 @@ Dim c() As String
    
    rst.Open "SELECT * FROM Board WHERE SectorID = " & sectorID, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
+      'get slot's coordinates for the destination sector
       coords = rst.Fields("Slot" & slot).Value
       c = Split(coords, ",")
+      
       Main.Verse.Imag(playerID).Visible = True
       a = Main.Verse.Imag(playerID).Left
       b = Main.Verse.Imag(playerID).top
       Main.Verse.Imag(playerID).Mirror = lvicMirrorNone
-      Main.Verse.Imag(playerID).Animate2.StopAnimation
-      Main.Verse.Imag(playerID).ImageIndex = 2
-      For X = b To Val(c(1)) Step IIf(b > Val(c(1)), -1, 1)
-         Main.Verse.Imag(playerID).top = X            'c(1)
-         Main.Verse.Imag(playerID).Refresh
-         DoEvents 'slow down!
-      Next X
-      
+      ' Mirror based on direction
       If a < Val(c(0)) Then Main.Verse.Imag(playerID).Mirror = lvicMirrorHorizontal
-      For X = a To Val(c(0)) Step IIf(a > Val(c(0)), -1, 1)
-         Main.Verse.Imag(playerID).Left = X           'c(0)
-         Main.Verse.Imag(playerID).Refresh
-         DoEvents
-      Next X
-      Main.Verse.Imag(playerID).Mirror = lvicMirrorNone
-      Main.Verse.Imag(playerID).Animate2.StartAnimation
+      StartMove playerID, a, b, Val(c(0)), Val(c(1)), speed
+      
+'      Main.Verse.Imag(playerID).Animate2.StopAnimation
+'      Main.Verse.Imag(playerID).ImageIndex = 2
+'      For X = b To Val(c(1)) Step IIf(b > Val(c(1)), -1, 1)
+'         Main.Verse.Imag(playerID).top = X            'c(1)
+'         Main.Verse.Imag(playerID).Refresh
+'         DoEvents 'slow down!
+'      Next X
+'
+'      If a < Val(c(0)) Then Main.Verse.Imag(playerID).Mirror = lvicMirrorHorizontal
+'      For X = a To Val(c(0)) Step IIf(a > Val(c(0)), -1, 1)
+'         Main.Verse.Imag(playerID).Left = X           'c(0)
+'         Main.Verse.Imag(playerID).Refresh
+'         DoEvents
+'      Next X
+'      Main.Verse.Imag(playerID).Mirror = lvicMirrorNone
+'      Main.Verse.Imag(playerID).Animate2.StartAnimation
    End If
    rst.Close
    
@@ -669,6 +662,7 @@ Dim c() As String
             playsnd 3, syncsound
          End Select
       End If
+      DoEvents
    End If
    
    If playerID = 6 Then 'moving the Corvette, check a Reaver is not here
@@ -708,6 +702,21 @@ Dim c() As String
    
 End Sub
 
+Public Sub StartMove(ByVal playerID As Integer, ByVal startX As Long, ByVal startY As Long, ByVal targetX As Long, ByVal targetY As Long, ByVal durationMs As Long)
+    With Anim(playerID)
+        .playerID = playerID
+        .startX = startX
+        .startY = startY
+        .targetX = targetX
+        .targetY = targetY
+        .startTime = Timer
+        .durationMs = durationMs
+        'setting active true enables TickAnim to move it in timed events
+        .active = True
+    End With
+    Main.tmrAnim.Enabled = True
+End Sub
+
 Public Function checkWhisperX1(ByVal sectorID) As Boolean
 Dim X, g, Dice
 
@@ -738,7 +747,7 @@ End Function
 
 Public Sub changeToken(ByVal sectorID As Integer, ByVal cnt As Integer, Optional ByVal sound As Boolean = True)
    If cnt < 0 Then
-      DB.Execute "UPDATE Board SET Token = " & varDLookup("TokenSet", "Board", "SectorID=" & sectorID) & " WHERE SectorID = " & sectorID
+      DB.Execute "UPDATE Board SET Token = TokenSet WHERE SectorID = " & sectorID
    Else
       If varDLookup("Token", "Board", "SectorID=" & sectorID) < 6 Then
          If sound Then playsnd 2
@@ -810,77 +819,7 @@ Dim c() As String
    
 End Sub
 
-Public Sub RefreshBoard()
-Dim rst As New ADODB.Recordset, Index
-Dim coords, c() As String
 
-   With Main.Verse
-
-   'ships
-   rst.Open "SELECT * FROM Players", DB, adOpenForwardOnly, adLockReadOnly ' WHERE PlayerID < 5 AND Name is not null
-   While Not rst.EOF  'no other players
-      If IsNull(rst!sectorID) Then
-         .Imag(rst!playerID).Visible = False
-      Else
-         displayShip rst!playerID, rst!sectorID
-      End If
-      rst.MoveNext
-   Wend
-   rst.Close
-   
-   'solid labels
-   For Index = 1 To NO_OF_CONTACTS
-      If isSolid(player.ID, Index) Then
-         .lblSolid(Index).Visible = True
-         MoveSolid .lblSolid(Index), Index
-      Else
-         .lblSolid(Index).Visible = False
-      End If
-   Next Index
-   
-   'tokens
-   rst.Open "SELECT * FROM Board WHERE SectorID > 0 ORDER BY SectorID", DB, adOpenDynamic, adLockOptimistic
-   While Not rst.EOF
-
-      If rst!Token = 0 Then
-         .imgToken(rst!sectorID).Visible = False
-      ElseIf Val(.imgToken(rst!sectorID).Tag) <> rst!Token Then
-         .imgToken(rst!sectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\RToken" & IIf(rst!Token > 6, 6, rst!Token) & ".gif")
-         .imgToken(rst!sectorID).Visible = True
-         .imgToken(rst!sectorID).TransparentColor = &HFFFFFF
-         .imgToken(rst!sectorID).TransparentColorMode = lvicUseTransparentColor
-         .imgToken(rst!sectorID).Animate2.StartAnimation
-      End If
-      .imgToken(rst!sectorID).Tag = CStr(rst!Token)
-      
-      If rst!AToken = 0 Then
-         .imgAToken(rst!sectorID).Visible = False
-      ElseIf Val(.imgAToken(rst!sectorID).Tag) <> rst!AToken Then
-         .imgAToken(rst!sectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\AToken" & IIf(rst!AToken > 6, 6, rst!AToken) & ".gif")
-         .imgAToken(rst!sectorID).Visible = True
-         .imgAToken(rst!sectorID).TransparentColor = &HFFFFFF
-         .imgAToken(rst!sectorID).TransparentColorMode = lvicUseTransparentColor
-         .imgAToken(rst!sectorID).Animate2.StartAnimation
-      End If
-      .imgAToken(rst!sectorID).Tag = CStr(rst!AToken)
-
-      If rst!Haven > 0 Then
-         coords = rst.Fields("Slot" & rst!Haven).Value
-         c = Split(coords, ",")
-         .imgHaven(rst!Haven).Left = c(0)
-         .imgHaven(rst!Haven).top = c(1)
-         .imgHaven(rst!Haven).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Haven" & rst!Haven & ".bmp")
-         .imgHaven(rst!Haven).Visible = True
-         .imgHaven(rst!Haven).TransparentColor = &HFFFFFF
-         .imgHaven(rst!Haven).TransparentColorMode = lvicUseTransparentColor
-      End If
-
-      rst.MoveNext
-   Wend
-   
-   End With
-
-End Sub
 
 Public Function getLeader() As Integer
       getLeader = Nz(varDLookup("Leader", "Players", "PlayerID = " & player.ID), 0)
@@ -3412,7 +3351,9 @@ Dim SQL, leader, CardID, CrewName As String, Disgruntled As Integer, Fendris As 
                If Disgruntled > 0 Or mode = 4 Then 'if this is the 2nd disgruntled or fired then crew go to discard pile, gear returns to ship
                   'remove Disgruntled
                   DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & CrewID
-                  If CrewID <> leader Then
+                  If CrewID = leader Then
+                     mode = 7 'flag that leader had disgruntled cleared
+                  Else
                      PutMsg player.PlayName & "'s Crew member " & CrewName & " left the Ship, fully disgruntled", playerID, Logic!Gamecntr
                      'remove any Gear from Crew
                      DB.Execute "UPDATE PlayerSupplies SET CrewID = 0 WHERE PlayerID = " & playerID & " AND CrewID = " & CrewID
@@ -4082,7 +4023,7 @@ Dim X
       Do
          X = RollDice(152)
          If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & X), 0) > 0 And getClearSector(X) <> "" And X > 2 Then
-            MoveShip 6, X
+            MoveShip 6, X, 0, False, True, 2000
             PutMsg "The Corvette has been sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & X), "the unknown..")
             doMoveCorvettePlanetary = True
             Exit Do
@@ -4099,7 +4040,7 @@ Dim X
       Do
          X = RollDice(152)
          If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & X), 0) > 0 And getClearSector(X) <> "" And getZone(X) <> "A" And X > 2 Then
-            MoveShip ship, X
+            MoveShip ship, X, 0, False, True, 3000
             PutMsg "A Cutter has been sighted at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & X), "the unknown..")
             doMoveCutterPlanetary = True
             Exit Do
@@ -4902,7 +4843,7 @@ End Function
 
 'returns which ship turns up if any
 Public Function resolveToken(ByVal sectorID, Optional ByVal adjacent As Boolean = False) As Integer
-Dim rst As New ADODB.Recordset, X, alliance As Boolean
+Dim rst As New ADODB.Recordset, X, alliance As Boolean, needRefresh As Boolean
 Dim SQL
 
    SQL = "SELECT * FROM Board WHERE SectorID= " & sectorID
@@ -4911,6 +4852,7 @@ Dim SQL
    If Not rst.EOF Then
       'do alliance tokens first
       If rst!AToken > 0 Then ' we gotta roll
+         needRefresh = True
          X = RollDice(6, True)
          If X <= rst!AToken Then ' we not good
             alliance = True
@@ -4934,6 +4876,7 @@ Dim SQL
       rst.Requery
       'is token and check a cutter is not in this sector already
       If rst!Token > 0 And getCutterSector(sectorID) = 0 And Not alliance Then ' we gotta roll
+         needRefresh = True
          X = RollDice(6, True)
          If X <= rst!Token Then ' we not good, reaver incoming
             resolveToken = 6 + RollDice(NumOfReavers)
@@ -4955,7 +4898,9 @@ Dim SQL
    End If
    rst.Close
    Set rst = Nothing
-   setRefresh True
+   If needRefresh Then
+      setRefresh True
+   End If
 End Function
 
 'return true if the Sector has an active Alert token present

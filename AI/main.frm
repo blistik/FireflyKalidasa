@@ -14,18 +14,18 @@ Begin VB.Form Main
    ScaleHeight     =   5955
    ScaleWidth      =   14760
    StartUpPosition =   3  'Windows Default
-   Begin SftTree.SftTree sftTree 
-      Height          =   4125
+   Begin SftTree.SftTree sftTree2 
+      Height          =   1455
       Left            =   0
-      TabIndex        =   1
-      Top             =   0
-      Width           =   14115
+      TabIndex        =   2
+      Top             =   4170
+      Width           =   14145
       _Version        =   262144
-      _ExtentX        =   24897
-      _ExtentY        =   7276
+      _ExtentX        =   24950
+      _ExtentY        =   2566
       _StockProps     =   237
       ForeColor       =   8833235
-      BackColor       =   4587520
+      BackColor       =   855618
       BorderStyle     =   1
       ItemPictureExpanded=   "main.frx":0442
       ItemPictureExpandable=   "main.frx":045E
@@ -63,99 +63,80 @@ Begin VB.Form Main
       EndProperty
       ColHeaderAppearance=   2
       ButtonStyle     =   2
-      TreeLineColor   =   -2147483632
-      Columns         =   10
-      ColTitle0       =   "ID"
+      Columns         =   9
+      ColTitle0       =   "Card ID"
       ColBmp0         =   "main.frx":0506
-      ColWidth1       =   167
-      ColTitle1       =   "Names & Titles"
+      ColWidth1       =   200
+      ColTitle1       =   "Contact / Job Details"
       ColBmp1         =   "main.frx":0522
-      ColWidth2       =   227
-      ColTitle2       =   "Perks & Quirks"
+      ColWidth2       =   213
+      ColTitle2       =   "Job Type / Planet"
       ColBmp2         =   "main.frx":053E
-      ColWidth3       =   67
-      ColTitle3       =   "Ability"
+      ColWidth3       =   120
+      ColTitle3       =   "Needs / System"
       ColBmp3         =   "main.frx":055A
-      ColWidth4       =   77
-      ColStyle4       =   9
-      ColTitle4       =   "Status"
+      ColWidth4       =   41
+      ColStyle4       =   10
+      ColTitle4       =   "Pay"
       ColBmp4         =   "main.frx":0576
-      ColWidth5       =   33
-      ColStyle5       =   9
-      ColTitle5       =   "Fight"
+      ColWidth5       =   87
+      ColTitle5       =   "Bonus"
       ColBmp5         =   "main.frx":0592
       ColWidth6       =   33
       ColStyle6       =   9
-      ColTitle6       =   "Tech"
+      ColTitle6       =   "Fight"
       ColBmp6         =   "main.frx":05AE
-      ColWidth7       =   37
+      ColWidth7       =   33
       ColStyle7       =   9
-      ColTitle7       =   "Nego"
+      ColTitle7       =   "Tech"
       ColBmp7         =   "main.frx":05CA
-      ColWidth8       =   47
-      ColStyle8       =   10
-      ColTitle8       =   "Pay/job"
+      ColWidth8       =   34
+      ColStyle8       =   9
+      ColTitle8       =   "Nego"
       ColBmp8         =   "main.frx":05E6
-      ColWidth9       =   200
-      ColTitle9       =   "Keywords"
-      ColBmp9         =   "main.frx":0602
-      MouseIcon       =   "main.frx":061E
+      MouseIcon       =   "main.frx":0602
       ColHeaderBackColor=   0
-      ColHeaderForeColor=   65280
+      ColHeaderForeColor=   10937324
       ForeColor       =   8833235
-      BackColor       =   4587520
-      SelectStyle     =   2
+      BackColor       =   855618
       RowColHeaderAppearance=   0
-      RowColPicture   =   "main.frx":063A
-      LeftButtonOnly  =   0   'False
+      RowColPicture   =   "main.frx":061E
       RowHeaderStyle  =   128
       RowHeaderAppearance=   0
       OpenEnded       =   0   'False
-      ColFlag0        =   4
-      ColPict0        =   "main.frx":0656
-      ColFlag1        =   8
-      ColPict1        =   "main.frx":0672
-      ColFlag2        =   4
-      ColPict2        =   "main.frx":068E
-      ColFlag3        =   12
-      ColPict3        =   "main.frx":06AA
-      ColFlag4        =   8
-      ColPict4        =   "main.frx":06C6
-      ColFlag5        =   8
-      ColPict5        =   "main.frx":06E2
-      ColFlag6        =   8
-      ColPict6        =   "main.frx":06FE
-      ColFlag7        =   8
-      ColPict7        =   "main.frx":071A
-      ColFlag8        =   8
-      ColPict8        =   "main.frx":0736
-      ColFlag9        =   8
-      ColPict9        =   "main.frx":0752
-      BackgroundPicture=   "main.frx":076E
-      ShowFocusRectangle=   0   'False
+      ColPict0        =   "main.frx":063A
+      ColPict1        =   "main.frx":0656
+      ColPict2        =   "main.frx":0672
+      ColPict3        =   "main.frx":068E
+      ColPict4        =   "main.frx":06AA
+      ColPict5        =   "main.frx":06C6
+      ColPict6        =   "main.frx":06E2
+      ColPict7        =   "main.frx":06FE
+      ColPict8        =   "main.frx":071A
+      BackgroundPicture=   "main.frx":0736
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End
-   Begin SftTree.SftTree sftTree2 
-      Height          =   1455
+   Begin SftTree.SftTree sftTree 
+      Height          =   4125
       Left            =   0
-      TabIndex        =   2
-      Top             =   4170
-      Width           =   14145
+      TabIndex        =   1
+      Top             =   0
+      Width           =   14115
       _Version        =   262144
-      _ExtentX        =   24950
-      _ExtentY        =   2566
+      _ExtentX        =   24897
+      _ExtentY        =   7276
       _StockProps     =   237
       ForeColor       =   8833235
-      BackColor       =   855618
+      BackColor       =   4587520
       BorderStyle     =   1
-      ItemPictureExpanded=   "main.frx":078A
-      ItemPictureExpandable=   "main.frx":07A6
-      ItemPictureLeaf =   "main.frx":07C2
-      PlusMinusPictureExpanded=   "main.frx":07DE
-      PlusMinusPictureExpandable=   "main.frx":07FA
-      PlusMinusPictureLeaf=   "main.frx":0816
-      ButtonPicture   =   "main.frx":0832
+      ItemPictureExpanded=   "main.frx":0752
+      ItemPictureExpandable=   "main.frx":076E
+      ItemPictureLeaf =   "main.frx":078A
+      PlusMinusPictureExpanded=   "main.frx":07A6
+      PlusMinusPictureExpandable=   "main.frx":07C2
+      PlusMinusPictureLeaf=   "main.frx":07DE
+      ButtonPicture   =   "main.frx":07FA
       BeginProperty ColHeaderFont {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "Cyberpunk Is Not Dead"
          Size            =   9
@@ -185,57 +166,76 @@ Begin VB.Form Main
       EndProperty
       ColHeaderAppearance=   2
       ButtonStyle     =   2
-      Columns         =   9
-      ColTitle0       =   "Card ID"
-      ColBmp0         =   "main.frx":084E
-      ColWidth1       =   200
-      ColTitle1       =   "Contact / Job Details"
-      ColBmp1         =   "main.frx":086A
-      ColWidth2       =   213
-      ColTitle2       =   "Job Type / Planet"
-      ColBmp2         =   "main.frx":0886
-      ColWidth3       =   120
-      ColTitle3       =   "Needs / System"
-      ColBmp3         =   "main.frx":08A2
-      ColWidth4       =   41
-      ColStyle4       =   10
-      ColTitle4       =   "Pay"
-      ColBmp4         =   "main.frx":08BE
-      ColWidth5       =   87
-      ColTitle5       =   "Bonus"
-      ColBmp5         =   "main.frx":08DA
+      TreeLineColor   =   -2147483632
+      Columns         =   10
+      ColTitle0       =   "ID"
+      ColBmp0         =   "main.frx":0816
+      ColWidth1       =   167
+      ColTitle1       =   "Names & Titles"
+      ColBmp1         =   "main.frx":0832
+      ColWidth2       =   227
+      ColTitle2       =   "Perks & Quirks"
+      ColBmp2         =   "main.frx":084E
+      ColWidth3       =   67
+      ColTitle3       =   "Ability"
+      ColBmp3         =   "main.frx":086A
+      ColWidth4       =   77
+      ColStyle4       =   9
+      ColTitle4       =   "Status"
+      ColBmp4         =   "main.frx":0886
+      ColWidth5       =   33
+      ColStyle5       =   9
+      ColTitle5       =   "Fight"
+      ColBmp5         =   "main.frx":08A2
       ColWidth6       =   33
       ColStyle6       =   9
-      ColTitle6       =   "Fight"
-      ColBmp6         =   "main.frx":08F6
-      ColWidth7       =   33
+      ColTitle6       =   "Tech"
+      ColBmp6         =   "main.frx":08BE
+      ColWidth7       =   37
       ColStyle7       =   9
-      ColTitle7       =   "Tech"
-      ColBmp7         =   "main.frx":0912
-      ColWidth8       =   34
-      ColStyle8       =   9
-      ColTitle8       =   "Nego"
-      ColBmp8         =   "main.frx":092E
-      MouseIcon       =   "main.frx":094A
+      ColTitle7       =   "Nego"
+      ColBmp7         =   "main.frx":08DA
+      ColWidth8       =   47
+      ColStyle8       =   10
+      ColTitle8       =   "Pay/job"
+      ColBmp8         =   "main.frx":08F6
+      ColWidth9       =   200
+      ColTitle9       =   "Keywords"
+      ColBmp9         =   "main.frx":0912
+      MouseIcon       =   "main.frx":092E
       ColHeaderBackColor=   0
-      ColHeaderForeColor=   10937324
+      ColHeaderForeColor=   65280
       ForeColor       =   8833235
-      BackColor       =   855618
+      BackColor       =   4587520
+      SelectStyle     =   2
       RowColHeaderAppearance=   0
-      RowColPicture   =   "main.frx":0966
+      RowColPicture   =   "main.frx":094A
+      LeftButtonOnly  =   0   'False
       RowHeaderStyle  =   128
       RowHeaderAppearance=   0
       OpenEnded       =   0   'False
-      ColPict0        =   "main.frx":0982
-      ColPict1        =   "main.frx":099E
-      ColPict2        =   "main.frx":09BA
-      ColPict3        =   "main.frx":09D6
-      ColPict4        =   "main.frx":09F2
-      ColPict5        =   "main.frx":0A0E
-      ColPict6        =   "main.frx":0A2A
-      ColPict7        =   "main.frx":0A46
-      ColPict8        =   "main.frx":0A62
+      ColFlag0        =   4
+      ColPict0        =   "main.frx":0966
+      ColFlag1        =   8
+      ColPict1        =   "main.frx":0982
+      ColFlag2        =   4
+      ColPict2        =   "main.frx":099E
+      ColFlag3        =   12
+      ColPict3        =   "main.frx":09BA
+      ColFlag4        =   8
+      ColPict4        =   "main.frx":09D6
+      ColFlag5        =   8
+      ColPict5        =   "main.frx":09F2
+      ColFlag6        =   8
+      ColPict6        =   "main.frx":0A0E
+      ColFlag7        =   8
+      ColPict7        =   "main.frx":0A2A
+      ColFlag8        =   8
+      ColPict8        =   "main.frx":0A46
+      ColFlag9        =   8
+      ColPict9        =   "main.frx":0A62
       BackgroundPicture=   "main.frx":0A7E
+      ShowFocusRectangle=   0   'False
       ToolTipForeColor=   -2147483640
       ToolTipBackColor=   -2147483643
    End
@@ -1174,7 +1174,7 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
             setRefresh
             Trail(FullburnMovesDone + 1) = goToContact
             PutMsg player.PlayName & " moving towards " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & ContactSectorID), "the Cruiser") & " via Sector " & goToContact, player.ID, Logic!Gamecntr
-            playsnd 1, True
+            'playsnd 1, True
             
          Else
             PutMsg player.PlayName & " has no viable path", player.ID, Logic!Gamecntr
@@ -1198,7 +1198,7 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
             setRefresh
             Trail(FullburnMovesDone + 1) = goToSupply
             PutMsg player.PlayName & " moving towards " & varDLookup("PlanetName", "Planet", "SectorID=" & SupplySectorID) & " via Sector " & goToSupply & " to get Supplies", player.ID, Logic!Gamecntr
-            playsnd 1, True
+            'playsnd 1, True
          Else
             PutMsg player.PlayName & " has no viable path", player.ID, Logic!Gamecntr
             movesDone
@@ -1224,7 +1224,7 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
             setRefresh
             Trail(FullburnMovesDone + 1) = goToPlayer
             PutMsg player.PlayName & " moving " & PlanetName & " via Sector " & goToPlayer & IIf(goalSector = 0, " to seek a Bounty", " to reach a goal"), player.ID, Logic!Gamecntr
-            playsnd 1, True
+            'playsnd 1, True
          Else
             PutMsg player.PlayName & " has no viable path", player.ID, Logic!Gamecntr
             movesDone

@@ -5,6 +5,11 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
+v 1.10.5 ~ December 2025
+gui: overhauled the Ship on-screen movement system - asyncronous time based
+gui: added "boarded" sound effect
+cfg: added saving/loading of some user game settings to registry
+
 v 1.10.4 ~ June 2025 - Nov 2025
 new: Story - "Out of Gas - Miranda Blockade"
 gui: Host/Join form visual improvements

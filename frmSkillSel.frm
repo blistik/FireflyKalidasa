@@ -118,7 +118,7 @@ Private Const SWP_NOMOVE = &H2
 'For use with USER32 Function SendMessage
 Private Const HTCAPTION = 2
 Private Const WM_NCLBUTTONDOWN = &HA1
-Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
+Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
 Private bOnTopState As Boolean
@@ -142,11 +142,11 @@ Private Sub cmd_Click(Index As Integer)
    skill = Index + 1
    If fmode = 2 Then actionSeq = ASBountySkillSel
    playsnd 8
-   Me.Hide
+   Me.hide
 End Sub
 
 Private Sub Form_Load()
-   playsnd 10
+   If fmode > 0 Then playsnd 10
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
