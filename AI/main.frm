@@ -805,7 +805,9 @@ Dim goalSector As Integer
             fullburndone = True  'set to not move as we could have another go here
          End If
          workdone = True
-         Logic.Update "Seq", "R"
+         Logic!Seq = "R"
+         Logic!CardID = 0
+         Logic.Update
          
    ElseIf status = "U" And thisPlayer = player.ID And actionSeq = ASidle Then 'capture the Move Corvette to any planetary sector
       x = setPlayer(player.ID, "", 0, True)
@@ -845,7 +847,10 @@ Dim goalSector As Integer
       
    '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< MAIN In-Game CYCLE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
    ElseIf status = "R" And thisPlayer = player.ID And actionSeq = ASidle Then   'MAIN Cycle - init your go
-      'PutMsg player.PlayName & "'s having a go", player.ID, Logic!Gamecntr
+      
+      If varDLookup("Fugitives", "Story", "StoryID=" & Logic!StoryID) > 0 Then
+         doForceFugitive
+      End If
       
       fuelleft = varDLookup("Fuel", "Players", "PlayerID=" & player.ID)
       
@@ -944,7 +949,7 @@ Dim goalSector As Integer
                   fullburndone = (FullburnMovesDone > 0) Or fullburndone
                   workdone = True
                   
-               ElseIf doBoardingTest(DefenderID) Then
+               ElseIf doBoardingTest(DefenderID, bountyCardID) Then
                   'AI has boarded! status "F"
                Else
                   targetSector = 0
@@ -1007,7 +1012,7 @@ Dim goalSector As Integer
             'do job
             If workdone And ((FullburnMovesDone > 0) Or fullburndone) Then 'already used this action
                fullburndone = True
-            ElseIf targetJobID = 1 Then
+            ElseIf targetJobID = 1 And Not workdone Then 'make sure we haven't used up the work action
                'check if this Job has a part 2?
                targetSector = getJobSector(targetJobCard, 2)
                
@@ -1019,9 +1024,11 @@ Dim goalSector As Integer
                   targetJobID = 2
                End If
                
-            Else 'complete Job (part 2)
+            ElseIf Not workdone Then   'complete Job (part 2)
                completeJob targetJobCard, targetJobID
                targetJobID = 1
+            Else
+               fullburndone = True  'we have a job here, but no work action, so stay put until next go
             End If
             
             workdone = True
@@ -2477,7 +2484,7 @@ Dim CSkilltype As Integer, Cskill As Integer, CDice As Integer, cnt, msg, win As
    
 End Function
 
-Private Function doBoardingTest(ByVal DefenderID As Integer) As Boolean
+Private Function doBoardingTest(ByVal DefenderID As Integer, ByVal bountyCardID As Integer) As Boolean
 Dim Skilltype As Integer, skill As Integer, Dice As Integer
 Dim x As Integer, y As Integer
 
@@ -2500,6 +2507,7 @@ Dim x As Integer, y As Integer
       Logic!HostAccept = 0
       Logic!ClientAccept = 0
       Logic!Trader = DefenderID
+      Logic!CardID = bountyCardID
       Logic.Update
    End If
       

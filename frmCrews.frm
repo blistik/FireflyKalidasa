@@ -29,7 +29,7 @@ Begin VB.Form frmCrewSel
          Strikethrough   =   0   'False
       EndProperty
       Height          =   345
-      Left            =   5340
+      Left            =   5300
       Style           =   1  'Graphical
       TabIndex        =   1
       Top             =   90
@@ -362,17 +362,6 @@ Attribute VB_Exposed = False
 Option Explicit
 Public crewFilter As String
 
-'For use with USER32 Function SetWindowPos
-Private Const HWND_TOPMOST = -&H1
-Private Const HWND_NOTOPMOST = -&H2
-Private Const SWP_NOSIZE = &H1
-Private Const SWP_NOMOVE = &H2
-'For use with USER32 Function SendMessage
-Private Const HTCAPTION = 2
-Private Const WM_NCLBUTTONDOWN = &HA1
-Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
-Private Declare Function ReleaseCapture Lib "user32" () As Long
-Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
 Private bOnTopState As Boolean
 
 Public Property Let AlwaysOnTop(bState As Boolean)
@@ -416,6 +405,18 @@ Private Sub cmd_Click()
 End Sub
 
 Private Sub Form_Load()
+Dim rgn As Long
+Dim w As Long, h As Long
+
+   ' Convert twips ? pixels
+   w = Me.ScaleX(Me.Width, vbTwips, vbPixels)
+   h = Me.ScaleY(Me.Height, vbTwips, vbPixels)
+   
+   ' 40,40 = corner roundness
+   rgn = CreateRoundRectRgn(0, 0, w, h, 20, 20)
+   
+   SetWindowRgn Me.hwnd, rgn, True
+   
    With AlphaImg
       Set .Picture = LoadPictureGDIplus(App.Path & "\pictures\CrewTemplate.bmp")
       .TransparentColor = 0

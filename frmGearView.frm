@@ -272,18 +272,6 @@ Attribute VB_Exposed = False
 Option Explicit
 Public gearFilter As String
 
-'For use with USER32 Function SetWindowPos
-Private Const HWND_TOPMOST = -&H1
-Private Const HWND_NOTOPMOST = -&H2
-Private Const SWP_NOSIZE = &H1
-Private Const SWP_NOMOVE = &H2
-'For use with USER32 Function SendMessage
-Private Const HTCAPTION = 2
-Private Const WM_NCLBUTTONDOWN = &HA1
-Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
-Private Declare Function ReleaseCapture Lib "user32" () As Long
-Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
-
 Private bOnTopState As Boolean
 
 Public Property Let AlwaysOnTop(bState As Boolean)
@@ -302,7 +290,7 @@ Public Property Get AlwaysOnTop() As Boolean
     AlwaysOnTop = bOnTopState
 End Property
 
-Private Sub AlphaImg_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub AlphaImg_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
@@ -315,7 +303,7 @@ End Sub
 
 Private Sub cmd_Click()
    playsnd 8
-   Me.Hide
+   Me.hide
 End Sub
 
 Private Sub Form_Load()
@@ -345,7 +333,7 @@ Private Sub lbl_DblClick(Index As Integer)
 End Sub
 
 Private Sub refreshGear(ByVal CardID)
-Dim rst As New ADODB.Recordset, SQL, x, y
+Dim rst As New ADODB.Recordset, SQL, X, Y
 
    SQL = "SELECT Gear.*, SupplyDeck.CardID, SupplyDeck.Seq, SupplyDeck.SupplyID, Supply.Colour, Supply.SupplyName, PlayerSupplies.PlayerID, Players.Name "
    SQL = SQL & "FROM Players RIGHT JOIN (PlayerSupplies RIGHT JOIN (Supply RIGHT JOIN (Gear LEFT JOIN SupplyDeck ON Gear.GearID = SupplyDeck.GearID) ON Supply.SupplyID = SupplyDeck.SupplyID) ON PlayerSupplies.CardID = SupplyDeck.CardID) ON Players.PlayerID = PlayerSupplies.PlayerID "
@@ -362,9 +350,9 @@ Dim rst As New ADODB.Recordset, SQL, x, y
          lbl(2) = "held by: " & rst!Name
          lbl(2).Visible = True
       ElseIf rst!Seq > 0 And rst!Seq < 5 Then
-         y = Nz(varDLookup("Name", "Players", "PlayerID = " & rst!Seq), "")
-         If y <> "" Then
-            lbl(2) = "at " & y & "'s haven"
+         Y = Nz(varDLookup("Name", "Players", "PlayerID = " & rst!Seq), "")
+         If Y <> "" Then
+            lbl(2) = "at " & Y & "'s haven"
             lbl(2).Visible = True
          End If
       Else
@@ -374,29 +362,29 @@ Dim rst As New ADODB.Recordset, SQL, x, y
       'lbl(4) = Trim(IIf(rst!fight >= 1, rst!fight & " Fight  ", "") & IIf(rst!tech >= 1, rst!tech & " Tech  ", "") & IIf(rst!Negotiate >= 1, rst!Negotiate & " Negotiate", ""))
       'lbl(4).Visible = (lbl(4) <> "")
       
-      y = 0
-      For x = 1 To rst!fight
-         Set skillPic(y).Picture = LoadPictureGDIplus(App.Path & "\pictures\fight.bmp")
-         skillPic(y).TransparentColor = 0
-         skillPic(y).TransparentColorMode = lvicUseTransparentColor
-         y = y + 1
-      Next x
-      For x = 1 To rst!tech
-         Set skillPic(y).Picture = LoadPictureGDIplus(App.Path & "\pictures\tech.bmp")
-         skillPic(y).TransparentColor = 0
-         skillPic(y).TransparentColorMode = lvicUseTransparentColor
-         y = y + 1
-      Next x
-      For x = 1 To rst!Negotiate
-         Set skillPic(y).Picture = LoadPictureGDIplus(App.Path & "\pictures\nego.bmp")
-         skillPic(y).TransparentColor = 0
-         skillPic(y).TransparentColorMode = lvicUseTransparentColor
-         y = y + 1
-      Next x
-      If y < 3 Then
-         For x = y To 2
-             Set skillPic(x).Picture = Nothing
-         Next x
+      Y = 0
+      For X = 1 To rst!fight
+         Set skillPic(Y).Picture = LoadPictureGDIplus(App.Path & "\pictures\fight.bmp")
+         skillPic(Y).TransparentColor = 0
+         skillPic(Y).TransparentColorMode = lvicUseTransparentColor
+         Y = Y + 1
+      Next X
+      For X = 1 To rst!tech
+         Set skillPic(Y).Picture = LoadPictureGDIplus(App.Path & "\pictures\tech.bmp")
+         skillPic(Y).TransparentColor = 0
+         skillPic(Y).TransparentColorMode = lvicUseTransparentColor
+         Y = Y + 1
+      Next X
+      For X = 1 To rst!Negotiate
+         Set skillPic(Y).Picture = LoadPictureGDIplus(App.Path & "\pictures\nego.bmp")
+         skillPic(Y).TransparentColor = 0
+         skillPic(Y).TransparentColorMode = lvicUseTransparentColor
+         Y = Y + 1
+      Next X
+      If Y < 3 Then
+         For X = Y To 2
+             Set skillPic(X).Picture = Nothing
+         Next X
       End If
       
       lbl(5) = Nz(rst!KeyWords)

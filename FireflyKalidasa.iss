@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.10.5"
+#define MyAppVersion "1.10.6"
 #define MyAppPublisher "BLiSoft"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -51,6 +51,8 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\bin\BRITANIC.TTF";  DestDir: "{autofont
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\CIND.otf";  DestDir: "{autofonts}"; FontInstall: "Cyberpunk Is Not Dead"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\Forque.ttf";  DestDir: "{autofonts}"; FontInstall: "FORQUE"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "D:\Progs\GitHub\FireflyKalidasa\bin\STENCIL.TTF";  DestDir: "{autofonts}"; FontInstall: "Stencil"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "D:\Progs\GitHub\FireflyKalidasa\bin\framd.ttf";  DestDir: "{autofonts}"; FontInstall: "Franklin Gothic Medium"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "D:\Progs\GitHub\FireflyKalidasa\bin\Franklin Gothic Demi Cond Regular.ttf";  DestDir: "{autofonts}"; FontInstall: "Franklin Gothic Demi Cond Regular"; Flags: onlyifdoesntexist uninsneveruninstall
 ; Primary Files >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa.mdb"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
 ;Source: "D:\Progs\GitHub\FireflyKalidasa\FireflyKalidasa_FullBoard.mdb"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
@@ -86,6 +88,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Corbin.jpg"; DestDir: "{app}\p
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Cortland.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Crow.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\CryBaby.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\datascope.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\delta.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Deputy.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Dobson.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
@@ -514,6 +517,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\gui\Deal5WarrantsActive.jpg"; DestDir: 
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\Deal5WarrantsOptActive.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\Deal5WarrantsOptClick.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\Deal5WarrantsOptInactive.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui\Deal5WarrantsOptMouseOver.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\End1EndActive.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\End1EndClick.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\End1EndInactive.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
@@ -571,6 +575,28 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip1.jpg"; DestDir: "{app}\
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip2.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip3.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip4.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
+
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\bonus.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact0.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact1.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact10.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact2.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact3.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact4.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact5.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact6.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact7.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact8.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact9.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\dropoff.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\illegal0.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\illegal1.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\immoral.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\JobBackAlliance.jpg"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\JobBackBounty.jpg"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\JobBackStd.jpg"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\sidebar.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\tick.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
 
 ; Solids >>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Solid1harken.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion

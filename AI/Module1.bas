@@ -2789,3 +2789,25 @@ Dim x
    Next x
 
 End Sub
+
+Public Sub doForceFugitive() 'reveal only one fugitive in supply deck, if none are available
+Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
+Dim SQL
+   'check if there is no bounties open that are available, either in a supply deck, or on a ship
+   SQL = "SELECT SupplyDeck.CardID FROM SupplyDeck INNER JOIN ContactDeck ON SupplyDeck.CrewID = ContactDeck.FugitiveID "
+   SQL = SQL & "WHERE ContactDeck.Seq= 5 AND SupplyDeck.Seq BETWEEN 1 AND 5"
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+   If rst.EOF Then
+      SQL = "SELECT SupplyDeck.CardID FROM SupplyDeck INNER JOIN ContactDeck ON SupplyDeck.CrewID = ContactDeck.FugitiveID "
+      SQL = SQL & "WHERE ContactDeck.Seq= 5 AND SupplyDeck.Seq > 6"
+      rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+      If Not rst2.EOF Then
+         DB.Execute "UPDATE SupplyDeck SET Seq = 5 WHERE CardID = " & rst2!CardID
+      End If
+      rst2.Close
+   End If
+   rst.Close
+   
+   Set rst = Nothing
+   Set rst2 = Nothing
+End Sub

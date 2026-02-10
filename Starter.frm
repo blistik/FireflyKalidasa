@@ -458,15 +458,9 @@ Dim supplyInit, contactInit
       ShuffleDeck "Contact", True
       contactInit = varDLookup("contactInit", "Story", "StoryID=" & Logic!StoryID)
       If contactInit > 0 Then
-         DrawDeck "Contact", 1, contactInit
-         DrawDeck "Contact", 2, contactInit
-         DrawDeck "Contact", 3, contactInit
-         DrawDeck "Contact", 4, contactInit
-         DrawDeck "Contact", 5, contactInit
-         DrawDeck "Contact", 6, contactInit
-         DrawDeck "Contact", 7, contactInit
-         DrawDeck "Contact", 8, contactInit
-         DrawDeck "Contact", 9, contactInit
+         For X = 1 To NO_OF_CONTACTS
+            DrawDeck "Contact", X, contactInit
+         Next X
       End If
       
       
@@ -475,13 +469,9 @@ Dim supplyInit, contactInit
       doExcludes
       supplyInit = varDLookup("supplyInit", "Story", "StoryID=" & Logic!StoryID)
       If supplyInit > 0 Then
-         DrawDeck "Supply", 1, supplyInit
-         DrawDeck "Supply", 2, supplyInit
-         DrawDeck "Supply", 3, supplyInit
-         DrawDeck "Supply", 4, supplyInit
-         DrawDeck "Supply", 5, supplyInit
-         DrawDeck "Supply", 6, supplyInit
-         DrawDeck "Supply", 7, supplyInit
+         For X = 1 To NO_OF_SUPPLY
+            DrawDeck "Supply", X, supplyInit
+         Next X
       End If
       
       ShuffleDeck "Nav", True, (Lst.ListCount > 2) 'Reshuffle Cards at end for 3 or more players

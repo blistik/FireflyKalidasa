@@ -211,6 +211,14 @@ Begin VB.Form frmDeals
       InitFloatWidth  =   200
       InitFloatHeight =   200
    End
+   Begin VB.Menu mnuPop 
+      Caption         =   "mnuPop"
+      Visible         =   0   'False
+      Begin VB.Menu mnuPopup 
+         Caption         =   "View"
+         Index           =   0
+      End
+   End
 End
 Attribute VB_Name = "frmDeals"
 Attribute VB_GlobalNameSpace = False
@@ -250,7 +258,7 @@ Dim Index, SQL, showBounty As Boolean
 Dim rst As New ADODB.Recordset
 Dim rst2 As New ADODB.Recordset
 Dim rst3 As New ADODB.Recordset
-Dim sectorID, ContactID As Integer, X, cnt As Integer
+Dim sectorID, ContactID As Integer, x, cnt As Integer
     
 With sftTree
    .Clear
@@ -309,17 +317,18 @@ With sftTree
       .ItemLevel(Index) = 0
       .CellText(Index, 1) = rst3!ContactName  '& IIf(isSolid(player.ID, rst3!ContactID), " - Solid", "")
       .CellFont(Index, 1).Name = "BankGothic Md BT"
+      
       .CellText(Index, 2) = CStr(getUnseenDeck("Contact", rst3!ContactID)) & " unseen"
       .CellFont(Index, 2).Name = "BankGothic Md BT"
-      For X = 0 To 8
+      For x = 0 To 8
          If rst3!ContactID = 10 Then
-            .CellForeColor(Index, X) = 14019306
+            .CellForeColor(Index, x) = 14019306
          Else
-            .CellForeColor(Index, X) = 0
+            .CellForeColor(Index, x) = 0
          End If
          
-         .CellBackColor(Index, X) = rst3!Colour
-      Next X
+         .CellBackColor(Index, x) = rst3!Colour
+      Next x
       Set .ItemPicture(Index) = LoadPicture(App.Path & "\Pictures\Sm" & Nz(varDLookup("Picture", "Contact", "ContactID=" & rst3!ContactID)))
       'Set .ItemPicture(Index) = AssetImages.Overlay("L", "U")
     
@@ -358,10 +367,10 @@ With sftTree
          .CellText(Index, 1) = rst!JobName
          .CellBackColor(Index, 1) = rst!Colour
          If rst!ContactID = 10 Then
-            X = varDLookup("Seq", "SupplyDeck", "CrewID=" & rst!FugitiveID)
-            Select Case X
+            x = varDLookup("Seq", "SupplyDeck", "CrewID=" & rst!FugitiveID)
+            Select Case x
             Case 1, 2, 3, 4
-               .CellBackColor(Index, 1) = getPlayerColor(X)
+               .CellBackColor(Index, 1) = getPlayerColor(x)
                .CellFont(Index, 1).Bold = True
             Case DISCARDED
                .CellFont(Index, 1).Bold = True
@@ -374,6 +383,7 @@ With sftTree
          End If
         
          .CellText(Index, 2) = rst!JobTypeDescr & IIf(rst!JobType2 <> "-", "/" & rst!JobType2, "") & IIf(rst!illegal = 1, "/illegal", "") & IIf(rst!Immoral = 1, "/immoral", "")
+         .CellItemData(Index, 2) = rst!ContactID
          If rst!illegal = 1 Or rst!Immoral Then
             .CellBackColor(Index, 2) = 3355647
          End If
@@ -406,8 +416,8 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 2
                .CellText(Index, 1) = rst2!JobDesc
-               X = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
+               x = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
                If sectorID = rst2!sectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
@@ -440,8 +450,8 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 3
                .CellText(Index, 1) = rst2!JobDesc
-               X = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
+               x = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
                If sectorID = rst2!sectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
@@ -473,8 +483,8 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                 .ItemLevel(Index) = 2
                .CellText(Index, 1) = rst2!JobDesc
-               X = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(X > 0, "  (" & X & ")", "")
+               x = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
                If sectorID = rst2!sectorID Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
@@ -511,6 +521,12 @@ End Function
 Private Sub Form_Resize()
    sftTree.Move sftTree.Left, sftTree.top, Me.Width, Abs(Me.Height - sftTree.top)
    
+End Sub
+
+Private Sub mnuPopup_Click(Index As Integer)
+   
+   viewJobCard sftTree.CellItemData(sftTree.ListIndex, 2), sftTree.ItemData(sftTree.ListIndex)
+            
 End Sub
 
 Private Sub sftTree_ItemClick(ByVal Index As Long, ByVal ColNum As Integer, ByVal AreaType As Integer, ByVal Button As Integer, ByVal Shift As Integer)
@@ -572,7 +588,8 @@ With sftTree
             End If
             
          End Select
-      
+   ElseIf Button = constSftTreeRightButton And AreaType = constSftTreeCellText Then
+      If (.ItemData(Index) > 0 And .ItemLevel(Index) = 1) Then PopupMenu mnuPop
    End If
    
 End With
@@ -607,6 +624,14 @@ Dim Index As Integer
 
 
 End Function
+
+Private Sub sftTree_ItemDblClick(ByVal Index As Long, ByVal ColNum As Integer, ByVal AreaType As Integer, ByVal Button As Integer, ByVal Shift As Integer)
+
+   If Button = constSftTreeLeftButton And AreaType = constSftTreeCellText And sftTree.ItemLevel(Index) = 1 Then
+      viewJobCard sftTree.CellItemData(Index, 2), sftTree.ItemData(Index)
+
+   End If
+End Sub
 
 Private Sub Timer1_Timer()
    If FDPane1.PaneVisible Then RefreshDeals

@@ -1518,7 +1518,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 Public moseydone As Boolean, fullburndone As Boolean, buydone As Boolean
-Public dealdone As Boolean, workdone As Boolean, disgruntledone As Boolean, rangeBoost As Integer
+Public dealdone As Boolean, workdone As Boolean, disgruntledone As Boolean, rangeBoost As Integer, mSectorID As Integer
 
 Private Sub Form_Load()
    Me.Picture = LoadPicture(App.Path & "\gui\Actionbg.jpg")
@@ -1764,7 +1764,7 @@ Private Sub imgClearWarrantsOpt_Click()
           
           .Tag = "Y"
       Else
-           .Picture = LoadPictureGDIplus(App.Path & "\gui\Deal5WarrantsOptInactive.jpg")
+           .Picture = LoadPictureGDIplus(App.Path & "\gui\Deal5WarrantsOptMouseOver.jpg")
 
           .Tag = "N"
       End If
@@ -1772,11 +1772,11 @@ Private Sub imgClearWarrantsOpt_Click()
 End Sub
 
 Private Sub imgClearWarrantsOpt_MouseEnter()
-   If imgClearWarrantsOpt.Tag = "N" And imgClearWarrants.Tag = "Y" Then imgClearWarrantsOpt.Picture = LoadPictureGDIplus(App.Path & "\gui\Deal5WarrantsOptActive.jpg")
+   If imgClearWarrantsOpt.Tag = "N" And imgClearWarrants.Tag = "Y" Then imgClearWarrantsOpt.Picture = LoadPictureGDIplus(App.Path & "\gui\Deal5WarrantsOptMouseOver.jpg")
 End Sub
 
 Private Sub imgClearWarrantsOpt_MouseExit()
-   If imgClearWarrantsOpt.Tag = "N" Then imgClearWarrantsOpt.Picture = LoadPictureGDIplus(App.Path & "\gui\Deal5WarrantsOptInactive.jpg")
+   If imgClearWarrantsOpt.Tag = "N" And imgClearWarrants.Tag = "Y" Then imgClearWarrantsOpt.Picture = LoadPictureGDIplus(App.Path & "\gui\Deal5WarrantsOptActive.jpg")
 End Sub
 
 Private Sub imgShore_Click()
@@ -1841,8 +1841,45 @@ Private Sub imgPhone_Click()
           .Picture = LoadPictureGDIplus(App.Path & "\gui\Deal3PhoneClick.jpg")
           imgContact.Picture = LoadPicture(App.Path & "\gui\Contact8.jpg")
           .Tag = "1"
+          imgContact.Tag = "8"
           HigginsDealPerk = True
           setVisState imgClearWarrants, False
+          actionButtonEnable "imgClearWarrantsOpt", False
+          setVisState imgDealContra, False
+          setVisState imgDealCargo, False
+          
+          setVisState imgDealCargo, False
+          setVisState imgDealContra, False
+          setVisState imgLoadPassngr, False
+          setVisState imgLoadFugi, False
+         
+          setVisState imgDealFuel, False
+
+          
+      ElseIf .Tag = "1" Then
+         playsnd 13
+         .Picture = LoadPictureGDIplus(App.Path & "\gui\Deal3PhoneMouseover.jpg")
+         setContact mSectorID
+         .Tag = "Y"
+         HigginsDealPerk = False
+         If imgContact.Tag = "2" Then
+               setVisState imgClearWarrants, ((varDLookup("Warrants", "Players", "PlayerID=" & player.ID) > 0) And (Val(imgContact.Tag) = 2) And isSolid(player.ID, 2) And (Val(lblCash.Tag) >= 1000))
+               actionButtonEnable "imgClearWarrantsOpt", getVisState(imgClearWarrants)
+               setVisState imgDealCargo, (doSellCargoContra(player.ID, imgContact.Tag, 1, 0, True) > 0)
+               setVisState imgDealContra, (doSellCargoContra(player.ID, imgContact.Tag, 0, 1, True) > 0)
+          ElseIf imgContact.Tag = "9" Then
+               setVisState imgDealContra, (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= 1) And isSolid(player.ID, 9) And getMoney(player.ID) >= 400
+         ElseIf imgContact.Tag = "6" Then
+               setVisState imgDealCargo, (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= 1) And isSolid(player.ID, 6) And getMoney(player.ID) >= 300
+         ElseIf imgContact.Tag = "5" Then
+               setVisState imgDealFuel, (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 And Nz(varDLookup("ContactID", "Contact", "SectorID=" & mSectorID), 0) = 5 And isSolid(player.ID, 5) And Not dealdone And getMoney(player.ID) >= 100)
+         Else
+               setVisState imgDealCargo, (doSellCargoContra(player.ID, imgContact.Tag, 1, 0, True) > 0)
+               setVisState imgDealContra, (doSellCargoContra(player.ID, imgContact.Tag, 0, 1, True) > 0)
+               setVisState imgLoadPassngr, (mSectorID = 23) And isSolid(player.ID, 1) And imgDealer.Tag <> "N" And (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0.6)
+               setVisState imgLoadFugi, imgLoadPassngr.Tag = "Y"
+
+         End If
       End If
    End With
    
@@ -1924,6 +1961,7 @@ Private Sub imgFullBurn_Click()
          moseydone = True
          actionSeq = ASfullburn
          actionButtonEnable "imgCancel", True
+         HigginsDealPerk = False
 
       End If
    End With
@@ -1945,7 +1983,7 @@ Private Sub imgMosey_Click()
          actionButtonEnable "imgMosey", True, True
          fullburndone = True
          actionSeq = ASmosey
-         
+         HigginsDealPerk = False
          actionButtonEnable "imgCancel", True
          
       End If
@@ -2273,6 +2311,11 @@ Private Sub mnuWorkPop_Click(Index As Integer)
    timScroll.Enabled = True
 End Sub
 
+Public Function getVisState(ByRef cntl As Control) As Boolean
+   getVisState = (cntl.Tag = "Y")
+   
+End Function
+
 Public Sub setVisState(ByRef cntl As Control, ByVal enable As Boolean)
    
    If enable Then
@@ -2311,6 +2354,7 @@ End Sub
 
 Public Sub setContact(ByVal sectorID)
 Dim s
+   mSectorID = sectorID 'save locally for later
    If sectorID = -1 Then 'deal with Harken
       s = 5 'harken's contactID
    Else
@@ -2438,7 +2482,7 @@ Public Sub actionButtonEnable(ByVal cntrl As String, ByVal enable As Boolean, Op
       If clicked Then
       ElseIf enable Then
          imgClearWarrantsOpt.Picture = LoadPictureGDIplus(App.Path & "\gui\Deal5WarrantsOptActive.jpg")
-         imgClearWarrantsOpt.Tag = "Y"
+         imgClearWarrantsOpt.Tag = "N"
       Else
          imgClearWarrantsOpt.Picture = LoadPictureGDIplus(App.Path & "\gui\Deal5WarrantsOptInactive.jpg")
          imgClearWarrantsOpt.Tag = "N"

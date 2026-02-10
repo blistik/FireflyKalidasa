@@ -256,6 +256,25 @@ Begin VB.Form frmStories
       TabIndex        =   12
       Top             =   60
       Width           =   10605
+      Begin VB.CheckBox chkFugitive 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "Fugitive revealed per turn"
+         Height          =   195
+         Left            =   3840
+         TabIndex        =   49
+         ToolTipText     =   "force at least one Fugitive to be available at Supply discards per turn"
+         Top             =   2650
+         Width           =   2490
+      End
+      Begin VB.CheckBox chkWarrantJob 
+         BackColor       =   &H00CBE1ED&
+         Caption         =   "Issue Warrant on Illegal Job completion"
+         Height          =   195
+         Left            =   180
+         TabIndex        =   48
+         Top             =   3400
+         Width           =   3420
+      End
       Begin VB.CheckBox chkAIBotEnabled 
          BackColor       =   &H00CBE1ED&
          Caption         =   "Allow AI Bot"
@@ -273,7 +292,7 @@ Begin VB.Form frmStories
          MaxLength       =   255
          TabIndex        =   45
          ToolTipText     =   "CSV format. Up to 12 sector IDs, 1 for each player and NPC ship. 0 can be used for players for default"
-         Top             =   3390
+         Top             =   3990
          Width           =   3855
       End
       Begin VB.TextBox txt 
@@ -339,11 +358,11 @@ Begin VB.Form frmStories
       End
       Begin VB.CheckBox chkFugitives 
          BackColor       =   &H00CBE1ED&
-         Caption         =   "force Fugitives available"
+         Caption         =   "force Fugitives revealed"
          Height          =   195
          Left            =   1700
          TabIndex        =   36
-         ToolTipText     =   "force starting Fugitives to be available at Supply discards"
+         ToolTipText     =   "force Fugitives to be available at Supply discards at Startup"
          Top             =   2650
          Width           =   2130
       End
@@ -385,7 +404,7 @@ Begin VB.Form frmStories
          Left            =   3840
          TabIndex        =   9
          ToolTipText     =   "pick Upgrade or Drive"
-         Top             =   2650
+         Top             =   3400
          Width           =   2265
       End
       Begin VB.CheckBox chkRandomCrew 
@@ -574,7 +593,7 @@ Begin VB.Form frmStories
          Index           =   8
          Left            =   150
          TabIndex        =   46
-         Top             =   3420
+         Top             =   4020
          Width           =   3765
       End
       Begin VB.Label lbl 
@@ -760,11 +779,13 @@ Dim frmScores As frmScore
       SQL = SQL & " Bounty = " & chkBounty.Value & ","
       SQL = SQL & " MoveCutter = " & chkMoveCutter.Value & ","
       SQL = SQL & " Fugitives = " & chkFugitives.Value & ","
+      SQL = SQL & " Fugitive = " & chkFugitive.Value & ","
       SQL = SQL & " pullSupply = " & chkSupply.Value & ","
       SQL = SQL & " pullContact = " & chkContact.Value & ","
       SQL = SQL & " supplyInit = " & CStr(Val(txt(8))) & ","
       SQL = SQL & " contactInit = " & CStr(Val(txt(9))) & ","
       SQL = SQL & " Warrant = " & chkWarrant.Value & ","
+      SQL = SQL & " WarrantJob = " & chkWarrantJob.Value & ","
       SQL = SQL & " AllianceTrail = " & chkAllianceTrail.Value & ","
       SQL = SQL & " AIBotEnabled = " & chkAIBotEnabled.Value & ","
       SQL = SQL & " StartSectorIDs = '" & Trim(txt(10)) & "'"
@@ -856,6 +877,7 @@ Dim SQL, Index
          chkRandomCrew.Value = rst!RandomCrew
          chkBounty.Value = rst!Bounty
          chkFugitives.Value = rst!Fugitives
+         chkFugitive.Value = rst!Fugitive
          chkSupply = rst!pullSupply
          chkContact = rst!pullContact
          chkMoveCutter.Value = rst!MoveCutter
@@ -863,6 +885,7 @@ Dim SQL, Index
          txt(8) = Nz(rst!supplyInit)
          txt(9) = Nz(rst!contactInit)
          chkWarrant.Value = rst!Warrant
+         chkWarrantJob.Value = rst!WarrantJob
          chkAIBotEnabled.Value = rst!AIBotEnabled
          chkAllianceTrail.Value = rst!AllianceTrail
          txt(10) = Nz(rst!StartSectorIDs)
@@ -952,21 +975,21 @@ Dim x
 End Function
 
 Private Function SetList(cbo As Control, ByVal solids As String) As Integer
-Dim x, y, a() As String
+Dim x, Y, a() As String
 
    If solids = "" Then Exit Function
    With cbo
    
          a = Split(solids, ",")
-         For y = LBound(a) To UBound(a)
+         For Y = LBound(a) To UBound(a)
             For x = 0 To .ListCount - 1
-               If .ItemData(x) = Val(a(y)) Then
+               If .ItemData(x) = Val(a(Y)) Then
                   .selected(x) = True
                   SetList = SetList + 1
                   Exit For
                End If
             Next x
-         Next y
+         Next Y
       
    End With
    

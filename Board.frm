@@ -476,8 +476,8 @@ Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hw
 Public isLoaded As Boolean
 Public Event SectClick(ByVal Index As Integer)
 
-
 Private Sub Form_Load()
+ReDim LineB(1 To 3)
    isLoaded = True
    initImages
 End Sub
@@ -485,7 +485,6 @@ End Sub
 Private Sub Form_Unload(Cancel As Integer)
    If Me.Visible Then
       MsgBox "Probably not a good idea to close the Map", vbInformation
-
    End If
 End Sub
 

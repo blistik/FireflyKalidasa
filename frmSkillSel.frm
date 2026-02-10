@@ -110,17 +110,7 @@ Attribute VB_Exposed = False
 Option Explicit
 Public skill
 Private fmode
-'For use with USER32 Function SetWindowPos
-Private Const HWND_TOPMOST = -&H1
-Private Const HWND_NOTOPMOST = -&H2
-Private Const SWP_NOSIZE = &H1
-Private Const SWP_NOMOVE = &H2
-'For use with USER32 Function SendMessage
-Private Const HTCAPTION = 2
-Private Const WM_NCLBUTTONDOWN = &HA1
-Private Declare Sub SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
-Private Declare Function ReleaseCapture Lib "user32" () As Long
-Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
+
 Private bOnTopState As Boolean
 
 Public Property Let AlwaysOnTop(bState As Boolean)

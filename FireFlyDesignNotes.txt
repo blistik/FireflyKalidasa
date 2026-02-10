@@ -5,6 +5,18 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
+v 1.10.6 ~ February 2026
+add: Story - Patience's War
+add: Story - Any Port in a Storm
+add: Gear - Early's Datascope
+add: story option to force at least one fugitive to be revealed at Supply or onboard per turn
+gui: added animation for Alliance & Reaver Alert Tokens
+gui: added Card views for Bounties and Jobs (rt-click-> View or dbl-click)
+gui: reworked Fess' call home Deal button to allow it to toggle once pressed.
+fix: Harken Solid updates in solo mode
+bot: tweaked work action logic to prevent a showdown and a working a job in the same turn
+map: fixed paths to and from sectors 84, 101, 102 & 155
+
 v 1.10.5 ~ December 2025
 gui: overhauled the Ship on-screen movement system - asyncronous time based
 gui: added "boarded" sound effect

@@ -8,6 +8,7 @@ Begin VB.Form frmShowdown
    ClientTop       =   390
    ClientWidth     =   11970
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmShowdown.frx":0000
@@ -123,12 +124,17 @@ Begin VB.Form frmShowdown
       Top             =   1530
       Width           =   5655
    End
-   Begin VB.Image imgCrew 
-      Height          =   615
-      Left            =   5680
-      Stretch         =   -1  'True
-      Top             =   30
-      Width           =   615
+   Begin LaVolpeAlphaImg.AlphaImgCtl imgCrew 
+      Height          =   650
+      Left            =   5640
+      Top             =   0
+      Width           =   705
+      _ExtentX        =   1244
+      _ExtentY        =   1138
+      Attr            =   516
+      FixedCx         =   47
+      FixedCy         =   45
+      Effects         =   "frmShowdown.frx":91F8
    End
    Begin VB.Label Label1 
       BackStyle       =   0  'Transparent
@@ -284,8 +290,7 @@ Begin VB.Form frmShowdown
       Width           =   915
       _ExtentX        =   1614
       _ExtentY        =   1614
-      Image           =   "frmShowdown.frx":91F8
-      Effects         =   "frmShowdown.frx":CC72
+      Effects         =   "frmShowdown.frx":9210
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl picDice 
       Height          =   915
@@ -296,8 +301,7 @@ Begin VB.Form frmShowdown
       Width           =   915
       _ExtentX        =   1614
       _ExtentY        =   1614
-      Image           =   "frmShowdown.frx":CC8A
-      Effects         =   "frmShowdown.frx":10704
+      Effects         =   "frmShowdown.frx":9228
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl picDice 
       Height          =   675
@@ -308,8 +312,7 @@ Begin VB.Form frmShowdown
       Width           =   675
       _ExtentX        =   1191
       _ExtentY        =   1191
-      Image           =   "frmShowdown.frx":1071C
-      Effects         =   "frmShowdown.frx":12716
+      Effects         =   "frmShowdown.frx":9240
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl picDice 
       Height          =   915
@@ -320,8 +323,7 @@ Begin VB.Form frmShowdown
       Width           =   915
       _ExtentX        =   1614
       _ExtentY        =   1614
-      Image           =   "frmShowdown.frx":1272E
-      Effects         =   "frmShowdown.frx":1535C
+      Effects         =   "frmShowdown.frx":9258
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl picDice 
       Height          =   915
@@ -332,8 +334,7 @@ Begin VB.Form frmShowdown
       Width           =   915
       _ExtentX        =   1614
       _ExtentY        =   1614
-      Image           =   "frmShowdown.frx":15374
-      Effects         =   "frmShowdown.frx":18DEE
+      Effects         =   "frmShowdown.frx":9270
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl picDice 
       Height          =   675
@@ -344,8 +345,7 @@ Begin VB.Form frmShowdown
       Width           =   675
       _ExtentX        =   1191
       _ExtentY        =   1191
-      Image           =   "frmShowdown.frx":18E06
-      Effects         =   "frmShowdown.frx":1AE00
+      Effects         =   "frmShowdown.frx":9288
    End
    Begin VB.Label Label2 
       Alignment       =   2  'Center
@@ -544,13 +544,13 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Private Sub listGear(ByVal playerID As Integer, ByVal Skilltype As Integer)
-Dim SQL As String, X
+Dim SQL As String, x
 Dim rst As New ADODB.Recordset
 
    If Skilltype = 0 Then Exit Sub
 
-   X = IIf(playerID = player.ID, 0, 1)
-   lstGear(X).Clear
+   x = IIf(playerID = player.ID, 0, 1)
+   lstGear(x).Clear
 
    SQL = "SELECT SupplyDeck.CardID, ShowdownGear.PlayerID, Gear.* "
    SQL = SQL & "FROM ShowdownGear RIGHT JOIN (PlayerSupplies INNER JOIN (Gear INNER JOIN SupplyDeck ON Gear.GearID = SupplyDeck.GearID) ON PlayerSupplies.CardID = SupplyDeck.CardID) ON ShowdownGear.CardID = SupplyDeck.CardID "
@@ -558,10 +558,10 @@ Dim rst As New ADODB.Recordset
 
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
-      lstGear(X).AddItem Nz(rst!GearName) & " " & Nz(rst!GearDescr)
-      lstGear(X).ItemData(lstGear(X).NewIndex) = rst!CardID
+      lstGear(x).AddItem Nz(rst!GearName) & " " & Nz(rst!GearDescr)
+      lstGear(x).ItemData(lstGear(x).NewIndex) = rst!CardID
       If Nz(rst!playerID) = playerID Then
-         lstGear(X).selected(lstGear(X).NewIndex) = True
+         lstGear(x).selected(lstGear(x).NewIndex) = True
       End If
       rst.MoveNext
    Wend
@@ -570,26 +570,26 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Private Sub doPics(ByVal playerID As Integer, ByVal Skilltype, ByVal skill, ByVal Dice)
-Dim X, Y, z
+Dim x, Y, z
    If playerID = player.ID Then
-      X = 0: Y = 1: z = 2
+      x = 0: Y = 1: z = 2
    Else
-      X = 3: Y = 4: z = 5
+      x = 3: Y = 4: z = 5
    End If
 
    If Dice > 0 And Dice < 7 Then
-      picDice(X).Visible = True
-      picDice(X).Picture = LoadPictureGDIplus(App.Path & "\pictures\D" & Dice & ".bmp") ' LoadPicture(App.Path & "\pictures\D" & dice & ".bmp")
+      picDice(x).Visible = True
+      picDice(x).Picture = LoadPictureGDIplus(App.Path & "\pictures\D" & Dice & ".bmp") ' LoadPicture(App.Path & "\pictures\D" & dice & ".bmp")
 
-      picDice(X).TransparentColor = 0
-      picDice(X).TransparentColorMode = lvicUseTransparentColor
+      picDice(x).TransparentColor = 0
+      picDice(x).TransparentColorMode = lvicUseTransparentColor
       picDice(Y).Visible = False
 
    ElseIf Dice > 6 Then
-      picDice(X).Visible = True
-      picDice(X).Picture = LoadPictureGDIplus(App.Path & "\pictures\D6.bmp") 'LoadPicture(App.Path & "\pictures\D6.jpg")
-      picDice(X).TransparentColor = 0
-      picDice(X).TransparentColorMode = lvicUseTransparentColor
+      picDice(x).Visible = True
+      picDice(x).Picture = LoadPictureGDIplus(App.Path & "\pictures\D6.bmp") 'LoadPicture(App.Path & "\pictures\D6.jpg")
+      picDice(x).TransparentColor = 0
+      picDice(x).TransparentColorMode = lvicUseTransparentColor
       picDice(Y).Visible = True
       picDice(Y).Picture = LoadPictureGDIplus(App.Path & "\pictures\D" & (Dice - 6) & ".bmp")  'LoadPicture(App.Path & "\pictures\D" & (dice - 6) & ".bmp")
       picDice(Y).TransparentColor = 0
@@ -603,13 +603,13 @@ Dim X, Y, z
 End Sub
 
 Private Sub discardGearUsed()
-Dim X
+Dim x
    With lstGear(0)
-      For X = 0 To .ListCount - 1
-         If .selected(X) Then 'discard it
-            doDiscardGear player.ID, .ItemData(X)
-            PutMsg player.PlayName & " discards " & getGearAttrib(.ItemData(X), "GearName"), player.ID, Logic!Gamecntr
+      For x = 0 To .ListCount - 1
+         If .selected(x) Then 'discard it
+            doDiscardGear player.ID, .ItemData(x)
+            PutMsg player.PlayName & " discards " & getGearAttrib(.ItemData(x), "GearName"), player.ID, Logic!Gamecntr
          End If
-      Next X
+      Next x
    End With
 End Sub
