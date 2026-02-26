@@ -124,6 +124,8 @@ Public pickStartSector As Integer
 Public wormHoleOpen As Boolean      '133 - 104
 Public datab                        'database for game
 Public LastJobDone As Integer       'record last job updated state for cards
+'Public SecretSectorID As Integer   'store the slected SectorID for the secret Planet
+'Public SecretRevealed As Boolean   'flag set when secret location has been reached
 
 'Public Bitpic() As Control
 Public Const JOB_SUCCESS As Integer = 3      'final JobStatus value once complete
@@ -139,6 +141,7 @@ Public Const DEF_STASHCAPACITY As Integer = 4
 Public Const NO_OF_CONTACTS As Integer = 9
 Public Const NO_OF_SUPPLY As Integer = 7
 Public Const NO_OF_SECTORS As Integer = 159
+Public Const UNKNOWN_SECTOR As Integer = 3
 
 Public Function Logon() As Boolean
 Dim ConStr As String
@@ -394,8 +397,6 @@ On Error GoTo err_handler
     If Not rst.EOF Then
        'set my cntr to current Game Seq
        DB.Execute "UPDATE Players SET Seq = " & CStr(Logic!Gamecntr) & " WHERE PlayerID = " & playerID
-       'rst!Seq = Logic!GameCntr 'set my go as done
-       'rst.Update
        rst.MoveNext
        If rst.EOF Then   'end of this round
          rst.Requery
@@ -711,6 +712,25 @@ Dim c() As String
       
    End If
    
+   If playerID = player.ID And Logic!SecretRevealed = 0 And Logic!SecretSectorID = sectorID Then
+      Dim msg As String, goal As Integer
+      Logic.Requery
+      Logic!SecretRevealed = 1
+      Logic.Update
+      goal = varDLookup("Goals", "Players", "PlayerID =" & player.ID)
+      msg = varDLookup("RevealText", "StoryGoals", "StoryID=" & Logic!StoryID & " AND Goal=" & goal, "") & vbNullString
+      If msg = vbNullString Then
+         If Nz(varDLookup("SectorID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = " & goal + 1), 0) = 3 Then
+            msg = varDLookup("RevealText", "StoryGoals", "StoryID=" & Logic!StoryID & " AND Goal=" & goal + 1, "") & vbNullString
+         End If
+      End If
+      If msg = vbNullString Then
+         PutMsg "We have a Tip-off from the Locals, we've found our Goal's location!", playerID, Logic!Gamecntr, True, getLeader()
+      Else
+         PutMsg msg, playerID, Logic!Gamecntr, True, getLeader()
+      End If
+   End If
+   
    Main.Timing.Enabled = TimingState
    
    'RefreshBoard
@@ -858,22 +878,6 @@ Public Sub changeToken(ByVal sectorID As Integer, ByVal cnt As Integer, Optional
 End Sub
 
 
-'Public Sub changeToken(ByVal sectorID As Integer, ByVal cnt As Integer, Optional ByVal sound As Boolean = True, Optional ByVal playerID As Integer = 0)
-'Dim x As Integer
-'   If cnt < 0 Then
-'      DB.Execute "UPDATE Board SET Token = TokenSet WHERE SectorID = " & sectorID
-'   Else
-'      x = varDLookup("Token", "Board", "SectorID=" & sectorID)
-'      If cnt < 6 Then
-'         x = x + cnt
-'         If sound Then playsnd 2
-'         DB.Execute "UPDATE Board Set Token = Token + " & Str(cnt) & " WHERE SectorID = " & sectorID
-'         Main.displayToken sectorID, x
-'      End If
-'   End If
-'
-'End Sub
-
 Public Function getAToken(ByVal sectorID As Integer) As Integer
    getAToken = varDLookup("AToken", "Board", "SectorID=" & sectorID)
 End Function
@@ -930,42 +934,6 @@ Public Sub changeAToken(ByVal sectorID As Integer, ByVal cnt As Integer, Optiona
         End If
     End If
 End Sub
-
-
-'Public Sub changeAToken(ByVal sectorID As Integer, ByVal cnt As Integer, Optional ByVal sound As Boolean = True)
-'Dim coords, slot, x
-'Dim c() As String
-'Dim tokenCnt As Integer, cruiserSectorID As Integer
-'
-'   cruiserSectorID = getCruiserSector
-'   tokenCnt = getAToken(sectorID)
-'   If tokenCnt + cnt < 0 Then
-'      DB.Execute "UPDATE Board Set AToken = 0 WHERE SectorID = " & sectorID
-'   Else
-'      If getHaven(sectorID) = 0 And varDLookup("TokenSet", "Board", "SectorID=" & sectorID) = 0 And tokenCnt < 6 Then 'update the token + cnt
-'         If sound Then playsnd 2
-'         DB.Execute "UPDATE Board Set AToken = AToken + " & Str(cnt) & " WHERE SectorID = " & sectorID
-'
-'         coords = varDLookup("Slot5", "Board", "SectorID=" & cruiserSectorID)
-'         c = Split(coords, ",")
-'         If cruiserSectorID <> sectorID Then
-'            With Main.Verse.imgAToken(sectorID)
-'               x = Val(.Tag) + cnt
-'               .Picture = LoadPictureGDIplus(App.Path & "\Pictures\AToken" & IIf(x > 6, 6, x) & ".gif")
-'               .Visible = True
-'               .TransparentColor = &HFFFFFF
-'               .TransparentColorMode = lvicUseTransparentColor
-'               .Animate2.StartAnimation
-'               .Tag = CStr(x)
-'
-'               .Visible = True
-'               StartTokenMove sectorID, Main.Verse.Imag(5).Left, Main.Verse.Imag(5).top + 680, .Left, .top, 3000
-'            End With
-'         End If
-'      End If
-'   End If
-'
-'End Sub
 
 Public Sub placeHaven(ByVal playerID, ByVal sectorID)
     DB.Execute "UPDATE Board Set Haven = " & Str(playerID) & " WHERE SectorID = " & sectorID
@@ -1094,7 +1062,7 @@ End Function
 
 'this Controls all the Story Goals, their Jobs and the WIN
 Public Function CheckWon(ByVal playerID) As Boolean
-Dim rst As New ADODB.Recordset, SQL, frmWin As frmWinner, goaldone As Boolean
+Dim rst As New ADODB.Recordset, SQL, frmWin As frmWinner, goaldone As Boolean, winText As String, goal As Integer
 On Error Resume Next
    goaldone = True
    SQL = "SELECT * FROM Players WHERE PlayerID=" & playerID
@@ -1103,6 +1071,7 @@ On Error Resume Next
       While Not CheckWon And goaldone
          CheckWon = doGoalCheck(playerID, Logic!StoryID, rst!Goals, rst!Seq, goaldone)
          rst.Requery
+         goal = rst!Goals
       Wend
    End If
 
@@ -1113,6 +1082,11 @@ On Error Resume Next
       DB.Execute "INSERT INTO Scores (StoryID,PlayerName,Turns,StartDate,PlayDate) Values (" & CStr(Logic!StoryID) & ",'" & SQLFilter(player.PlayName) & "'," & CStr(Logic!Gamecntr - 1) & ", " & SQLDate(varDLookup("EventTime", "Events", "Event ='" & player.PlayName & "''s on the Map'")) & ", " & SQLNow & ")"
       PutMsg PlayCode(playerID).PlayName & " has WON the Game in " & Logic!Gamecntr - 1 & " turns", playerID, Logic!Gamecntr
       Set frmWin = New frmWinner
+      winText = varDLookup("Instructions", "StoryGoals", "StoryID =" & Logic!StoryID & " AND Goal =" & goal, "")
+      If Not (winText = vbNullString Or winText = "WIN") Then
+         frmWin.lbl = winText
+         frmWin.lbl.Visible = True
+      End If
       frmWin.Show 1
    End If
 
@@ -1120,13 +1094,14 @@ On Error Resume Next
 Set rst = Nothing
 End Function
 
+'goal is set to current number of goals done
 Private Function doGoalCheck(ByVal playerID, ByVal StoryID, ByVal goal, ByVal Seq, ByRef goaldone As Boolean) As Boolean
 Dim rst As New ADODB.Recordset, a() As String
-Dim SQL, x, cnt As Integer, sectorID As Integer, ContactID As Integer
+Dim SQL, x, Y, cnt As Integer, sectorID As Integer, ContactID As Integer
    goaldone = False
    If goal = -1 Then Exit Function 'never acheive goal now
    goaldone = True 'until proven otherwise
-   SQL = "SELECT * FROM StoryGoals WHERE StoryID=" & StoryID & " AND Goal = " & CStr(goal + 1)
+   SQL = "SELECT * FROM StoryGoals WHERE StoryID=" & StoryID & " AND Goal = " & CStr(goal + 1) 'next goal's requirements
    rst.CursorLocation = adUseClient
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
@@ -1194,7 +1169,7 @@ Dim SQL, x, cnt As Integer, sectorID As Integer, ContactID As Integer
       'be at a Sector
       If goaldone And rst!sectorID > 0 Then
          sectorID = getPlayerSector(playerID)
-         If Not ((rst!sectorID = 1 And getCruiserSector() = sectorID) Or (rst!sectorID = 2 And getCorvetteSector() = sectorID) Or (sectorID = rst!sectorID)) Then
+         If Not isAtLocation(rst!sectorID, sectorID) Then
             goaldone = False
          End If
       End If
@@ -1243,19 +1218,38 @@ Dim SQL, x, cnt As Integer, sectorID As Integer, ContactID As Integer
       
       '======= Success. if we here and goaldone is still true, then Goal IS Done ============
       If goaldone Then
+         'advance our goal value
          addGoal playerID, 1
+         goal = goal + 1
+         
+         'now deliver the new goals outputs, like a Job, change in cutters, etc
       
-         'if we here and goaldone, we good to deliver job
+         'if we here and goaldone, we're good to deliver job
+         x = 0 'secret location set flag
          If rst!IssueJobID > 0 Then
             assignDeal playerID, rst!IssueJobID
-'            If Main.Toolbar1.Buttons("help").ButtonMenus("viewjobcard").Tag = "X" Then
-'               viewJobCard 0, rst!IssueJobID
-'            End If
+            If hasSecretLocation(rst!IssueJobID) And rst!groupID > 0 Then
+               Logic.Requery
+               Logic!SecretSectorID = getRandomSectorFromGroup(rst!groupID)
+               Logic!SecretRevealed = False
+               Logic.Update
+               x = 1
+            End If
             If Not (Main.frmJob Is Nothing) Then
                Main.frmJob.refreshJobs
             End If
-   
          End If
+         If x = 0 Then 'check if goal 1 has unknown location
+            x = Nz(varDLookup("SectorID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = " & goal + 1), 0)
+            If x = 3 Then
+               Y = Nz(varDLookup("GroupID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = " & goal + 1), 0)
+               Logic.Requery
+               Logic!SecretSectorID = getRandomSectorFromGroup(Y)
+               Logic!SecretRevealed = False
+               Logic.Update
+            End If
+         End If
+
          
          If rst!chngInCutters <> 0 Then
             
@@ -1277,9 +1271,16 @@ Dim SQL, x, cnt As Integer, sectorID As Integer, ContactID As Integer
             Next x
             
          End If
+         If rst!PayCash > 0 Then
+            getMoney playerID, -1 * rst!PayCash
+            PutMsg player.PlayName & " paid out $" & rst!PayCash, playerID, Logic!Gamecntr
+         End If
          
          If rst!Warrant > 0 Then
-            DB.Execute "UPDATE Players SET Warrants = Warrants +1 WHERE PlayerID = " & player.ID
+            If Not warrantDodge(playerID) Then
+               DB.Execute "UPDATE Players SET Warrants = Warrants + 1" & IIf(discardRoberta(playerID), "", ", Solid5 = 0") & " WHERE PlayerID = " & playerID
+               PutMsg player.PlayName & "'s Goal log: a Warrant has been issued" & IIf(isSolid(playerID, 5), " and you are no longer Solid with Harken", "") & "!", playerID, Logic!Gamecntr, True, getLeader()
+            End If
          End If
          
          If rst!clearAlliance = 1 Then
@@ -1288,7 +1289,6 @@ Dim SQL, x, cnt As Integer, sectorID As Integer, ContactID As Integer
          
          If rst!clearReaver = 1 Then
             DB.Execute "UPDATE Board SET Token = TokenSet"
-            'DB.Execute "UPDATE Board Set Token = 1 WHERE SectorID IN (120,121,122,156,157)"
          End If
          
          ContactID = rst!doSolid
@@ -1307,7 +1307,7 @@ Dim SQL, x, cnt As Integer, sectorID As Integer, ContactID As Integer
          
          ' we good to give new instructions
          If Nz(rst!Instructions) <> "" And Not doGoalCheck Then
-            PutMsg player.PlayName & ", you have completed Goal " & goal + 1 & vbNewLine & rst!Instructions, playerID, Logic!Gamecntr, True, getLeader()
+            PutMsg player.PlayName & ", you have completed Goal " & goal & vbNewLine & rst!Instructions, playerID, Logic!Gamecntr, True, getLeader()
          End If
       End If
       
@@ -1426,8 +1426,16 @@ On Error GoTo err_handler
       If CrewID > 0 Then
          .Width = 10320
          .Height = 5040
-         .lblMsg.Height = 1600
-         .cmd(0).top = 1900
+         If Len(msg) > 300 And Dice = 0 And skill = 0 Then
+            .lblMsg.Height = 3200
+            .cmd(0).top = 3800
+         ElseIf Dice = 0 And skill = 0 Then
+            .lblMsg.Height = 2200
+            .cmd(0).top = 2600
+         Else
+            .lblMsg.Height = 1600
+            .cmd(0).top = 1900
+         End If
          .pic.Visible = True
          Set .pic.Picture = LoadPicture(App.Path & "\pictures\" & varDLookup("Picture", "Crew", "CrewID=" & CrewID))
       ElseIf GearID > 0 Then
@@ -1509,8 +1517,18 @@ On Error GoTo err_handler
       If CrewID > 0 Then
          .Width = 10320
          .Height = 5040
-         .lblMsg.Height = 1600
-         .cmd(0).top = 1900
+         If Len(msg) > 300 And Dice = 0 And button2 = vbNullString Then
+            .lblMsg.Height = 3200
+            .cmd(0).top = 3800
+         ElseIf Dice = 0 And button2 = vbNullString Then
+            .lblMsg.Height = 2200
+            .cmd(0).top = 2600
+         Else
+            .lblMsg.Height = 1600
+            .cmd(0).top = 1900
+         End If
+         '.lblMsg.Height = 1600
+         '.cmd(0).top = 1900
          .cmd(1).top = 1900
          .pic.Visible = True
          Set .pic.Picture = LoadPicture(App.Path & "\pictures\" & varDLookup("Picture", "Crew", "CrewID=" & CrewID))
@@ -1857,16 +1875,33 @@ On Error GoTo err_handler
          cbo.ItemData(cbo.NewIndex) = rst!CardID
          rst.MoveNext
       Wend
-      
+   
+   Case "planetgroup"
+      SQL = "SELECT Distinct GroupID FROM PlanetGroup " & filter
+      rst.Open SQL, DB, 0, 1
+      While Not rst.EOF
+         cbo.AddItem rst!groupID
+         cbo.ItemData(cbo.NewIndex) = rst!groupID
+         rst.MoveNext
+      Wend
    Case "planet"
       SQL = "SELECT * FROM Planet WHERE PlanetID > 0 " & filter
       rst.Open SQL, DB, 0, 1
       While Not rst.EOF
-         cbo.AddItem rst!PlanetName
+         cbo.AddItem rst!planetName
          cbo.ItemData(cbo.NewIndex) = rst!sectorID
          rst.MoveNext
       Wend
-      
+   
+   Case "planetsystem"
+      SQL = "SELECT * FROM Planet WHERE SectorID > " & UNKNOWN_SECTOR & filter
+      rst.Open SQL, DB, 0, 1
+      While Not rst.EOF
+         cbo.AddItem rst!planetName & " - " & rst!System
+         cbo.ItemData(cbo.NewIndex) = rst!sectorID
+         rst.MoveNext
+      Wend
+     
    Case "contact"
       SQL = "SELECT * FROM Contact " & filter
       rst.Open SQL, DB, 0, 1
@@ -2071,7 +2106,7 @@ End Function
 
 Public Sub dealDriveAndJobs(ByVal playerID)
 Dim rst As New ADODB.Recordset
-Dim startjobs As String, a() As String, x, msg As String
+Dim startjobs As String, a() As String, x, Y, msg As String
 
    'std Drive Core IDs 132 - 135
    DB.Execute "INSERT INTO PlayerSupplies (PlayerID,CardID) VALUES (" & playerID & ", " & 131 + playerID & ")"
@@ -2079,15 +2114,37 @@ Dim startjobs As String, a() As String, x, msg As String
    
    'get Story Issued Job
    x = Nz(varDLookup("IssueJobID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 0"), 0)
-   If x > 0 Then
+   Y = Nz(varDLookup("GroupID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 0"), 0)
+   If x > 0 Then 'Issue a Job and if unknown location, set secret sector
       assignDeal playerID, x
-'      If Main.Toolbar1.Buttons("help").ButtonMenus("viewjobcard").Tag = "X" Then
-'         viewJobCard 0, x
-'      End If
+      If hasSecretLocation(x) And Y > 0 Then 'Unknown Location to be set!
+         Logic.Requery
+         Logic!SecretSectorID = getRandomSectorFromGroup(Y)
+         Logic!SecretRevealed = False
+         Logic.Update
+      Else
+         x = 0 'clear the flag so secret location can be rechecked at goal level
+      End If
+   End If
+   If x = 0 Then 'check if goal 1 has unknown location
+      x = Nz(varDLookup("SectorID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 1"), 0)
+      If x = 3 Then
+         Y = Nz(varDLookup("GroupID", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 1"), 0)
+         Logic.Requery
+         Logic!SecretSectorID = getRandomSectorFromGroup(Y)
+         Logic!SecretRevealed = False
+         Logic.Update
+      End If
    End If
    msg = Nz(varDLookup("Instructions", "StoryGoals", "StoryID=" & Logic!StoryID & " and Goal = 0"))
    If msg <> "" Then
       MessBox msg, "Story - First Goal", "Shiny", "", getLeader()
+   End If
+   
+   If getPlayerSector(player.ID) = Logic!SecretSectorID Then
+      Logic!SecretRevealed = True
+      Logic.Update
+      MessBox "Looks like we landed right at the Unknown Location", "Location found!", "Shiny", "", getLeader()
    End If
    
    'Grab a Job from configured list out of Contact decks
@@ -3461,7 +3518,9 @@ Dim frmStory As New frmStories
    End With
 End Function
 
-'NB: for only one crew, supply crewID and use -1 for remove all, 1-add to Moral Only, 2 for add all disgruntled, 3-remove disgruntle Moral Only, 4-all fired regardless of original mode, 6-add moral crew only (on win)
+'mode: for only one crew, supply crewID and use -1 for remove all, 1-add to Moral Only, 2 for add all disgruntled,
+'   3-remove disgruntle Moral Only, 4-all fired regardless of original mode, 6-add moral crew only (on win),
+'   7- disgruntled everyone except Leader OR return value if capt dbl disgrntld
 Public Function doDisgruntled(ByVal playerID, ByVal mode, Optional ByVal CrewID As Integer = 0) As Integer
 Dim rst As New ADODB.Recordset
 Dim SQL, leader, CardID, CrewName As String, Disgruntled As Integer, Fendris As Boolean, FendrisUsed As Boolean
@@ -3508,7 +3567,7 @@ Dim SQL, leader, CardID, CrewName As String, Disgruntled As Integer, Fendris As 
       Select Case mode
          Case -1, 3 'remove all/moral only disgruntled
             DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & rst!CrewID
-         Case 1, 2, 4 'moral only / all
+         Case 1, 2, 4, 7 'moral only / all
             If rst!Moral = 1 Or mode >= 2 Then 'they are either disgruntled or leaving
                'if leader, then do Fendris check & switch
                If leader = rst!CrewID And Fendris Then
@@ -3525,7 +3584,7 @@ Dim SQL, leader, CardID, CrewName As String, Disgruntled As Integer, Fendris As 
                   Disgruntled = rst!Disgruntled
                End If
                
-               If Disgruntled > 0 Or mode = 4 Then 'if this is the 2nd disgruntled or fired then crew go to discard pile, gear returns to ship
+               If Disgruntled > 0 Or mode = 4 Or mode = 7 Then  'if this is the 2nd disgruntled or fired then crew go to discard pile, gear returns to ship
                   'remove Disgruntled
                   DB.Execute "UPDATE Crew SET Disgruntled = 0 WHERE CrewID = " & CrewID
                   If CrewID = leader Then
@@ -5185,7 +5244,7 @@ Dim SQL
    SQL = SQL & "WHERE JobID =" & JobID
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
-      getPlanetSector = rst!PlanetName & " - " & rst!System
+      getPlanetSector = rst!planetName & " - " & rst!System
    End If
    rst.Close
    Set rst = Nothing
@@ -5200,7 +5259,7 @@ Dim SQL
    SQL = SQL & "WHERE SectorID =" & sectorID
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
-      getPlanetName = rst!PlanetName ' & " - " & rst!System
+      getPlanetName = rst!planetName ' & " - " & rst!System
    End If
    rst.Close
    Set rst = Nothing
@@ -5212,22 +5271,35 @@ Public Sub removeJob(ByVal playerID, ByVal CardID)
 End Sub
 
 Public Sub viewJobCard(ByVal ContactID As Integer, ByVal CardID As Integer)
-Dim frmJobcards As Form
+    Dim f As Form
 
-   On Error Resume Next
-   If CardID = 0 Then Exit Sub
+    If CardID = 0 Then Exit Sub
+    On Error Resume Next
 
-   If ContactID = 10 Then
-      Set frmJobcards = New frmBounty
-   Else
-      Set frmJobcards = New frmJobcard
-   End If
-   frmJobcards.JobCardID = CardID
-   frmJobcards.AlwaysOnTop = True
-   frmJobcards.Show
-   Set frmJobcards = Nothing
+    ' Check if this card is already open
+    For Each f In Forms
+        If TypeOf f Is frmJobcard Or TypeOf f Is frmBounty Then
+            If Val(f.Caption) = CardID Then
+                f.ZOrder 0   ' bring to front
+                Exit Sub     ' prevent duplicate
+            End If
+        End If
+    Next f
 
+    ' No existing card found — create a new one
+    Dim frmJobcards As Form
+    If ContactID = 10 Then
+        Set frmJobcards = New frmBounty
+    Else
+        Set frmJobcards = New frmJobcard
+    End If
+
+    frmJobcards.JobCardID = CardID
+    frmJobcards.AlwaysOnTop = True
+    frmJobcards.Show
+    Set frmJobcards = Nothing
 End Sub
+
 
 Public Function discardJob(ByVal JobName As String, ByVal CardID As Integer) As Boolean
       If MessBox("Are you sure you want to ditch the Job: " & JobName & "?", "Discard Job", "Ditch it", "Nope", getLeader()) = 0 Then
@@ -5238,6 +5310,7 @@ Public Function discardJob(ByVal JobName As String, ByVal CardID As Integer) As 
          End If
          Main.frmJob.refreshJobs
          Main.drawLine 0, -1
+         LastJobDone = CardID
       End If
 End Function
 
@@ -5356,21 +5429,9 @@ End Sub
 
 
 Public Function getNumOfReavers() As Integer
-Dim rst As New ADODB.Recordset
-Dim SQL
-Dim goal
-   getNumOfReavers = varDLookup("NoOfReavers", "Story", "StoryID = " & Logic!StoryID)
-   goal = varDLookup("Goals", "Players", "PlayerID=" & player.ID)
-   SQL = "SELECT Sum(StoryGoals.chngInCutters) AS SumOfchngInCutters "
-   SQL = SQL & "From StoryGoals GROUP BY StoryGoals.StoryID, StoryGoals.Goal "
-   SQL = SQL & "HAVING StoryGoals.StoryID=" & Logic!StoryID & " AND StoryGoals.Goal>=" & goal
-   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
-   If Not rst.EOF Then
-      getNumOfReavers = getNumOfReavers + rst!SumOfchngInCutters
-   End If
-   
-   rst.Close
-   Set rst = Nothing
+
+   getNumOfReavers = varDLookup("Count(*) AS cnt", "Players", "SectorID IS NOT NULL AND PlayerID > 6", "cnt")
+
 End Function
 
 Public Sub setRefresh(Optional ByVal All As Boolean = False)
@@ -5396,4 +5457,111 @@ Dim x
    Next x
 
 End Sub
+
+Public Function getRandomSectorFromGroup(ByVal groupID As Integer) As Integer
+   Dim rst As New ADODB.Recordset
+   Dim SQL
+   Dim count As Integer
+   Dim Index As Integer
+
+   SQL = "SELECT SectorID FROM PlanetGroup WHERE GroupID=" & groupID
+   rst.Open SQL, DB, adOpenStatic, adLockReadOnly
+
+   If Not rst.EOF Then
+      ' Count rows
+      rst.MoveLast
+      count = rst.RecordCount
+      rst.MoveFirst
+
+      ' Pick a random row
+      Randomize
+      Index = Int(Rnd * count) + 1
+
+      ' Move to that row
+      rst.MoveFirst
+      rst.Move Index - 1
+
+      getRandomSectorFromGroup = rst!sectorID
+   Else
+      getRandomSectorFromGroup = 0   ' No sectors found for this group
+   End If
+
+   rst.Close
+   Set rst = Nothing
+End Function
+
+
+Public Function hasSecretLocation(ByVal CardID As Integer) As Boolean
+   Dim rst As New ADODB.Recordset
+   Dim SQL
+
+   SQL = "SELECT Job.SectorID AS Sector1, Job_1.SectorID AS Sector2 " & _
+         "FROM (Job INNER JOIN ContactDeck ON Job.JobID = ContactDeck.Job1ID) " & _
+         "LEFT JOIN Job AS Job_1 ON ContactDeck.Job2ID = Job_1.JobID " & _
+         "WHERE ContactDeck.CardID=" & CardID
+
+   rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
+
+   If Not rst.EOF Then
+      If rst!sector1 = 3 Or rst!sector2 = 3 Then
+         hasSecretLocation = True
+      Else
+         hasSecretLocation = False
+      End If
+   Else
+      hasSecretLocation = False
+   End If
+
+   rst.Close
+   Set rst = Nothing
+End Function
+
+Public Function getPlanetDescription(ByVal sectorID As Integer, ByVal playerID As Integer, ByVal planetName As String) As String
+   Dim x As Integer
+
+   ' Secret location revealed
+   If sectorID = UNKNOWN_SECTOR And Logic!SecretRevealed = 1 Then
+      x = getSectorCount(getPlayerSector(playerID), Logic!SecretSectorID)
+      getPlanetDescription = getPlanetName(Logic!SecretSectorID) & IIf(x > 0, "  (" & x & ")", "")
+      Exit Function
+   End If
+
+   ' Secret location not yet revealed
+   If sectorID = UNKNOWN_SECTOR And Logic!SecretRevealed = 0 Then
+      getPlanetDescription = planetName
+      Exit Function
+   End If
+
+   ' Normal planet
+   x = getSectorCount(getPlayerSector(playerID), sectorID)
+   getPlanetDescription = planetName & IIf(x > 0, "  (" & x & ")", "")
+End Function
+
+Public Function isAtLocation(ByVal sectorID As Variant, ByVal playerSectorID As Integer) As Boolean
+
+   If IsNull(sectorID) Then Exit Function
+   If sectorID = 0 Then Exit Function
+   
+   'Cruiser (SectorID = 1)
+   If sectorID = 1 Then
+      isAtLocation = (getCruiserSector() = playerSectorID)
+      Exit Function
+   End If
+
+   'Corvette (SectorID = 2)
+   If sectorID = 2 Then
+      isAtLocation = (getCorvetteSector() = playerSectorID)
+      Exit Function
+   End If
+
+   'Unknown Location (SectorID = 3)
+   If sectorID = UNKNOWN_SECTOR Then
+      isAtLocation = (Logic!SecretSectorID = playerSectorID)
+      Exit Function
+   End If
+
+   'Normal planet (SectorID > 3)
+   isAtLocation = (sectorID > UNKNOWN_SECTOR And sectorID = playerSectorID)
+
+End Function
 

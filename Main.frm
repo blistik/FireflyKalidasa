@@ -699,15 +699,15 @@ End Sub
 ' actionSeq States = ASidle , ASselect --- >>> , ASend, -> ASidle, <repeat>
 Private Sub Timing_Timer()
 Dim status As Variant, errh, thisplayer As Integer
-Dim sectorID, ContactID As Integer, SupplyID As Integer, x, Y As Integer
+Dim SectorID, ContactID As Integer, SupplyID As Integer, x, Y As Integer
 Dim maxConsider, StartSectorIDs As String, a() As String
 On Error GoTo err_handler
 
-   sectorID = getPlayerSector(player.ID)
-   player.sectorID = sectorID
-   ContactID = Nz(varDLookup("ContactID", "Contact", "SectorID=" & sectorID), 0)
+   SectorID = getPlayerSector(player.ID)
+   player.SectorID = SectorID
+   ContactID = Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0)
    ContactID = IIf(HigginsDealPerk, 8, IIf(HarkenDeal, 5, ContactID))
-   SupplyID = Nz(varDLookup("SupplyID", "Supply", "SectorID=" & sectorID), 0)
+   SupplyID = Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0)
 
    status = GetSeqX(thisplayer)
    
@@ -782,6 +782,7 @@ On Error GoTo err_handler
       End If
       
       refreshAll
+      refreshSolid
       
       'starting point selected, pass to next person, or kick the main Running Game cycle off
       setNextPlayerREV player.ID, "R"
@@ -795,8 +796,8 @@ On Error GoTo err_handler
          doForceFugitive
       End If
       
-      If ((getCutterSector(sectorID) > 0 Or getCruiserCorvette(sectorID) = 5) And CruiserCutter <> sectorID) Or (getCruiserCorvette(sectorID) = 6 And CorvetteSeq <> getCorvetteSeq) Then
-         If checkWhisperX1(sectorID) Then
+      If ((getCutterSector(SectorID) > 0 Or getCruiserCorvette(SectorID) = 5) And CruiserCutter <> SectorID) Or (getCruiserCorvette(SectorID) = 6 And CorvetteSeq <> getCorvetteSeq) Then
+         If checkWhisperX1(SectorID) Then
             actionSeq = ASNavEvade ' and get away
             Exit Sub
          End If
@@ -897,27 +898,27 @@ On Error GoTo err_handler
       End If
    
    ElseIf status = "R" And thisplayer = player.ID And actionSeq = ASMoseyEnd Then   'Mosey Cycle - your go
-      x = getPlanetName(sectorID)
-      PutMsg player.PlayName & " moseyed to " & IIf(x = "", "sector " & sectorID, x), player.ID, Logic!Gamecntr
-      If resolveToken(sectorID) = 6 And isOutlaw(player.ID) Then 'no Nav card when Corvette arrives
+      x = getPlanetName(SectorID)
+      PutMsg player.PlayName & " moseyed to " & IIf(x = "", "sector " & SectorID, x), player.ID, Logic!Gamecntr
+      If resolveToken(SectorID) = 6 And isOutlaw(player.ID) Then 'no Nav card when Corvette arrives
          If actionSeq <> ASNavEvade Then
             actionSeq = ASselect 'in limbo awaiting user to select
             showActions   'throw it back to the action window
          End If
       Else 'reavers
          If actionSeq <> ASNavEvade Then
-            checkFlacGun sectorID
+            checkFlacGun SectorID
             actionSeq = ASselect 'in limbo awaiting user to select
             showActions   'throw it back to the action window
          End If
       End If
    
    ElseIf status = "R" And thisplayer = player.ID And actionSeq = ASFullburnEnd Then   'fullburn Cycle - your go
-      x = getPlanetName(sectorID)
-      PutMsg player.PlayName & " fullburned to " & IIf(x = "", "sector " & sectorID, x), player.ID, Logic!Gamecntr
-      x = resolveToken(sectorID)
+      x = getPlanetName(SectorID)
+      PutMsg player.PlayName & " fullburned to " & IIf(x = "", "sector " & SectorID, x), player.ID, Logic!Gamecntr
+      x = resolveToken(SectorID)
       'check if Alliance is in the Sector
-      If x = 0 Then x = getCruiserCorvette(sectorID)
+      If x = 0 Then x = getCruiserCorvette(SectorID)
       If (x = 5 Or x = 6) And isOutlaw(player.ID) Then 'no Nav card when Alliance arrives
          If actionSeq = ASNavEvade Then
             frmAction.fullburndone = True
@@ -929,9 +930,9 @@ On Error GoTo err_handler
          If actionSeq <> ASNavEvade Then
             If isMoveCutterEnabled Then moveAutoAI 6 + RollDice(NumOfReavers)
             If actionSeq <> ASNavEvade Then 'may be set in above line
-               checkFlacGun sectorID
+               checkFlacGun SectorID
                actionSeq = ASNav 'pick a Nav card
-               showNav sectorID
+               showNav SectorID
             End If
          End If
       End If
@@ -946,7 +947,7 @@ On Error GoTo err_handler
          PutMsg player.PlayName & " discards and redraws a NAV Card using the Surveyor's Shuttle", player.ID, Logic!Gamecntr
          SurvShuttlePerk = True
          actionSeq = ASNav 'pick next Nav card
-         showNav sectorID
+         showNav SectorID
       ElseIf frmNav.NavOption > 0 Then
          doNav frmNav.NavCardID, frmNav.NavOption
          If hasShipUpgrade(player.ID, 20) And TheBigBlack >= 0 Then 'Emissions Recycler
@@ -965,9 +966,9 @@ On Error GoTo err_handler
          showActions   'throw it back to the action window
       End If
    ElseIf status = "R" And thisplayer = player.ID And actionSeq = ASNavEvadeEnd Then   'fullburn Cycle
-      resolveToken sectorID
+      resolveToken SectorID
       If actionSeq <> ASNavEvade Then
-         checkFlacGun sectorID
+         checkFlacGun SectorID
          actionSeq = ASselect 'in limbo awaiting user to select
          showActions   'throw it back to the action window
       End If
@@ -1104,7 +1105,7 @@ On Error GoTo err_handler
       ElseIf hasShipUpgrade(player.ID, 19) Then
          PutMsg player.PlayName & " treated the Crew with a shiny Board Game for $" & CStr(Abs(x)), player.ID, Logic!Gamecntr, True, 0, 0, 19
       Else
-         PutMsg player.PlayName & " went on Shore Leave at " & varDLookup("PlanetName", "Planet", "SectorID=" & sectorID) & " for $" & CStr(Abs(x)), player.ID, Logic!Gamecntr
+         PutMsg player.PlayName & " went on Shore Leave at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID) & " for $" & CStr(Abs(x)), player.ID, Logic!Gamecntr
       End If
             
       showActions
@@ -1114,10 +1115,10 @@ On Error GoTo err_handler
       'buy fuel & parts now
       If frmAction.imgFuelBuy.Tag = "Y" Then
          If CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) >= (Val(frmAction.lblBuyFuel)) / 2 Then
-            If doBuyFuelParts(player.ID, Val(frmAction.lblBuyFuel), 0, False, IIf(getHaven(sectorID) = player.ID, 4, 0)) = 0 Then
+            If doBuyFuelParts(player.ID, Val(frmAction.lblBuyFuel), 0, False, IIf(getHaven(SectorID) = player.ID, 4, 0)) = 0 Then
                
             End If
-            PutMsg player.PlayName & " loaded " & frmAction.lblBuyFuel & " Fuel at the Haven" & IIf(getHaven(sectorID) = player.ID, ", up to 4 for free!", ""), player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " loaded " & frmAction.lblBuyFuel & " Fuel at the Haven" & IIf(getHaven(SectorID) = player.ID, ", up to 4 for free!", ""), player.ID, Logic!Gamecntr
          Else
             MessBox "Not enough Cargo Space for the Fuel/Parts order", "Fuel/Parts order", "Ooops", "", getLeader()
          End If
@@ -1128,7 +1129,7 @@ On Error GoTo err_handler
       'Haven Shore Leave
       If hasDisgruntled(player.ID) Then
          If MessBox("Do you want to take Shore Leave at your Haven as well?", "Haven Leave", "Yes", "No", getLeader()) = 0 Then
-            x = doShoreLeave(player.ID, False, (getHaven(sectorID) = player.ID))
+            x = doShoreLeave(player.ID, False, (getHaven(SectorID) = player.ID))
          End If
       End If
       
@@ -1170,10 +1171,10 @@ On Error GoTo err_handler
       If frmAction.lblJobName.Tag = "" Then  'make work
          If hasCrew(player.ID, 73) Then  'Busker adds 100
             getMoney player.ID, 300
-            PutMsg player.PlayName & " made Extra Work with Busker at " & varDLookup("PlanetName", "Planet", "SectorID=" & sectorID), player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " made Extra Work with Busker at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID), player.ID, Logic!Gamecntr
          Else
             getMoney player.ID, 200
-            PutMsg player.PlayName & " made Work at " & varDLookup("PlanetName", "Planet", "SectorID=" & sectorID), player.ID, Logic!Gamecntr
+            PutMsg player.PlayName & " made Work at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID), player.ID, Logic!Gamecntr
          End If
          
          If hasCrew(player.ID, 78) And (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID)) >= 1 Then ' Holder- When you Make-Work, you may also take a Fugitive
@@ -1205,6 +1206,7 @@ On Error GoTo err_handler
          If doWork(player.ID, Val(frmAction.lblJobName.Tag)) = 0 Then ' normal exit
             actionSeq = ASselect 'this one is conditional based on the job outcome <<<< !
          End If
+         LastJobDone = Val(frmAction.lblJobName.Tag)  'let any card open know of the update
          refreshSolid
          Verse.lblSolid(5).Visible = isSolid(player.ID, 5)
          'reset OffJob status
@@ -1606,7 +1608,7 @@ Dim ChatTxt As String, x
        player.ID = 0
        player.Color = ""
        player.PlayName = ""
-       DB.Execute "UPDATE GameSeq SET Seq = 'H', GameCntr = 0"
+       DB.Execute "UPDATE GameSeq SET Seq = 'H', GameCntr = 0, SecretSectorID = 0, SecretRevealed = 0"
        ClearBoard
        refreshSolid
        Starter.isHost = True
@@ -1614,7 +1616,6 @@ Dim ChatTxt As String, x
               
        If player.ID = 0 Then 'no active player
          DB.Execute "UPDATE GameSeq SET Seq = 'E'"
-         'Logic.Update "Seq", "E"
          ClearBoard
        Else
          
@@ -1630,7 +1631,6 @@ Dim ChatTxt As String, x
      Case "H"
         If MsgBox("Game already being hosted, do you need to reset it?", vbYesNo + vbCritical, "Game in Host mode") = vbYes Then
             DB.Execute "UPDATE GameSeq SET Seq = 'E'"
-            'Logic.Update "Seq", "E"
         End If
 
      Case Else
@@ -1639,7 +1639,6 @@ Dim ChatTxt As String, x
         Select Case x
         Case vbOK
             DB.Execute "UPDATE GameSeq SET Seq = 'E'"
-            'Logic.Update "Seq", "E"
             MsgBox "Game has been reset, press Host again to start", vbInformation
         End Select
      End Select
@@ -1854,42 +1853,42 @@ Dim coords, c() As String, x
       rst.CursorLocation = adUseClient
       rst.Open "SELECT SectorID, Slot5,STop,SLeft,SHeight,SWidth, Token, AToken, Haven FROM Board WHERE SectorID > 0 ORDER BY SectorID", DB, adOpenStatic, adLockReadOnly
       While Not rst.EOF
-         Load .HotSpot(rst!sectorID)
-         Set .HotSpot(rst!sectorID).Container = .Picture1
-         .HotSpot(rst!sectorID).top = rst!STop
-         .HotSpot(rst!sectorID).Left = rst!SLeft
-         .HotSpot(rst!sectorID).Height = rst!SHeight
-         .HotSpot(rst!sectorID).Width = rst!SWidth
-         .HotSpot(rst!sectorID).ZOrder
-         .HotSpot(rst!sectorID).Visible = True
+         Load .HotSpot(rst!SectorID)
+         Set .HotSpot(rst!SectorID).Container = .Picture1
+         .HotSpot(rst!SectorID).top = rst!STop
+         .HotSpot(rst!SectorID).Left = rst!SLeft
+         .HotSpot(rst!SectorID).Height = rst!SHeight
+         .HotSpot(rst!SectorID).Width = rst!SWidth
+         .HotSpot(rst!SectorID).ZOrder
+         .HotSpot(rst!SectorID).Visible = True
          coords = rst.Fields("Slot5").Value
          c = Split(coords, ",")
          
-         Load .imgAToken(rst!sectorID)
-         .imgAToken(rst!sectorID).Left = c(0)
-         .imgAToken(rst!sectorID).top = c(1)
-         Set .imgAToken(rst!sectorID).Container = .Picture1
-         .imgAToken(rst!sectorID).Tag = CStr(rst!AToken)
-         If rst!AToken > 0 Then
-            .imgAToken(rst!sectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\AToken" & IIf(rst!AToken > 6, 6, rst!AToken) & ".gif")
-            .imgAToken(rst!sectorID).Visible = True
-            .imgAToken(rst!sectorID).Animate2.StartAnimation
+         Load .imgAToken(rst!SectorID)
+         .imgAToken(rst!SectorID).Left = c(0)
+         .imgAToken(rst!SectorID).top = c(1)
+         Set .imgAToken(rst!SectorID).Container = .Picture1
+         .imgAToken(rst!SectorID).Tag = CStr(rst!Atoken)
+         If rst!Atoken > 0 Then
+            .imgAToken(rst!SectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\AToken" & IIf(rst!Atoken > 6, 6, rst!Atoken) & ".gif")
+            .imgAToken(rst!SectorID).Visible = True
+            .imgAToken(rst!SectorID).Animate2.StartAnimation
          End If
-         .imgAToken(rst!sectorID).TransparentColor = &HFFFFFF
-         .imgAToken(rst!sectorID).TransparentColorMode = lvicUseTransparentColor
+         .imgAToken(rst!SectorID).TransparentColor = &HFFFFFF
+         .imgAToken(rst!SectorID).TransparentColorMode = lvicUseTransparentColor
          
-         Load .imgToken(rst!sectorID)
-         .imgToken(rst!sectorID).Left = c(0) + 100
-         .imgToken(rst!sectorID).top = c(1) + 100
-         Set .imgToken(rst!sectorID).Container = .Picture1
-         .imgToken(rst!sectorID).Tag = CStr(rst!Token)
+         Load .imgToken(rst!SectorID)
+         .imgToken(rst!SectorID).Left = c(0) + 100
+         .imgToken(rst!SectorID).top = c(1) + 100
+         Set .imgToken(rst!SectorID).Container = .Picture1
+         .imgToken(rst!SectorID).Tag = CStr(rst!Token)
          If rst!Token > 0 Then
-            .imgToken(rst!sectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\RToken" & IIf(rst!Token > 6, 6, rst!Token) & ".gif")
-            .imgToken(rst!sectorID).Visible = True
-            .imgToken(rst!sectorID).Animate2.StartAnimation
+            .imgToken(rst!SectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\RToken" & IIf(rst!Token > 6, 6, rst!Token) & ".gif")
+            .imgToken(rst!SectorID).Visible = True
+            .imgToken(rst!SectorID).Animate2.StartAnimation
          End If
-         .imgToken(rst!sectorID).TransparentColor = &HFFFFFF
-         .imgToken(rst!sectorID).TransparentColorMode = lvicUseTransparentColor
+         .imgToken(rst!SectorID).TransparentColor = &HFFFFFF
+         .imgToken(rst!SectorID).TransparentColorMode = lvicUseTransparentColor
          
          If rst!Haven > 0 Then
             .imgHaven(rst!Haven).Left = c(0)
@@ -1911,16 +1910,16 @@ End Sub
 
 Public Sub RefreshBoard()
 Dim rst As New ADODB.Recordset, Index
-Dim coords, c() As String, sectorID As Integer
+Dim coords, c() As String, SectorID As Integer
  playsnd 18
  With Verse
 
    'ships
    rst.Open "SELECT * FROM Players", DB, adOpenForwardOnly, adLockReadOnly ' WHERE PlayerID < 5 AND Name is not null
    While Not rst.EOF  'no other players
-      sectorID = Nz(rst!sectorID, 0)
+      SectorID = Nz(rst!SectorID, 0)
       
-      displayShip rst!playerID, sectorID
+      displayShip rst!playerID, SectorID
       
       rst.MoveNext
    Wend
@@ -1940,11 +1939,11 @@ Dim coords, c() As String, sectorID As Integer
    rst.Open "SELECT * FROM Board WHERE SectorID > 0 ORDER BY SectorID", DB, adOpenDynamic, adLockOptimistic
    While Not rst.EOF
       'reaver code block moved to its own routine so as to be called to force a single tokens update
-      displayToken rst!sectorID, rst!Token
+      displayToken rst!SectorID, rst!Token
       
-      displayAToken rst!sectorID, rst!AToken
+      displayAToken rst!SectorID, rst!Atoken
 
-      displayHaven rst!sectorID, rst!Haven
+      displayHaven rst!SectorID, rst!Haven
 
       rst.MoveNext
    Wend
@@ -1953,41 +1952,126 @@ Dim coords, c() As String, sectorID As Integer
 
 End Sub
 
-Public Sub displayToken(ByVal sectorID As Integer, ByVal Token As Integer)
-   With Verse
-      If Token = 0 Then
-         .imgToken(sectorID).Visible = False
-      ElseIf Val(.imgToken(sectorID).Tag) <> Token Then
-         .imgToken(sectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\RToken" & IIf(Token > 6, 6, Token) & ".gif")
-         .imgToken(sectorID).Visible = True
-         .imgToken(sectorID).TransparentColor = &HFFFFFF
-         .imgToken(sectorID).TransparentColorMode = lvicUseTransparentColor
-         .imgToken(sectorID).Animate2.StartAnimation
-      End If
-      .imgToken(sectorID).Tag = CStr(Token)
-   End With
+Public Sub displayToken(ByVal SectorID As Integer, ByVal Token As Integer)
+Dim coords As String, c() As String
+Dim oldCount As Integer
+
+    With Verse
+        
+        oldCount = Val(.imgToken(SectorID).Tag)
+
+        ' If token is being added, animate it
+        If Token > oldCount Then
+            
+            '121   (Reaver Space)
+            
+            ' Animate from Reaver Space (Sector 121 Slot5 coords)
+            coords = varDLookup("Slot5", "Board", "SectorID=121")
+            c = Split(coords, ",")
+
+            ' Animate from origin to this sector
+            StartTokenMove SectorID, Val(c(0)), Val(c(1)), .imgToken(SectorID).Left, .imgToken(SectorID).top, 3000
+
+        End If
+
+        ' Now update the static token image
+        If Token = 0 Then
+            .imgToken(SectorID).Visible = False
+        ElseIf oldCount <> Token Then
+            .imgToken(SectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\RToken" & IIf(Token > 6, 6, Token) & ".gif")
+            .imgToken(SectorID).Visible = True
+            .imgToken(SectorID).TransparentColor = &HFFFFFF
+            .imgToken(SectorID).TransparentColorMode = lvicUseTransparentColor
+            .imgToken(SectorID).Animate2.StartAnimation
+        End If
+
+        .imgToken(SectorID).Tag = CStr(Token)
+    End With
 End Sub
 
-Public Sub displayAToken(ByVal sectorID As Integer, ByVal AToken As Integer)
-   With Verse
-      If AToken = 0 Then
-         .imgAToken(sectorID).Visible = False
-      ElseIf Val(.imgAToken(sectorID).Tag) <> AToken Then
-         .imgAToken(sectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\AToken" & IIf(AToken > 6, 6, AToken) & ".gif")
-         .imgAToken(sectorID).Visible = True
-         .imgAToken(sectorID).TransparentColor = &HFFFFFF
-         .imgAToken(sectorID).TransparentColorMode = lvicUseTransparentColor
-         .imgAToken(sectorID).Animate2.StartAnimation
-      End If
-      .imgAToken(sectorID).Tag = CStr(AToken)
-   End With
+
+'Public Sub displayToken(ByVal sectorID As Integer, ByVal Token As Integer)
+'   With Verse
+'      If Token = 0 Then
+'         .imgToken(sectorID).Visible = False
+'      ElseIf Val(.imgToken(sectorID).Tag) <> Token Then
+'         .imgToken(sectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\RToken" & IIf(Token > 6, 6, Token) & ".gif")
+'         .imgToken(sectorID).Visible = True
+'         .imgToken(sectorID).TransparentColor = &HFFFFFF
+'         .imgToken(sectorID).TransparentColorMode = lvicUseTransparentColor
+'         .imgToken(sectorID).Animate2.StartAnimation
+'      End If
+'      .imgToken(sectorID).Tag = CStr(Token)
+'   End With
+'End Sub
+
+Public Sub displayAToken(ByVal SectorID As Integer, ByVal Atoken As Integer)
+Dim rst As New ADODB.Recordset
+Dim cruiserSectorID As Integer
+Dim coords As String
+Dim c() As String
+    With Verse
+        Dim oldCount As Integer
+        oldCount = Val(.imgAToken(SectorID).Tag)
+
+        ' If token is being added, animate it
+        If Atoken > oldCount Then
+            
+            cruiserSectorID = getCruiserSector()
+
+            ' Get the Cruiser's Slot5 coords (same as your existing animation logic)
+            
+            rst.Open "SELECT Slot5 FROM Board WHERE SectorID = " & cruiserSectorID, DB, adOpenForwardOnly, adLockReadOnly
+
+            If Not rst.EOF Then
+
+                coords = rst!Slot5
+                c = Split(coords, ",")
+
+                ' Animate from Cruiser to this sector
+                StartATokenMove SectorID, Val(c(0)), Val(c(1)), .imgAToken(SectorID).Left, .imgAToken(SectorID).top, 3000
+            End If
+
+            rst.Close
+            Set rst = Nothing
+        End If
+
+        ' Now update the static token image
+        If Atoken = 0 Then
+            .imgAToken(SectorID).Visible = False
+        ElseIf oldCount <> Atoken Then
+            .imgAToken(SectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\AToken" & IIf(Atoken > 6, 6, Atoken) & ".gif")
+            .imgAToken(SectorID).Visible = True
+            .imgAToken(SectorID).TransparentColor = &HFFFFFF
+            .imgAToken(SectorID).TransparentColorMode = lvicUseTransparentColor
+            .imgAToken(SectorID).Animate2.StartAnimation
+        End If
+
+        .imgAToken(SectorID).Tag = CStr(Atoken)
+    End With
 End Sub
 
-Public Sub displayHaven(ByVal sectorID As Integer, ByVal Haven As Integer)
+
+'Public Sub displayAToken(ByVal sectorID As Integer, ByVal AToken As Integer)
+'   With Verse
+'      If AToken = 0 Then
+'         .imgAToken(sectorID).Visible = False
+'      ElseIf Val(.imgAToken(sectorID).Tag) <> AToken Then
+'         .imgAToken(sectorID).Picture = LoadPictureGDIplus(App.Path & "\Pictures\AToken" & IIf(AToken > 6, 6, AToken) & ".gif")
+'         .imgAToken(sectorID).Visible = True
+'         .imgAToken(sectorID).TransparentColor = &HFFFFFF
+'         .imgAToken(sectorID).TransparentColorMode = lvicUseTransparentColor
+'         .imgAToken(sectorID).Animate2.StartAnimation
+'      End If
+'      .imgAToken(sectorID).Tag = CStr(AToken)
+'   End With
+'End Sub
+
+Public Sub displayHaven(ByVal SectorID As Integer, ByVal Haven As Integer)
 Dim coords, c() As String
    With Verse
       If Haven > 0 Then
-         coords = varDLookup("Slot" & Haven, "Board", "SectorID = " & sectorID)
+         coords = varDLookup("Slot" & Haven, "Board", "SectorID = " & SectorID)
          c = Split(coords, ",")
          .imgHaven(Haven).Left = c(0)
          .imgHaven(Haven).top = c(1)
@@ -1999,18 +2083,18 @@ Dim coords, c() As String
    End With
 End Sub
 
-Public Sub displayShip(ByVal playerID, sectorID)
+Public Sub displayShip(ByVal playerID, SectorID)
 Dim rst As New ADODB.Recordset
-Dim coords, Slot, x, a, B
+Dim coords, slot, x, a, B
 Dim c() As String
    
-   If sectorID = 0 Then  'remove
+   If SectorID = 0 Then  'remove
       Verse.Imag(playerID).Visible = False
    Else
-      Slot = IIf(playerID > 4, 5, playerID)
-      rst.Open "SELECT * FROM Board WHERE SectorID = " & sectorID, DB, adOpenForwardOnly, adLockReadOnly
+      slot = IIf(playerID > 4, 5, playerID)
+      rst.Open "SELECT * FROM Board WHERE SectorID = " & SectorID, DB, adOpenForwardOnly, adLockReadOnly
       If Not rst.EOF Then
-         coords = rst.Fields("Slot" & Slot).Value
+         coords = rst.Fields("Slot" & slot).Value
          c = Split(coords, ",")
          a = Verse.Imag(playerID).Left
          B = Verse.Imag(playerID).top
@@ -2300,7 +2384,7 @@ Public Sub showBuys(Optional ByVal toggle As Boolean = False, Optional ByVal fil
     
 End Sub
 
-Private Sub showNav(ByVal sectorID, Optional ByVal CardID As Integer = 0)
+Private Sub showNav(ByVal SectorID, Optional ByVal CardID As Integer = 0)
 Dim SQL, reshuffle, Zone, x
 Dim rst As New ADODB.Recordset
 
@@ -2316,7 +2400,7 @@ Dim rst As New ADODB.Recordset
       .FDPane1.PaneVisible = False
       
       'SectorID = Nz(varDLookup("SectorID", "Players", "PlayerID=" & player.ID), 0)
-      Zone = varDLookup("Zones", "Board", "SectorID=" & sectorID)
+      Zone = varDLookup("Zones", "Board", "SectorID=" & SectorID)
       
       'Read in the next NAV card and display either 1 or 2 options
       
@@ -2346,17 +2430,17 @@ Dim rst As New ADODB.Recordset
                   
          If (rst!CardName = "Reaver Cutter!") Then ' move cutter here and deal with it after
             PutMsg player.PlayName & " has a gorram Reaver Cutter closing in!", player.ID, Logic!Gamecntr, True, getLeader()
-            If getCutterSector(sectorID) = 0 Then MoveShip 6 + RollDice(NumOfReavers), sectorID
+            If getCutterSector(SectorID) = 0 Then MoveShip 6 + RollDice(NumOfReavers), SectorID
          End If
          
          If actionSeq = ASNavEvade Then 'we are evading already
             'evade
-         ElseIf (rst!CardName = "Reaver Cutter!") And getCruiserCorvette(sectorID) = 6 Then 'corvette shoos the Reavers away
-            x = getCutterSector(sectorID)
+         ElseIf (rst!CardName = "Reaver Cutter!") And getCruiserCorvette(SectorID) = 6 Then 'corvette shoos the Reavers away
+            x = getCutterSector(SectorID)
             moveAutoAI x
             actionSeq = ASnavEnd
             PutMsg player.PlayName & " is Shielded from a Reaver Cutter attack by the Alliance Corvette", player.ID, Logic!Gamecntr, True, getLeader()
-         ElseIf checkFlacGun(sectorID, Not (rst!CardName = "Reaver Cutter!")) Then
+         ElseIf checkFlacGun(SectorID, Not (rst!CardName = "Reaver Cutter!")) Then
             actionSeq = ASnavEnd
             
          'skip Customs Inspection if solid with Harken
@@ -2477,46 +2561,46 @@ Dim rst As New ADODB.Recordset
 End Sub
 
 Public Sub showActions()
-Dim SQL, sectorID, onlyFullburn As Boolean, x As Integer, Y As Integer, z, unseenDeck As Integer
+Dim SQL, SectorID, onlyFullburn As Boolean, x As Integer, Y As Integer, z, unseenDeck As Integer
 Dim rst As New ADODB.Recordset, reaverActive As Boolean, moseyrng As Integer
 Dim frmJoSel As frmJobSel, hide As Boolean
 
-   sectorID = getPlayerSector(player.ID)
-   If sectorID = 0 Then
+   SectorID = getPlayerSector(player.ID)
+   If SectorID = 0 Then
       MsgBox "The Starting Sector was not set, please reset and start a new game", vbExclamation, "Setup Issue"
       Exit Sub
    End If
    SoloGame = isSoloGame() 'as a player may drop out
    
-   If ignoreToken <> sectorID And Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) Then 'must be moving into the sector to resolve token
-      resolveToken sectorID
+   If ignoreToken <> SectorID And Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) Then 'must be moving into the sector to resolve token
+      resolveToken SectorID
    End If
    
    'check that the REAVER is or is not here
-   If getCutterSector(sectorID) > 0 Then
-      checkFlacGun sectorID, Not (frmAction.checkNoOfActions = 0 And FullburnMovesDone = 0 And MoseyMovesDone = 0 And CruiserCutter <> sectorID) 'possibly chase it away
+   If getCutterSector(SectorID) > 0 Then
+      checkFlacGun SectorID, Not (frmAction.checkNoOfActions = 0 And FullburnMovesDone = 0 And MoseyMovesDone = 0 And CruiserCutter <> SectorID) 'possibly chase it away
    End If
-   If getCutterSector(sectorID) > 0 And frmAction.checkNoOfActions = 0 And FullburnMovesDone = 0 And MoseyMovesDone = 0 And CruiserCutter <> sectorID Then
+   If getCutterSector(SectorID) > 0 And frmAction.checkNoOfActions = 0 And FullburnMovesDone = 0 And MoseyMovesDone = 0 And CruiserCutter <> SectorID Then
       playsnd 17
       reaverActive = True
-      showNav sectorID, -1
-      CruiserCutter = sectorID
+      showNav SectorID, -1
+      CruiserCutter = SectorID
    End If
    
-   If isShipHere(5, sectorID) = 5 And CruiserCutter <> sectorID Then
-      CruiserCutter = sectorID 'set it as faced regardless of outcome
+   If isShipHere(5, SectorID) = 5 And CruiserCutter <> SectorID Then
+      CruiserCutter = SectorID 'set it as faced regardless of outcome
       If isOutlaw(player.ID) And actionSeq <> ASNavEvade Then  'it just arrived so face it
          playsnd 17
-         showNav sectorID, -2
+         showNav SectorID, -2
          Exit Sub
       End If
    End If
-   If isShipHere(6, sectorID) = 6 And CorvetteSeq <> getCorvetteSeq Then
+   If isShipHere(6, SectorID) = 6 And CorvetteSeq <> getCorvetteSeq Then
       CorvetteSeq = getCorvetteSeq
       'CruiserCutter = SectorID 'set it as faced regardless of outcome
       If isOutlaw(player.ID) And actionSeq <> ASNavEvade Then  'it just arrived so face it
          playsnd 17
-         showNav sectorID, -3
+         showNav SectorID, -3
          If Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) Then 'only stop if Flying
             frmAction.moseydone = True 'Full Stop!
             frmAction.fullburndone = True
@@ -2729,7 +2813,7 @@ Dim frmJoSel As frmJobSel, hide As Boolean
       rst.Close
       
       'load Supply Graphic for this sector
-      .setSupply sectorID
+      .setSupply SectorID
       
       '>>>>>  CMD  BUY  <<<<
       Select Case actionSeq
@@ -2753,12 +2837,12 @@ Dim frmJoSel As frmJobSel, hide As Boolean
       'SHORE LEAVE
       If (Not .buydone) And (Not onlyFullburn) And Not reaverActive Then  ' Buy and Shore leave *may* be active
          unseenDeck = getUnseenDeck("Supply", Val(.imgSupply.Tag))
-         .actionButtonEnable "imgShore", Not hide And (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & sectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19) Or getHaven(sectorID) > 0) And hasDisgruntled(player.ID) And (Abs(doShoreLeave(player.ID, True)) <= getMoney(player.ID) Or getHaven(sectorID) = player.ID)
-         .lblDisCost.Visible = Not hide And (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & sectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19) Or getHaven(sectorID) > 0) And hasDisgruntled(player.ID)
+         .actionButtonEnable "imgShore", Not hide And (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19) Or getHaven(SectorID) > 0) And hasDisgruntled(player.ID) And (Abs(doShoreLeave(player.ID, True)) <= getMoney(player.ID) Or getHaven(SectorID) = player.ID)
+         .lblDisCost.Visible = Not hide And (Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0 Or hasShipUpgrade(player.ID, 19) Or getHaven(SectorID) > 0) And hasDisgruntled(player.ID)
          .lblDisCost = "$" & Abs(doShoreLeave(player.ID, True))
          If (.imgSupply.Tag <> "") And (actionSeq = ASselect Or (actionSeq = ASBuySelDiscard And unseenDeck > 0) Or actionSeq = ASBuySelect) Then 'we can BUY
             'Enabled
-         ElseIf getHaven(sectorID) > 0 And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 Then
+         ElseIf getHaven(SectorID) > 0 And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 Then
             'Enabled
          ElseIf unseenDeck = 0 And Val(.imgSupply.Tag) > 0 And (actionSeq = ASselect Or actionSeq = ASBuySelDiscard Or actionSeq = ASBuySelect) Then  'modify to Consider
             .setMultiStateButton "imgShop", "2a"
@@ -2773,14 +2857,14 @@ Dim frmJoSel As frmJobSel, hide As Boolean
       .lblDisCnt = cntDisgruntled(player.ID)
       
       'FUEL & PARTS
-      .setVisState .imgFuelBuy, (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 And (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & sectorID), 0) > 0) And (Not .buydone)) Or getHaven(sectorID) > 0))
-      .setVisState .imgPartsBuy, (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & sectorID), 0) > 0) And (Not .buydone) And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0))
+      .setVisState .imgFuelBuy, (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 And (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone)) Or getHaven(SectorID) > 0))
+      .setVisState .imgPartsBuy, (((Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0) > 0) And (Not .buydone) And CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0))
             
       'check Bree DEAL
-      .setVisState .imgDealParts, (hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) > 0 And isSolid(player.ID, varDLookup("ContactID", "Contact", "SectorID=" & sectorID)))   'Bree sells parts to Solids
+      .setVisState .imgDealParts, (hasCrew(player.ID, 34) And varDLookup("Parts", "Players", "PlayerID=" & player.ID) > 0 And isSolid(player.ID, varDLookup("ContactID", "Contact", "SectorID=" & SectorID)))   'Bree sells parts to Solids
       
       'load Dealer in this sector
-      .setContact sectorID
+      .setContact SectorID
       
       .imgPhone.Visible = hasCrew(player.ID, 75) And Not hasCrew(player.ID, 22)
       If (.imgContact.Tag = "" And hasCrew(player.ID, 75) And Not hasCrew(player.ID, 22)) Or HigginsDealPerk Then
@@ -2803,7 +2887,7 @@ Dim frmJoSel As frmJobSel, hide As Boolean
          
          .setVisState .imgDealCargo, False
          .setVisState .imgDealContra, False
-         .setVisState .imgDealFuel, (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 And Nz(varDLookup("ContactID", "Contact", "SectorID=" & sectorID), 0) = 5 And isSolid(player.ID, 5) And Not .dealdone And getMoney(player.ID) >= 100)
+         .setVisState .imgDealFuel, (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0 And Nz(varDLookup("ContactID", "Contact", "SectorID=" & SectorID), 0) = 5 And isSolid(player.ID, 5) And Not .dealdone And getMoney(player.ID) >= 100)
          
       ElseIf .imgContact.Tag = "6" Then 'harrow
 
@@ -2871,35 +2955,38 @@ Dim frmJoSel As frmJobSel, hide As Boolean
       SQL = SQL & "FROM (Job INNER JOIN ((PlayerJobs INNER JOIN ContactDeck ON PlayerJobs.CardID = ContactDeck.CardID) LEFT JOIN "
       SQL = SQL & "Job AS Job_1 ON ContactDeck.Job2ID = Job_1.JobID) ON Job.JobID = ContactDeck.Job1ID) LEFT JOIN Job AS Job_2 ON ContactDeck.Job3ID = Job_2.JobID "
 
-      SQL = SQL & "Where PlayerJobs.PlayerID = " & player.ID & " And (Job.SectorID IN (1,2," & sectorID & ") Or Job_1.SectorID IN (1,2," & sectorID & ") Or Job_2.SectorID IN (1,2," & sectorID & "))"
+      SQL = SQL & "Where PlayerJobs.PlayerID = " & player.ID & " And (Job.SectorID IN (1,2,3," & SectorID & ") Or Job_1.SectorID IN (1,2,3," & SectorID & ") Or Job_2.SectorID IN (1,2,3," & SectorID & "))"
       rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
       '.cbo.Clear
       
-      For x = 1 To .mnuWorkPop.Count - 1
+      For x = 1 To .mnuWorkPop.count - 1
          Unload .mnuWorkPop(x)
       Next x
       x = -1
       While Not rst.EOF
-         If ((rst!sector1 = 1 And getCruiserSector() = sectorID) Or (rst!sector1 = 2 And getCorvetteSector() = sectorID) Or (sectorID = rst!sector1)) And rst!JobStatus = 0 And getPlayerJobs(player.ID, "1,2") < MAXACTIVEJOBS + IIf(isSolid(player.ID, 8), 1, 0) Then ' check requirements met for job
+         'If ((rst!sector1 = 1 And getCruiserSector() = SectorID) Or (rst!sector1 = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!sector1)) And rst!JobStatus = 0 And getPlayerJobs(player.ID, "1,2") < MAXACTIVEJOBS + IIf(isSolid(player.ID, 8), 1, 0) Then ' check requirements met for job
+         If (isAtLocation(rst!sector1, SectorID)) And rst!JobStatus = 0 And getPlayerJobs(player.ID, "1,2") < MAXACTIVEJOBS + IIf(isSolid(player.ID, 8), 1, 0) Then ' check requirements met for job
             If hasJobReqs(player.ID, rst!CardID, rst!Job1) Then
                x = x + 1
-               If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
+               If .mnuWorkPop.count < x + 1 Then Load .mnuWorkPop(x)
                .mnuWorkPop(x).Caption = rst!Jobdes1 & " (" & CStr(rst!CardID) & ")"
                .mnuWorkPop(x).Tag = CStr(rst!CardID)
             End If
 
-         ElseIf ((rst!Sector3 = 1 And getCruiserSector() = sectorID) Or (rst!Sector3 = 2 And getCorvetteSector() = sectorID) Or (sectorID = rst!Sector3)) And rst!JobStatus = 1 Then 'Job3 must be in the sector
+         'ElseIf ((rst!Sector3 = 1 And getCruiserSector() = SectorID) Or (rst!Sector3 = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!Sector3)) And rst!JobStatus = 1 Then 'Job3 must be in the sector
+         ElseIf (isAtLocation(rst!sector3, SectorID)) And rst!JobStatus = 1 Then 'Job3 must be in the sector
             If hasJobReqs(player.ID, rst!CardID, rst!Job3) Then
                x = x + 1
-               If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
+               If .mnuWorkPop.count < x + 1 Then Load .mnuWorkPop(x)
                .mnuWorkPop(x).Caption = rst!Jobdes3 & " (" & CStr(rst!CardID) & ")"
                .mnuWorkPop(x).Tag = CStr(rst!CardID)
             End If
 
-         ElseIf ((rst!sector2 = 1 And getCruiserSector() = sectorID) Or (rst!sector2 = 2 And getCorvetteSector() = sectorID) Or (sectorID = rst!sector2)) And (rst!JobStatus = 1 Or rst!JobStatus = 2) Then 'Job2 must be in the sector
+         'ElseIf ((rst!sector2 = 1 And getCruiserSector() = SectorID) Or (rst!sector2 = 2 And getCorvetteSector() = SectorID) Or (SectorID = rst!sector2)) And (rst!JobStatus = 1 Or rst!JobStatus = 2) Then 'Job2 must be in the sector
+         ElseIf (isAtLocation(rst!sector2, SectorID)) And (rst!JobStatus = 1 Or rst!JobStatus = 2) Then 'Job2 must be in the sector
             If hasJobReqs(player.ID, rst!CardID, rst!Job2) Then
                x = x + 1
-               If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
+               If .mnuWorkPop.count < x + 1 Then Load .mnuWorkPop(x)
                .mnuWorkPop(x).Caption = rst!Jobdes2 & " (" & CStr(rst!CardID) & ")"
                .mnuWorkPop(x).Tag = CStr(rst!CardID)
             End If
@@ -2910,20 +2997,20 @@ Dim frmJoSel As frmJobSel, hide As Boolean
       rst.Close
 
       'do supply transfer at Haven
-      If getHaven(sectorID) = player.ID And useHavenStorage(Logic!StoryID) Then
+      If getHaven(SectorID) = player.ID And useHavenStorage(Logic!StoryID) Then
          x = x + 1
-         If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
-         .mnuWorkPop(x).Caption = "Supplies Transfer at " & varDLookup("PlanetName", "Planet", "SectorID=" & sectorID)
+         If .mnuWorkPop.count < x + 1 Then Load .mnuWorkPop(x)
+         .mnuWorkPop(x).Caption = "Supplies Transfer at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)
          .mnuWorkPop(x).Tag = "-1"
       End If
 
       'look for Possible Bounty
-      loadBounties .mnuWorkPop, Val(.imgSupply.Tag), sectorID, x
+      loadBounties .mnuWorkPop, Val(.imgSupply.Tag), SectorID, x
       
       'Early's Datascope?
       If hasGear(player.ID, 62) And Val(.imgSupply.Tag) > 0 Then
          x = x + 1
-         If .mnuWorkPop.Count < x + 1 Then Load .mnuWorkPop(x)
+         If .mnuWorkPop.count < x + 1 Then Load .mnuWorkPop(x)
          .mnuWorkPop(x).Caption = "Reveal the top 3 Supply Cards"
          .mnuWorkPop(x).Tag = "-2"
       End If
@@ -2939,12 +3026,12 @@ Dim frmJoSel As frmJobSel, hide As Boolean
          .lblJobName.ToolTipText = "no work available"
          .lblJobName.Tag = ""
       End If
-      .setVisState .imgWorkDrop, (.mnuWorkPop.Count > 1)
-      If .mnuWorkPop.Count > 1 Then .imgWorkDrop.Animate2.StartAnimation
+      .setVisState .imgWorkDrop, (.mnuWorkPop.count > 1)
+      If .mnuWorkPop.count > 1 Then .imgWorkDrop.Animate2.StartAnimation
       
       'Make Work if at a Planet
       
-      If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & sectorID), 63) <> 63 And Nz(varDLookup("PlanetID", "Planet", "SectorID=" & sectorID), 64) <> 64 And (actionSeq = ASselect) And (Not .workdone) And (Not onlyFullburn) And Not reaverActive Then  'but not Cruiser/Corvette dummy planetID 63,64
+      If Nz(varDLookup("PlanetID", "Planet", "SectorID=" & SectorID), 63) <> 63 And Nz(varDLookup("PlanetID", "Planet", "SectorID=" & SectorID), 64) <> 64 And (actionSeq = ASselect) And (Not .workdone) And (Not onlyFullburn) And Not reaverActive Then  'but not Cruiser/Corvette dummy planetID 63,64
          .actionButtonEnable "imgMakeWork", True
          .lblMakeWorkVal.Visible = True
          .lblMakeWorkVal.Caption = "$" & (200 + IIf(hasCrew(player.ID, 73), 100, 0))
@@ -2969,11 +3056,11 @@ Dim frmJoSel As frmJobSel, hide As Boolean
       .imgResolve.Visible = hasShipUpgrade(player.ID, 16) > 0 ' .imgResolve.Tag = "Y"
       
       'Cruiser Call by Dobson
-      .actionButtonEnable "imgFlyMole", Not hide And (hasCrew(player.ID, 93) And getZone(sectorID) = "A" And FullburnMovesDone = 0 And MoseyMovesDone = 0 And (Not .fullburndone Or Not .moseydone) And isShipHere(5, sectorID) <> 5)
+      .actionButtonEnable "imgFlyMole", Not hide And (hasCrew(player.ID, 93) And getZone(SectorID) = "A" And FullburnMovesDone = 0 And MoseyMovesDone = 0 And (Not .fullburndone Or Not .moseydone) And isShipHere(5, SectorID) <> 5)
       .imgFlyMole.Visible = hasCrew(player.ID, 93)
       
       '>>>>>> load Passengers & Fugitives at Amnon's <<<<<
-      .setVisState .imgLoadPassngr, (sectorID = 23) And isSolid(player.ID, 1) And .imgDealer.Tag <> "N" And (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0.6) And Not HigginsDealPerk
+      .setVisState .imgLoadPassngr, (SectorID = 23) And isSolid(player.ID, 1) And .imgDealer.Tag <> "N" And (CargoCapacity(player.ID) - CargoSpaceUsed(player.ID) > 0.6) And Not HigginsDealPerk
       .setVisState .imgLoadFugi, .imgLoadPassngr.Tag = "Y" And Not HigginsDealPerk
 
       .setVisState .imgFly, Not (.fullburndone And .moseydone)
@@ -3008,12 +3095,12 @@ End Sub
 'returns doWork = 0 Normal, 1= Evade
 Public Function doWork(ByVal playerID, ByVal CardID) As Integer
 Dim rst As New ADODB.Recordset, x, Y, parts As Integer, a() As String, DoubleDown As Integer
-Dim SQL, sectorID, ContactID, JobID, finalstate, result As Integer, misbehaveNum, bonus, cargofit As Integer, fugifit As Integer, cargopay As Integer
+Dim SQL, SectorID, ContactID, JobID, finalstate, result As Integer, misbehaveNum, bonus, cargofit As Integer, fugifit As Integer, cargopay As Integer
 Dim frmCrew As frmCrewLst, Dice As Integer, payment As Integer, KeywordInUse As Boolean
 Dim skillcnt, payCrewTotal As Integer, WSkill As Integer
 Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble, solidMsg As String
 
-   sectorID = varDLookup("SectorID", "Players", "PlayerID=" & playerID)
+   SectorID = varDLookup("SectorID", "Players", "PlayerID=" & playerID)
    ContactID = varDLookup("ContactID", "ContactDeck", "CardID=" & CardID)
    usedStitchSkill = False
    DoubleDown = 1
@@ -3026,7 +3113,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
 
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
-      If rst!JobStatus = 0 And ((rst!sector1 = 1 And getCruiserSector() = sectorID) Or (rst!sector1 = 2 And getCorvetteSector() = sectorID) Or (sectorID = rst!sector1)) Then ' we're doing Job 1
+      If rst!JobStatus = 0 And (isAtLocation(rst!sector1, SectorID)) Then ' we're doing Job 1
       
          JobID = rst!Job1
          If IsNull(rst!Job2) Then
@@ -3036,12 +3123,12 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
          End If
          PutMsg player.PlayName & " Started Job: " & rst!JobName, playerID, Logic!Gamecntr
          
-      ElseIf rst!JobStatus = 1 And ((rst!Sector3 = 1 And getCruiserSector() = sectorID) Or (rst!Sector3 = 2 And getCorvetteSector() = sectorID) Or (sectorID = rst!Sector3)) And Not IsNull(rst!Job3) Then ' we're doing Bonus Job
+      ElseIf rst!JobStatus = 1 And (isAtLocation(rst!sector3, SectorID)) And Not IsNull(rst!Job3) Then ' we're doing Bonus Job
          JobID = rst!Job3
          bonus = rst!bonus
          finalstate = 2
          
-      ElseIf (rst!JobStatus = 1 Or rst!JobStatus = 2) And ((rst!sector2 = 1 And getCruiserSector() = sectorID) Or (rst!sector2 = 2 And getCorvetteSector() = sectorID) Or (sectorID = rst!sector2)) And Not IsNull(rst!Job2) Then  ' we're doing Job 2
+      ElseIf (rst!JobStatus = 1 Or rst!JobStatus = 2) And (isAtLocation(rst!sector2, SectorID)) And Not IsNull(rst!Job2) Then  ' we're doing Job 2
          JobID = rst!Job2
          finalstate = JOB_SUCCESS
          
@@ -3086,7 +3173,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
             PutMsg player.PlayName & "'s Two-Fry used his DeadEye Sniper skills to good effect and eliminates 1 misbehave", playerID, Logic!Gamecntr, True, 56
          End If
          'go do the number of misbehaves
-         result = doMisbehaves(playerID, misbehaveNum, sectorID)
+         result = doMisbehaves(playerID, misbehaveNum, SectorID)
          Select Case result
          Case 1, 4 'proceed
             result = 0 'reset as Win for below tests
@@ -3299,13 +3386,13 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
    
    If finalstate = 1 Then
 
-      PutMsg player.PlayName & " has completed the first Work Part of " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & sectorID)), playerID, Logic!Gamecntr, True, getLeader()
+      PutMsg player.PlayName & " has completed the first Work Part of " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)), playerID, Logic!Gamecntr, True, getLeader()
       
    ElseIf finalstate = 2 Then 'Bonus Job done
       'Pay Bonus
       bonus = bonus + cargopay
       getMoney playerID, bonus
-      PutMsg player.PlayName & " has completed the $" & bonus & " Bonus Work Part of " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & sectorID)), playerID, Logic!Gamecntr, True, getLeader()
+      PutMsg player.PlayName & " has completed the $" & bonus & " Bonus Work Part of " & varDLookup("JobName", "ContactDeck", "CardID=" & CardID) & " at " & Nz(varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)), playerID, Logic!Gamecntr, True, getLeader()
 
    ElseIf finalstate = JOB_SUCCESS Then 'job is ending, but do any remaining challenges Negotiate Pay or Cover your Tracks, Gamble
       'Open the Contact Deck to access end of Job info and flags
@@ -3374,8 +3461,8 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
                End If
                
             Case 4 'move Cruiser to sector and EVADE - work done
-               MoveShip 5, sectorID
-               If getHaven(sectorID) > 0 Then
+               MoveShip 5, SectorID
+               If getHaven(SectorID) > 0 Then
                   PutMsg player.PlayName & "'s Nav log: refuge found at this Haven, the Alliance Cruiser sails on by", playerID, Logic!Gamecntr, True, 0, 0, 1
                   moveAutoAI 5
                Else
@@ -3408,7 +3495,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
                doWork = 1 ' Evade
                
             Case 8 'move Corvette to sector and EVADE - work done
-               MoveShip 6, sectorID
+               MoveShip 6, SectorID
                PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!Gamecntr, True
                actionSeq = ASNavEvade
                doWork = 1 ' Evade
@@ -3437,8 +3524,8 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
                Exit Function
             
             Case 5 'move Cruiser to sector and EVADE - work done
-               MoveShip 5, sectorID
-               If getHaven(sectorID) > 0 Then
+               MoveShip 5, SectorID
+               If getHaven(SectorID) > 0 Then
                   PutMsg player.PlayName & "'s Nav log: refuge found at this Haven, the Alliance Cruiser sails on by", playerID, Logic!Gamecntr, True, 0, 0, 1
                   moveAutoAI 5
                Else
@@ -3447,7 +3534,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
                   doWork = 1 ' Evade
                End If
             Case 6 'move Corvette to sector and EVADE - work done
-               MoveShip 6, sectorID
+               MoveShip 6, SectorID
                PutMsg player.PlayName & " needs to EVADE!", playerID, Logic!Gamecntr, True
                actionSeq = ASNavEvade
                doWork = 1 ' Evade
@@ -3496,7 +3583,7 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
              
             Case 5, 6 'move Cruiser/Corvette to sector
                PutMsg player.PlayName & " botches the job and has attracted some attention from the Alliance", playerID, Logic!Gamecntr, True, getLeader()
-               MoveShip rst!FailResult, sectorID
+               MoveShip rst!FailResult, SectorID
                Exit Function
                
             Case Is < -99
@@ -3641,7 +3728,6 @@ Dim frmSalvage As frmSalvaging, frmKillCrw As frmKillCrew, frmGamb As frmGamble,
    
    Main.drawLine 0, -1
    
-   LastJobDone = CardID  'let any card open know of the update
    'if we got this far, we're good!
    'doWork = 0 only set this to a value above to change the exit actionSeq behavior.  1=EVADE
    
@@ -3824,7 +3910,7 @@ Dim frmMB As New frmMisbehave
 End Function
 
 'returns the Result Flag passed from doMisbehave: 1=proceed, 2=botched, 3=warrant, 4=load 1 contra per crew wit no gear, 5-double down
-Public Function doMisbehaves(ByVal playerID, ByVal cnt As Integer, ByVal sectorID) As Integer
+Public Function doMisbehaves(ByVal playerID, ByVal cnt As Integer, ByVal SectorID) As Integer
 Dim x, CardID As Integer, opt, actualcnt As Integer, suit, c(1 To 4) As Integer, dalin As Boolean
    clearPicMB
    actualcnt = 0
@@ -3872,14 +3958,14 @@ Dim x, CardID As Integer, opt, actualcnt As Integer, suit, c(1 To 4) As Integer,
    End If
    
    'inform of the success
-   If IsNull(varDLookup("PlanetName", "Planet", "SectorID=" & sectorID)) Then
-      If getCruiserSector() = sectorID Then
+   If IsNull(varDLookup("PlanetName", "Planet", "SectorID=" & SectorID)) Then
+      If getCruiserSector() = SectorID Then
          PutMsg player.PlayName & " Misbehaved successfully " & actualcnt & " times at the Alliance Cruiser", playerID, Logic!Gamecntr, True, getLeader()
-      ElseIf getCorvetteSector() = sectorID Then
+      ElseIf getCorvetteSector() = SectorID Then
          PutMsg player.PlayName & " Misbehaved successfully " & actualcnt & " times at the Operative's Corvette", playerID, Logic!Gamecntr, True, getLeader()
       End If
    Else
-      PutMsg player.PlayName & " Misbehaved successfully " & actualcnt & " times at " & varDLookup("PlanetName", "Planet", "SectorID=" & sectorID), playerID, Logic!Gamecntr, True, getLeader()
+      PutMsg player.PlayName & " Misbehaved successfully " & actualcnt & " times at " & varDLookup("PlanetName", "Planet", "SectorID=" & SectorID), playerID, Logic!Gamecntr, True, getLeader()
    End If
 
 End Function
@@ -4268,7 +4354,7 @@ End Function
 'this is where we apply the 1000 rules and outcomes of the nav option :(
 'these apply to FULLBURN only. to Full Stop, set fullburndone = True
 Public Function doNav(ByVal CardID, ByVal opt) As Boolean
-Dim SQL, sectorID, skillcnt, x, Y, z
+Dim SQL, SectorID, skillcnt, x, Y, z
 Dim result   '0=win,1-inter,2=fail
 Dim rst As New ADODB.Recordset
 Dim frmShUp As frmShipUpgd, frmBart As frmBarter
@@ -4593,7 +4679,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
       End Select
        
       'DO the tests that run whatever the above outcome -----------------------------------------
-      sectorID = varDLookup("SectorID", "Players", "PlayerID=" & player.ID)
+      SectorID = varDLookup("SectorID", "Players", "PlayerID=" & player.ID)
        
       If rst!Disgruntled <> 0 Then 'apply disgruntled changes
          doDisgruntled player.ID, rst!Disgruntled
@@ -4619,8 +4705,8 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             actionSeq = ASNavReavBorder
             
          Case 3    '3-move to your location  (evade done later)
-            If getCutterSector(sectorID) = 0 Then
-               MoveShip 6 + RollDice(NumOfReavers), sectorID
+            If getCutterSector(SectorID) = 0 Then
+               MoveShip 6 + RollDice(NumOfReavers), SectorID
             End If
             
          Case 4  'other player move reaver to any B zone,
@@ -4668,8 +4754,8 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
             'for each Wanted Crew: 1-Remove Crew, 2+ Crew safe
             'may use Cry Baby - or other modifiers? eg. Concealed Smuggling Compartments
             x = isOutlaw(player.ID)
-            If doMoveAlliance(player.ID, sectorID) Then
-               CruiserCutter = sectorID 'set it as faced
+            If doMoveAlliance(player.ID, SectorID) Then
+               CruiserCutter = SectorID 'set it as faced
                If Not (FullburnMovesDone = 0 And MoseyMovesDone = 0) And x Then 'only stop if Flying
                   frmAction.moseydone = True 'Full Stop!
                   frmAction.fullburndone = True
@@ -4678,7 +4764,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          
          Case 5 'move adjacent if failed
             If result = 2 Then
-               If Logic!AutoAI = 0 And doMoveAllianceAdjacent(sectorID, True) Then  'there is a valid solution
+               If Logic!AutoAI = 0 And doMoveAllianceAdjacent(SectorID, True) Then  'there is a valid solution
                   setPlayer player.ID, "Z", 1
                   If isSoloGame(True) Then
                     MessBox "Move the Alliance Cruiser adjacent your Ship", "Cruiser on the Move", "OK", "", getLeader()
@@ -4688,13 +4774,13 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
                   End If
                
                Else
-                  doMoveAllianceAdjacent sectorID
+                  doMoveAllianceAdjacent SectorID
                  
                End If
             End If
             
          Case 6 'alert tokens adjacent your posn
-            doAddTokensAdjacent sectorID
+            doAddTokensAdjacent SectorID
             'RefreshBoard
             setRefresh True
          Case 7 'corvette contact
@@ -4715,11 +4801,11 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
          
          Case 9 'alert tokens at every Outlaw Ship
             doAddTokensOutlaws
-            If isOutlaw(player.ID) Then ignoreToken = sectorID 'so as to not trip on one put here
+            If isOutlaw(player.ID) Then ignoreToken = SectorID 'so as to not trip on one put here
             'RefreshBoard
             setRefresh True
          Case 10 ' Move Corvette Adjacent player
-            If Logic!AutoAI = 0 And doMoveCorvetteAdjacent(sectorID, True) Then
+            If Logic!AutoAI = 0 And doMoveCorvetteAdjacent(SectorID, True) Then
                setPlayer player.ID, "V", 1
                If isSoloGame(True) Then
                  MessBox "Move the Operative's Corvette adjacent your Ship", "Corvette on the Move", "OK", "", getLeader()
@@ -4729,7 +4815,7 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
                End If
             
             Else
-               doMoveCorvetteAdjacent sectorID
+               doMoveCorvetteAdjacent SectorID
               
             End If
             
@@ -4812,13 +4898,13 @@ Dim frmSalvage As frmSalvaging, frmCrewList As frmCrewLst, frmSeize As frmSeized
       End If
       
       If rst!Token = 1 Then
-         changeToken sectorID, 1
-         ignoreToken = sectorID
+         changeToken SectorID, 1
+         ignoreToken = SectorID
          RefreshBoard
          setRefresh
       ElseIf rst!Token = 2 Then
-         changeAToken sectorID, 1
-         ignoreToken = sectorID
+         changeAToken SectorID, 1
+         ignoreToken = SectorID
          RefreshBoard
          setRefresh
       End If
@@ -4941,12 +5027,12 @@ Dim frmplayer As New frmSelPlayer
 
 End Function
 
-Private Function checkFlacGun(ByVal sectorID, Optional ByVal ignore As Boolean = False) As Boolean
+Private Function checkFlacGun(ByVal SectorID, Optional ByVal ignore As Boolean = False) As Boolean
 Dim x, G
 
    If ignore Then Exit Function 'use when other conditions already fail so as to not trigger the test
 
-   x = getCutterSector(sectorID)
+   x = getCutterSector(SectorID)
    If x > 0 Then  'we got company!
       G = hasShipUpgrade(player.ID, 15)
       If G > 0 Then 'Flac Gun
@@ -5184,6 +5270,24 @@ Dim Havens As Boolean
    
 End Sub
 
+Private Sub Verse_SectDblClick(ByVal Index As Integer)
+Dim msg, t, a
+Dim frmD As frmDash
+
+   t = varDLookup("Token", "Board", "SectorID=" & Index)
+   a = varDLookup("AToken", "Board", "SectorID=" & Index)
+   Set frmD = New frmDash
+   With frmD
+      .SectorID = Index
+      .Atoken = a
+      .Token = t
+      .PlanetName = IIf(Index = UNKNOWN_SECTOR, "", getPlanetName(Index))
+      .Distance = getSectorCount(getPlayerSector(player.ID), Index)
+      .Show 0, Me
+   End With
+
+End Sub
+
 Public Sub drawLine(ByVal mode, ByVal sector1, Optional ByVal sector2, Optional ByVal silent As Boolean = True)
 Dim rst As New ADODB.Recordset
 Dim SQL, X1, X2, Y1, Y2
@@ -5198,6 +5302,13 @@ Dim SQL, X1, X2, Y1, Y2
       sector1 = getCruiserSector()
    ElseIf sector1 = 2 Then
       sector1 = getCorvetteSector()
+   ElseIf sector1 = 3 Then
+      Logic.Requery
+      If Logic!SecretRevealed = 0 Or Logic!SecretSectorID = 0 Then
+         Exit Sub
+      Else
+         sector1 = Logic!SecretSectorID
+      End If
    End If
 
    If sector1 = -2 Then
@@ -5330,7 +5441,7 @@ Dim frmHavn As New frmHaven
 
 End Function
 
-Private Function loadBounties(mnuWorkPop As Object, ByVal SupplyID As Integer, ByVal sectorID, ByRef x)
+Private Function loadBounties(mnuWorkPop As Object, ByVal SupplyID As Integer, ByVal SectorID, ByRef x)
 Dim SQL As String
 Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
 
@@ -5342,22 +5453,22 @@ Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
       'see if the bounty is on board
       If hasCrew(player.ID, rst!FugitiveID) Then
          x = x + 1
-         If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
+         If mnuWorkPop.count < x + 1 Then Load mnuWorkPop(x)
          mnuWorkPop(x).Caption = "Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
          mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
          
       ElseIf Nz(varDLookup("SupplyID", "SupplyDeck", "CrewID = " & rst!FugitiveID & " AND Seq = " & DISCARDED), 0) = SupplyID And SupplyID > 0 Then 'see if the bounty is at the current supply planet
          x = x + 1
-         If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
+         If mnuWorkPop.count < x + 1 Then Load mnuWorkPop(x)
          mnuWorkPop(x).Caption = "Supply Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
          mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
             
       Else 'or Rival crew
-         SQL = "SELECT Players.PlayerID FROM Players INNER JOIN PlayerSupplies ON Players.PlayerID = PlayerSupplies.PlayerID WHERE Players.SectorID=" & sectorID & " AND PlayerSupplies.CardID = " & getCrewCardID(rst!FugitiveID)
+         SQL = "SELECT Players.PlayerID FROM Players INNER JOIN PlayerSupplies ON Players.PlayerID = PlayerSupplies.PlayerID WHERE Players.SectorID=" & SectorID & " AND PlayerSupplies.CardID = " & getCrewCardID(rst!FugitiveID)
          rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
          If Not rst2.EOF Then
             x = x + 1
-            If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
+            If mnuWorkPop.count < x + 1 Then Load mnuWorkPop(x)
             mnuWorkPop(x).Caption = "Rival Crew Bounty " & rst!JobName & " (" & CStr(rst!CardID) & ")"
             mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
          End If
@@ -5371,11 +5482,11 @@ Dim rst As New ADODB.Recordset, rst2 As New ADODB.Recordset
    'look for Bounty Jumps
    SQL = "SELECT ContactDeck.CardID, ContactDeck.Job1ID, ContactDeck.JobName, ContactDeck.FugitiveID, Players.SectorID "
    SQL = SQL & "FROM Players INNER JOIN (PlayerJobs INNER JOIN ContactDeck ON PlayerJobs.CardID = ContactDeck.CardID) ON Players.PlayerID = PlayerJobs.PlayerID "
-   SQL = SQL & "Where ContactDeck.ContactID = 10 And PlayerJobs.JobStatus =0 And Players.SectorID = " & sectorID & " And PlayerJobs.PlayerID <> " & player.ID & " And PlayerJobs.PlayerID > 0 And PlayerJobs.PlayerID <" & DISCARDED
+   SQL = SQL & "Where ContactDeck.ContactID = 10 And PlayerJobs.JobStatus =0 And Players.SectorID = " & SectorID & " And PlayerJobs.PlayerID <> " & player.ID & " And PlayerJobs.PlayerID > 0 And PlayerJobs.PlayerID <" & DISCARDED
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    While Not rst.EOF
       x = x + 1
-      If mnuWorkPop.Count < x + 1 Then Load mnuWorkPop(x)
+      If mnuWorkPop.count < x + 1 Then Load mnuWorkPop(x)
       mnuWorkPop(x).Caption = "Bounty Jump " & rst!JobName & " (" & CStr(rst!CardID) & ")"
       mnuWorkPop(x).Tag = CStr(rst!CardID * -1)
       rst.MoveNext
@@ -6080,7 +6191,7 @@ Dim skillcnt, skilldiscards, extraSkill As Integer
             Else 'you lose :(
                doWorkSkillTest = 3
             End If
-            PutMsg player.PlayName & "'s Work log: Rolls a " & Dice & " with added " & cstrSkill(WSkill) & " skill points of " & CStr(skillcnt - Dice) & " for a total of " & skillcnt & " to " & IIf(doWorkSkillTest = 0, "succeed :^)", IIf(doWorkSkillTest = 1, "part win", "lose :^(")), player.ID, Logic!Gamecntr, True, getLeader(), getLeader(), 0, 0, 0, Dice, WSkill
+            PutMsg player.PlayName & "'s Skill Test: Rolls a " & Dice & " with added " & cstrSkill(WSkill) & " skill points of " & CStr(skillcnt - Dice) & " for a total of " & skillcnt & " to " & IIf(doWorkSkillTest = 0, "succeed :^)", IIf(doWorkSkillTest = 1, "part win", "lose :^(")), player.ID, Logic!Gamecntr, True, getLeader(), getLeader(), 0, 0, 0, Dice, WSkill
             
 End Function
 
@@ -6124,4 +6235,3 @@ Dim SQL, refrsh As Boolean
       If Not (frmShip Is Nothing) Then frmShip.RefreshShips  'update display
    End If
 End Sub
-

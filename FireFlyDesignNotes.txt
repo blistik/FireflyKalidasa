@@ -5,6 +5,19 @@ Dev Ideas:
 Test Issues pending: 
 
 Version updates:
+v 1.10.7 ~ February 2026
+add: Story – Niska's Courier Conundrum
+add: Story – Harrow's Haul
+add: Story – The Blacklist Job
+add: goal/job Location option can be "unknown", drawn randomally from a collection of seeded planets
+add: Goal completion option to take away player's cash, i.e. make a payment
+gui: Planet images added to Job Cards
+gui: End game splashscreen includes optional story closing message
+gui: Show Suits on Universal Encyclopedia Misbehave reorder list
+fix: prevent duplicate JobCards being opened, instead bring open card to front
+fix: Warrant issued by Goal now honours Fan Dancer and Roberta perks
+bot: support for a single unknown location in a story v1.2.2
+
 v 1.10.6 ~ February 2026
 add: Story - Patience's War
 add: Story - Any Port in a Storm

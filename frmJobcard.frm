@@ -64,6 +64,51 @@ Begin VB.Form frmJobcard
       Appearance      =   0  'Flat
       BackColor       =   &H80000005&
       BackStyle       =   0  'Transparent
+      Caption         =   "Drop Off"
+      BeginProperty Font 
+         Name            =   "Franklin Gothic Medium"
+         Size            =   18
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   -1  'True
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H0084B7DF&
+      Height          =   495
+      Index           =   9
+      Left            =   150
+      TabIndex        =   10
+      Top             =   3060
+      Visible         =   0   'False
+      Width           =   3285
+   End
+   Begin LaVolpeAlphaImg.AlphaImgCtl img 
+      Height          =   680
+      Index           =   13
+      Left            =   0
+      Top             =   3500
+      Width           =   700
+      _ExtentX        =   1244
+      _ExtentY        =   1191
+      Attr            =   514
+      Effects         =   "frmJobcard.frx":0000
+   End
+   Begin LaVolpeAlphaImg.AlphaImgCtl img 
+      Height          =   680
+      Index           =   12
+      Left            =   0
+      Top             =   1440
+      Width           =   700
+      _ExtentX        =   1244
+      _ExtentY        =   1191
+      Attr            =   514
+      Effects         =   "frmJobcard.frx":0018
+   End
+   Begin VB.Label lbl 
+      Appearance      =   0  'Flat
+      BackColor       =   &H80000005&
+      BackStyle       =   0  'Transparent
       Caption         =   "planet 2"
       BeginProperty Font 
          Name            =   "Franklin Gothic Demi Cond"
@@ -104,7 +149,7 @@ Begin VB.Form frmJobcard
       Width           =   735
       _ExtentX        =   1296
       _ExtentY        =   1058
-      Effects         =   "frmJobcard.frx":0000
+      Effects         =   "frmJobcard.frx":0030
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl img 
       Height          =   600
@@ -114,7 +159,7 @@ Begin VB.Form frmJobcard
       Width           =   735
       _ExtentX        =   1296
       _ExtentY        =   1058
-      Effects         =   "frmJobcard.frx":0018
+      Effects         =   "frmJobcard.frx":0048
    End
    Begin VB.Label lbl 
       Alignment       =   1  'Right Justify
@@ -193,7 +238,7 @@ Begin VB.Form frmJobcard
       Attr            =   516
       FixedCx         =   31
       FixedCy         =   25
-      Effects         =   "frmJobcard.frx":0030
+      Effects         =   "frmJobcard.frx":0060
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl img 
       Height          =   435
@@ -206,7 +251,7 @@ Begin VB.Form frmJobcard
       Attr            =   516
       FixedCx         =   31
       FixedCy         =   25
-      Effects         =   "frmJobcard.frx":0048
+      Effects         =   "frmJobcard.frx":0078
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl img 
       Height          =   435
@@ -219,7 +264,7 @@ Begin VB.Form frmJobcard
       Attr            =   516
       FixedCx         =   31
       FixedCy         =   25
-      Effects         =   "frmJobcard.frx":0060
+      Effects         =   "frmJobcard.frx":0090
    End
    Begin VB.Label lbl 
       Appearance      =   0  'Flat
@@ -262,35 +307,12 @@ Begin VB.Form frmJobcard
       ForeColor       =   &H003B80B4&
       Height          =   600
       Index           =   10
-      Left            =   150
+      Left            =   750
       TabIndex        =   11
       Top             =   3550
       Visible         =   0   'False
       Width           =   2805
       WordWrap        =   -1  'True
-   End
-   Begin VB.Label lbl 
-      Appearance      =   0  'Flat
-      BackColor       =   &H80000005&
-      BackStyle       =   0  'Transparent
-      Caption         =   "Drop Off"
-      BeginProperty Font 
-         Name            =   "Franklin Gothic Medium"
-         Size            =   18
-         Charset         =   0
-         Weight          =   700
-         Underline       =   0   'False
-         Italic          =   -1  'True
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H0084B7DF&
-      Height          =   495
-      Index           =   9
-      Left            =   150
-      TabIndex        =   10
-      Top             =   3060
-      Visible         =   0   'False
-      Width           =   3285
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl img 
       Height          =   570
@@ -301,7 +323,7 @@ Begin VB.Form frmJobcard
       Width           =   3435
       _ExtentX        =   6059
       _ExtentY        =   1005
-      Effects         =   "frmJobcard.frx":0078
+      Effects         =   "frmJobcard.frx":00A8
    End
    Begin VB.Label lbl 
       Appearance      =   0  'Flat
@@ -361,7 +383,7 @@ Begin VB.Form frmJobcard
       Width           =   3150
       _ExtentX        =   5556
       _ExtentY        =   5477
-      Effects         =   "frmJobcard.frx":0090
+      Effects         =   "frmJobcard.frx":00C0
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl img 
       Height          =   540
@@ -372,7 +394,7 @@ Begin VB.Form frmJobcard
       Width           =   1680
       _ExtentX        =   2963
       _ExtentY        =   953
-      Effects         =   "frmJobcard.frx":00A8
+      Effects         =   "frmJobcard.frx":00D8
    End
    Begin VB.Label lbl 
       Appearance      =   0  'Flat
@@ -406,7 +428,7 @@ Begin VB.Form frmJobcard
       Width           =   3225
       _ExtentX        =   5689
       _ExtentY        =   1058
-      Effects         =   "frmJobcard.frx":00C0
+      Effects         =   "frmJobcard.frx":00F0
    End
    Begin VB.Label lbl 
       Alignment       =   2  'Center
@@ -448,7 +470,7 @@ Begin VB.Form frmJobcard
       ForeColor       =   &H003B80B4&
       Height          =   600
       Index           =   3
-      Left            =   150
+      Left            =   750
       TabIndex        =   5
       Top             =   1450
       Width           =   2805
@@ -462,7 +484,7 @@ Begin VB.Form frmJobcard
       Width           =   2175
       _ExtentX        =   3836
       _ExtentY        =   1323
-      Effects         =   "frmJobcard.frx":00D8
+      Effects         =   "frmJobcard.frx":0108
    End
    Begin VB.Label lbl 
       Alignment       =   2  'Center
@@ -562,7 +584,7 @@ Begin VB.Form frmJobcard
       _ExtentX        =   1693
       _ExtentY        =   873
       Attr            =   640
-      Effects         =   "frmJobcard.frx":00F0
+      Effects         =   "frmJobcard.frx":0120
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl img 
       Height          =   6000
@@ -572,7 +594,7 @@ Begin VB.Form frmJobcard
       Width           =   8595
       _ExtentX        =   15161
       _ExtentY        =   10583
-      Effects         =   "frmJobcard.frx":0108
+      Effects         =   "frmJobcard.frx":0138
    End
 End
 Attribute VB_Name = "frmJobcard"
@@ -583,7 +605,7 @@ Attribute VB_Exposed = False
 Option Explicit
 Public JobCardID As Integer, ContactID As Integer
 
-Private LastSectorID As Integer, isOwner As Boolean
+Private LastSectorID As Integer, isOwner As Boolean, LastSecretReveal As Integer
 Private bOnTopState As Boolean
 Private DragPending As Boolean
 Private StartX As Single, StartY As Single
@@ -629,7 +651,7 @@ Dim w As Long, h As Long
    rgn = CreateRoundRectRgn(0, 0, w, h, 20, 20)
    
    SetWindowRgn Me.hwnd, rgn, True
-    
+   Me.Caption = CStr(JobCardID)
    RefreshJob
 End Sub
 
@@ -783,13 +805,18 @@ Dim x
          End If
 
          If rst!Job1ID > 0 Then
-            SQL = "SELECT Planet.PlanetName, Planet.System, Job.* FROM Job LEFT JOIN Planet ON Job.SectorID = Planet.SectorID WHERE JobID =" & rst!Job1ID
+            SQL = "SELECT Planet.PlanetName, Planet.System, Planet.Picture, Job.* FROM Job LEFT JOIN Planet ON Job.SectorID = Planet.SectorID WHERE JobID =" & rst!Job1ID
             rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
             If Not rst2.EOF Then
                x = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
-               lbl(3).Caption = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "") & vbNewLine & Nz(rst2!System)
+               lbl(3).Caption = getPlanetDescription(rst2!sectorID, player.ID, rst2!planetName) & vbNewLine & Nz(rst2!System)
+               'lbl(3).Caption = rst2!planetName & IIf(x > 0, "  (" & x & ")", "") & vbNewLine & Nz(rst2!System)
                lbl(3).ForeColor = IIf(x > 0, &H3B80B4, &HC000&)
                lbl(3).Tag = CStr(rst2!sectorID)
+               Set img(12).Picture = LoadPictureGDIplus(App.Path & "\planets\" & rst2!Picture)
+               img(12).TransparentColor = 0
+               img(12).TransparentColorMode = lvicUseTransparentColor
+
                lbl(8).Visible = True
                lbl(8).Caption = Replace(rst2!JobDesc, "&", "&&")
 
@@ -810,14 +837,14 @@ Dim x
                lbl(8).Width = 5800
                lbl(11).Width = 5800
                lbl(16).Visible = True
-               lbl(16).Caption = rst2!PlanetName & vbNewLine & rst2!System
+               lbl(16).Caption = rst2!planetName & vbNewLine & rst2!System
                lbl(16).Tag = CStr(rst2!sectorID)
             End If
             rst2.Close
          End If
 
          If rst!Job2ID > 0 Then
-            SQL = "SELECT Planet.PlanetName, Planet.System, Job.* FROM Job INNER JOIN Planet ON Job.SectorID = Planet.SectorID WHERE JobID =" & rst!Job2ID
+            SQL = "SELECT Planet.PlanetName, Planet.System, Planet.Picture, Job.* FROM Job INNER JOIN Planet ON Job.SectorID = Planet.SectorID WHERE JobID =" & rst!Job2ID
             rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
             If Not rst2.EOF Then
                img(6).Visible = True
@@ -829,11 +856,16 @@ Dim x
                lbl(1).Caption = "Pick Up"
                x = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
                lbl(10).Visible = True
-               lbl(10).Caption = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "") & vbNewLine & Nz(rst2!System)
+               lbl(10).Caption = getPlanetDescription(rst2!sectorID, player.ID, rst2!planetName) & vbNewLine & Nz(rst2!System)
+               'lbl(10).Caption = rst2!planetName & IIf(x > 0, "  (" & x & ")", "") & vbNewLine & Nz(rst2!System)
                lbl(10).ForeColor = IIf(x > 0, &H3B80B4, &HC000&)
                lbl(10).Tag = CStr(rst2!sectorID)
                lbl(11).Visible = True
                lbl(11).Caption = Replace(rst2!JobDesc, "&", "&&")
+               Set img(13).Picture = LoadPictureGDIplus(App.Path & "\planets\" & rst2!Picture)
+               img(13).TransparentColor = 0
+               img(13).TransparentColorMode = lvicUseTransparentColor
+
 
             End If
             rst2.Close
@@ -842,6 +874,7 @@ Dim x
          If checkThisJob Then Unload Me
       End If
       LastSectorID = player.sectorID
+      LastSecretReveal = Logic!SecretRevealed
 End Sub
 
 Private Sub Timer1_Timer()
@@ -849,7 +882,7 @@ Private Sub Timer1_Timer()
       LastJobDone = 0 'clear the flag
       If checkThisJob Then Unload Me
    End If
-   If LastSectorID <> player.sectorID Then RefreshJob
+   If LastSectorID <> player.sectorID Or LastSecretReveal <> Logic!SecretRevealed Then RefreshJob
    If Logic!Seq = "E" Then Unload Me
 End Sub
 
@@ -859,10 +892,16 @@ Dim SQL
    SQL = "SELECT PlayerID, JobStatus FROM PlayerJobs "
    SQL = SQL & "WHERE CardID=" & JobCardID
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
-   If Not rst.EOF Then
-      status = rst!JobStatus
-      If status = 0 And ContactID > 0 Then cmdDiscard.Visible = True
-      isOwner = (rst!playerID = player.ID)
+   If rst.EOF And isOwner Then 'not in the table, discarded
+      status = 3
+   Else
+      Do While Not rst.EOF   'loop as goal jobs may appear multi times in this table
+         status = rst!JobStatus
+         If status = 0 And ContactID > 0 Then cmdDiscard.Visible = True
+         isOwner = (rst!playerID = player.ID)
+         If isOwner Then Exit Do
+         rst.MoveNext
+      Loop
    End If
    rst.Close
    Set rst = Nothing

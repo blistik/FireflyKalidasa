@@ -126,13 +126,17 @@ Dim ShipUpgradeID, cost, pay
 End Sub
 
 Private Sub Form_Load()
-   If discardMode = 1 Then
+
+   Select Case discardMode
+   Case 1
       Me.Caption = "Discard a Ship upgrade"
       Label1 = "Pick a Ship Upgrade to discard"
-   ElseIf discardMode = 2 Then
+   Case 2
       Me.Caption = "Buy a Ship upgrade"
       Label1 = "Pick a Ship Upgrade to buy at Half Listed Price"
-   End If
+   Case 6
+      Label1 = "Pick an Upgrade to add to your Ship"
+   End Select
    LoadCombo cbo, "shipupgd", IIf(discardMode = 1, "=" & CStr(player.ID) & " AND ShipUpgrade.DriveCore<>1", IIf(discardMode = 3, "=5 AND ShipUpgrade.ShipUpgradeID = 1", IIf(discardMode = 5, "=5 AND ShipUpgrade.DriveCore = 1", IIf(discardMode = 6, ">4", IIf(discardMode = 4, "=5 AND ShipUpgrade.DriveCore<>1", "=5")))))
 
 End Sub

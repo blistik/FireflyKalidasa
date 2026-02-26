@@ -341,10 +341,11 @@ With sftTree
             If Not rst2.EOF Then
                 Index = .AddItem(CStr(rst2!JobID))
                .CellText(Index, 1) = rst2!JobDesc
-               x = getSectorCount(getPlayerSector(rst3!playerID), rst2!sectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+                              
+               .CellText(Index, 2) = getPlanetDescription(rst2!sectorID, rst3!playerID, rst2!planetName)
+
                .ItemData(Index) = rst!playerID
-               If (rst2!sectorID = 1 And getCruiserSector() = sectorID) Or (rst2!sectorID = 2 And getCorvetteSector() = sectorID) Or (rst2!sectorID > 2 And sectorID = rst2!sectorID) Then
+               If isAtLocation(rst2!sectorID, sectorID) Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
                   If hasJobReqs(rst3!playerID, rst!CardID, rst!Job1ID) Then
@@ -388,9 +389,10 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                .CellText(Index, 1) = rst2!JobDesc
                x = getSectorCount(getPlayerSector(rst3!playerID), rst2!sectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+               .CellText(Index, 2) = rst2!planetName & IIf(x > 0, "  (" & x & ")", "")
+               
                .ItemData(Index) = rst!playerID
-               If (rst2!sectorID = 1 And getCruiserSector() = sectorID) Or (rst2!sectorID = 2 And getCorvetteSector() = sectorID) Or (rst2!sectorID > 2 And sectorID = rst2!sectorID) Then
+               If isAtLocation(rst2!sectorID, sectorID) Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
                   If hasJobReqs(rst3!playerID, rst!CardID, rst!Job3ID) Then
@@ -424,10 +426,14 @@ With sftTree
             If Not rst2.EOF Then
                 Index = .AddItem(CStr(rst2!JobID))
                .CellText(Index, 1) = rst2!JobDesc
-               x = getSectorCount(getPlayerSector(rst3!playerID), rst2!sectorID)
-               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
+                              
+               .CellText(Index, 2) = getPlanetDescription(rst2!sectorID, rst3!playerID, rst2!planetName)
+
+'               x = getSectorCount(getPlayerSector(rst3!playerID), rst2!sectorID)
+'               .CellText(index, 2) = rst2!planetName & IIf(x > 0, "  (" & x & ")", "")
+               
                .ItemData(Index) = rst!playerID
-               If (rst2!sectorID = 1 And getCruiserSector() = sectorID) Or (rst2!sectorID = 2 And getCorvetteSector() = sectorID) Or (rst2!sectorID > 2 And sectorID = rst2!sectorID) Then
+               If isAtLocation(rst2!sectorID, sectorID) Then
                   .CellFont(Index, 2).Bold = True
                   .CellFont(Index, 3).Bold = True
                   If hasJobReqs(rst3!playerID, rst!CardID, rst!Job2ID) Then
@@ -464,7 +470,6 @@ Private Sub Form_Resize()
 
 End Sub
 
-
 Private Sub mnuPopup_Click(Index As Integer)
  With sftTree
    Select Case Index
@@ -474,15 +479,7 @@ Private Sub mnuPopup_Click(Index As Integer)
    Case 1 'discard
       If .ListIndex < 1 Or Left(.CellText(.ListIndex, 1), 4) = "Goal" Then Exit Sub
       discardJob .CellText(.ListIndex, 1), .ItemData(.ListIndex)
-'      If MessBox("Are you sure you want to ditch the Job: " & .CellText(.ListIndex, 1) & "?", "Discard Job", "Ditch it", "Nope", getLeader()) = 0 Then
-'         removeJob player.ID, .ItemData(.ListIndex)
-'         If actionSeq > ASidle And actionSeq < ASend Then
-'            Main.showActions
-'         End If
-'         refreshJobs
-'         Main.drawLine 0, -1
-'      End If
-
+      
    End Select
  End With
 End Sub

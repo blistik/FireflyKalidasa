@@ -1270,15 +1270,7 @@ On Error GoTo err_handler
    SQL = "INSERT INTO ContactDeck (CardID, JobName, ContactID, Job1ID) VALUES (" & CardID & ", 'New Job at " & Now() & "', 0,1)"
    DB.Execute SQL
    newJob = varDLookup("max(CardID) AS maxcard", "ContactDeck", "", "maxcard")
-'   rst.Open SQL, DB, adOpenDynamic, adLockPessimistic
-'   rst.AddNew
-'   rst!JobName = "New Job at " & Now()
-'   rst!ContactID = 0
-'   rst!Job1ID = 1
-'   rst.Update
-'   newJob = rst!CardID
-'   rst.Close
-'   Set rst = Nothing
+
 normal_exit:
    Exit Function
    
@@ -1299,7 +1291,11 @@ On Error GoTo err_handler
    SQL = "UPDATE ContactDeck Set "
    SQL = SQL & "ContactID=" & GetCombo(cbo(5))
    SQL = SQL & ", JobTypeID=" & GetCombo(cbo(0))
-   SQL = SQL & ", JobType2D=" & GetCombo(cbo(1))
+   If GetCombo(cbo(1)) = -1 Then
+      SQL = SQL & ", JobType2D= 0"
+   Else
+      SQL = SQL & ", JobType2D=" & GetCombo(cbo(1))
+   End If
    SQL = SQL & ", JobName='" & SQLFilter(txt(2)) & "'"
    If txt(3) = "" Then
       SQL = SQL & ", JobOrder=Null"

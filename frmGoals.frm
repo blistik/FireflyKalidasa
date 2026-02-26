@@ -2,27 +2,81 @@ VERSION 5.00
 Begin VB.Form frmGoals 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Story Goal - Criteria to achieve"
-   ClientHeight    =   5250
+   ClientHeight    =   5625
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   9330
+   ClientWidth     =   9285
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "frmGoals.frx":0000
-   ScaleHeight     =   5250
-   ScaleWidth      =   9330
+   ScaleHeight     =   5625
+   ScaleWidth      =   9285
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.CommandButton cmd 
+      BackColor       =   &H00FF8080&
+      Caption         =   "edit"
+      BeginProperty Font 
+         Name            =   "Showcard Gothic"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   315
+      Index           =   5
+      Left            =   8550
+      Style           =   1  'Graphical
+      TabIndex        =   50
+      Top             =   3360
+      Visible         =   0   'False
+      Width           =   645
+   End
+   Begin VB.TextBox txt 
+      Height          =   285
+      Index           =   12
+      Left            =   2670
+      TabIndex        =   48
+      ToolTipText     =   "Issued Job's reveal text eg. Location found!"
+      Top             =   3090
+      Visible         =   0   'False
+      Width           =   5865
+   End
+   Begin VB.TextBox txt 
+      Alignment       =   2  'Center
+      Height          =   285
+      Index           =   11
+      Left            =   8070
+      TabIndex        =   46
+      Text            =   "0"
+      ToolTipText     =   "Issued Job's location group if ""Unknown Location"""
+      Top             =   3390
+      Visible         =   0   'False
+      Width           =   405
+   End
    Begin VB.Frame Frame1 
       BackColor       =   &H00CBE1ED&
       Caption         =   "post Goal variations"
-      Height          =   855
+      Height          =   915
       Left            =   120
       TabIndex        =   38
-      Top             =   4290
+      Top             =   4650
       Width           =   8415
+      Begin VB.TextBox txt 
+         Alignment       =   2  'Center
+         Height          =   285
+         Index           =   13
+         Left            =   1350
+         TabIndex        =   51
+         Text            =   "0"
+         ToolTipText     =   "lose this amount on goal completion"
+         Top             =   570
+         Width           =   645
+      End
       Begin VB.ComboBox cbo 
          Height          =   315
          Index           =   3
@@ -71,6 +125,20 @@ Begin VB.Form frmGoals
          ToolTipText     =   "-ve or +ve change value"
          Top             =   240
          Width           =   405
+      End
+      Begin VB.Label lbl 
+         Alignment       =   2  'Center
+         Appearance      =   0  'Flat
+         BackColor       =   &H80000005&
+         BackStyle       =   0  'Transparent
+         Caption         =   "Pay Cash"
+         ForeColor       =   &H80000008&
+         Height          =   285
+         Index           =   19
+         Left            =   120
+         TabIndex        =   52
+         Top             =   600
+         Width           =   1365
       End
       Begin VB.Label lbl 
          Alignment       =   2  'Center
@@ -307,7 +375,7 @@ Begin VB.Form frmGoals
       Left            =   120
       MultiLine       =   -1  'True
       TabIndex        =   8
-      Top             =   3360
+      Top             =   3720
       Width           =   8415
    End
    Begin VB.TextBox txt 
@@ -381,6 +449,34 @@ Begin VB.Form frmGoals
       Width           =   2175
    End
    Begin VB.Label lbl 
+      Alignment       =   1  'Right Justify
+      BackColor       =   &H00CBE1ED&
+      BackStyle       =   0  'Transparent
+      Caption         =   "Unknown Location found text:"
+      Height          =   285
+      Index           =   18
+      Left            =   240
+      TabIndex        =   49
+      Top             =   3120
+      Visible         =   0   'False
+      Width           =   2325
+   End
+   Begin VB.Label lbl 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      BackColor       =   &H80000005&
+      BackStyle       =   0  'Transparent
+      Caption         =   "Location Group"
+      ForeColor       =   &H80000008&
+      Height          =   285
+      Index           =   17
+      Left            =   6660
+      TabIndex        =   47
+      Top             =   3420
+      Visible         =   0   'False
+      Width           =   1365
+   End
+   Begin VB.Label lbl 
       BackColor       =   &H00CBE1ED&
       BackStyle       =   0  'Transparent
       Caption         =   "Bounties delvd"
@@ -438,12 +534,12 @@ Begin VB.Form frmGoals
    Begin VB.Label lbl 
       BackColor       =   &H00CBE1ED&
       BackStyle       =   0  'Transparent
-      Caption         =   "Instructions for the next Goal"
+      Caption         =   "Instructions for the next Goal ( <290 characters)"
       Height          =   285
       Index           =   9
       Left            =   120
       TabIndex        =   27
-      Top             =   3150
+      Top             =   3510
       Width           =   6315
    End
    Begin VB.Label lbl 
@@ -563,11 +659,24 @@ Attribute VB_Exposed = False
 Option Explicit
 Public StoryID As Integer, goal As Integer
 
+Private Sub cbo_Click(Index As Integer)
+Dim x
+   x = GetCombo(cbo(1))
+   If Index = 1 And x > 0 Then
+      showPlanetGrp hasSecretLocation(x)
+   ElseIf Index = 2 Then
+      If GetCombo(cbo(2)) = 3 Then
+         showPlanetGrp True
+      Else
+         showPlanetGrp hasSecretLocation(x)
+      End If
+   End If
+End Sub
+
 Private Sub cbo_KeyDown(Index As Integer, KeyCode As Integer, Shift As Integer)
    If KeyCode = 46 Then
       cbo(Index).ListIndex = -1
    End If
-      
 End Sub
 
 Private Sub chkGoal_Click()
@@ -575,7 +684,7 @@ Private Sub chkGoal_Click()
 End Sub
 
 Private Sub cmd_Click(Index As Integer)
-Dim frmJobEdit As frmJobEditor
+Dim frmJobEdit As frmJobEditor, frmPG As frmPlanetGrp
 Dim SQL
    Select Case Index
    Case 0 ' delete
@@ -604,6 +713,9 @@ Dim SQL
          SQL = SQL & "Passenger = " & CStr(Val(txt(7))) & ","
          SQL = SQL & "Bounties = " & CStr(Val(txt(9))) & ","
          SQL = SQL & "chngInCutters = " & CStr(Val(txt(10))) & ","
+         SQL = SQL & "PayCash = " & CStr(Val(txt(13))) & ","
+         SQL = SQL & "GroupID = " & CStr(Val(txt(11))) & ","
+         SQL = SQL & "RevealText = " & "'" & SQLFilter(txt(12)) & "',"
          If GetCombo(cbo(3)) = -1 Then
             SQL = SQL & " doSolid=0"
          Else
@@ -614,7 +726,7 @@ Dim SQL
          
       Else
          SQL = "INSERT INTO StoryGoals (StoryID, Goal, Instructions, Solid, AddCrew, SolidCount, IssueJobID, CompleteJobID, Cash, TurnLimit, Misbehaves, Fight, "
-         SQL = SQL & "Tech, Negotiate, SectorID, Win, NoUnfinished, Passenger, Bounties, chngInCutters, clearAlliance, clearReaver, Warrant) VALUES ("
+         SQL = SQL & "Tech, Negotiate, SectorID, Win, NoUnfinished, Passenger, Bounties, chngInCutters, PayCash, GroupID, RevealText, clearAlliance, clearReaver, Warrant) VALUES ("
          SQL = SQL & CStr(StoryID) & ","
          SQL = SQL & CStr(goal) & ","
          SQL = SQL & "'" & SQLFilter(txt(8)) & "',"
@@ -635,6 +747,9 @@ Dim SQL
          SQL = SQL & CStr(Val(txt(7))) & ","
          SQL = SQL & CStr(Val(txt(9))) & ","
          SQL = SQL & CStr(Val(txt(10))) & ","
+         SQL = SQL & CStr(Val(txt(13))) & ","
+         SQL = SQL & CStr(Val(txt(11))) & ","
+         SQL = SQL & "'" & SQLFilter(txt(12)) & "',"
          SQL = SQL & CStr(chkClearAlliance.Value) & ","
          SQL = SQL & CStr(chkClearReaver.Value) & ","
          SQL = SQL & CStr(chkWarrant.Value) & ")"
@@ -658,11 +773,18 @@ Dim SQL
       frmJobEdit.lockEdits = True
       frmJobEdit.JobCardID = GetCombo(cbo(1))
       frmJobEdit.Show 1
+   Case 5
+      Set frmPG = New frmPlanetGrp
+      frmPG.groupID = Val(txt(11))
+      frmPG.Show 1
+      If frmPG.groupID > 0 Then txt(11) = CStr(frmPG.groupID)
+      Unload frmPG
+      Set frmPG = Nothing
    End Select
 End Sub
 
 Private Sub Form_Load()
-Dim X, filter As String
+Dim x, filter As String
    
    LoadCombo lstContacts, "contact", " WHERE ContactID > 0 and ContactID < 10"
    LoadCombo cbo(2), "planet"
@@ -677,13 +799,13 @@ Dim X, filter As String
    End If
    
    If goal = 0 Then
-      For X = 0 To 7
-         txt(X).Enabled = False
-      Next X
+      For x = 0 To 7
+         txt(x).Enabled = False
+      Next x
 
-      For X = 0 To cbo.Count - 1
-         cbo(X).Enabled = False
-      Next X
+      For x = 0 To cbo.count - 1
+         cbo(x).Enabled = False
+      Next x
       cbo(1).Enabled = True
       lstContacts.Enabled = False
       lstCrew.Enabled = False
@@ -707,35 +829,35 @@ Private Sub comboRefresh()
 End Sub
 
 Private Function getSolid() As String
-Dim X
+Dim x
    If Val(txt(6)) > 0 Then 'overrides
       getSolid = ""
       Exit Function
    End If
    With lstContacts
-      For X = 0 To .ListCount - 1
-         If .selected(X) Then
-            getSolid = getSolid & IIf(getSolid = "", "", ",") & CStr(.ItemData(X))
+      For x = 0 To .ListCount - 1
+         If .selected(x) Then
+            getSolid = getSolid & IIf(getSolid = "", "", ",") & CStr(.ItemData(x))
          End If
-      Next X
+      Next x
    End With
    
 End Function
 
 Private Sub setSolid(ByVal solids As String)
-Dim X, Y, a() As String
+Dim x, Y, a() As String
 
    If solids = "" Then Exit Sub
    With lstContacts
    
          a = Split(solids, ",")
          For Y = LBound(a) To UBound(a)
-            For X = 0 To .ListCount - 1
-               If .ItemData(X) = Val(a(Y)) Then
-                  .selected(X) = True
+            For x = 0 To .ListCount - 1
+               If .ItemData(x) = Val(a(Y)) Then
+                  .selected(x) = True
                   Exit For
                End If
-            Next X
+            Next x
          Next Y
       
    End With
@@ -743,32 +865,32 @@ Dim X, Y, a() As String
 End Sub
 
 Private Function getList(cbo As Control) As String
-Dim X
+Dim x
    With cbo
-      For X = 0 To .ListCount - 1
-         If .selected(X) Then
-            getList = getList & IIf(getList = "", "", ",") & CStr(.ItemData(X))
+      For x = 0 To .ListCount - 1
+         If .selected(x) Then
+            getList = getList & IIf(getList = "", "", ",") & CStr(.ItemData(x))
          End If
-      Next X
+      Next x
    End With
    
 End Function
 
 Private Function SetList(cbo As Control, ByVal theList As String) As Integer
-Dim X, Y, a() As String
+Dim x, Y, a() As String
 
    If theList = "" Then Exit Function
    With cbo
    
          a = Split(theList, ",")
          For Y = LBound(a) To UBound(a)
-            For X = 0 To .ListCount - 1
-               If .ItemData(X) = Val(a(Y)) Then
-                  .selected(X) = True
+            For x = 0 To .ListCount - 1
+               If .ItemData(x) = Val(a(Y)) Then
+                  .selected(x) = True
                   SetList = SetList + 1
                   Exit For
                End If
-            Next X
+            Next x
          Next Y
       
    End With
@@ -797,7 +919,12 @@ Dim SQL
       txt(7) = CStr(rst!Passenger)
       txt(9) = CStr(rst!Bounties)
       txt(10) = CStr(rst!chngInCutters)
-      If rst!SectorID > 0 Then SetCombo cbo(2), "", rst!SectorID
+      txt(11) = CStr(rst!groupID)
+      txt(12) = Nz(rst!RevealText)
+      txt(13) = CStr(rst!PayCash)
+      If rst!sectorID > 0 Then
+         SetCombo cbo(2), "", rst!sectorID
+      End If
       SetCombo cbo(3), "", rst!doSolid
       chkWin.Value = rst!win
       chkUnfinished.Value = rst!NoUnfinished
@@ -809,3 +936,10 @@ Dim SQL
    Set rst = Nothing
 End Sub
 
+Private Sub showPlanetGrp(ByVal mode As Boolean)
+      lbl(17).Visible = mode
+      txt(11).Visible = mode
+      txt(12).Visible = mode
+      lbl(18).Visible = mode
+      cmd(5).Visible = mode
+End Sub

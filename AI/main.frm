@@ -672,7 +672,9 @@ Dim SectorID, ContactID As Integer, SupplyID As Integer, x, y
 Dim maxConsider, fuelleft, HavenID As Integer, DefenderID As Integer, BSupplyID As Integer
 Dim bountyJumpSector As Integer, supplyBountySector As Integer, sbountyCardID As Integer
 Dim goalSector As Integer
-'On Error GoTo err_handler
+Dim GroupID As Integer, lastGoal As Integer, revealText As String
+
+On Error GoTo err_handler
 
    SectorID = getPlayerSector(player.ID)
    HavenID = Nz(varDLookup("Haven", "Board", "SectorID=" & SectorID), 0)
@@ -682,10 +684,8 @@ Dim goalSector As Integer
    End If
 
    status = GetSeqX(thisPlayer)
-
-   'If status <> "H" And status <> "E" And status <> "L" And pickStartSector > -1 Then
-     ' RefreshBoard
-   'End If
+   
+   'Start of StATUS block checks
    If status = "E" Then 'currently in End Game
       PutMsg "Waiting to Join a Game"
       player.ID = 0
@@ -705,6 +705,10 @@ Dim goalSector As Integer
          player.ID = 0
       End If
    ElseIf status = "L" And player.ID = thisPlayer Then 'pick leader
+      BotUnknown.GroupID = 0
+      Erase BotUnknown.SectorList
+      Erase BotUnknown.Visited
+
       getPlayerCount True
       SetupPlayer player.ID, Logic!StoryID
       leader = getRandomLeader
@@ -895,7 +899,48 @@ Dim goalSector As Integer
          
          'do we need to go to a goal sector?
          If hasGoalSector(goalSector) Then
+            If goalSector = 3 Then 'location is unknown
+                ' === BOT UNKNOWN GOAL LOCATION SEARCH LOGIC ===
+                Logic.Requery
+            
+                If Logic!SecretRevealed = 1 Then
+                    goalSector = Logic!SecretSectorID
+                Else
+                    lastGoal = Nz(varDLookup("Goals", "Players", "PlayerID=" & player.ID), 0)
+                    GroupID = Nz(varDLookup("GroupID", "StoryGoals", "StoryID=" & Logic!StoryID & " AND Goal=" & lastGoal + 1), 0)
+            
+                    ' Initialize search if needed
+                    If BotUnknown.GroupID = 0 Then
+                        Bot_InitUnknownSearch GroupID, BotUnknown
+                    End If
+            
+                    ' Pick closest unvisited sector
+                    goalSector = Bot_GetNextUnknownSector(BotUnknown, SectorID)
+            
+                    ' Did we stumble onto the secret planet?
+                    If Logic!SecretRevealed = 0 And SectorID = Logic!SecretSectorID Then
+                        Logic!SecretRevealed = 1
+                        Logic.Update
+            
+                        ' Announce reveal
+                        revealText = Nz(varDLookup("RevealText", "StoryGoals", "StoryID=" & Logic!StoryID & " AND Goal=" & lastGoal + 1), "")
+                        
+                        PutMsg player.PlayName & " has uncovered the hidden location!" & vbNewLine & revealText, player.ID, Logic!Gamecntr
+            
+                        goalSector = SectorID
+                    ElseIf goalSector = SectorID Then  'we're already here, must've got missed
+                        If BotUnknown.GroupID > 0 Then
+                           Bot_MarkVisited BotUnknown, goalSector
+                           goalSector = Bot_GetNextUnknownSector(BotUnknown, SectorID)
+                        End If
+                     
+                    End If
+                End If
+                ' ===============================================
+
+            End If
             targetSector = goalSector
+            
          
          ElseIf isBountyEnabled And Not bountiesDone() Then
         
@@ -928,9 +973,9 @@ Dim goalSector As Integer
          End If
          
          
-         If targetSector > 0 Then 'we have a bounty chase
+         If targetSector > 0 Then 'we have a bounty chase or goal location
             If goToPlayer(SectorID, targetSector, (FullburnMovesDone = 0), goalSector) > 0 And Not fullburndone Then 'move then check if a mosey or a fullburn was required
-               SectorID = processMove ' getPlayerSector(player.ID)
+               SectorID = processMove(goalSector)
                
             ElseIf SectorID = targetSector Then 'we are there, load fuel below
                
@@ -1008,6 +1053,47 @@ Dim goalSector As Integer
       Else 'we have a job, go to it
          If IsEmpty(targetJobID) Then targetJobID = 1
          targetSector = getJobSector(targetJobCard, targetJobID)
+         
+         ' === BOT UNKNOWN LOCATION SEARCH LOGIC ===
+         If targetSector = 3 Then
+            Logic.Requery
+            If Logic!SecretRevealed = 1 Then
+               targetSector = Logic!SecretSectorID
+            Else
+
+               lastGoal = Nz(varDLookup("Goals", "Players", "PlayerID=" & player.ID), 0)
+               
+               ' Look up the GroupID for that goal
+               GroupID = Nz(varDLookup("GroupID", "StoryGoals", "StoryID=" & Logic!StoryID & " AND Goal=" & lastGoal), 0)
+
+               ' Initialize search if needed
+               If BotUnknown.GroupID = 0 Then
+                   Bot_InitUnknownSearch GroupID, BotUnknown
+               End If
+               
+               ' Pick closest unvisited sector
+               targetSector = Bot_GetNextUnknownSector(BotUnknown, SectorID)
+               'are we there?
+               If Logic!SecretRevealed = 0 And SectorID = Logic!SecretSectorID Then
+                  Logic!SecretRevealed = 1
+                  Logic.Update
+               
+                  ' === Broadcast reveal to all players ===
+                  revealText = Nz(varDLookup("RevealText", "StoryGoals", "StoryID=" & Logic!StoryID & " AND Goal=" & lastGoal), "")
+                  If revealText <> "" Then
+                      PutMsg player.PlayName & " has uncovered the hidden location!" & vbNewLine & revealText, player.ID, Logic!Gamecntr
+                  Else
+                      PutMsg player.PlayName & " has uncovered the hidden location!", player.ID, Logic!Gamecntr
+                  End If
+                  ' ========================================
+               
+                  targetSector = SectorID
+               End If
+
+            End If
+         End If
+         ' =========================================
+         
          If targetSector = SectorID Then   'we there
             'do job
             If workdone And ((FullburnMovesDone > 0) Or fullburndone) Then 'already used this action
@@ -1039,6 +1125,10 @@ Dim goalSector As Integer
 
                SectorID = processMove ' getPlayerSector(player.ID)
                
+               If BotUnknown.GroupID > 0 Then
+                  Bot_MarkVisited BotUnknown, SectorID
+               End If
+
             End If
          End If
          
@@ -1151,12 +1241,12 @@ Dim x
          buyFuel = True
 End Function
 
-Private Function processMove() As Integer
+Private Function processMove(Optional ByVal goalSector As Integer = 0) As Integer
 Dim fuel As Integer
 
    fuel = 1 + getExtraBurn(player.ID)
    processMove = getPlayerSector(player.ID)
-   If FullburnMovesDone = 0 And (targetSector = processMove Or getFuel(player.ID) < 1) Then 'Mosey
+   If FullburnMovesDone = 0 And (targetSector = processMove Or getFuel(player.ID) < 1) And (goalSector = 0 Or Logic!SecretSectorID = goalSector) Then 'Mosey
       PutMsg player.PlayName & " Moseys to Sector " & processMove, player.ID, Logic!Gamecntr
       fullburndone = True
    ElseIf FullburnMovesDone = 0 Then
@@ -1240,7 +1330,9 @@ Dim rst As ADODB.Recordset, SQL, x As Integer, closest As Integer, targetSectorI
       Else
          goToPlayer = 0 'we here already
       End If
-      
+      If BotUnknown.GroupID > 0 Then
+         Bot_MarkVisited BotUnknown, goToPlayer
+      End If
       
 End Function
 

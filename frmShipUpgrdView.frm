@@ -65,7 +65,7 @@ Begin VB.Form frmShipUpgrdView
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   &H00FFFFC0&
+      ForeColor       =   &H00FFFF00&
       Height          =   405
       Index           =   7
       Left            =   1260
@@ -241,6 +241,17 @@ Private Sub cmd_Click()
 End Sub
 
 Private Sub Form_Load()
+Dim rgn As Long
+Dim w As Long, h As Long
+
+   ' Convert twips ? pixels
+   w = Me.ScaleX(Me.Width, vbTwips, vbPixels)
+   h = Me.ScaleY(Me.Height, vbTwips, vbPixels)
+   
+   ' 40,40 = corner roundness
+   rgn = CreateRoundRectRgn(0, 0, w, h, 20, 20)
+   SetWindowRgn Me.hwnd, rgn, True
+   
    With AlphaImg
       Set .Picture = LoadPictureGDIplus(App.Path & "\pictures\ShipUpgrdBlank.bmp")
       .TransparentColor = 0

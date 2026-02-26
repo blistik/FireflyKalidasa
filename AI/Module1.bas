@@ -8,8 +8,15 @@ Type Playertype
   PlayName As String
 End Type
 
+Type BotUnknownSearch
+    GroupID As Integer
+    SectorList() As Integer
+    Visited() As Boolean
+End Type
+
 Public DB As ADODB.Connection, Logic As New ADODB.Recordset
 Public player As Playertype, SoloGame As Boolean, PlayCode(4) As Playertype
+Public BotUnknown As BotUnknownSearch
 Public HemmorrhagingFuel As Boolean, turnExtraRange As Integer
 Public CruiserCutter As Integer     'record the Sector of a Cruiser/Cutter.Corvette Visit to prevenet re-triggering
 Public CorvetteSeq As Integer       'extra Corvette detection flag due to 2 moves possible
@@ -822,7 +829,7 @@ End Function
 Public Function getJob(ByVal ContactID)
 Dim rst As New ADODB.Recordset, x
 Dim SQL
-   SQL = "SELECT * FROM ContactDeck WHERE Illegal=0 and Immoral=0 AND Seq > 5 AND ContactID = " & ContactID & " Order by Seq DESC"
+   SQL = "SELECT * FROM ContactDeck WHERE" & IIf(ContactID = 9, "", " Illegal=0 and") & " Immoral=0 AND Seq > 5 AND ContactID = " & ContactID & " Order by Seq DESC"
    rst.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
    If Not rst.EOF Then
       DB.Execute "UPDATE ContactDeck SET Seq =" & player.ID & " WHERE CardID = " & rst!CardID
@@ -878,11 +885,72 @@ Dim SQL
       getJobSector = rst!SectorID
       If getJobSector = 1 Then getJobSector = getCruiserSector
       If getJobSector = 2 Then getJobSector = getCorvetteSector
+      
    End If
    rst.Close
 
 Set rst = Nothing
 End Function
+
+Public Function Bot_GetNextUnknownSector(Bot As BotUnknownSearch, ByVal CurrentSector As Integer) As Integer
+    Dim i As Integer
+    Dim bestSector As Integer
+    Dim bestDist As Integer
+    Dim dist As Integer
+
+    bestDist = 9999
+    bestSector = -1
+
+    For i = 0 To UBound(Bot.SectorList)
+        If Bot.Visited(i) = False Then
+            dist = getSectorCount(CurrentSector, Bot.SectorList(i))
+            If dist < bestDist Then
+                bestDist = dist
+                bestSector = Bot.SectorList(i)
+            End If
+        End If
+    Next i
+
+    Bot_GetNextUnknownSector = bestSector
+End Function
+
+Public Sub Bot_MarkVisited(Bot As BotUnknownSearch, ByVal SectorID As Integer)
+    Dim i As Integer
+    For i = 0 To UBound(Bot.SectorList)
+        If Bot.SectorList(i) = SectorID Then
+            Bot.Visited(i) = True
+            Exit Sub
+        End If
+    Next i
+End Sub
+
+Public Sub Bot_InitUnknownSearch(ByVal GroupID As Integer, ByRef Bot As BotUnknownSearch)
+    Dim rst As New ADODB.Recordset
+    Dim SQL As String
+    Dim i As Integer
+
+    SQL = "SELECT SectorID FROM PlanetGroup WHERE GroupID = " & GroupID
+    rst.Open SQL, DB, adOpenStatic, adLockReadOnly
+    If Not rst.EOF Then
+      rst.MoveLast
+      rst.MoveFirst
+
+       ReDim Bot.SectorList(rst.RecordCount - 1)
+       ReDim Bot.Visited(rst.RecordCount - 1)
+   
+       i = 0
+       Do While Not rst.EOF
+           Bot.SectorList(i) = rst!SectorID
+           Bot.Visited(i) = False
+           i = i + 1
+           rst.MoveNext
+       Loop
+       Bot.GroupID = GroupID
+    End If
+
+    rst.Close
+End Sub
+
 
 Public Function getPlayerCount(Optional ByVal loadnames As Boolean = False) As Integer
 Dim rst As New ADODB.Recordset
@@ -2478,10 +2546,11 @@ Dim SQL, x, cnt As Integer, ContactID As Integer
          x = rst!SectorID
          If x = 1 Then x = getCruiserSector
          If x = 2 Then x = getCorvetteSector
+         If x = 3 Then x = Logic!SecretSectorID
          goaldone = (getPlayerSector(player.ID) = x)
       End If
       
-      If rst!SolidCount = 0 And Nz(rst!Solid) = "" And rst!Cash = 0 And rst!Bounties = 0 And rst!IssueJobID = 0 And rst!CompleteJobID = 0 Then goaldone = False 'AI can never reach goal
+      If rst!SolidCount = 0 And Nz(rst!Solid) = "" And rst!Cash = 0 And rst!Bounties = 0 And rst!IssueJobID = 0 And rst!CompleteJobID = 0 And rst!SectorID = 0 Then goaldone = False 'AI can never reach goal
      
       'CompleteJob
       If goaldone And rst!CompleteJobID > 0 Then

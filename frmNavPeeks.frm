@@ -220,7 +220,7 @@ Private Sub Form_Resize()
 End Sub
 
 
-Private Sub sftTree_DragDrop(Source As Control, X As Single, Y As Single)
+Private Sub sftTree_DragDrop(Source As Control, x As Single, Y As Single)
 Dim Index As Long, CardID
    With sftTree
       
@@ -241,10 +241,10 @@ Dim Index As Long, CardID
    End With
 End Sub
 
-Private Sub sftTree_DragOver(Source As Control, X As Single, Y As Single, State As Integer)
+Private Sub sftTree_DragOver(Source As Control, x As Single, Y As Single, State As Integer)
 Dim Index As Long
    With sftTree
-      Index = .HitTest(X, Y)
+      Index = .HitTest(x, Y)
       If Index = -1 Then Exit Sub
       .DropHighlightStyle = dropSftTreeBetween  ' = dropSftTreeOnTop
       If State = 1 Then
@@ -272,8 +272,8 @@ With sftTree
 
    .Clear
    
-   SQL = "SELECT MisbehaveDeck.CardID, MisbehaveDeck.CardName, MisOption.OptionID, MisOption.OptionName, MisOption.Details, MisOption_1.OptionID AS Option2, "
-   SQL = SQL & "MisOption_1.OptionName AS Option2Name, MisOption_1.Details AS Details2, MisbehaveDeck.Seq, MisbehaveDeck.Keyword, MisbehaveDeck.CrewID, MisbehaveDeck.GearID, MisbehaveDeck.ProfessionID "
+   SQL = "SELECT MisbehaveDeck.*, MisOption.OptionID, MisOption.OptionName, MisOption.Details, MisOption_1.OptionID AS Option2, "
+   SQL = SQL & "MisOption_1.OptionName AS Option2Name, MisOption_1.Details AS Details2 "
    SQL = SQL & "FROM (MisOption INNER JOIN MisbehaveDeck ON MisOption.OptionID = MisbehaveDeck.Option1ID) LEFT JOIN MisOption AS MisOption_1 ON MisbehaveDeck.Option2ID = MisOption_1.OptionID "
    SQL = SQL & "WHERE MisbehaveDeck.Seq > 6 ORDER BY  MisbehaveDeck.Seq"
 
@@ -286,6 +286,7 @@ With sftTree
       Index = .AddItem(rst!CardName)
       .CellFont(Index, 0).Name = "BankGothic Md BT"
       .ItemData(Index) = rst!CardID
+      Set .ItemPicture(Index) = LoadPicture(App.Path & "\Pictures\smsuit2" & rst!suit & ".bmp")
       SQL = rst!keyword & getCrewName(0, rst!CrewID) & getGearName(0, rst!GearID) & cstrProfession(rst!ProfessionID)
       .CellText(Index, 1) = IIf(SQL = "", "", "Ace: " & SQL)
       .CellItemData(Index, 0) = 1

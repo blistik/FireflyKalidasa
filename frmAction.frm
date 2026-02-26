@@ -1510,6 +1510,13 @@ Begin VB.Form frmAction
          Index           =   0
       End
    End
+   Begin VB.Menu mnuGoodsPopup 
+      Caption         =   "mnuGoodsPopup"
+      Visible         =   0   'False
+      Begin VB.Menu mnuGoodsPop 
+         Caption         =   "Discard"
+      End
+   End
 End
 Attribute VB_Name = "frmAction"
 Attribute VB_GlobalNameSpace = False
@@ -2301,6 +2308,123 @@ Private Sub lblPartsChg_Click(Index As Integer)
 
    lblBuyParts = Trim(Str(Val(lblBuyParts) + Index - 1))
    If Val(lblBuyParts) < 0 Then lblBuyParts = "0"
+   
+End Sub
+
+Private Sub lblFugitives_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+   If Button = 2 And getPlanetID(player.ID) > 0 Then
+      mnuGoodsPop.Caption = "Discard Fugitives"
+      mnuGoodsPop.Tag = "F"
+      PopupMenu mnuGoodsPopup
+   End If
+End Sub
+
+Private Sub lblPassngr_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+   If Button = 2 And getPlanetID(player.ID) > 0 Then
+      mnuGoodsPop.Caption = "Discard Passengers"
+      mnuGoodsPop.Tag = "P"
+      PopupMenu mnuGoodsPopup
+   End If
+End Sub
+
+Private Sub lblCargo_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+   If Button = 2 Then
+      mnuGoodsPop.Caption = "Discard Cargo"
+      mnuGoodsPop.Tag = "C"
+      PopupMenu mnuGoodsPopup
+   End If
+End Sub
+
+Private Sub lblContra_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+   If Button = 2 Then
+      mnuGoodsPop.Caption = "Discard Contraband"
+      mnuGoodsPop.Tag = "B"
+      PopupMenu mnuGoodsPopup
+   End If
+End Sub
+
+Private Sub lblParts_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+   If Button = 2 Then
+      mnuGoodsPop.Caption = "Discard Parts"
+      mnuGoodsPop.Tag = "T"
+      PopupMenu mnuGoodsPopup
+   End If
+End Sub
+
+Private Sub lblFuel_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+   If Button = 2 Then
+      mnuGoodsPop.Caption = "Discard Fuel"
+      mnuGoodsPop.Tag = "L"
+      PopupMenu mnuGoodsPopup
+   End If
+End Sub
+
+Private Sub mnuGoodsPop_Click()
+Dim Y, z
+
+   Select Case mnuGoodsPop.Tag
+   Case "P"
+      Y = varDLookup("Passenger", "Players", "PlayerID=" & player.ID)
+      Do
+         z = InputBoxx("How many Passengers do you want to set ashore?", "Make room in the Cargo Hold", CStr(Y), getLeader())
+         If z >= 0 And z <= Y Then
+            Exit Do
+         End If
+      Loop
+      DB.Execute "UPDATE Players SET Passenger = Passenger - " & z & " WHERE PlayerID=" & player.ID
+   Case "F"
+      Y = varDLookup("Fugitive", "Players", "PlayerID=" & player.ID)
+      Do
+         z = InputBoxx("How many Fugitives do you want to set ashore?", "Make room in the Cargo Hold", CStr(Y), getLeader())
+         If z >= 0 And z <= Y Then
+            Exit Do
+         End If
+      Loop
+      DB.Execute "UPDATE Players SET Fugitive = Fugitive - " & z & " WHERE PlayerID=" & player.ID
+   Case "L" ' fuel
+      Y = varDLookup("Fuel", "Players", "PlayerID=" & player.ID)
+      Do
+         z = InputBoxx("How much Fuel do you want to toss overboard?", "Make room in the Cargo Hold", "1", getLeader())
+         If z >= 0 And z <= Y Then
+            Exit Do
+         End If
+      Loop
+      DB.Execute "UPDATE Players SET Fuel = Fuel - " & z & " WHERE PlayerID=" & player.ID
+      
+   Case "T" 'parts
+      Y = varDLookup("Parts", "Players", "PlayerID=" & player.ID)
+      Do
+         z = InputBoxx("How many Parts do you want to toss overboard?", "Make room in the Cargo Hold", CStr(Y), getLeader())
+         If z >= 0 And z <= Y Then
+            Exit Do
+         End If
+      Loop
+      DB.Execute "UPDATE Players SET Parts = Parts - " & z & " WHERE PlayerID=" & player.ID
+   
+   Case "C" 'Cargo
+      Y = varDLookup("Cargo", "Players", "PlayerID=" & player.ID)
+      Do
+         z = InputBoxx("How much Cargo do you want to toss overboard?", "Make room in the Cargo Hold", CStr(Y), getLeader())
+         If z >= 0 And z <= Y Then
+            Exit Do
+         End If
+      Loop
+      DB.Execute "UPDATE Players SET Cargo = Cargo - " & z & " WHERE PlayerID=" & player.ID
+   
+   Case "B" 'Contraband
+      Y = varDLookup("Contraband", "Players", "PlayerID=" & player.ID)
+      Do
+         z = InputBoxx("How much Contraband do you want to toss overboard?", "Make room in the Cargo Hold", CStr(Y), getLeader())
+         If z >= 0 And z <= Y Then
+            Exit Do
+         End If
+      Loop
+      DB.Execute "UPDATE Players SET Contraband = Contraband - " & z & " WHERE PlayerID=" & player.ID
+   
+   
+   End Select
+   Main.frmShip.RefreshShips
+   Main.showActions
    
 End Sub
 

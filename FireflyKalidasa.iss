@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.10.6"
+#define MyAppVersion "1.10.7"
 #define MyAppPublisher "BLiSoft"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -255,10 +255,6 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\CrewTemplate.bmp"; DestDir: "{
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\GearBlank.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\MisbehaveTemplate.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\ShipUpgrdBlank.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit1.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit2.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit3.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit4.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\skill1.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\skill2.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\skill3.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
@@ -320,6 +316,13 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\identguest.jpg"; DestDir: "{ap
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\vektorpistol.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\waiting.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\showdown.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\array.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\catalyzer.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\chopshop.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\compressioncoils.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\dockingclamps.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\reaverflage.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smuggling.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 
 ; Smalls >>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmAtherton.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
@@ -435,14 +438,14 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmScrapperVox.jpg"; DestDir: "
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Smhelmsman.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Smhelmsman2.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmDalin.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\array.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\catalyzer.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\chopshop.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\compressioncoils.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\dockingclamps.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\reaverflage.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smuggling.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
-
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit1.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit2.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit3.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit4.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit21.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit22.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit23.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smsuit24.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
 ; GUI >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\Action1FlyActive.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\Action2BuyActive.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
@@ -575,6 +578,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip1.jpg"; DestDir: "{app}\
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip2.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip3.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui\FireflyShip4.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\gui\dash.jpg"; DestDir: "{app}\gui"; Flags: ignoreversion
 
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\bonus.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\gui-job\Contact0.bmp"; DestDir: "{app}\gui-job"; Flags: ignoreversion
@@ -617,6 +621,73 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Solid2higgins.jpg"; DestDir: "
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Solid2fantymingo.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Solid2amnon.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Solid2badger.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+
+; Planet Pics >>>>>>>>
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\cruiser.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\corvette.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\unknown.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Jubilee.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Ansons.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Aesir.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Brisingamen.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Harvest.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\StAlbans.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\SpaceBazaar.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Greenleaf.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Triumph.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Persephone.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Silverhold.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Pelorum.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Gonghe.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Bellerophon.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Bernadette.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Sihnon.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Londinium.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\LiannJiun.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\valentine.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Ariel.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Osiris.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Santo.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Albion.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Newhope.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Athens.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Ithaca.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Priam.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\ThreeHills.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Kerry.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Boros.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Aphrodite.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Hera.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Shadow.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Regina.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Ezra.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Jiangyin.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\NewMelbourne.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\CortexRelay7.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\DragonsEgg.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Deadwood.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Highgate.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Fury.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Muir.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Meridian.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\NewCanaan.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Miranda.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Zeus.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\DjinnsBane.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\CortexRelay2.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Beaumonde.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Whittier.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\NewKasmir.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Newhall.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Salisbury.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Aberdeen.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Heaven.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Angel.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Constance.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Zephyr.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Beylix.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Verbena.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\planets\Sho-jeDowns.bmp"; DestDir: "{app}\planets"; Flags: ignoreversion
 
 ; SOUNDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Alert.WAV"; DestDir: "{app}\sounds"; Flags: ignoreversion

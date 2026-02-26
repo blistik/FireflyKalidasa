@@ -414,7 +414,6 @@ Dim w As Long, h As Long
    
    ' 40,40 = corner roundness
    rgn = CreateRoundRectRgn(0, 0, w, h, 20, 20)
-   
    SetWindowRgn Me.hwnd, rgn, True
    
    With AlphaImg

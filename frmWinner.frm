@@ -158,6 +158,27 @@ Begin VB.Form frmWinner
       Top             =   8670
       Width           =   2565
    End
+   Begin VB.Label lbl 
+      Alignment       =   2  'Center
+      BackColor       =   &H0033344D&
+      BorderStyle     =   1  'Fixed Single
+      BeginProperty Font 
+         Name            =   "Franklin Gothic Demi Cond"
+         Size            =   15.75
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H0000C0C0&
+      Height          =   2600
+      Left            =   1980
+      TabIndex        =   4
+      Top             =   180
+      Visible         =   0   'False
+      Width           =   8055
+   End
 End
 Attribute VB_Name = "frmWinner"
 Attribute VB_GlobalNameSpace = False
@@ -218,4 +239,3 @@ With Grid
 End With
 
 End Sub
-
