@@ -659,23 +659,23 @@ Private Sub img_DblClick(Index As Integer)
    Unload Me
 End Sub
 
-Private Sub img_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub img_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
 
-Private Sub lbl_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub lbl_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
     If Button = vbLeftButton Then
         DragPending = True
         StartX = x
-        StartY = Y
+        StartY = y
     End If
 End Sub
 
-Private Sub lbl_MouseMove(Index As Integer, Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub lbl_MouseMove(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
     If DragPending And Button = vbLeftButton Then
         ' Check if user has moved enough to count as a drag
-        If Abs(x - StartX) > DRAG_THRESHOLD Or Abs(Y - StartY) > DRAG_THRESHOLD Then
+        If Abs(x - StartX) > DRAG_THRESHOLD Or Abs(y - StartY) > DRAG_THRESHOLD Then
             DragPending = False
             ReleaseCapture
             SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
@@ -683,21 +683,24 @@ Private Sub lbl_MouseMove(Index As Integer, Button As Integer, Shift As Integer,
     End If
 End Sub
 
-Private Sub lbl_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub lbl_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
     ' If DragPending is still True here, it was a click, not a drag
     DragPending = False
 End Sub
 
 Private Sub lbl_Click(Index As Integer)
    If Val(lbl(3).Tag) > 0 And Index = 3 Then
-      Main.drawLine IIf(isOwner, 0, 1), Val(lbl(3).Tag), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
+      'Main.drawLine IIf(isOwner, 0, 1), Val(lbl(3).Tag), getPlayerSector(player.ID), False
+      Main.startBeam Val(lbl(3).Tag), getPlayerSector(player.ID), IIf(isOwner, 0, 1)
    End If
 
    If Val(lbl(10).Tag) > 0 And Index = 10 Then
-      Main.drawLine IIf(isOwner, 0, 1), Val(lbl(10).Tag), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
+      'Main.drawLine IIf(isOwner, 0, 1), Val(lbl(10).Tag), getPlayerSector(player.ID), False
+      Main.startBeam Val(lbl(10).Tag), getPlayerSector(player.ID), IIf(isOwner, 0, 1)
    End If
    If Val(lbl(16).Tag) > 0 And Index = 16 Then
-      Main.drawLine IIf(isOwner, 0, 1), Val(lbl(16).Tag), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
+      'Main.drawLine IIf(isOwner, 0, 1), Val(lbl(16).Tag), getPlayerSector(player.ID), False
+      Main.startBeam Val(lbl(16).Tag), getPlayerSector(player.ID), IIf(isOwner, 0, 1)
    End If
 End Sub
 
@@ -809,7 +812,7 @@ Dim x
             rst2.Open SQL, DB, adOpenForwardOnly, adLockReadOnly
             If Not rst2.EOF Then
                x = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
-               lbl(3).Caption = getPlanetDescription(rst2!sectorID, player.ID, rst2!planetName) & vbNewLine & Nz(rst2!System)
+               lbl(3).Caption = getPlanetDescription(rst2!sectorID, player.ID, rst2!PlanetName) & vbNewLine & Nz(rst2!System)
                'lbl(3).Caption = rst2!planetName & IIf(x > 0, "  (" & x & ")", "") & vbNewLine & Nz(rst2!System)
                lbl(3).ForeColor = IIf(x > 0, &H3B80B4, &HC000&)
                lbl(3).Tag = CStr(rst2!sectorID)
@@ -837,7 +840,7 @@ Dim x
                lbl(8).Width = 5800
                lbl(11).Width = 5800
                lbl(16).Visible = True
-               lbl(16).Caption = rst2!planetName & vbNewLine & rst2!System
+               lbl(16).Caption = rst2!PlanetName & vbNewLine & rst2!System
                lbl(16).Tag = CStr(rst2!sectorID)
             End If
             rst2.Close
@@ -856,7 +859,7 @@ Dim x
                lbl(1).Caption = "Pick Up"
                x = getSectorCount(getPlayerSector(player.ID), rst2!sectorID)
                lbl(10).Visible = True
-               lbl(10).Caption = getPlanetDescription(rst2!sectorID, player.ID, rst2!planetName) & vbNewLine & Nz(rst2!System)
+               lbl(10).Caption = getPlanetDescription(rst2!sectorID, player.ID, rst2!PlanetName) & vbNewLine & Nz(rst2!System)
                'lbl(10).Caption = rst2!planetName & IIf(x > 0, "  (" & x & ")", "") & vbNewLine & Nz(rst2!System)
                lbl(10).ForeColor = IIf(x > 0, &H3B80B4, &HC000&)
                lbl(10).Tag = CStr(rst2!sectorID)

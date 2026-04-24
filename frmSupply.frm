@@ -285,20 +285,20 @@ Dim Index, SQL
 Dim rst As New ADODB.Recordset
 Dim rst2 As New ADODB.Recordset
 Dim rst3 As New ADODB.Recordset
-Dim SectorID, SupplyID As Integer, X, first As Boolean, discount As Single
+Dim sectorID, SupplyID As Integer, x, first As Boolean, discount As Single
     
 With sftTree
    .Clear
    
-   SectorID = varDLookup("SectorID", "Players", "PlayerID=" & player.ID)
-   If IsNull(SectorID) Then Exit Sub
+   sectorID = getPlayerSector(player.ID)
+   If IsNull(sectorID) Then Exit Sub
    If Left(buyFilter, 5) = "local" Then
       If buyFilter = "localbuy" Then
          Me.Caption = "Local Buys for Consideration"
       Else
          Me.Caption = "Local Buys"
       End If
-      SupplyID = Nz(varDLookup("SupplyID", "Supply", "SectorID=" & SectorID), 0)
+      SupplyID = Nz(varDLookup("SupplyID", "Supply", "SectorID=" & sectorID), 0)
 
       If SupplyID = 0 Then Exit Sub 'no Deals in this Sector - cater for Alliance/Harken - Fuel
 
@@ -322,10 +322,10 @@ With sftTree
       .CellFont(Index, 1).Name = "BankGothic Md BT"
       .CellText(Index, 2) = CStr(getUnseenDeck("Supply", rst3!SupplyID)) & " unseen"
       .CellFont(Index, 2).Name = "BankGothic Md BT"
-      For X = 0 To 8
-         .CellForeColor(Index, X) = 0
-         .CellBackColor(Index, X) = rst3!Colour
-      Next X
+      For x = 0 To 8
+         .CellForeColor(Index, x) = 0
+         .CellBackColor(Index, x) = rst3!Colour
+      Next x
       Set .ItemPicture(Index) = AssetImages.Overlay("L", "U")
       
       'Crew for Hire ____________________________________

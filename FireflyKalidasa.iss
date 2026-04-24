@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Firefly The PC Game"
-#define MyAppVersion "1.10.7"
+#define MyAppVersion "1.10.8"
 #define MyAppPublisher "BLiSoft"
 #define MyAppURL "https://boardgamegeek.com/thread/2996155/firefly-windows-pc-game"
 #define MyAppExeName "FireflyKalidasa.exe"
@@ -88,6 +88,7 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Corbin.jpg"; DestDir: "{app}\p
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Cortland.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Crow.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\CryBaby.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\CryBaby.bmp"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\datascope.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\delta.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\Deputy.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
@@ -323,6 +324,9 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\compressioncoils.jpg"; DestDir
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\dockingclamps.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\reaverflage.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\smuggling.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\wormhole.gif"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\radar.gif"; DestDir: "{app}\pictures"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\ReaverFlage.png"; DestDir: "{app}\pictures"; Flags: ignoreversion
 
 ; Smalls >>>>>>>>
 Source: "D:\Progs\GitHub\FireflyKalidasa\pictures\SmAtherton.jpg"; DestDir: "{app}\pictures"; Flags: ignoreversion
@@ -708,6 +712,8 @@ Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Wormhole.wav"; DestDir: "{app}\s
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Boarded.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\Alarm.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
 Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\refresh.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\flakgun.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
+Source: "D:\Progs\GitHub\FireflyKalidasa\sounds\deploy.wav"; DestDir: "{app}\sounds"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

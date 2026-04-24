@@ -342,7 +342,7 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                .CellText(Index, 1) = rst2!JobDesc
                               
-               .CellText(Index, 2) = getPlanetDescription(rst2!sectorID, rst3!playerID, rst2!planetName)
+               .CellText(Index, 2) = getPlanetDescription(rst2!sectorID, rst3!playerID, rst2!PlanetName)
 
                .ItemData(Index) = rst!playerID
                If isAtLocation(rst2!sectorID, sectorID) Then
@@ -389,7 +389,7 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                .CellText(Index, 1) = rst2!JobDesc
                x = getSectorCount(getPlayerSector(rst3!playerID), rst2!sectorID)
-               .CellText(Index, 2) = rst2!planetName & IIf(x > 0, "  (" & x & ")", "")
+               .CellText(Index, 2) = rst2!PlanetName & IIf(x > 0, "  (" & x & ")", "")
                
                .ItemData(Index) = rst!playerID
                If isAtLocation(rst2!sectorID, sectorID) Then
@@ -427,7 +427,7 @@ With sftTree
                 Index = .AddItem(CStr(rst2!JobID))
                .CellText(Index, 1) = rst2!JobDesc
                               
-               .CellText(Index, 2) = getPlanetDescription(rst2!sectorID, rst3!playerID, rst2!planetName)
+               .CellText(Index, 2) = getPlanetDescription(rst2!sectorID, rst3!playerID, rst2!PlanetName)
 
 '               x = getSectorCount(getPlayerSector(rst3!playerID), rst2!sectorID)
 '               .CellText(index, 2) = rst2!planetName & IIf(x > 0, "  (" & x & ")", "")
@@ -491,7 +491,8 @@ Private Sub sftTree_ItemClick(ByVal Index As Long, ByVal ColNum As Integer, ByVa
          With sftTree
             If sftTree.CellItemData(Index, 1) > 0 And sftTree.ItemData(Index) = player.ID Then
                'draw a line
-               Main.drawLine 0, sftTree.CellItemData(Index, 1), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
+               'Main.drawLine 0, sftTree.CellItemData(Index, 1), getPlayerSector(player.ID), False
+               Main.startBeam sftTree.CellItemData(Index, 1), getPlayerSector(player.ID), 0
             Else
                Main.drawLine 0, -1
             End If

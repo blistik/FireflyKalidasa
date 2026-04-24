@@ -23,31 +23,53 @@ Begin VB.Form Board
       Height          =   15060
       Left            =   0
       ScaleHeight     =   15000
-      ScaleWidth      =   22575
+      ScaleWidth      =   22605
       TabIndex        =   0
       Top             =   0
-      Width           =   22635
+      Width           =   22665
+      Begin LaVolpeAlphaImg.AlphaImgCtl CryBaby 
+         Height          =   465
+         Left            =   2760
+         Top             =   -60
+         Visible         =   0   'False
+         Width           =   525
+         _ExtentX        =   926
+         _ExtentY        =   820
+         Effects         =   "Board.frx":030A
+      End
+      Begin LaVolpeAlphaImg.AlphaImgCtl Beam 
+         Height          =   720
+         Left            =   21270
+         Top             =   11160
+         Visible         =   0   'False
+         Width           =   720
+         _ExtentX        =   1270
+         _ExtentY        =   1270
+         Trans           =   33488638
+         Attr            =   514
+         Effects         =   "Board.frx":0322
+      End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   300
          Index           =   6
-         Left            =   16920
-         Top             =   2190
+         Left            =   14310
+         Top             =   30
          Visible         =   0   'False
          Width           =   900
          _ExtentX        =   1588
          _ExtentY        =   529
-         Effects         =   "Board.frx":030A
+         Effects         =   "Board.frx":033A
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   750
          Index           =   5
-         Left            =   17970
-         Top             =   2190
+         Left            =   16140
+         Top             =   0
          Visible         =   0   'False
          Width           =   480
          _ExtentX        =   847
          _ExtentY        =   1323
-         Effects         =   "Board.frx":0322
+         Effects         =   "Board.frx":0352
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
@@ -58,7 +80,7 @@ Begin VB.Form Board
          Width           =   750
          _ExtentX        =   1323
          _ExtentY        =   582
-         Effects         =   "Board.frx":033A
+         Effects         =   "Board.frx":036A
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
@@ -69,7 +91,7 @@ Begin VB.Form Board
          Width           =   750
          _ExtentX        =   1323
          _ExtentY        =   582
-         Effects         =   "Board.frx":0352
+         Effects         =   "Board.frx":0382
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
@@ -80,7 +102,7 @@ Begin VB.Form Board
          Width           =   750
          _ExtentX        =   1323
          _ExtentY        =   582
-         Effects         =   "Board.frx":036A
+         Effects         =   "Board.frx":039A
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
@@ -91,7 +113,7 @@ Begin VB.Form Board
          Width           =   750
          _ExtentX        =   1323
          _ExtentY        =   582
-         Effects         =   "Board.frx":0382
+         Effects         =   "Board.frx":03B2
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
@@ -102,7 +124,7 @@ Begin VB.Form Board
          Width           =   750
          _ExtentX        =   1323
          _ExtentY        =   582
-         Effects         =   "Board.frx":039A
+         Effects         =   "Board.frx":03CA
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   330
@@ -113,7 +135,7 @@ Begin VB.Form Board
          Width           =   750
          _ExtentX        =   1323
          _ExtentY        =   582
-         Effects         =   "Board.frx":03B2
+         Effects         =   "Board.frx":03E2
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   540
@@ -124,7 +146,7 @@ Begin VB.Form Board
          Width           =   840
          _ExtentX        =   1482
          _ExtentY        =   953
-         Effects         =   "Board.frx":03CA
+         Effects         =   "Board.frx":03FA
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   540
@@ -135,7 +157,7 @@ Begin VB.Form Board
          Width           =   840
          _ExtentX        =   1482
          _ExtentY        =   953
-         Effects         =   "Board.frx":03E2
+         Effects         =   "Board.frx":0412
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   540
@@ -146,7 +168,7 @@ Begin VB.Form Board
          Width           =   840
          _ExtentX        =   1482
          _ExtentY        =   953
-         Effects         =   "Board.frx":03FA
+         Effects         =   "Board.frx":042A
       End
       Begin LaVolpeAlphaImg.AlphaImgCtl Imag 
          Height          =   540
@@ -157,7 +179,7 @@ Begin VB.Form Board
          Width           =   840
          _ExtentX        =   1482
          _ExtentY        =   953
-         Effects         =   "Board.frx":0412
+         Effects         =   "Board.frx":0442
       End
       Begin VB.Label lblSolid 
          Alignment       =   2  'Center
@@ -428,7 +450,7 @@ Begin VB.Form Board
       Width           =   705
       _ExtentX        =   1244
       _ExtentY        =   1244
-      Effects         =   "Board.frx":042A
+      Effects         =   "Board.frx":045A
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgHaven 
       Height          =   705
@@ -439,7 +461,7 @@ Begin VB.Form Board
       Width           =   705
       _ExtentX        =   1244
       _ExtentY        =   1244
-      Effects         =   "Board.frx":0442
+      Effects         =   "Board.frx":0472
    End
    Begin LaVolpeAlphaImg.AlphaImgCtl imgToken 
       Height          =   705
@@ -450,13 +472,13 @@ Begin VB.Form Board
       Width           =   705
       _ExtentX        =   1244
       _ExtentY        =   1244
-      Effects         =   "Board.frx":045A
+      Effects         =   "Board.frx":048A
    End
    Begin VB.Image HotSpot 
       Height          =   735
       Index           =   0
       Left            =   0
-      MouseIcon       =   "Board.frx":0472
+      MouseIcon       =   "Board.frx":04A2
       MousePointer    =   4  'Icon
       Top             =   14500
       Width           =   555
@@ -473,9 +495,12 @@ Private Const HTCAPTION = 2
 Private Const WM_NCLBUTTONDOWN = &HA1
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
+Private ReaverOverlayPic As GDIpImage
+
 Public isLoaded As Boolean
 Public Event SectClick(ByVal Index As Integer)
 Public Event SectDblClick(ByVal Index As Integer)
+
 
 Private Sub Form_Load()
 ReDim LineB(1 To 3)
@@ -490,8 +515,8 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Private Sub HotSpot_Click(Index As Integer)
-  ' MsgBox "You clicked on " & Index
-    RaiseEvent SectClick(Index)
+     
+   RaiseEvent SectClick(Index)
      
 End Sub
 
@@ -499,12 +524,12 @@ Private Sub HotSpot_DblClick(Index As Integer)
    RaiseEvent SectDblClick(Index)
 End Sub
 
-Private Sub Imag_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub Imag_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
 'allow title drag
-Private Sub HotSpot_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub HotSpot_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
    If pickStartSector <> 1 Then
       Select Case actionSeq
          Case ASmosey, ASfullburn, ASNavEvade, ASNavReav, ASNavReavBorder, ASNavCrus, ASNavCrusBorder, ASNavCrusOutlaw, ASNavCrusAdjacent, ASNavCorvAdjacent, ASNavCorvPlanetary, ASResolveAlert
@@ -515,24 +540,44 @@ Private Sub HotSpot_MouseDown(Index As Integer, Button As Integer, Shift As Inte
    End If
 End Sub
 
-Private Sub Picture1_MouseDown(Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub Imag_PostPaint(Index As Integer, hDC As Long, Left As Long, Top As Long, Width As Long, Height As Long, HitTestRgn As Long)
+Dim hGraphics As Long
+
+    If Not ReaverFlageActive(Index) Then Exit Sub
+    
+    GdipCreateFromHDC hDC, hGraphics
+
+    GdipDrawImageRectRectI hGraphics, ReaverOverlayPic.Handle, Left, Top, Width, Height, 0, 0, ReaverOverlayPic.Width, ReaverOverlayPic.Height, 2, 0, 0, 0
+
+    GdipDeleteGraphics hGraphics
+
+End Sub
+
+Private Sub Picture1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
 
 Private Sub initImages()
-Dim x
+Dim X
    Imag(1).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyOrange.gif")
    Imag(2).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyBlue.gif")
    Imag(3).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyYellow.gif")
    Imag(4).Picture = LoadPictureGDIplus(App.Path & "\Pictures\FireflyGreen.gif")
    Imag(5).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cruiser.gif")
    Imag(6).Picture = LoadPictureGDIplus(App.Path & "\Pictures\corvette.gif")
-   For x = 7 To 12  '6 Reavers
-      Imag(x).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.gif")
-   Next x
-   For x = 1 To 12   'all ships set invisible to start
-      Imag(x).TransparentColor = 0
-      Imag(x).TransparentColorMode = lvicUseTransparentColor
-   Next x
+   For X = 7 To 12  '6 Reavers
+      Imag(X).Picture = LoadPictureGDIplus(App.Path & "\Pictures\Cutter.gif")
+   Next X
+   For X = 1 To 12   'all ships set invisible to start
+      Imag(X).TransparentColor = 0
+      Imag(X).TransparentColorMode = lvicUseTransparentColor
+   Next X
+   For X = 1 To 4   'enable for overlays
+      Imag(X).WantPrePostEvents = True
+   Next X
+   
+   'Reaver-Flage overlay effect image
+   Set ReaverOverlayPic = LoadPictureGDIplus(App.Path & "\Pictures\ReaverFlage.png")
+   
 End Sub

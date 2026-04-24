@@ -306,18 +306,18 @@ Private Sub img_DblClick(Index As Integer)
    Unload Me
 End Sub
 
-Private Sub img_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub img_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
    ReleaseCapture
    SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&
 End Sub
 
 Private Sub lbl_Click(Index As Integer)
    If Val(lbl(1).Tag) > 0 And Index = 1 Then
-      Main.drawLine IIf(isOwner, 0, 1), Val(lbl(1).Tag), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
+      Main.drawLine IIf(isOwner, 0, 1), Val(lbl(1).Tag), getPlayerSector(player.ID), False
    End If
    
    If Val(lbl(3).Tag) > 0 And Index = 3 Then
-      Main.drawLine IIf(isOwner, 0, 1), Val(lbl(3).Tag), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
+      Main.drawLine IIf(isOwner, 0, 1), Val(lbl(3).Tag), getPlayerSector(player.ID), False
    End If
 End Sub
 
@@ -325,7 +325,7 @@ Private Sub lbl_DblClick(Index As Integer)
    Unload Me
 End Sub
 
-Private Sub lbl_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub lbl_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
    If Index <> 3 And Index <> 1 Then
       ReleaseCapture
       SendMessage Me.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&

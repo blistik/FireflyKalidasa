@@ -263,7 +263,7 @@ Dim sectorID, ContactID As Integer, x, cnt As Integer
 With sftTree
    .Clear
    
-   sectorID = varDLookup("SectorID", "Players", "PlayerID=" & player.ID)
+   sectorID = getPlayerSector(player.ID)
    If IsNull(sectorID) Then Exit Function
    showBounty = (varDLookup("Bounty", "Story", "StoryID=" & Logic!StoryID) = 1)
    If dealFilter = "bounties" Then
@@ -541,7 +541,8 @@ With sftTree
          
          If sftTree.CellItemData(Index, 1) > 0 Then
              'draw a line
-             Main.drawLine 1, sftTree.CellItemData(Index, 1), varDLookup("SectorID", "Players", "PlayerID=" & player.ID), False
+             'Main.drawLine 1, sftTree.CellItemData(Index, 1), getPlayerSector(player.ID), False
+             Main.startBeam sftTree.CellItemData(Index, 1), getPlayerSector(player.ID), 1
           Else
              Main.drawLine 1, -1
          End If
